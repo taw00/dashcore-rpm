@@ -26,18 +26,44 @@ Important notes:
 
 RPM? How? What?: https://fedoraproject.org/wiki/How_to_create_an_RPM_package
 
-Once your rpmbuild environment is set up and a source RPM is downloaded, **install your source RPM** like this:
+Once your rpmbuild environment is set up:
 
-    $ rpm -ivh dash-*.src.rpm
-    # ...and if you like...
-    $ cp -a dash-*.src.rpm ~/rpmbuild/SRPMS/
+* download the source RPM.
+* Verify the source RPM is what it should be. There are two ways to do this. One is with an sha256sum hash check and the other is with a GPG signature check. The GPG signature check is vastly more secure, but more complicated.
+sha256sum example, from the commandline:
+
+
+    sha256sum dash-0.12.0.56-5.taw.src.rpm
+
+* A better way is to verify the gpg signature of the RPM. They may not be signed every single time, but I'll try to remember to do so. They will be for RPMs I deem "released".
+
+
+    # Import my GPG key if you have not already
+    rpm --import https://raw.githubusercontent.com/taw00/public-keys/master/taw-694673ED-public-2030-01-04.asc
+    # Or navigate to http://github.com/taw00/public-keys and fetch it manually
+
+    # Check the signature
+    rpm --checksig dash-0.12.0.56-5.taw.src.rpm
+    # You should see something like: dash-0.12.0.56-5.taw.src.rp: sha1 md5 OK
+
+    # If the package is not signed, or if does not match a key on your RPM keyring,
+    # the messaging will be obvious
+
+
+**install your source RPM** like this:
+
+    # Do all of this from the commandline as a normal user:
+    # First, copy that source RPM into the source RPMs location in the rpmbuild build tree:
+    cp -a dash-*.src.rpm ~/rpmbuild/SRPMS/
+    # Install the sucker:
+    rpm -ivh dash-*.src.rpm
 
 That should explode it's source code and patch contents into ~/rpmbuild/SOURCES/ and the build instruction into ~/rpmbuild/SPECS/.
 
 **Building binaries** is as easy as running the rpmbuild command against a specfile. For example:
 
-    $ cd ~/rpmbuild/SPECS
-    $ rpmbuild -ba dash.spec # or whatever the specfile name is
+    cd ~/rpmbuild/SPECS
+    rpmbuild -ba dash.spec # or whatever the specfile name is
 
 Wait 30+ minutes for it to complete and the build process will list the RPMS that were created at the end of the terminal window output. The binary RPMs will be saved in the _~/rpmbuild/RPMS/_ directory and a newly minted source RPM will land in the _~/rpmbuild/RPMS/_ directory. The binary RPMs will be these...
 
