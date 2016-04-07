@@ -1,4 +1,4 @@
-# dash-srpms
+# Dash Source RPMs
 
 **Dash (Digital Cash)** is a privacy-centric digital currency that
 enables instant transactions to anyone, anywhere in the world. It uses
