@@ -39,7 +39,7 @@ That should explode it's source code and patch contents into ~/rpmbuild/SOURCES/
     $ cd ~/rpmbuild/SPECS
     $ rpmbuild -ba dash.spec # or whatever the specfile name is
 
-Wait 30+ minutes for it to complete and the build process will list the RPMS that were created at the end of the terminal window output. Those RPMs will be these...
+Wait 30+ minutes for it to complete and the build process will list the RPMS that were created at the end of the terminal window output. The binary RPMs will be saved in the _~/rpmbuild/RPMS/_ directory and a newly minted source RPM will land in the _~/rpmbuild/RPMS/_ directory. The binary RPMs will be these...
 
 * **dash** -- The dash-qt wallet and full node
 * **dash-utils** -- dash-cli, a utility to communicate with and control a Dash server via its RPC protocol, and dash-tx, a utility to create custom Dash transactions.
