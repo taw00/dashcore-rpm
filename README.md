@@ -19,14 +19,12 @@ Dash on github can be found here: https://github.com/dashpay/dash
 
 Important notes:
 
-0. There are versions considered **stable** and versions considered **experimental**. Version with an "x" in their version number should be considered the most experimental.
+0. There are versions considered **stable** and versions considered **experimental**. Versions with an "x" in their version number should be considered the most experimental.
 0. These have all been developed and tested on Fedora 23 and x86_64. I welcome folks to experiment with other distributions and architectures and let me know how they go.
-
-
 
 ----
 
-Howto do RPM'ish things -- and what are RPMs to begin with?: https://fedoraproject.org/wiki/How_to_create_an_RPM_package
+RPM? How? What?: https://fedoraproject.org/wiki/How_to_create_an_RPM_package
 
 Once your rpmbuild environment is set up and a source RPM is downloaded, **install your source RPM** like this:
 
@@ -52,3 +50,6 @@ Wait 30+ minutes for it to complete and the build process will list the RPMS tha
 You want to build binaries for your RPM-based linux distribution? Use this source RPM to do so easily.
 * **dash-debuginfo** -- debug information for package dash. Debug information is useful when developing applications that use this package or when debugging this package.
 (99.999% of you do not need to install this)
+
+
+Note: Binaries for Dash have already been built for Fedora 23 on x86_64 and can be found here: https://drive.google.com/folderview?id=0B0BT-eTEFVLOdWJjWGRybW1tMjQ
