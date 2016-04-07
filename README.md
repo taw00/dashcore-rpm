@@ -28,9 +28,9 @@ RPM? How? What?: https://fedoraproject.org/wiki/How_to_create_an_RPM_package
 
 Once your rpmbuild environment is set up and a source RPM is downloaded, **install your source RPM** like this:
 
-    $ rpm -ivh dash-\*.src.rpm
+    $ rpm -ivh dash-*.src.rpm
     # ...and if you like...
-    $ cp -a dash-\*.src.rpm ~/rpmbuild/SRPMS/
+    $ cp -a dash-*.src.rpm ~/rpmbuild/SRPMS/
 
 That should explode it's source code and patch contents into ~/rpmbuild/SOURCES/ and the build instruction into ~/rpmbuild/SPECS/.
 
