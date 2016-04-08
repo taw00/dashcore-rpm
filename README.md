@@ -34,7 +34,7 @@ Once your rpmbuild environment is set up...
 
 For example, at the time of this writing, `dash-0.12.0.56-5.taw.src.rpm`, is considered "stable".
 
-#### [3] Verify the RPM is not tampered with
+#### [3] Verify the RPM has not been tampered with
 
 This is done in one of two ways: (1) with an sha256sum hash check and (2) with a GPG signature check. Assuming the source RPM is digitally signed, GPG signature verification is vastly more secure, but more complicated.
 
