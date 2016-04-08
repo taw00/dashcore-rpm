@@ -33,41 +33,42 @@ Once your rpmbuild environment is set up:
 
   Here's a sha256sum hash verification example, from the commandline (note, current matching hashs posted at end of this document)**
 
-      sha256sum dash-0.12.0.56-5.taw.src.rpm
-      # The result will be something like this and it needs to match the
-      # posted hashes
-      297273f71b040ea2b683bf1e41e562598736fc53d6d5fdef2fb4a3eef8cc2bc8  dash-0.12.0.56-5.taw.fc23.src.rpm
+      $ sha256sum dash-0.12.0.56-5.taw.src.rpm
+      $ # The result will be something like this and it needs to match the
+      $ # posted hashes
+        297273f71b040ea2b683bf1e41e562598736fc53d6d5fdef2fb4a3eef8cc2bc8  dash-0.12.0.56-5.taw.fc23.src.rpm
 
 * A better way is to verify the gpg signature of the RPM. They may not be signed every single time, but I'll try to remember to do so. They will be for RPMs I deem "released".
 
-      # Import my GPG key if you have not already
-      rpm --import https://raw.githubusercontent.com/taw00/public-keys/master/taw-694673ED-public-2030-01-04.asc
-      # Or navigate to http://github.com/taw00/public-keys and fetch it manually
+      $ # Import my GPG key if you have not already
+      $ rpm --import https://raw.githubusercontent.com/taw00/public-keys/master/taw-694673ED-public-2030-01-04.asc
+      $ # Or navigate to http://github.com/taw00/public-keys and fetch it manually
 
-      # Check the signature
-      rpm --checksig dash-0.12.0.56-5.taw.src.rpm
-      # You should see something like:
+      $ # Check the signature
+      $ rpm --checksig dash-0.12.0.56-5.taw.src.rpm
+      $ # You should see something like:
         dash-0.12.0.56-5.taw.src.rp: sha1 md5 OK
 
-      # If the package is not signed, or if does not match a key on your RPM
-      # keyring,
-      # the messaging will be obvious
+      $ # If the package is not signed, or if does not match a key on your RPM
+      $ # keyring,
+      $ # the messaging will be obvious
 
 
-**install your source RPM** like this:
 
-    # Do all of this from the commandline as a normal user:
-    # First, copy that source RPM into the source RPMs location in the rpmbuild build tree:
-    cp -a dash-*.src.rpm ~/rpmbuild/SRPMS/
-    # Install the sucker:
-    rpm -ivh dash-*.src.rpm
+**install your source RPM** like this, again from the commandline:
+
+    $ # Do all of this from the commandline as a normal user:
+    $ # First, copy that source RPM into the source RPMs location in the rpmbuild build tree:
+    $ cp -a dash-*.src.rpm ~/rpmbuild/SRPMS/
+    $ # Install the sucker:
+    $ rpm -ivh dash-*.src.rpm
 
 That should explode it's source code and patch contents into ~/rpmbuild/SOURCES/ and the build instruction into ~/rpmbuild/SPECS/.
 
 **Building binaries** is as easy as running the rpmbuild command against a specfile. For example:
 
-    cd ~/rpmbuild/SPECS
-    rpmbuild -ba dash.spec # or whatever the specfile name is
+    $ cd ~/rpmbuild/SPECS
+    $ rpmbuild -ba dash.spec # or whatever the specfile name is
 
 Wait 30+ minutes for it to complete and the build process will list the RPMS that were created at the end of the terminal window output. The binary RPMs will be saved in the _~/rpmbuild/RPMS/_ directory and a newly minted source RPM will land in the _~/rpmbuild/RPMS/_ directory. The binary RPMs will be these...
 
@@ -86,7 +87,7 @@ Note: Binaries for Dash have already been built for Fedora 23 on x86_64 and can 
 
 ----
 
-sha256 hashes:
+### The sha256 verification hashes:
 
 `726f86097fbac3ddd0b0465b5dc0ef6300cde1be294481677ebf82b35a32282e  dash-0.12.0.56-0.taw0.fc23.src.rpm
 d1a080a5ab42137ab9d8485dfd65c3f2b8a34f5f7d0966c8e2d06fe65714e11e  dash-0.12.0.56-0.taw2.fc23.src.rpm
