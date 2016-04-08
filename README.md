@@ -56,18 +56,21 @@ The result will be something like this and it needs to match the posted hash.
 
 If I built these packages correctly, their appropriate sha256 hash should be posted below _and_ they should pass a gpg digital signature check signed by my public key.
 
-(1) Import my GPG key into your RPM keyring if you have not already done so.
+(1) Import my GPG key into your RPM keyring if you have not already done so. You have to do this as the root user.
 
-    $ rpm --import https://raw.githubusercontent.com/taw00/public-keys/master/taw-694673ED-public-2030-01-04.asc
-    $ # Or navigate to http://github.com/taw00/public-keys and fetch the key manually
+    $ sudo rpm --import https://raw.githubusercontent.com/taw00/public-keys/master/taw-694673ED-public-2030-01-04.asc
+
+Or navigate to http://github.com/taw00/public-keys and fetch the key manually
 
 (2) Check the signature
 
     $ rpm --checksig dash-0.12.0.56-5.taw.src.rpm
 
-You should see something like: `dash-0.12.0.56-5.taw.src.rp: sha1 md5 OK`
+You should see something like: `dash-0.12.0.56-5.taw.fc23.src.rpm: rsa sha1 (md5) pgp md5 OK`
 
-If the package is not signed, or if it's digital signature does not match a key on your RPM keyring, the messaging will be obvious
+`dash-0.12.0.56-5.taw.src.rp: sha1 md5 OK`
+
+If the package is not signed, or if the result is something less subsantial, like `sha1 md5 OK`, or no signature. Then, I would not recommend installing the source RPM. If it says `(MISSING KEYS: RSA#694673ed (MD5) PGP#694673ed)`, you did not successfully import my key in step 1.
 
 
 #### [4] Install the source RPM
