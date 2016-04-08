@@ -30,24 +30,28 @@ Once your rpmbuild environment is set up:
 
 * download the source RPM.
 * Verify the source RPM is what it should be. There are two ways to do this. One is with an sha256sum hash check and the other is with a GPG signature check. The GPG signature check is vastly more secure, but more complicated.
-sha256sum example, from the commandline:
 
+  Here's a sha256sum hash verification example, from the commandline (note, current matching hashs posted at end of this document)**
 
-    sha256sum dash-0.12.0.56-5.taw.src.rpm
+      sha256sum dash-0.12.0.56-5.taw.src.rpm
+      # The result will be something like this and it needs to match the
+      # posted hashes
+      297273f71b040ea2b683bf1e41e562598736fc53d6d5fdef2fb4a3eef8cc2bc8  dash-0.12.0.56-5.taw.fc23.src.rpm
 
 * A better way is to verify the gpg signature of the RPM. They may not be signed every single time, but I'll try to remember to do so. They will be for RPMs I deem "released".
 
+      # Import my GPG key if you have not already
+      rpm --import https://raw.githubusercontent.com/taw00/public-keys/master/taw-694673ED-public-2030-01-04.asc
+      # Or navigate to http://github.com/taw00/public-keys and fetch it manually
 
-    # Import my GPG key if you have not already
-    rpm --import https://raw.githubusercontent.com/taw00/public-keys/master/taw-694673ED-public-2030-01-04.asc
-    # Or navigate to http://github.com/taw00/public-keys and fetch it manually
+      # Check the signature
+      rpm --checksig dash-0.12.0.56-5.taw.src.rpm
+      # You should see something like:
+        dash-0.12.0.56-5.taw.src.rp: sha1 md5 OK
 
-    # Check the signature
-    rpm --checksig dash-0.12.0.56-5.taw.src.rpm
-    # You should see something like: dash-0.12.0.56-5.taw.src.rp: sha1 md5 OK
-
-    # If the package is not signed, or if does not match a key on your RPM keyring,
-    # the messaging will be obvious
+      # If the package is not signed, or if does not match a key on your RPM
+      # keyring,
+      # the messaging will be obvious
 
 
 **install your source RPM** like this:
@@ -79,3 +83,24 @@ You want to build binaries for your RPM-based linux distribution? Use this sourc
 
 
 Note: Binaries for Dash have already been built for Fedora 23 on x86_64 and can be found here: https://drive.google.com/folderview?id=0B0BT-eTEFVLOdWJjWGRybW1tMjQ
+
+----
+
+sha256 hashes:
+
+`726f86097fbac3ddd0b0465b5dc0ef6300cde1be294481677ebf82b35a32282e  dash-0.12.0.56-0.taw0.fc23.src.rpm
+d1a080a5ab42137ab9d8485dfd65c3f2b8a34f5f7d0966c8e2d06fe65714e11e  dash-0.12.0.56-0.taw2.fc23.src.rpm
+91dbd7cded28c88aa85154913e73798cb7c25d278ea700a97e2b7fc2dd63b4bb  dash-0.12.0.56-3.taw.fc23.src.rpm
+72a3940f47e60bab2145e5546eae4f7c6034ef61adb1d3eda55e6d5d23ea267b  dash-0.12.0.56-4.taw.fc23.src.rpm
+297273f71b040ea2b683bf1e41e562598736fc53d6d5fdef2fb4a3eef8cc2bc8  dash-0.12.0.56-5.taw.fc23.src.rpm
+1a16a4406b3f9686ef3a5c08aaaba14cc9820cbc89be981f699d893f4e5bf5c6  dash-0.12.1.x-0.taw.fc23.src.rpm
+6e303f3196f7431152b6f14ca5f9774aa67e53cfe0a1a5dad401fb15834b3a04  dash-0.12.1.x-20160405.0.taw.fc23.src.rpm
+123d350149bc0d8c5735a76b095f23425e2e3e255cf58fab0db723c6b634b615  dash-0.13.0.x-20160405.0.taw.fc23.src.rpm
+726f86097fbac3ddd0b0465b5dc0ef6300cde1be294481677ebf82b35a32282e  dash-0.12.0.56-0.taw0.fc23.src.rpm
+d1a080a5ab42137ab9d8485dfd65c3f2b8a34f5f7d0966c8e2d06fe65714e11e  dash-0.12.0.56-0.taw2.fc23.src.rpm
+91dbd7cded28c88aa85154913e73798cb7c25d278ea700a97e2b7fc2dd63b4bb  dash-0.12.0.56-3.taw.fc23.src.rpm
+72a3940f47e60bab2145e5546eae4f7c6034ef61adb1d3eda55e6d5d23ea267b  dash-0.12.0.56-4.taw.fc23.src.rpm
+297273f71b040ea2b683bf1e41e562598736fc53d6d5fdef2fb4a3eef8cc2bc8  dash-0.12.0.56-5.taw.fc23.src.rpm
+1a16a4406b3f9686ef3a5c08aaaba14cc9820cbc89be981f699d893f4e5bf5c6  dash-0.12.1.x-0.taw.fc23.src.rpm
+6e303f3196f7431152b6f14ca5f9774aa67e53cfe0a1a5dad401fb15834b3a04  dash-0.12.1.x-20160405.0.taw.fc23.src.rpm
+123d350149bc0d8c5735a76b095f23425e2e3e255cf58fab0db723c6b634b615  dash-0.13.0.x-20160405.0.taw.fc23.src.rpm`
