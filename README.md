@@ -48,8 +48,9 @@ From the commandline...
 
 The result will be something like this and it needs to match the posted hash.
 
-`297273f71b040ea2b683bf1e41e562598736fc53d6d5fdef2fb4a3eef8cc2bc8  dash-0.12.0.56-5.taw.fc23.src.rpm`
-
+`
+297273f71b040ea2b683bf1e41e562598736fc53d6d5fdef2fb4a3eef8cc2bc8  dash-0.12.0.56-5.taw.fc23.src.rpm
+`
 
 **Verification of the source RPMs digital signature**
 
@@ -108,7 +109,8 @@ You want to build binaries for your RPM-based linux distribution? Use this sourc
 
 ### The sha256 verification hashes:
 
-`726f86097fbac3ddd0b0465b5dc0ef6300cde1be294481677ebf82b35a32282e  dash-0.12.0.56-0.taw0.fc23.src.rpm
+`
+726f86097fbac3ddd0b0465b5dc0ef6300cde1be294481677ebf82b35a32282e  dash-0.12.0.56-0.taw0.fc23.src.rpm
 d1a080a5ab42137ab9d8485dfd65c3f2b8a34f5f7d0966c8e2d06fe65714e11e  dash-0.12.0.56-0.taw2.fc23.src.rpm
 91dbd7cded28c88aa85154913e73798cb7c25d278ea700a97e2b7fc2dd63b4bb  dash-0.12.0.56-3.taw.fc23.src.rpm
 72a3940f47e60bab2145e5546eae4f7c6034ef61adb1d3eda55e6d5d23ea267b  dash-0.12.0.56-4.taw.fc23.src.rpm
@@ -123,4 +125,5 @@ d1a080a5ab42137ab9d8485dfd65c3f2b8a34f5f7d0966c8e2d06fe65714e11e  dash-0.12.0.56
 297273f71b040ea2b683bf1e41e562598736fc53d6d5fdef2fb4a3eef8cc2bc8  dash-0.12.0.56-5.taw.fc23.src.rpm
 1a16a4406b3f9686ef3a5c08aaaba14cc9820cbc89be981f699d893f4e5bf5c6  dash-0.12.1.x-0.taw.fc23.src.rpm
 6e303f3196f7431152b6f14ca5f9774aa67e53cfe0a1a5dad401fb15834b3a04  dash-0.12.1.x-20160405.0.taw.fc23.src.rpm
-123d350149bc0d8c5735a76b095f23425e2e3e255cf58fab0db723c6b634b615  dash-0.13.0.x-20160405.0.taw.fc23.src.rpm`
+123d350149bc0d8c5735a76b095f23425e2e3e255cf58fab0db723c6b634b615  dash-0.13.0.x-20160405.0.taw.fc23.src.rpm
+`
