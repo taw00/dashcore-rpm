@@ -145,7 +145,7 @@ c18adccfcbba110cd7fd490243f1d46f78498cc98129f31bd7de6ba36ee098f9  dash-0.13.0.x-
 
 ### Advanced: Creating your own tagged builds
 
-If you are feeling a bit froggy, make the pages versions in your name.
+If you are feeling a bit froggy, build and compile the binary RPMs specific to your name.
 
 Let's say your name is Barney Miller (initials "bm").
 
@@ -153,7 +153,12 @@ Let's say your name is Barney Miller (initials "bm").
 cp dash-0.12.56.spec dash-0.12.56-6.bm.spec
 ```
 
-Edit `dash-0.12.56-6.bm.spec` and change the _bumptag_ value in that file from '.taw' to '.bm'. And build from that...
+* Edit `dash-0.12.56-6.bm.spec`
+* Change the _bumptag_ value in that file from '.taw' to '.bm'
+* Add a stanza in the changelog at the bottom reflective of what you did (copy the format)...
+
+...and build your RPMs from that...
+
 
 ```
 rpmbuild -ba dash-0.12.0.56-6.bm.spec
