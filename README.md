@@ -68,7 +68,7 @@ Or navigate to http://github.com/taw00/public-keys and fetch the key manually
 
 You should see something like: `dash-0.12.0.56-5.taw.fc23.src.rpm: rsa sha1 (md5) pgp md5 OK`
 
-`dash-0.12.0.56-5.taw.src.rp: sha1 md5 OK`
+`dash-0.12.0.56-5.taw.src.rpm: sha1 md5 OK`
 
 If the package is not signed, or if the result is something less subsantial, like `sha1 md5 OK`, or no signature. Then, I would not recommend installing the source RPM. If it says `(MISSING KEYS: RSA#694673ed (MD5) PGP#694673ed)`, you did not successfully import my key in step 1.
 
@@ -95,7 +95,7 @@ Actually building the binary RPMs is as easy as running the rpmbuild command aga
 
 If all goes well, the build process may take 30+ minutes and nicely bog down your computer. If the build succeeded, the build process will list the RPMS that were created at the end of the terminal window output. The binary RPMs will be saved in the _~/rpmbuild/RPMS/_ directory and a newly minted source RPM will land in the _~/rpmbuild/SRPMS/_ directory. The binary RPMs will be these...
 
-* **dash** -- The dash-qt wallet and full node
+* **dash-client** -- The dash-qt wallet and full node _(note, some older sources merely named this package "dash" and not "dash-client")_
 * **dash-utils** -- dash-cli, a utility to communicate with and control a Dash server via its RPC protocol, and dash-tx, a utility to create custom Dash transactions.
 * **dash-server** -- dashd, a peer-to-peer node and wallet server. It is the command line installation without a GUI.  It can be used as a commandline wallet and is typically used to run a Dash Masternode. Requires dash-utils to be installed as well.
 * **dash-libs** -- provides libbitcoinconsensus, which is used by third party applications to verify scripts (and other functionality in the future).
@@ -112,11 +112,15 @@ You want to build binaries for your RPM-based linux distribution? Use this sourc
 
 ### The sha256 verification hashes:
 
-`
-5976b00c4bbd1a5d5527e871c793aac9e1f9f30e3144079cd1072a53c068f493  dash-0.12.0.56-0.taw0.fc23.src.rpm
-4c43723393d42d7db33c8277dcf144afc2449b7bc87a1a5b45de65b89e67fe3f  dash-0.12.0.56-0.taw2.fc23.src.rpm
-1951fa168f369aff3a93ada7b0c8bbdbf6521f2f44532b1508c17e510cb2265a  dash-0.12.0.56-3.taw.fc23.src.rpm
-d6616a0bb468be5f316f7955653f131295204e5ef9d54166023c62dc9cf7de3a  dash-0.12.0.56-4.taw.fc23.src.rpm
-70e01f95c7d57d06a51547a46bdb12fddd613d17872327b056e90a1791567a98  dash-0.12.0.56-5.taw.fc23.src.rpm
-7580ac8548cb9eb62ddc50c44d382d8a8c7b4159f388fea5c5d0d292f9c96390  dash-0.12.1.x-20160405.0.taw.fc23.src.rpm
-8932fa45899946f2775a7b7449dbcc86afa8a56b5e7f43916e81313177e3b1fe  dash-0.13.0.x-20160405.0.taw.fc23.src.rpm`
+```
+726f86097fbac3ddd0b0465b5dc0ef6300cde1be294481677ebf82b35a32282e  dash-0.12.0.56-0.taw0.fc23.src.rpm
+d1a080a5ab42137ab9d8485dfd65c3f2b8a34f5f7d0966c8e2d06fe65714e11e  dash-0.12.0.56-0.taw2.fc23.src.rpm
+91dbd7cded28c88aa85154913e73798cb7c25d278ea700a97e2b7fc2dd63b4bb  dash-0.12.0.56-3.taw.fc23.src.rpm
+72a3940f47e60bab2145e5546eae4f7c6034ef61adb1d3eda55e6d5d23ea267b  dash-0.12.0.56-4.taw.fc23.src.rpm
+297273f71b040ea2b683bf1e41e562598736fc53d6d5fdef2fb4a3eef8cc2bc8  dash-0.12.0.56-5.taw.fc23.src.rpm
+93a64f9c2633c2790c67e5a982802d5e266124695cb914281f75331528cf9a63  dash-0.12.0.56-6.taw.fc23.src.rpm
+6e303f3196f7431152b6f14ca5f9774aa67e53cfe0a1a5dad401fb15834b3a04  dash-0.12.1.x-20160405.0.taw.fc23.src.rpm
+beeb67fcc7f67d0a9b93b7df0f393c6044a489bcfcfc734bc4de0a7e1ef7f6ae  dash-0.12.1.x-20160410.taw.fc23.src.rpm
+123d350149bc0d8c5735a76b095f23425e2e3e255cf58fab0db723c6b634b615  dash-0.13.0.x-20160405.0.taw.fc23.src.rpm
+c18adccfcbba110cd7fd490243f1d46f78498cc98129f31bd7de6ba36ee098f9  dash-0.13.0.x-20160410.taw.fc23.src.rpm
+```
