@@ -183,7 +183,7 @@ Finally, once built and you are happy, instead of relying on sha256sum hash veri
 * http://fedoranews.org/tchung/gpg/
 * http://blog.packagecloud.io/eng/2014/11/24/howto-gpg-sign-verify-rpm-packages-yum-repositories/
 
-And if you are feeling really ambitious, you can set up a publicly facing yum repository and making your packages available through super-automated means to the world (keep reading the Fedora documentation for more information about yum and dnf).
+And if you are feeling really ambitious, you can set up a publicly facing dnf (once called yum) repository and making your packages available through super-automated means to the world (keep reading the Fedora documentation for more information about yum and dnf).
 
 ## Good Luck
 
