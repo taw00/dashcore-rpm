@@ -17,6 +17,8 @@ Dash on github can be found here: https://github.com/dashpay/dash
 
 **This repository houses source RPMs for the latest stable (and experimental) releases of Dash.** Using these SRPMs one should be able to build binary RPMs for your specific linux variety and architecture.
 
+A source RPM (SRPM or .src.rpm) nicely packages up the source code of a program/project and contains all the instruction needed to build (compile and package) corresponding binary RPMs. In the case of Dash, one source RPM will compile the code and generate all the binary runnable RPMs associated to the Dash project.
+
 Important notes:
 
 0. There are versions considered **stable** and versions considered **experimental**. Versions with an "x" in their version number should be considered the most experimental.
@@ -28,11 +30,22 @@ Important notes:
 
 RPM? How? What?: https://fedoraproject.org/wiki/How_to_create_an_RPM_package
 
-Once your rpmbuild environment is set up...
+In order to build from a source RPM, you first need to set up your environment. If you have not already, do this as your normal user (not root) from the commandline:
+
+```
+$ rpmdev-setuptree
+```
+
+That will set up a working folder tree at `~/rpmbuild/`
+
+_If that fails,_ you need to set up your development environment, which is beyond the scope of this document. For setting up a Fedora system, check this out: https://fedoraproject.org/wiki/How_to_create_an_RPM_package
+
+Note, it suggests using a separate user on your system to build RPMs… you can do that, but for our examples, I am assuming you are doing it with whatever user you want. I execute these commands from my personal normal user account usually.
+
 
 #### [2] Download a source RPM of your choosing
 
-For example, at the time of this writing the latest `dash-0.12.0.56-*.taw.src.rpm`, is considered "stable".
+For example, at the time of this writing the latest dash src.rpm of version  `0.12.0.56`, is considered "stable". For the purposes of this document, we are going use version-release `0.12.0.56-6.taw` as our example.
 
 #### [3] Verify the RPM has not been tampered with
 
@@ -68,9 +81,7 @@ Or navigate to http://github.com/taw00/public-keys and fetch the key manually
 
 You should see something like: `dash-0.12.0.56-6.taw.fc23.src.rpm: rsa sha1 (md5) pgp md5 OK`
 
-`dash-0.12.0.56-6.taw.src.rpm: sha1 md5 OK`
-
-If the package is not signed, or if the result is something less subsantial, like `sha1 md5 OK`, or no signature. Then, I would not recommend installing the source RPM. If it says `(MISSING KEYS: RSA#694673ed (MD5) PGP#694673ed)`, you did not successfully import my key in step 1.
+If the package is not signed, or if the result is something less subsantial, like just `sha1 md5 OK`, or no signature. Then, I would not recommend installing the source RPM. If it says `(MISSING KEYS: RSA#694673ed (MD5) PGP#694673ed)`, you did not successfully import my key in step 1.
 
 
 #### [4] Install the source RPM
@@ -79,10 +90,16 @@ Again, from the commandline as a normal user... First, copy that source RPM into
 
     $ cp -a dash-*.src.rpm ~/rpmbuild/SRPMS/
     $ # Install the sucker:
-    $ rpm -ivh dash-*.src.rpm
+    $ rpm -ivh dash-0.12.0.56-6.taw.src.rpm
 
-That should explode it's source code and patch contents into ~/rpmbuild/SOURCES/ and the build instructions into ~/rpmbuild/SPECS/.
+That should explode it's source code and patch contents into ~/rpmbuild/SOURCES/ and the build instructions into ~/rpmbuild/SPECS/. Something likes this...
 
+```
+~/rpmbuild/SPECS/dash-0.12.0.56.spec
+~/rpmbuild/SOURCES/v0.12.0.56.tar.gz
+~/rpmbuild/SOURCES/dash-0.12.0.56-contrib-fedora.tar.gz
+~/rpmbuild/SOURCES/dash-0.12.0.56-fedora.patch
+```
 
 #### [5] Build the binaries
 
@@ -124,3 +141,45 @@ beeb67fcc7f67d0a9b93b7df0f393c6044a489bcfcfc734bc4de0a7e1ef7f6ae  dash-0.12.1.x-
 123d350149bc0d8c5735a76b095f23425e2e3e255cf58fab0db723c6b634b615  dash-0.13.0.x-20160405.0.taw.fc23.src.rpm
 c18adccfcbba110cd7fd490243f1d46f78498cc98129f31bd7de6ba36ee098f9  dash-0.13.0.x-20160410.taw.fc23.src.rpm
 ```
+----
+
+### Advanced: Creating your own tagged builds
+
+If you are feeling a bit froggy, make the pages versions in your name.
+
+Let's say your name is Barney Miller (initials "bm").
+
+```
+cp dash-0.12.56.spec dash-0.12.56-6.bm.spec
+```
+
+Edit `dash-0.12.56-6.bm.spec` and change the _bumptag_ value in that file from '.taw' to '.bm'. And build from that...
+
+```
+rpmbuild -ba dash-0.12.0.56-6.bm.spec
+```
+
+If all goes to plan, in 30 or 40 minutes you should have a set of binary packages, specifically built to your system with a release of '6.bm'.
+
+If there is a significant problem where you have to, for example, fix the `configure.ac` file in the `v0.12.0.56.tar.gz` archive (common issue)... you will have to do something like this:
+
+* Copy the archive to some working director and then extract it...
+
+      tar xvzf v0.12.0.56.tar.gz
+
+* Copy the resultant (the original pristine) folder…
+
+      cp -a dash-0.12.0.56 dash-0.12.0.56.orig --
+
+* Work on the `dash-0.12.0.56/configure.ac` file, build a new patch, and try to rebuild things (iterate iterate iterate). All that is a bit beyond this document, but this is a good place to start to understand RPMs: https://fedoraproject.org/wiki/How_to_create_an_RPM_package
+
+Finally, once built and you are happy, instead of relying on sha256sum hash verification, you can GPG sign your packages. For instruction, read these nice summaries:
+
+* http://fedoranews.org/tchung/gpg/
+* http://blog.packagecloud.io/eng/2014/11/24/howto-gpg-sign-verify-rpm-packages-yum-repositories/
+
+And if you are feeling really ambitious, you can set up a publicly facing yum repository and making your packages available through super-automated means to the world (keep reading the Fedora documentation for more information about yum and dnf).
+
+## Good Luck
+
+That should get you started! Good luck! -todd _(dagrarian on dashtalk and slack, taw, or taw00 in various other venues)_
