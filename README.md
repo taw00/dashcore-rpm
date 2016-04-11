@@ -32,7 +32,7 @@ Once your rpmbuild environment is set up...
 
 #### [2] Download a source RPM of your choosing
 
-For example, at the time of this writing, `dash-0.12.0.56-5.taw.src.rpm`, is considered "stable".
+For example, at the time of this writing the latest `dash-0.12.0.56-*.taw.src.rpm`, is considered "stable".
 
 #### [3] Verify the RPM has not been tampered with
 
@@ -44,12 +44,12 @@ This is done in one of two ways: (1) with an sha256sum hash check and (2) with a
 
 From the commandline...
 
-    $ sha256sum dash-0.12.0.56-5.taw.src.rpm
+    $ sha256sum dash-0.12.0.56-6.taw.src.rpm
 
-The result will be something like this and it needs to match the posted hash.
+The result will be something like this and it needs to match the posted hash _(this example may be incorrect)_.
 
 `
-297273f71b040ea2b683bf1e41e562598736fc53d6d5fdef2fb4a3eef8cc2bc8  dash-0.12.0.56-5.taw.fc23.src.rpm
+93a64f9c2633c2790c67e5a982802d5e266124695cb914281f75331528cf9a63  dash-0.12.0.56-6.taw.fc23.src.rpm
 `
 
 **Verification of the source RPMs digital signature**
@@ -64,11 +64,11 @@ Or navigate to http://github.com/taw00/public-keys and fetch the key manually
 
 (2) Check the signature
 
-    $ rpm --checksig dash-0.12.0.56-5.taw.src.rpm
+    $ rpm --checksig dash-0.12.0.56-6.taw.src.rpm
 
-You should see something like: `dash-0.12.0.56-5.taw.fc23.src.rpm: rsa sha1 (md5) pgp md5 OK`
+You should see something like: `dash-0.12.0.56-6.taw.fc23.src.rpm: rsa sha1 (md5) pgp md5 OK`
 
-`dash-0.12.0.56-5.taw.src.rpm: sha1 md5 OK`
+`dash-0.12.0.56-6.taw.src.rpm: sha1 md5 OK`
 
 If the package is not signed, or if the result is something less subsantial, like `sha1 md5 OK`, or no signature. Then, I would not recommend installing the source RPM. If it says `(MISSING KEYS: RSA#694673ed (MD5) PGP#694673ed)`, you did not successfully import my key in step 1.
 
@@ -91,7 +91,7 @@ One source RPM will often build multiple binary RPMs. In this case, six RPMs are
 Actually building the binary RPMs is as easy as running the rpmbuild command against a specfile. For example:
 
     $ cd ~/rpmbuild/SPECS
-    $ rpmbuild -ba dash-0.12.0.56-5.taw.spec
+    $ rpmbuild -ba dash-0.12.0.56-6.taw.spec
 
 If all goes well, the build process may take 30+ minutes and nicely bog down your computer. If the build succeeded, the build process will list the RPMS that were created at the end of the terminal window output. The binary RPMs will be saved in the _~/rpmbuild/RPMS/_ directory and a newly minted source RPM will land in the _~/rpmbuild/SRPMS/_ directory. The binary RPMs will be these...
 
