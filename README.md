@@ -119,7 +119,7 @@ Again, from the commandline as a normal user... First, move that source RPM into
     $ # Install the sucker:
     $ rpm -ivh ~/rpmbuild/SRPMS/dashcore-0.12.0.56-7.taw.src.rpm
 
-That should explode it's source code and patch contents into
+That should explode source code and patch instruction into
 ~/rpmbuild/SOURCES/ and the build instructions into ~/rpmbuild/SPECS/.
 Something likes this...
 
@@ -208,7 +208,7 @@ Let's say your name is Barney Miller (initials "bm").
 cp dashcore-0.12.56.spec dashcore-0.12.56-7.bm.spec
 ```
 
-* Edit `dashcore-0.12.56-6.bm.spec`
+* Edit `dashcore-0.12.56-7.bm.spec`
 * Change the _bumptag_ value in that file from '.taw' to '.bm'
 * Add a stanza in the changelog at the bottom reflective of what you did (copy
   the format)...
@@ -217,11 +217,11 @@ cp dashcore-0.12.56.spec dashcore-0.12.56-7.bm.spec
 
 
 ```
-rpmbuild -ba dashcore-0.12.0.56-6.bm.spec
+rpmbuild -ba dashcore-0.12.0.56-7.bm.spec
 ```
 
 If all goes to plan, in 30 or 40 minutes you should have a set of binary
-packages, specifically built to your system with a release of '6.bm'.
+packages, specifically built to your system with a release of '7.bm'.
 
 If there is a significant problem where you have to, for example, fix the
 `configure.ac` file in the `v0.12.0.56.tar.gz` archive (common issue)... you
@@ -261,4 +261,4 @@ slack, taw, taw00, taw0<n> in various other venues)_
 
 _Special thanks go out to [Michael
 Hampton](https://www.ringingliberty.com/bitcoin/) for his mature bitcoin spec
-file from which I originally templated these dashcore specs.
+file that I originally templated these dashcore specs from._
