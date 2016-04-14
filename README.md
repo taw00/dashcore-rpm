@@ -261,4 +261,4 @@ slack, taw, taw00, taw0<n> in various other venues)_
 
 _Special thanks go out to [Michael
 Hampton](https://www.ringingliberty.com/bitcoin/) for his mature bitcoin spec
-file that I originally templated these dashcore specs from._
+file from which I originally templated these dashcore spec files._
