@@ -1,12 +1,11 @@
 # Dash Core Source RPMs
 
-**Dash (Digital Cash)** is a privacy-centric digital currency that
-enables instant transactions to anyone, anywhere in the world. It uses
-peer-to-peer technology to operate with no central authority where
-managing transactions and issuing money are carried out collectively
-by the network. Dash is based on the Bitcoin software, but it has a
-two tier network that improves it. Dash allows you to remain anonymous
-while you make transactions, similar to cash.
+**Dash (Digital Cash)** is a privacy-centric digital currency that enables
+instant transactions to anyone, anywhere in the world. It uses peer-to-peer
+technology to operate with no central authority where managing transactions and
+issuing money are carried out collectively by the network. Dash is based on the
+Bitcoin software, but it has a two tier network that improves upon it. Dash
+allows you to remain anonymous while you make transactions, similar to cash.
 
 Dash is also a platform for innovative decentralized crypto-tech.
 
@@ -15,14 +14,24 @@ Dash on github can be found here: https://github.com/dashpay/dash
 
 ----
 
-**This repository houses source RPMs for the latest stable (and experimental) releases of Dash.** Using these SRPMs one should be able to build binary RPMs for your specific linux variety and architecture.
+**This repository houses source RPMs for the latest stable (and experimental)
+releases of Dash.** Using these SRPMs one should be able to build binary RPMs
+for your specific linux variety and architecture.
 
-A source RPM (SRPM or .src.rpm) nicely packages up the source code of a program/project and contains all the instruction needed to build (compile and package) corresponding binary RPMs. In the case of Dash, one source RPM will compile the code and generate all the binary runnable RPMs associated to the Dash project.
+A source RPM (SRPM or .src.rpm) nicely packages up the source code of a
+program/project and contains all the instruction needed to build (compile and
+package) corresponding binary RPMs. In the case of Dash, one source RPM will
+compile the code and generate all the binary runnable RPMs associated to the
+Dash project.
 
 Important notes:
 
-0. There are versions considered **stable** and versions considered **experimental**. Versions with an "x" in their version number should be considered the most experimental.
-0. These have all been developed and tested on Fedora 23 and x86_64. I welcome folks to experiment with other distributions and architectures and let me know how they go.
+0. There are versions considered **stable** and versions considered
+   **experimental**. Versions with an "x" in their version number should be
+   considered the most experimental.
+0. These have all been developed and tested on Fedora 23 and x86_64. I welcome
+   folks to experiment with other distributions and architectures and let me
+   know how they go.
 
 ----
 
@@ -38,38 +47,52 @@ $ rpmdev-setuptree
 
 That will set up a working folder tree at `~/rpmbuild/`
 
-_If that fails,_ you need to set up your development environment, which is beyond the scope of this document. For setting up a Fedora system, check this out: https://fedoraproject.org/wiki/How_to_create_an_RPM_package
+_If that fails,_ you need to set up your development environment, which is
+beyond the scope of this document. For setting up a Fedora system, check this
+out: https://fedoraproject.org/wiki/How_to_create_an_RPM_package
 
-Note, it suggests using a separate user on your system to build RPMs… you can do that, but for our examples, I am assuming you are doing it with whatever user you want. I execute these commands from my personal normal user account usually.
+Note, it suggests using a separate user on your system to build RPMs… you can
+do that, but for our examples, I am assuming you are doing it with whatever
+user you want. I execute these commands from my personal normal user account
+usually.
 
 
 #### [2] Download a source RPM of your choosing
 
-For example, at the time of this writing the latest dash src.rpm of version  `0.12.0.56`, is considered "stable". For the purposes of this document, we are going use version-release `0.12.0.56-7.taw` as our example.
+For example, at the time of this writing the latest dash src.rpm of version
+`0.12.0.56`, is considered "stable". For the purposes of this document, we are
+going use version-release `0.12.0.56-7.taw` as our example.
 
 #### [3] Verify the RPM has not been tampered with
 
-This is done in one of two ways: (1) with an sha256sum hash check and (2) with a GPG signature check. Assuming the source RPM is digitally signed, GPG signature verification is vastly more secure, but more complicated.
+This is done in one of two ways: (1) with an sha256sum hash check and (2) with
+a GPG signature check. Assuming the source RPM is digitally signed, GPG
+signature verification is vastly more secure, but more complicated.
 
 **Verification via sha256sum**
 
-*Note, at the end of this document, a list of the source RPMs and the sha256sums that they should match, are listed.*
+*Note, at the end of this document, a list of the source RPMs and the
+sha256sums that they should match, are listed.*
 
 From the commandline...
 
     $ sha256sum dashcore-0.12.0.56-7.taw.src.rpm
 
-The result will be something like this and it needs to match the posted hash _(this example may be incorrect)_.
+The result will be something like this and it needs to match the posted hash
+_(note, this example hash may be incorrect)_.
 
 `
-93a64f9c2633c2790c67e5a982802d5e266124695cb914281f75331528cf9a63  dashcore-0.12.0.56-7.taw.fc23.src.rpm
+6960916334de35ddf8d96d87dcb9a188a095d430ada13c068286e483db4edf32  dashcore-0.12.0.56-7.taw.fc23.src.rpm
 `
 
 **Verification of the source RPMs digital signature**
 
-If I built these packages correctly, their appropriate sha256 hash should be posted below _and_ they should pass a gpg digital signature check signed by my public key.
+If I built these packages correctly, their appropriate sha256 hash should be
+posted below _and_ they should pass a gpg digital signature check signed by my
+public key.
 
-(1) Import my GPG key into your RPM keyring if you have not already done so. You have to do this as the root user.
+(1) Import my GPG key into your RPM keyring if you have not already done so.
+You have to do this as the root user.
 
     $ sudo rpm --import https://raw.githubusercontent.com/taw00/public-keys/master/taw-694673ED-public-2030-01-04.asc
 
@@ -79,20 +102,26 @@ Or navigate to http://github.com/taw00/public-keys and fetch the key manually
 
     $ rpm --checksig dashcore-0.12.0.56-7.taw.src.rpm
 
-You should see something like: `dashcore-0.12.0.56-7.taw.fc23.src.rpm: rsa sha1 (md5) pgp md5 OK`
+You should see something like: `dashcore-0.12.0.56-7.taw.fc23.src.rpm: rsa sha1
+(md5) pgp md5 OK`
 
-If the package is not signed, or if the result is something less subsantial, like just `sha1 md5 OK`, or no signature. Then, I would not recommend installing the source RPM. If it says `(MISSING KEYS: RSA#694673ed (MD5) PGP#694673ed)`, you did not successfully import my key in step 1.
+If the package is not signed, or if the result is something less subsantial,
+like just `sha1 md5 OK`, or no signature. Then, I would not recommend
+installing the source RPM. If it says `(MISSING KEYS: RSA#694673ed (MD5)
+PGP#694673ed)`, you did not successfully import my key in step 1.
 
 
 #### [4] Install the source RPM
 
-Again, from the commandline as a normal user... First, copy that source RPM into the source RPMs location in the rpmbuild build tree:
+Again, from the commandline as a normal user... First, move that source RPM into the source RPMs location in the rpmbuild build tree:
 
-    $ cp -a dashcore-*.src.rpm ~/rpmbuild/SRPMS/
+    $ mv dashcore-*.src.rpm ~/rpmbuild/SRPMS/
     $ # Install the sucker:
-    $ rpm -ivh dashcore-0.12.0.56-7.taw.src.rpm
+    $ rpm -ivh ~/rpmbuild/SRPMS/dashcore-0.12.0.56-7.taw.src.rpm
 
-That should explode it's source code and patch contents into ~/rpmbuild/SOURCES/ and the build instructions into ~/rpmbuild/SPECS/. Something likes this...
+That should explode it's source code and patch contents into
+~/rpmbuild/SOURCES/ and the build instructions into ~/rpmbuild/SPECS/.
+Something likes this...
 
 ```
 ~/rpmbuild/SPECS/dashcore-0.12.0.56.spec
@@ -104,27 +133,48 @@ That should explode it's source code and patch contents into ~/rpmbuild/SOURCES/
 
 #### [5] Build the binaries
 
-One source RPM will often build multiple binary RPMs. In this case, six RPMs are built (with the debuginfo RPM optionally built). See them listed furthin into this document.
+One source RPM will often build multiple binary RPMs. In this case, six RPMs
+are built (with the debuginfo RPM optionally built). See them listed furthin
+into this document.
 
-Actually building the binary RPMs is as easy as running the rpmbuild command against a specfile. For example:
+Actually building the binary RPMs is as easy as running the rpmbuild command
+against a specfile. For example:
 
     $ cd ~/rpmbuild/SPECS
     $ rpmbuild -ba dashcore-0.12.0.56-7.taw.spec
 
-If all goes well, the build process may take 30+ minutes and nicely bog down your computer. If the build succeeded, the build process will list the RPMS that were created at the end of the terminal window output. The binary RPMs will be saved in the _~/rpmbuild/RPMS/_ directory and a newly minted source RPM will land in the _~/rpmbuild/SRPMS/_ directory. The binary RPMs will be these...
+If all goes well, the build process may take 30+ minutes and nicely bog down
+your computer. If the build succeeded, the build process will list the RPMS
+that were created at the end of the terminal window output. The binary RPMs
+will be saved in the _~/rpmbuild/RPMS/_ directory and a newly minted source RPM
+will land in the _~/rpmbuild/SRPMS/_ directory. The binary RPMs will be
+these...
 
-* **dashcore-client** -- The dash-qt wallet and full node _(note, some older sources merely named this package "dash" and not "dashcore-client")_
-* **dashcore-utils** -- dash-cli, a utility to communicate with and control a Dash server via its RPC protocol, and dash-tx, a utility to create custom Dash transactions.
-* **dashcore-server** -- dashd, a peer-to-peer node and wallet server. It is the command line installation without a GUI.  It can be used as a commandline wallet and is typically used to run a Dash Masternode. Requires dashcore-utils to be installed as well.
-* **dashcore-libs** -- provides libbitcoinconsensus, which is used by third party applications to verify scripts (and other functionality in the future).
-* **dashcore-devel** -- provides the libraries and header files necessary to compile programs which use libbitcoinconsensus. Requires dashcore-libs to be installed as well.
-* **dashcore-[version info].src.rpm** -- The source code -- the source RPM, or SRPM
-You want to build binaries for your RPM-based linux distribution? Use this source RPM to do so easily.
-* **dashcore-debuginfo** -- debug information for package dash. Debug information is useful when developing applications that use this package or when debugging this package.
-(99.999% of you do not need to install this)
+* **dashcore-client** -- The dash-qt wallet and full node _(note, some older
+  sources merely named this package "dash" and not "dashcore-client")_
+* **dashcore-utils** -- dash-cli, a utility to communicate with and control a
+  Dash server via its RPC protocol, and dash-tx, a utility to create custom
+  Dash transactions.
+* **dashcore-server** -- dashd, a peer-to-peer node and wallet server. It is
+  the command line installation without a GUI.  It can be used as a commandline
+  wallet and is typically used to run a Dash Masternode. Requires
+  dashcore-utils to be installed as well.
+* **dashcore-libs** -- provides libbitcoinconsensus, which is used by third
+  party applications to verify scripts (and other functionality in the future).
+* **dashcore-devel** -- provides the libraries and header files necessary to
+  compile programs which use libbitcoinconsensus. Requires dashcore-libs to be
+  installed as well.
+* **dashcore-[version info].src.rpm** -- The source code -- the source RPM, or
+  SRPM You want to build binaries for your RPM-based linux distribution? Use
+  this source RPM to do so easily.
+* **dashcore-debuginfo** -- debug information for package dash. Debug
+  information is useful when developing applications that use this package or
+  when debugging this package.  (99.999% of you do not need to install this)
 
 
-***Are you impatient?*** Binaries for Dash have already been built for Fedora 23 on x86_64 and can be found here: https://drive.google.com/folderview?id=0B0BT-eTEFVLOdWJjWGRybW1tMjQ
+***Are you impatient?*** Binaries for Dash have already been built for Fedora
+23 on x86_64 and can be found here:
+https://drive.google.com/folderview?id=0B0BT-eTEFVLOdWJjWGRybW1tMjQ
 
 ----
 
@@ -149,7 +199,8 @@ c18adccfcbba110cd7fd490243f1d46f78498cc98129f31bd7de6ba36ee098f9  dash-0.13.0.x-
 
 ### Advanced: Creating your own tagged builds
 
-If you are feeling a bit froggy, build and compile the binary RPMs specific to your name.
+If you are feeling a bit froggy, build and compile the binary RPMs specific to
+your name.
 
 Let's say your name is Barney Miller (initials "bm").
 
@@ -159,7 +210,8 @@ cp dashcore-0.12.56.spec dashcore-0.12.56-7.bm.spec
 
 * Edit `dashcore-0.12.56-6.bm.spec`
 * Change the _bumptag_ value in that file from '.taw' to '.bm'
-* Add a stanza in the changelog at the bottom reflective of what you did (copy the format)...
+* Add a stanza in the changelog at the bottom reflective of what you did (copy
+  the format)...
 
 ...and build your RPMs from that...
 
@@ -168,9 +220,12 @@ cp dashcore-0.12.56.spec dashcore-0.12.56-7.bm.spec
 rpmbuild -ba dashcore-0.12.0.56-6.bm.spec
 ```
 
-If all goes to plan, in 30 or 40 minutes you should have a set of binary packages, specifically built to your system with a release of '6.bm'.
+If all goes to plan, in 30 or 40 minutes you should have a set of binary
+packages, specifically built to your system with a release of '6.bm'.
 
-If there is a significant problem where you have to, for example, fix the `configure.ac` file in the `v0.12.0.56.tar.gz` archive (common issue)... you will have to do something like this:
+If there is a significant problem where you have to, for example, fix the
+`configure.ac` file in the `v0.12.0.56.tar.gz` archive (common issue)... you
+will have to do something like this:
 
 * Copy the archive to some working director and then extract it...
 
@@ -180,19 +235,30 @@ If there is a significant problem where you have to, for example, fix the `confi
 
       cp -a dash-0.12.0.56 dash-0.12.0.56.orig --
 
-* Work on the `dash-0.12.0.56/configure.ac` file, build a new patch, and try to rebuild things (iterate iterate iterate). All that is a bit beyond this document, but this is a good place to start to understand RPMs: https://fedoraproject.org/wiki/How_to_create_an_RPM_package
+* Work on the `dash-0.12.0.56/configure.ac` file, build a new patch, and try to
+  rebuild things (iterate iterate iterate). All that is a bit beyond this
+  document, but this is a good place to start to understand RPMs:
+  https://fedoraproject.org/wiki/How_to_create_an_RPM_package
 
-Finally, once built and you are happy, instead of relying on sha256sum hash verification, you can GPG sign your packages. For instruction, read these nice summaries:
+Finally, once built and you are happy, instead of relying on sha256sum hash
+verification, you can GPG sign your packages. For instruction, read these nice
+summaries:
 
 * http://fedoranews.org/tchung/gpg/
 * http://blog.packagecloud.io/eng/2014/11/24/howto-gpg-sign-verify-rpm-packages-yum-repositories/
 
-And if you are feeling really ambitious, you can set up a publicly facing dnf (once called yum) repository and making your packages available through super-automated means to the world (keep reading the Fedora documentation for more information about yum and dnf).
+And if you are feeling really ambitious, you can set up a publicly facing dnf
+(once called yum) repository and making your packages available through
+super-automated means to the world (keep reading the Fedora documentation for
+more information about yum and dnf).
 
 ## Good Luck
 
-That should get you started! Good luck! -todd _(dagrarian on dashtalk and slack, taw, taw00, taw0<n> in various other venues)_
+That should get you started! Good luck! -todd _(dagrarian on dashtalk and
+slack, taw, taw00, taw0<n> in various other venues)_
 
 ...
 
-_Special thanks go out to [Michael Hampton](https://www.ringingliberty.com/bitcoin/) for his mature bitcoin spec file that I originally templated these dashcore specs from._
+_Special thanks go out to [Michael
+Hampton](https://www.ringingliberty.com/bitcoin/) for his mature bitcoin spec
+file from which I originally templated these dashcore specs.
