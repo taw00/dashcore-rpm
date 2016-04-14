@@ -191,4 +191,8 @@ And if you are feeling really ambitious, you can set up a publicly facing dnf (o
 
 ## Good Luck
 
-That should get you started! Good luck! -todd _(dagrarian on dashtalk and slack, taw, or taw00 in various other venues)_
+That should get you started! Good luck! -todd _(dagrarian on dashtalk and slack, taw, taw00, taw0<n> in various other venues)_
+
+...
+
+_Special thanks go out to [Michael Hampton](https://www.ringingliberty.com/bitcoin/) for his mature bitcoin spec file that I originally templated these dashcore specs from._
