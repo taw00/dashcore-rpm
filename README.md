@@ -98,6 +98,7 @@ That should explode it's source code and patch contents into ~/rpmbuild/SOURCES/
 ~/rpmbuild/SPECS/dashcore-0.12.0.56.spec
 ~/rpmbuild/SOURCES/v0.12.0.56.tar.gz
 ~/rpmbuild/SOURCES/dashcore-0.12.0.56-contrib-fedora.tar.gz
+~/rpmbuild/SOURCES/dashcore-0.12.0.56-dashify.tar.gz
 ~/rpmbuild/SOURCES/dashcore-0.12.0.56-fedora.patch
 ```
 
