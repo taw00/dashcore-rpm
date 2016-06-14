@@ -141,7 +141,7 @@ Actually building the binary RPMs is as easy as running the rpmbuild command
 against a specfile. For example:
 
     $ cd ~/rpmbuild/SPECS
-    $ rpmbuild -ba dashcore-0.12.0.56-7.taw.spec
+    $ rpmbuild -ba dashcore-0.12.0.56.spec
 
 If all goes well, the build process may take 30+ minutes and nicely bog down
 your computer. If the build succeeded, the build process will list the RPMS
