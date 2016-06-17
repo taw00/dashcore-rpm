@@ -1,5 +1,7 @@
 # Dash Core Source RPMs
 
+**Current stable source:** `dashcore-0.12.0.58-1.taw.fc23.src.rpm`
+
 **Dash (Digital Cash)** is a privacy-centric digital currency that enables
 instant transactions to anyone, anywhere in the world. It uses peer-to-peer
 technology to operate with no central authority where managing transactions and
