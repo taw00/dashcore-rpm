@@ -60,8 +60,8 @@ usually.
 #### [2] Download a source RPM of your choosing
 
 For example, at the time of this writing the latest dash src.rpm of version
-`0.12.0.56`, is considered "stable". For the purposes of this document, we are
-going use version-release `0.12.0.56-7.taw` as our example.
+`0.12.0.58`, is considered "stable". For the purposes of this document, we are
+going use version-release `0.12.0.58-1.taw` as our example.
 
 #### [3] Verify the RPM has not been tampered with
 
@@ -76,13 +76,13 @@ sha256sums that they should match, are listed.*
 
 From the commandline...
 
-    $ sha256sum dashcore-0.12.0.56-7.taw.src.rpm
+    $ sha256sum dashcore-0.12.0.58-1.taw.src.rpm
 
 The result will be something like this and it needs to match the posted hash
 _(note, this example hash may be incorrect)_.
 
 `
-6960916334de35ddf8d96d87dcb9a188a095d430ada13c068286e483db4edf32  dashcore-0.12.0.56-7.taw.fc23.src.rpm
+f12edc5c22bb4bdeeb7d493de17bc8c703d2592838ddd292eff3c884d3a93a09  dashcore-0.12.0.58-1.taw.fc23.src.rpm
 `
 
 **Verification of the source RPMs digital signature**
@@ -100,9 +100,9 @@ Or navigate to http://github.com/taw00/public-keys and fetch the key manually
 
 (2) Check the signature
 
-    $ rpm --checksig dashcore-0.12.0.56-7.taw.src.rpm
+    $ rpm --checksig dashcore-0.12.0.58-1.taw.src.rpm
 
-You should see something like: `dashcore-0.12.0.56-7.taw.fc23.src.rpm: rsa sha1
+You should see something like: `dashcore-0.12.0.58-1.taw.fc23.src.rpm: rsa sha1
 (md5) pgp md5 OK`
 
 If the package is not signed, or if the result is something less subsantial,
@@ -117,18 +117,18 @@ Again, from the commandline as a normal user... First, move that source RPM into
 
     $ mv dashcore-*.src.rpm ~/rpmbuild/SRPMS/
     $ # Install the sucker:
-    $ rpm -ivh ~/rpmbuild/SRPMS/dashcore-0.12.0.56-7.taw.src.rpm
+    $ rpm -ivh ~/rpmbuild/SRPMS/dashcore-0.12.0.58-1.taw.src.rpm
 
 That should explode source code and patch instruction into
 ~/rpmbuild/SOURCES/ and the build instructions into ~/rpmbuild/SPECS/.
 Something likes this...
 
 ```
-~/rpmbuild/SPECS/dashcore-0.12.0.56.spec
-~/rpmbuild/SOURCES/v0.12.0.56.tar.gz
-~/rpmbuild/SOURCES/dashcore-0.12.0.56-contrib-fedora.tar.gz
-~/rpmbuild/SOURCES/dashcore-0.12.0.56-dashify.tar.gz
-~/rpmbuild/SOURCES/dashcore-0.12.0.56-fedora.patch
+~/rpmbuild/SPECS/dashcore-0.12.0.58.spec
+~/rpmbuild/SOURCES/dash-0.12.0.58.tar.gz
+~/rpmbuild/SOURCES/dashcore-0.12.0.58-contrib-fedora.tar.gz
+~/rpmbuild/SOURCES/dashcore-0.12.0.58-dashify.tar.gz
+~/rpmbuild/SOURCES/dashcore-0.12.0.58-fedora.patch
 ```
 
 #### [5] Build the binaries
@@ -141,7 +141,7 @@ Actually building the binary RPMs is as easy as running the rpmbuild command
 against a specfile. For example:
 
     $ cd ~/rpmbuild/SPECS
-    $ rpmbuild -ba dashcore-0.12.0.56.spec
+    $ rpmbuild -ba dashcore-0.12.0.58.spec
 
 Note, you may run into a failed build. Look at the BuildRequires in the .spec
 file. For example, you may have to install a few RPMs first, like gcc-c++ and
@@ -191,12 +191,16 @@ https://drive.google.com/folderview?id=0B0BT-eTEFVLOdWJjWGRybW1tMjQ
 e92317551373acba1715a42260dedd129ab78870c3899c973b641e6128026081  dash-0.12.0.56-4.taw.fc23.src.rpm
 4b39fbb50b3618bc69dea277c11e56936f877bc79bc5a638988260441f26c43b  dash-0.12.0.56-5.taw.fc23.src.rpm
 93a64f9c2633c2790c67e5a982802d5e266124695cb914281f75331528cf9a63  dash-0.12.0.56-6.taw.fc23.src.rpm
+6960916334de35ddf8d96d87dcb9a188a095d430ada13c068286e483db4edf32  dashcore-0.12.0.56-7.taw.fc23.src.rpm
+
+f12edc5c22bb4bdeeb7d493de17bc8c703d2592838ddd292eff3c884d3a93a09  dashcore-0.12.0.58-1.taw.fc23.src.rpm
+
 6e303f3196f7431152b6f14ca5f9774aa67e53cfe0a1a5dad401fb15834b3a04  dash-0.12.1.x-20160405.0.taw.fc23.src.rpm
 37a26fc2c17d8039a16acf1f3b27eaadfab83c8c935196d2239c30d80dc904ab  dash-0.12.1.x-20160410.taw.fc23.src.rpm
+228a17721c975dfdf9b1b3cca5512cf866f0888c57ff612f0f3006502ca94e9f  dashcore-0.12.1.x-20160413.taw.fc23.src.rpm
+
 123d350149bc0d8c5735a76b095f23425e2e3e255cf58fab0db723c6b634b615  dash-0.13.0.x-20160405.0.taw.fc23.src.rpm
 c18adccfcbba110cd7fd490243f1d46f78498cc98129f31bd7de6ba36ee098f9  dash-0.13.0.x-20160410.taw.fc23.src.rpm
-6960916334de35ddf8d96d87dcb9a188a095d430ada13c068286e483db4edf32  dashcore-0.12.0.56-7.taw.fc23.src.rpm
-228a17721c975dfdf9b1b3cca5512cf866f0888c57ff612f0f3006502ca94e9f  dashcore-0.12.1.x-20160413.taw.fc23.src.rpm
 07cf3cf45ad28b45f3727dfbbcd8407ca0670c2f3426ab335d8d7800cefdf269  dashcore-0.13.0.x-20160413.taw.fc23.src.rpm
 ```
 ----
@@ -209,10 +213,10 @@ your name.
 Let's say your name is Barney Miller (initials "bm").
 
 ```
-cp dashcore-0.12.56.spec dashcore-0.12.56-7.bm.spec
+cp dashcore-0.12.0.58.spec dashcore-0.12.58-1.bm.spec
 ```
 
-* Edit `dashcore-0.12.56-7.bm.spec`
+* Edit `dashcore-0.12.0.58-1.bm.spec`
 * Change the _bumptag_ value in that file from '.taw' to '.bm'
 * Add a stanza in the changelog at the bottom reflective of what you did (copy
   the format)...
@@ -221,32 +225,32 @@ cp dashcore-0.12.56.spec dashcore-0.12.56-7.bm.spec
 
 
 ```
-rpmbuild -ba dashcore-0.12.0.56-7.bm.spec
+rpmbuild -ba dashcore-0.12.0.58-1.bm.spec
 ```
 
 If all goes to plan, in 30 or 40 minutes you should have a set of binary
 packages, specifically built to your system with a release of '7.bm'.
 
 If there is a significant problem where you have to, for example, fix the
-`configure.ac` file in the `v0.12.0.56.tar.gz` archive (common issue)... you
+`configure.ac` file in the `dash-0.12.0.58.tar.gz` archive (common issue)... you
 will have to do something like this:
 
 * Copy the archive to some working director and then extract it...
 
-      tar xvzf v0.12.0.56.tar.gz
+      tar xvzf dash-0.12.0.58.tar.gz
 
 * Copy the resultant (the original pristine) folder…
 
-      cp -a dash-0.12.0.56 dash-0.12.0.56.orig --
+      cp -a dash-0.12.0.58 dash-0.12.0.58.orig --
 
-* Work on the `dash-0.12.0.56/configure.ac` file, build a new patch, and try to
+* Work on the `dash-0.12.0.58/configure.ac` file, build a new patch, and try to
   rebuild things (iterate iterate iterate). All that is a bit beyond this
   document, but this is a good place to start to understand RPMs:
   https://fedoraproject.org/wiki/How_to_create_an_RPM_package
 
 Finally, once built and you are happy, instead of relying on sha256sum hash
 verification, you can GPG sign your packages. For instruction, read these nice
-summaries:
+summaries (hint, you will have to install the `rpm-sign` RPM first):
 
 * http://fedoranews.org/tchung/gpg/
 * http://blog.packagecloud.io/eng/2014/11/24/howto-gpg-sign-verify-rpm-packages-yum-repositories/
