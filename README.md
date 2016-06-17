@@ -143,6 +143,10 @@ against a specfile. For example:
     $ cd ~/rpmbuild/SPECS
     $ rpmbuild -ba dashcore-0.12.0.56.spec
 
+Note, you may run into a failed build. Look at the BuildRequires in the .spec
+file. For example, you may have to install a few RPMs first, like gcc-c++ and
+and others.
+
 If all goes well, the build process may take 30+ minutes and nicely bog down
 your computer. If the build succeeded, the build process will list the RPMS
 that were created at the end of the terminal window output. The binary RPMs
