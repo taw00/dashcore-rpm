@@ -1,6 +1,7 @@
 # Dash Core Source RPMs
 
 **Current stable source:** `dashcore-0.12.0.58-1.taw.fc23.src.rpm`
+**Current tested/running builds:** [Fedora 23 dashcore-0.12.0.58](https://docs.google.com/document/d/18qwFkDKfyZhvecuR5kxiIKmPsjPZjFhRY0EsfHYbD7I)
 
 **Dash (Digital Cash)** is a privacy-centric digital currency that enables
 instant transactions to anyone, anywhere in the world. It uses peer-to-peer
