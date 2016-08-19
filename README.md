@@ -1,4 +1,4 @@
-Note, if you are looking for the "blessed" binaries (tested and runnable versions) built from the the source RPM(s) described below, you can find them here: [Fedora 23 dashcore-0.12.0.58](https://docs.google.com/document/d/18qwFkDKfyZhvecuR5kxiIKmPsjPZjFhRY0EsfHYbD7I)
+Note, if you are looking for the "blessed" binaries (tested and runnable versions) built from the the source RPM(s) described below, you can find them here: [Dash Core Wallet for Fedora Linux](https://docs.google.com/document/d/18qwFkDKfyZhvecuR5kxiIKmPsjPZjFhRY0EsfHYbD7I)
 
 # Dash Core Source RPMs
 
