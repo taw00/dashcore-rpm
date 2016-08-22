@@ -1,8 +1,12 @@
-Note, if you are looking for the "blessed" binaries (tested and runnable versions) built from the the source RPM(s) described below, you can find them here: [Dash Core Wallet for Fedora Linux](https://docs.google.com/document/d/18qwFkDKfyZhvecuR5kxiIKmPsjPZjFhRY0EsfHYbD7I)
+Note, if you are looking for the "blessed" binaries (tested and runnable versions) built from the the source RPM(s) described below, you can find them here: [Dash Core Wallet for Fedora Linux, RHEL, and CentOS](https://docs.google.com/document/d/18qwFkDKfyZhvecuR5kxiIKmPsjPZjFhRY0EsfHYbD7I)
 
 # Dash Core Source RPMs
 
-**Current stable source:** `dashcore-0.12.0.58-1.taw.fc23.src.rpm`
+**Current stable sources:**
+
+* Fedora 23: `dashcore-0.12.0.58-1.taw.fc23.src.rpm`
+* CentOS 7: `dashcore-0.12.0.58-1.taw.el7.centos.src.rpm`
+* RHEL 7: `dashcore-0.12.0.58-1.taw.el7.src.rpm`
 
 **Dash (Digital Cash)** is a privacy-centric digital currency that enables
 instant transactions to anyone, anywhere in the world. It uses peer-to-peer
@@ -33,30 +37,44 @@ Important notes:
 0. There are versions considered **stable** and versions considered
    **experimental**. Versions with an "x" in their version number should be
    considered the most experimental.
-0. These have all been developed and tested on Fedora 23 and x86_64. I welcome
-   folks to experiment with other distributions and architectures and let me
-   know how they go.
+0. **Stable** versions have been developed and tested on Fedora 23, RHEL7, and CentOS7, all on the x86_64 architecture. I welcome folks to experiment with other distributions and architectures.
 
 ----
 
-#### [1]  Set up your rpmbuild environment
+#### [0] For RHEL and CentOS, you need to subscribe to special repositories (ignore this step if you are using Fedora)
 
-RPM? How? What?: https://fedoraproject.org/wiki/How_to_create_an_RPM_package (especially "Preparing your system")
+**RHEL 7 Specific Instructions**
+
+Do this as root (or a sudo'er). Subscribe to all the appropriate repositories and add the EPEL repo
+
+```
+# sudo subscription-manager repos --enable rhel-7-server-rpms
+# sudo subscription-manager repos --enable rhel-7-server-extras-rpms
+# sudo subscription-manager repos --enable rhel-7-server-optional-rpms
+# rpm -ivh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+```
+
+**CentOS 7 Specific Instructions**
+
+As root, do this...
+```
+# yum install epel-release
+```
+
+
+#### [1]  Set up your Build environment
+
+RPM? How? What?: https://fedoraproject.org/wiki/How_to_create_an_RPM_package (read especially "Preparing your system")
 
 In order to build from a source RPM, you first need to set up your environment. If you have not already, do this as your normal user (not root) from the commandline:
 
 ```
-$ sudo dnf install @development-tools fedora-packager rpmdevtools
-$ rpmdev-setuptree
+# For RHEL and CentOS, it's the same, just don't include the "fedora-packager"
+sudo dnf install @development-tools fedora-packager rpmdevtools
+rpmdev-setuptree
 ```
 
 That will set up a working folder tree at `~/rpmbuild/`
-
-For RHEL7 and CentOS7...
-```
-$ sudo yum install @development-tools rpmdevtools
-$ rpmdev-setuptree
-```
 
 _If that fails,_ you need to read more about setting up your development
 environment at the link that was provided earlier.
@@ -71,7 +89,7 @@ usually.
 
 For example, at the time of this writing the latest dash src.rpm of version
 `0.12.0.58`, is considered "stable". For the purposes of this document, we are
-going use version-release `0.12.0.58-1.taw` as our example.
+going use version-release `0.12.0.58-1.taw` as our example. Download the one specific to Fedora, RHEL, or CentOS. If you are attempting to build in a different environment, download the source RPM that as closely matches your platform and experiment away.
 
 #### [3] Verify the RPM has not been tampered with
 
@@ -93,6 +111,8 @@ _(note, this example hash may be incorrect)_.
 
 `
 f12edc5c22bb4bdeeb7d493de17bc8c703d2592838ddd292eff3c884d3a93a09  dashcore-0.12.0.58-1.taw.fc23.src.rpm
+d0ca8947bc71785ccac7a0f80f526b886e36d8efafa7636f4e2433fb4b53bb3b  dashcore-0.12.0.58-1.taw.el7.centos.src.rpm
+94acc5d45b42418a514dd7c1147bf719f1901c03a8ff13a4b99ec7b1fc7a4ce6  dashcore-0.12.0.58-1.taw.el7.src.rpm
 `
 
 **Verification of the source RPMs digital signature**
@@ -110,7 +130,7 @@ Or navigate to http://github.com/taw00/public-keys and fetch the key manually
 
 (2) Check the signature
 
-    $ rpm --checksig dashcore-0.12.0.58-1.taw.src.rpm
+    $ rpm --checksig dashcore-0.12.0.58-1.taw.*.src.rpm
 
 You should see something like: `dashcore-0.12.0.58-1.taw.fc23.src.rpm: rsa sha1
 (md5) pgp md5 OK`
@@ -127,7 +147,7 @@ Again, from the commandline as a normal user... First, move that source RPM into
 
     $ mv dashcore-*.src.rpm ~/rpmbuild/SRPMS/
     $ # Install the sucker:
-    $ rpm -ivh ~/rpmbuild/SRPMS/dashcore-0.12.0.58-1.taw.src.rpm
+    $ rpm -ivh ~/rpmbuild/SRPMS/dashcore-0.12.0.58-1.taw.fc23.src.rpm #Or whatever version you are installing.
 
 That should explode source code and patch instruction into
 ~/rpmbuild/SOURCES/ and the build instructions into ~/rpmbuild/SPECS/.
@@ -155,7 +175,12 @@ against a specfile. For example:
 
 Note, you may run into a failed build. Look at the BuildRequires in the .spec
 file. For example, you may have to install a few RPMs first, like gcc-c++ and
-and others.
+and others. Or just note the output of the failed build and add the packages.
+For example, I had to do something like this for a RHEL7 build...
+
+    $ # Example only!
+    $ sudo yum install qrencode-devel miniupnpc-devel protobuf-devel openssl-devel boost-devel libdb4-cxx-devel libevent-devel qt5-qtbase-devel qt5-linguist
+
 
 If all goes well, the build process may take 30+ minutes and nicely bog down
 your computer. If the build succeeded, the build process will list the RPMS
@@ -204,6 +229,8 @@ e92317551373acba1715a42260dedd129ab78870c3899c973b641e6128026081  dash-0.12.0.56
 6960916334de35ddf8d96d87dcb9a188a095d430ada13c068286e483db4edf32  dashcore-0.12.0.56-7.taw.fc23.src.rpm
 
 f12edc5c22bb4bdeeb7d493de17bc8c703d2592838ddd292eff3c884d3a93a09  dashcore-0.12.0.58-1.taw.fc23.src.rpm
+d0ca8947bc71785ccac7a0f80f526b886e36d8efafa7636f4e2433fb4b53bb3b  dashcore-0.12.0.58-1.taw.el7.centos.src.rpm
+94acc5d45b42418a514dd7c1147bf719f1901c03a8ff13a4b99ec7b1fc7a4ce6  dashcore-0.12.0.58-1.taw.el7.src.rpm
 
 6e303f3196f7431152b6f14ca5f9774aa67e53cfe0a1a5dad401fb15834b3a04  dash-0.12.1.x-20160405.0.taw.fc23.src.rpm
 37a26fc2c17d8039a16acf1f3b27eaadfab83c8c935196d2239c30d80dc904ab  dash-0.12.1.x-20160410.taw.fc23.src.rpm
