@@ -41,19 +41,25 @@ Important notes:
 
 #### [1]  Set up your rpmbuild environment
 
-RPM? How? What?: https://fedoraproject.org/wiki/How_to_create_an_RPM_package
+RPM? How? What?: https://fedoraproject.org/wiki/How_to_create_an_RPM_package (especially "Preparing your system")
 
 In order to build from a source RPM, you first need to set up your environment. If you have not already, do this as your normal user (not root) from the commandline:
 
 ```
+$ sudo dnf install @development-tools fedora-packager rpmdevtools
 $ rpmdev-setuptree
 ```
 
 That will set up a working folder tree at `~/rpmbuild/`
 
-_If that fails,_ you need to set up your development environment, which is
-beyond the scope of this document. For setting up a Fedora system, check this
-out: https://fedoraproject.org/wiki/How_to_create_an_RPM_package
+For RHEL7 and CentOS7...
+```
+$ sudo yum install @development-tools rpmdevtools
+$ rpmdev-setuptree
+```
+
+_If that fails,_ you need to read more about setting up your development
+environment at the link that was provided earlier.
 
 Note, it suggests using a separate user on your system to build RPMs… you can
 do that, but for our examples, I am assuming you are doing it with whatever
@@ -80,7 +86,7 @@ sha256sums that they should match, are listed.*
 
 From the commandline...
 
-    $ sha256sum dashcore-0.12.0.58-1.taw.src.rpm
+    $ sha256sum dashcore-0.12.0.58-1.taw.*.src.rpm
 
 The result will be something like this and it needs to match the posted hash
 _(note, this example hash may be incorrect)_.
