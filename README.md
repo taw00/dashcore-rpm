@@ -1,12 +1,20 @@
-Note, if you are looking for the "blessed" binaries (tested and runnable versions) built from the the source RPM(s) described below, you can find them here: [Dash Core Wallet for Fedora Linux, RHEL, and CentOS](https://docs.google.com/document/d/18qwFkDKfyZhvecuR5kxiIKmPsjPZjFhRY0EsfHYbD7I)
+Note, if you are looking for the "blessed" binaries (tested and runnable
+versions) built from the the source RPM(s) described below, you can find them
+here: [Dash Core Wallet for Fedora Linux, RHEL, and CentOS](https://docs.google.com/document/d/18qwFkDKfyZhvecuR5kxiIKmPsjPZjFhRY0EsfHYbD7I).
+Please remember to backup your Dash wallet before installing another version.
 
 # Dash Core Source RPMs
 
 **Current stable sources:**
 
 * Fedora 23: `dashcore-0.12.0.58-1.taw.fc23.src.rpm`
-* CentOS 7: `dashcore-0.12.0.58-1.taw.el7.centos.src.rpm`
-* RHEL 7: `dashcore-0.12.0.58-1.taw.el7.src.rpm`
+* CentOS and RHEL 7: `dashcore-0.12.0.58-1.taw.el7.centos.src.rpm`
+
+**Current testnet/experimental sources:**
+*Use test RPMs at your own risk*
+
+* Fedora 24: `dashcore-0.12.1-TESTNET20160920.taw.fc24.src.rpm`
+* CentOS and RHEL 7: `dashcore-0.12.1-TESTNET20160920.taw.el7.centos.src.rpm`
 
 **Dash (Digital Cash)** is a privacy-centric digital currency that enables
 instant transactions to anyone, anywhere in the world. It uses peer-to-peer
@@ -45,7 +53,7 @@ Important notes:
 
 **RHEL 7 Specific Instructions**
 
-Do this as root (or a sudo'er). Subscribe to all the appropriate repositories and add the EPEL repo
+Do this as root (or a sudo'er). Subscribe to all the appropriate repositories and add the EPEL repo. Note, RHEL7 has proven to be a challenging platform to build for. Be aware that CentOS7 RPMs should work just fine on RHEL7.
 
 ```
 # sudo subscription-manager repos --enable rhel-7-server-rpms
@@ -70,8 +78,7 @@ In order to build from a source RPM, you first need to set up your environment. 
 
 ```
 # For RHEL and CentOS, it's the same, just don't include the "fedora-packager"
-sudo dnf install @development-tools fedora-packager rpmdevtools
-rpmdev-setuptree
+sudo dnf install @development-tools fedora-packager rpmdevtools rpmdev-setuptree
 ```
 
 That will set up a working folder tree at `~/rpmbuild/`
@@ -87,9 +94,12 @@ usually.
 
 #### [2] Download a source RPM of your choosing
 
-For example, at the time of this writing the latest dash src.rpm of version
+For example, at the time of this writing the latest Dash src.rpm of version
 `0.12.0.58`, is considered "stable". For the purposes of this document, we are
-going use version-release `0.12.0.58-1.taw` as our example. Download the one specific to Fedora, RHEL, or CentOS. If you are attempting to build in a different environment, download the source RPM that as closely matches your platform and experiment away.
+going use version-release `0.12.0.58-1.taw` as our example. Download the one
+specific to your linux distribution Fedora, RHEL, or CentOS. If you are
+attempting to build in a different environment, download the source RPM that as
+closely matches your platform and experiment away.
 
 #### [3] Verify the RPM has not been tampered with
 
@@ -112,7 +122,6 @@ _(note, this example hash may be incorrect)_.
 `
 f12edc5c22bb4bdeeb7d493de17bc8c703d2592838ddd292eff3c884d3a93a09  dashcore-0.12.0.58-1.taw.fc23.src.rpm
 d0ca8947bc71785ccac7a0f80f526b886e36d8efafa7636f4e2433fb4b53bb3b  dashcore-0.12.0.58-1.taw.el7.centos.src.rpm
-94acc5d45b42418a514dd7c1147bf719f1901c03a8ff13a4b99ec7b1fc7a4ce6  dashcore-0.12.0.58-1.taw.el7.src.rpm
 `
 
 **Verification of the source RPMs digital signature**
@@ -127,23 +136,24 @@ You have to do this as the root user.
     $ sudo rpm --import https://raw.githubusercontent.com/taw00/public-keys/master/taw-694673ED-public-2030-01-04.asc
 
 Or navigate to http://github.com/taw00/public-keys and fetch the key manually
+and import it locally.
 
 (2) Check the signature
 
     $ rpm --checksig dashcore-0.12.0.58-1.taw.*.src.rpm
 
-You should see something like: `dashcore-0.12.0.58-1.taw.fc23.src.rpm: rsa sha1
-(md5) pgp md5 OK`
+You should see something like: `dashcore-0.12.0.58-1.taw.fc23.src.rpm: rsa sha1 (md5) pgp md5 OK`
 
-If the package is not signed, or if the result is something less subsantial,
+If the package is not signed, or if the result is something less substantial,
 like just `sha1 md5 OK`, or no signature. Then, I would not recommend
-installing the source RPM. If it says `(MISSING KEYS: RSA#694673ed (MD5)
-PGP#694673ed)`, you did not successfully import my key in step 1.
+installing the source RPM. If it says
+`(MISSING KEYS: RSA#694673ed (MD5) PGP#694673ed)`,
+you did not successfully import my key in step 1.
 
 
 #### [4] Install the source RPM
 
-Again, from the commandline as a normal user... First, move that source RPM into the source RPMs location in the rpmbuild build tree:
+Again, from the command line as a normal user... First, move that source RPM into the source RPMs location in the rpmbuild build tree:
 
     $ mv dashcore-*.src.rpm ~/rpmbuild/SRPMS/
     $ # Install the sucker:
@@ -164,8 +174,8 @@ Something likes this...
 #### [5] Build the binaries
 
 One source RPM will often build multiple binary RPMs. In this case, six RPMs
-are built (with the debuginfo RPM optionally built). See them listed furthin
-into this document.
+are built (with the debuginfo RPM optionally built). See them listed later
+in this document.
 
 Actually building the binary RPMs is as easy as running the rpmbuild command
 against a specfile. For example:
@@ -211,41 +221,31 @@ these...
   when debugging this package.  (99.999% of you do not need to install this)
 
 
-***Are you impatient?*** Binaries for Dash have already been built for Fedora
-23 on x86_64 and can be found here:
-https://drive.google.com/folderview?id=0B0BT-eTEFVLOdWJjWGRybW1tMjQ
+***Are you impatient?*** Binaries for Dash have already been built for these
+linux distributions.
+
+* stable: https://drive.google.com/open?id=0B0BT-eTEFVLORG03ck1tem1idEE
+* test: https://drive.google.com/open?id=0B0BT-eTEFVLOcm12Zzcza2psTzQ
 
 ----
 
 ### The sha256 verification hashes:
 
 ```
-56fb0fa83a0114dd42acc10647ac53568f792c4045a7ceded09b8db5880f0c74  dash-0.12.0.56-0.taw0.fc23.src.rpm
-9996a776c4ddda046b5d5679216533ef95331e321477dfdc140b83b889637a41  dash-0.12.0.56-0.taw2.fc23.src.rpm
-02f8f10864cfb0ae649dbaac82551e53a876d44d0e9067406471bd484f032e35  dash-0.12.0.56-3.taw.fc23.src.rpm
-e92317551373acba1715a42260dedd129ab78870c3899c973b641e6128026081  dash-0.12.0.56-4.taw.fc23.src.rpm
-4b39fbb50b3618bc69dea277c11e56936f877bc79bc5a638988260441f26c43b  dash-0.12.0.56-5.taw.fc23.src.rpm
-93a64f9c2633c2790c67e5a982802d5e266124695cb914281f75331528cf9a63  dash-0.12.0.56-6.taw.fc23.src.rpm
 6960916334de35ddf8d96d87dcb9a188a095d430ada13c068286e483db4edf32  dashcore-0.12.0.56-7.taw.fc23.src.rpm
 
 f12edc5c22bb4bdeeb7d493de17bc8c703d2592838ddd292eff3c884d3a93a09  dashcore-0.12.0.58-1.taw.fc23.src.rpm
 d0ca8947bc71785ccac7a0f80f526b886e36d8efafa7636f4e2433fb4b53bb3b  dashcore-0.12.0.58-1.taw.el7.centos.src.rpm
-94acc5d45b42418a514dd7c1147bf719f1901c03a8ff13a4b99ec7b1fc7a4ce6  dashcore-0.12.0.58-1.taw.el7.src.rpm
 
-6e303f3196f7431152b6f14ca5f9774aa67e53cfe0a1a5dad401fb15834b3a04  dash-0.12.1.x-20160405.0.taw.fc23.src.rpm
-37a26fc2c17d8039a16acf1f3b27eaadfab83c8c935196d2239c30d80dc904ab  dash-0.12.1.x-20160410.taw.fc23.src.rpm
-228a17721c975dfdf9b1b3cca5512cf866f0888c57ff612f0f3006502ca94e9f  dashcore-0.12.1.x-20160413.taw.fc23.src.rpm
-
-123d350149bc0d8c5735a76b095f23425e2e3e255cf58fab0db723c6b634b615  dash-0.13.0.x-20160405.0.taw.fc23.src.rpm
-c18adccfcbba110cd7fd490243f1d46f78498cc98129f31bd7de6ba36ee098f9  dash-0.13.0.x-20160410.taw.fc23.src.rpm
-07cf3cf45ad28b45f3727dfbbcd8407ca0670c2f3426ab335d8d7800cefdf269  dashcore-0.13.0.x-20160413.taw.fc23.src.rpm
+ae6aa089c8cab4e0979d89e9a76e1a5d6dfd738ef6eed4de96517f801f7579e5  dashcore-0.12.1-TESTNET20160920.taw.el7.centos.src.rpm
+06f3ed6d06a3326d99b4801551ae93e56b3bc9f3e2c22122f6e368b2655fab5b  dashcore-0.12.1-TESTNET20160920.taw.fc24.src.rpm
 ```
 ----
 
 ### Advanced: Creating your own tagged builds
 
 If you are feeling a bit froggy, build and compile the binary RPMs specific to
-your name.
+your name/initials.
 
 Let's say your name is Barney Miller (initials "bm").
 
