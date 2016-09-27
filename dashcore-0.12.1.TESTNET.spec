@@ -12,12 +12,14 @@
 # Comment out the next line if you want to produce a dashcore-debuginfo package.
 #% define debug_package % {nil}
 
-# Release bump is the base release number - i.e., we tend to "bump" this often.
-# Recommend including the date for experimental builds
-# for example 20160405, or 20160405.0, 20160405.1, 20160405.2, 20160406.0, etc
-%define bump TESTNET20160920
-# Release bumptag
-%define bumptag .taw
+# Release bump is the base release number - or it is a build identifier
+# It's called a "bump" becoes we tend to "bump" this often.
+# For experimental builds, just make it a date 20160405, or 20160405.0,
+# 20160405.1, 20160405.2, 20160406.0, etc
+# The DashCore builds tend to look something like this: b9bd116
+%define bump b9bd116
+# Release bumptag (builder's initials or a date or both or nil)
+%define bumptag .taw_TESTNET20160926
 #% define bumptag %{nil}
 # ...the release bumptag is used to convey information about who built the
 # package (or other extra information) and is really only useful during early
@@ -469,7 +471,13 @@ exit 0
 
 
 %changelog
-* Tue Sep 20 2016 Todd Warner <toddwarner@protonmail.com> 0.12.1.TESTNET-20160920.taw
+* Mon Sep 26 2016 Todd Warner <toddwarner@protonmail.com> 0.12.1-b9bd116.taw_TESTNET20160926
+- Testnet Testing Phase 2
+- Sourced from: https://dashpay.atlassian.net/builds/browse/DASHL-DEV-644/artifact/JOB1/gitian-linux-dash-src/src
+- Announcement message: https://www.dash.org/forum/threads/12-1-testnet-testing-phase-two-ignition.10818/
+- Testnet documentation: https://dashpay.atlassian.net/wiki/display/DOC/Testnet
+-
+* Tue Sep 20 2016 Todd Warner <toddwarner@protonmail.com> 0.12.1-TESTNET20160920.taw
 - Initial spec
 - ALPHA QUALITY VERSION
 - Testnet version of 12.1 -- nearing public beta-time.

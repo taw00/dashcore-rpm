@@ -10,11 +10,11 @@ Please remember to backup your Dash wallet before installing another version.
 * Fedora 23: `dashcore-0.12.0.58-1.taw.fc23.src.rpm`
 * CentOS and RHEL 7: `dashcore-0.12.0.58-1.taw.el7.centos.src.rpm`
 
-**Current testnet/experimental sources:**
+**Current Testnet Testing Phase 2 - testnet/experimental sources:**
 *Use test RPMs at your own risk*
 
-* Fedora 24: `dashcore-0.12.1-TESTNET20160920.taw.fc24.src.rpm`
-* CentOS and RHEL 7: `dashcore-0.12.1-TESTNET20160920.taw.el7.centos.src.rpm`
+* Fedora 24: `dashcore-0.12.1-b9bd116.taw_TESTNET20160926.fc24.src.rpm`
+* CentOS and RHEL 7: `dashcore-0.12.1-b9bd116.taw_TESTNET20160926.el7.centos.src.rpm`
 
 **Dash (Digital Cash)** is a privacy-centric digital currency that enables
 instant transactions to anyone, anywhere in the world. It uses peer-to-peer
@@ -237,8 +237,10 @@ linux distributions.
 f12edc5c22bb4bdeeb7d493de17bc8c703d2592838ddd292eff3c884d3a93a09  dashcore-0.12.0.58-1.taw.fc23.src.rpm
 d0ca8947bc71785ccac7a0f80f526b886e36d8efafa7636f4e2433fb4b53bb3b  dashcore-0.12.0.58-1.taw.el7.centos.src.rpm
 
-ae6aa089c8cab4e0979d89e9a76e1a5d6dfd738ef6eed4de96517f801f7579e5  dashcore-0.12.1-TESTNET20160920.taw.el7.centos.src.rpm
-06f3ed6d06a3326d99b4801551ae93e56b3bc9f3e2c22122f6e368b2655fab5b  dashcore-0.12.1-TESTNET20160920.taw.fc24.src.rpm
+3f98864f214b64880a108265313db1bdb4fd15e3acaebaa2bacc592539ca4ce8  dashcore-0.12.1-b9bd116.taw_TESTNET20160926.el7.centos.src.rpm
+4963299526a1d3ccb0f1f4bf9e466c22f93b343b337783f4039a51a7c4bfef1c  dashcore-0.12.1-b9bd116.taw_TESTNET20160926.fc24.src.rpm
+
+
 ```
 ----
 
