@@ -82,7 +82,7 @@ sudo dnf install @development-tools fedora-packager rpmdevtools
 ```
 
 ```
-# Create your working folder - ~/rpmbuild/
+# Create your working folder ~/rpmbuild/
 rpmdev-setuptree
 ```
 
