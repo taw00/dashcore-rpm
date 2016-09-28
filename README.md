@@ -193,7 +193,7 @@ and others. Or just note the output of the failed build and add the packages.
 For example, I had to do something like this for a RHEL7 build...
 
     $ # Example only!
-    $ sudo yum install qrencode-devel miniupnpc-devel protobuf-devel openssl-devel boost-devel libdb4-cxx-devel libevent-devel qt5-qtbase-devel qt5-linguist
+    $ sudo dnf install autoconf automake boost-devel java libdb4-cxx-devel libevent-devel libtool miniupnpc-devel openssl-devel protobuf-devel qrencode-devel qt5-linguist qt5-qtbase-devel
 
 
 If all goes well, the build process may take 30+ minutes and nicely bog down
