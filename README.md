@@ -13,8 +13,14 @@ Please remember to backup your Dash wallet before installing another version.
 **Current Testnet Testing Phase 2 - testnet/experimental sources:**
 *Use test RPMs at your own risk*
 
-* Fedora 24: `dashcore-0.12.1-b9bd116.taw_TESTNET20160926.fc24.src.rpm`
-* CentOS and RHEL 7: `dashcore-0.12.1-b9bd116.taw_TESTNET20160926.el7.centos.src.rpm`
+* Fedora 24: `dashcore-0.12.1-test.taw_20160929.fc24.src.rpm`
+* CentOS and RHEL 7: `dashcore-0.12.1-test.taw_20160929.el7.centos.src.rpm`
+
+```
+Sourced from: https://dashpay.atlassian.net/builds/browse/DASHL-DEV/latestSuccessful
+Announcement message: https://www.dash.org/forum/threads/12-1-testnet-testing-phase-two-ignition.10818/
+Testnet documentation (and phase descriptions): https://dashpay.atlassian.net/wiki/display/DOC/Testnet
+```
 
 **Dash (Digital Cash)** is a privacy-centric digital currency that enables
 instant transactions to anyone, anywhere in the world. It uses peer-to-peer
@@ -193,7 +199,7 @@ and others. Or just note the output of the failed build and add the packages.
 For example, I had to do something like this for a RHEL7 build...
 
     $ # Example only!
-    $ sudo dnf install autoconf automake boost-devel java libdb4-cxx-devel libevent-devel libtool miniupnpc-devel openssl-devel protobuf-devel qrencode-devel qt5-linguist qt5-qtbase-devel
+    $ sudo dnf install autoconf automake boost-devel gcc-c++ java libdb4-cxx-devel libevent-devel libtool miniupnpc-devel openssl-devel protobuf-devel qrencode-devel qt5-linguist qt5-qtbase-devel
 
 
 If all goes well, the build process may take 30+ minutes and nicely bog down
@@ -241,10 +247,8 @@ linux distributions.
 f12edc5c22bb4bdeeb7d493de17bc8c703d2592838ddd292eff3c884d3a93a09  dashcore-0.12.0.58-1.taw.fc23.src.rpm
 d0ca8947bc71785ccac7a0f80f526b886e36d8efafa7636f4e2433fb4b53bb3b  dashcore-0.12.0.58-1.taw.el7.centos.src.rpm
 
-3f98864f214b64880a108265313db1bdb4fd15e3acaebaa2bacc592539ca4ce8  dashcore-0.12.1-b9bd116.taw_TESTNET20160926.el7.centos.src.rpm
-4963299526a1d3ccb0f1f4bf9e466c22f93b343b337783f4039a51a7c4bfef1c  dashcore-0.12.1-b9bd116.taw_TESTNET20160926.fc24.src.rpm
-
-
+39dc8141046411efeec4711c8bab36867fc4c6d2526b3be80becbb14f41d8e56 dashcore-0.12.1-test.taw_20160929.fc24.src.rpm
+c0a761d0a8fcf7d4079b6db3de3b047f84e12f8baebf3ec6954f9c549154a264 dashcore-0.12.1-test.taw_20160929.el7.centos.src.rpm
 ```
 ----
 

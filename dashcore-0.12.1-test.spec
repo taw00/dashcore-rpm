@@ -1,31 +1,37 @@
 # Dash (digital cash) cryptocurrency spec file
+# Dash Core QT wallet, masternode, full node, and more.
 #
-# Note, anything with #taw commenting it out is my attempt to block off
-# troublesome, or inappropriate stuff that came over from the bitcoin.spec
-# file that this is based off of. Some things, like the SELinux elements
-# will likely be brought back in when I get a moment.
+# Note about edits within the spec: Any comments beginning with #taw is my
+# attempt to block off troublesome, or inappropriate stuff that came over from
+# the bitcoin.spec file that this is based off of. Some things, like the SELinux
+# elements will likely be brought back in when I get a moment.
 #
-# Enjoy. -taw, aka Todd Warner, Fall 2016
+# Enjoy. Todd Warner, Fall 2016
 
 %define _hardened_build 1
 %global selinux_variants mls strict targeted
-# Comment out the next line if you want to produce a dashcore-debuginfo package.
-#% define debug_package % {nil}
 
-# Release bump is the base release number - or it is a build identifier
-# It's called a "bump" becoes we tend to "bump" this often.
-# For experimental builds, just make it a date 20160405, or 20160405.0,
-# 20160405.1, 20160405.2, 20160406.0, etc
-# The DashCore builds tend to look something like this: b9bd116
-%define bump b9bd116
-# Release bumptag (builder's initials or a date or both or nil)
-%define bumptag .taw_TESTNET20160926
+# To produce a dashcore-debuginfo package:
+#   1. Comment out this define
+#   2. Separate the %'s from their variable (this screws things up)
+# Otherwise, leave it uncommented
+%define debug_package %{nil}
+
+# "bump" refers to "release bump" and is a build identifier For full releases,
+# one will often just name this a numberal for every build: 1, 2, 3, etc. For
+# more experimental builds, one will often just make it a date 20160405, or a
+# date with a numeral, like 20160405.0, 20160405.1, etc.
+# Use whatever is meaningful to you.
+%define bump test
+
+# "bumptag" is used to indicate additional information, usually an identifier,
+# like the builder's initials, or a date, or both, or nil.
+# Example, the original builder was "taw" or "Todd Warner", so he would use .taw
+# Note: If the value is not %{nil} there needs to be a . preceding this value
+# For final releases, one will often opt to nil-out this value.
+%define bumptag .taw_20160929
 #% define bumptag %{nil}
-# ...the release bumptag is used to convey information about who built the
-# package (or other extra information) and is really only useful during early
-# spins of the RPMs. For example, ".taw" is a reference to the original
-# packager, Todd Warner (his initials).
-# For actual releases, you may want to NIL the value above
+
 %define _release %{bump}%{bumptag}
 
 %define _name dash
@@ -73,11 +79,12 @@ Source4: %{extrasbasename}%{pedanticfiletag}-dashify-extra-qt-icons.tar.gz
 
 BuildRoot:	%(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
-BuildRequires:  qrencode-devel miniupnpc-devel protobuf-devel openssl-devel
-BuildRequires:	desktop-file-utils autoconf automake
+BuildRequires: autoconf automake
+BuildRequires: boost-devel gcc-c++ java
+BuildRequires: libdb4-cxx-devel libevent-devel libtool miniupnpc-devel openssl-devel protobuf-devel qrencode-devel
+BuildRequires: qt5-linguist qt5-qtbase-devel
+BuildRequires: desktop-file-utils
 #taw BuildRequires:	checkpolicy selinux-policy-devel selinux-policy-doc
-BuildRequires:	boost-devel libdb4-cxx-devel libevent-devel
-BuildRequires:	libtool java
 
 #taw # Python tests still use OpenSSL for secp256k1, so we still need this to run
 #taw # the testsuite on RHEL7, until Red Hat fixes OpenSSL on RHEL7. It has already
@@ -91,7 +98,7 @@ BuildRequires:	libtool java
 # dashcore-client
 %package client
 Summary: Dash - Digital Cash - Peer-to-peer, privacy-centric, digital currency (dash-qt client)
-BuildRequires:	qt5-qtbase-devel qt5-linguist
+BuildRequires: qt5-qtbase-devel qt5-linguist
 
 
 # dashcore-server
@@ -132,18 +139,15 @@ Summary: Dash - Digital Cash - Peer-to-peer, privacy-centric, digital currency (
 This is the source package for building the Dash Core set of binary packages.
 It will build dashcore-{client,server,utils,libs,devel,debuginfo}.
 
-Dash (Digital Cash) is a privacy-centric digital currency that
-enables instant transactions to anyone, anywhere in the world. It uses
-peer-to-peer technology to operate with no central authority where
-managing transactions and issuing money are carried out collectively
-by the network. Dash is based on the Bitcoin software, but it has a
-two tier network that improves upon it. Dash allows you to remain anonymous
-while you make transactions, similar to cash.
-
-Dash is also a platform for innovative decentralized crypto-tech.
+Dash (Digital Cash) is an open source peer-to-peer cryptocurrency that offers
+instant transactions (InstantSend), private transactions (PrivateSend) and token
+fungibility. Dash operates a decentralized governance and budgeting system,
+making it the first decentralized autonomous organization (DAO). Dash is also a
+platform for innovative decentralized crypto-tech.
 
 Dash is open source and the name of the overarching project. Learn more
-at dash.org.
+at www.dash.org.
+
 
 
 # dashcore-client
@@ -151,18 +155,14 @@ at dash.org.
 This package provides dash-qt, a user-friendly wallet manager for
 personal use.
 
-Dash (Digital Cash) is a privacy-centric digital currency that
-enables instant transactions to anyone, anywhere in the world. It uses
-peer-to-peer technology to operate with no central authority where
-managing transactions and issuing money are carried out collectively
-by the network. Dash is based on the Bitcoin software, but it has a
-two tier network that improves upon it. Dash allows you to remain anonymous
-while you make transactions, similar to cash.
-
-Dash is also a platform for innovative decentralized crypto-tech.
+Dash (Digital Cash) is an open source peer-to-peer cryptocurrency that offers
+instant transactions (InstantSend), private transactions (PrivateSend) and token
+fungibility. Dash operates a decentralized governance and budgeting system,
+making it the first decentralized autonomous organization (DAO). Dash is also a
+platform for innovative decentralized crypto-tech.
 
 Dash is open source and the name of the overarching project. Learn more
-at dash.org.
+at www.dash.org.
 
 
 # dashcore-server
@@ -172,18 +172,14 @@ command line installation without a GUI.  It can be used as a commandline wallet
 and is typically used to run a masternode. Requires dashcore-utils to be
 installed as well
 
-Dash (Digital Cash) is a privacy-centric digital currency that
-enables instant transactions to anyone, anywhere in the world. It uses
-peer-to-peer technology to operate with no central authority where
-managing transactions and issuing money are carried out collectively
-by the network. Dash is based on the Bitcoin software, but it has a
-two tier network that improves upon it. Dash allows you to remain anonymous
-while you make transactions, similar to cash.
-
-Dash is also a platform for innovative decentralized crypto-tech.
+Dash (Digital Cash) is an open source peer-to-peer cryptocurrency that offers
+instant transactions (InstantSend), private transactions (PrivateSend) and token
+fungibility. Dash operates a decentralized governance and budgeting system,
+making it the first decentralized autonomous organization (DAO). Dash is also a
+platform for innovative decentralized crypto-tech.
 
 Dash is open source and the name of the overarching project. Learn more
-at dash.org.
+at www.dash.org.
 
 
 # dashcore-libs
@@ -191,18 +187,14 @@ at dash.org.
 This package provides libbitcoinconsensus, which is used by third party
 applications to verify scripts (and other functionality in the future).
 
-Dash (Digital Cash) is a privacy-centric digital currency that
-enables instant transactions to anyone, anywhere in the world. It uses
-peer-to-peer technology to operate with no central authority where
-managing transactions and issuing money are carried out collectively
-by the network. Dash is based on the Bitcoin software, but it has a
-two tier network that improves upon it. Dash allows you to remain anonymous
-while you make transactions, similar to cash.
-
-Dash is also a platform for innovative decentralized crypto-tech.
+Dash (Digital Cash) is an open source peer-to-peer cryptocurrency that offers
+instant transactions (InstantSend), private transactions (PrivateSend) and token
+fungibility. Dash operates a decentralized governance and budgeting system,
+making it the first decentralized autonomous organization (DAO). Dash is also a
+platform for innovative decentralized crypto-tech.
 
 Dash is open source and the name of the overarching project. Learn more
-at dash.org.
+at www.dash.org.
 
 
 # dashcore-devel
@@ -210,18 +202,14 @@ at dash.org.
 This package provides the libraries and header files necessary to
 compile programs which use libbitcoinconsensus.
 
-Dash (Digital Cash) is a privacy-centric digital currency that
-enables instant transactions to anyone, anywhere in the world. It uses
-peer-to-peer technology to operate with no central authority where
-managing transactions and issuing money are carried out collectively
-by the network. Dash is based on the Bitcoin software, but it has a
-two tier network that improves upon it. Dash allows you to remain anonymous
-while you make transactions, similar to cash.
-
-Dash is also a platform for innovative decentralized crypto-tech.
+Dash (Digital Cash) is an open source peer-to-peer cryptocurrency that offers
+instant transactions (InstantSend), private transactions (PrivateSend) and token
+fungibility. Dash operates a decentralized governance and budgeting system,
+making it the first decentralized autonomous organization (DAO). Dash is also a
+platform for innovative decentralized crypto-tech.
 
 Dash is open source and the name of the overarching project. Learn more
-at dash.org.
+at www.dash.org.
 
 
 # dashcore-utils
@@ -230,18 +218,14 @@ This package provides dash-cli, a utility to communicate with and
 control a Dash server via its RPC protocol, and dash-tx, a utility
 to create custom Dash transactions.
 
-Dash (Digital Cash) is a privacy-centric digital currency that
-enables instant transactions to anyone, anywhere in the world. It uses
-peer-to-peer technology to operate with no central authority where
-managing transactions and issuing money are carried out collectively
-by the network. Dash is based on the Bitcoin software, but it has a
-two tier network that improves upon it. Dash allows you to remain anonymous
-while you make transactions, similar to cash.
-
-Dash is also a platform for innovative decentralized crypto-tech.
+Dash (Digital Cash) is an open source peer-to-peer cryptocurrency that offers
+instant transactions (InstantSend), private transactions (PrivateSend) and token
+fungibility. Dash operates a decentralized governance and budgeting system,
+making it the first decentralized autonomous organization (DAO). Dash is also a
+platform for innovative decentralized crypto-tech.
 
 Dash is open source and the name of the overarching project. Learn more
-at dash.org.
+at www.dash.org.
 
 
 
@@ -252,7 +236,7 @@ at dash.org.
 %setup -q -T -D -b 1 -n %{sourcetree}
 # debian stuff Source2
 %setup -q -T -D -b 2 -n %{sourcetree}
-# pixmaps icons Source3 
+# pixmaps icons Source3
 %setup -q -T -D -b 3 -n %{sourcetree}
 # QT icons Source4 (must come after main sourcetree (overwrites))
 #taw commented out because some core devs expressed displeasure at dark dash icons
@@ -310,6 +294,11 @@ make INSTALL="install -p" CP="cp -p" DESTDIR=%{buildroot} install
 mkdir -p -m 755 %{buildroot}%{_sbindir}
 mv %{buildroot}%{_bindir}/dashd %{buildroot}%{_sbindir}/dashd
 
+# The test binaries
+#rm -f %{buildroot}%{_bindir}/test_*
+#rm -f %{buildroot}%{_bindir}/bench_dash
+
+
 # Install ancillary files
 mkdir -p -m 755 %{buildroot}%{_datadir}/pixmaps
 install -D -m644 -p share/pixmaps/*.{png,xpm,ico,bmp} %{buildroot}%{_datadir}/pixmaps/
@@ -328,12 +317,6 @@ install -D -m644 -p contrib/debian/manpages/dash.conf.5 %{buildroot}%{_mandir}/m
 gzip %{buildroot}%{_mandir}/man1/dashd.1
 gzip %{buildroot}%{_mandir}/man1/dash-qt.1
 gzip %{buildroot}%{_mandir}/man5/dash.conf.5
-
-# Remove test files so that they aren't shipped. Tests have already been run.
-rm -f %{buildroot}%{_bindir}/test_*
-
-# We don't ship bench_dash right now
-rm -f %{buildroot}%{_bindir}/bench_dash
 
 #taw # Install SELinux policy
 #taw for selinuxvariant in %{selinux_variants}
@@ -413,8 +396,10 @@ exit 0
 %license COPYING
 #taw %doc README.md README.gui.redhat doc/assets-attribution.md doc/multiwallet-qt.md doc/release-notes.md doc/tor.md dash.conf.example
 #taw 0.12.0.58 %doc README.md doc/assets-attribution.md doc/multiwallet-qt.md doc/release-notes.md doc/tor.md dash.conf.example
-%doc doc/assets-attribution.md doc/multiwallet-qt.md doc/release-notes.md doc/tor.md
+%doc doc/assets-attribution.md doc/multiwallet-qt.md doc/release-notes.md doc/tor.md doc/keepass.md
 %{_bindir}/dash-qt
+# XXX COMMENT OUT TEST BINARY IF THIS IS A PRODUCTION RELEASE
+%{_bindir}/test_dash-qt
 %{_datadir}/applications/dash-qt.desktop
 %{_datadir}/kde4/services/dash-qt.protocol
 %{_datadir}/pixmaps/*
@@ -427,12 +412,15 @@ exit 0
 %license COPYING
 #taw %doc README.md README.server.redhat doc/dnsseed-policy.md doc/release-notes.md doc/tor.md dash.conf.example
 #TAW 0.12.0.58 %doc README.md doc/dnsseed-policy.md doc/release-notes.md doc/tor.md dash.conf.example
-%doc doc/dnsseed-policy.md doc/release-notes.md doc/tor.md
+%doc doc/dnsseed-policy.md doc/release-notes.md doc/tor.md doc/multiwallet-qt.md doc/guide-startmany.md doc/reduce-traffic.md doc/zmq.md
 %dir %attr(750,dash,dash) %{_localstatedir}/lib/dash
 %dir %attr(750,dash,dash) %{_sysconfdir}/dash
 %config(noreplace) %attr(600,root,root) %{_sysconfdir}/sysconfig/dash
 %doc SELinux/*
 %{_sbindir}/dashd
+# XXX COMMENT OUT TEST BINARIES IF THIS IS A PRODUCTION RELEASE
+%{_bindir}/test_dash
+%{_bindir}/bench_dash
 %{_unitdir}/dash.service
 %{_tmpfilesdir}/dash.conf
 %{_mandir}/man1/dashd.1.gz
@@ -471,19 +459,26 @@ exit 0
 
 
 %changelog
+* Thu Sep 29 2016 Todd Warner <toddwarner@protonmail.com> 0.12.1-testnet
+- Testnet - Testing Phase 2
+- Updated build requirements. Updated descriptions. Updated versioning (yet again).
+- Added test binaries.
+-
+- Sourced from: https://dashpay.atlassian.net/builds/browse/DASHL-DEV/latestSuccessful
+- Announcement message: https://www.dash.org/forum/threads/12-1-testnet-testing-phase-two-ignition.10818/
+- Testnet documentation (and phase descriptions): https://dashpay.atlassian.net/wiki/display/DOC/Testnet
+-
 * Mon Sep 26 2016 Todd Warner <toddwarner@protonmail.com> 0.12.1-b9bd116.taw_TESTNET20160926
-- Testnet Testing Phase 2
+- Testnet Testing Phase 2 - don't use this version
 - Sourced from: https://dashpay.atlassian.net/builds/browse/DASHL-DEV-644/artifact/JOB1/gitian-linux-dash-src/src
 - Announcement message: https://www.dash.org/forum/threads/12-1-testnet-testing-phase-two-ignition.10818/
 - Testnet documentation: https://dashpay.atlassian.net/wiki/display/DOC/Testnet
 -
 * Tue Sep 20 2016 Todd Warner <toddwarner@protonmail.com> 0.12.1-TESTNET20160920.taw
-- Initial spec
+- Initial spec - don't use this version
 - ALPHA QUALITY VERSION
 - Testnet version of 12.1 -- nearing public beta-time.
 - Note: all kinds of unnatural things done with contrib/debian and contrib/fedora copied over from 0.12.0.58
 - Sourced from: https://dashpay.atlassian.net/builds/browse/DASHL-DEV/latestSuccessful
 - ..and GitHub: https://github.com/dashpay/dash
--
--
 -
