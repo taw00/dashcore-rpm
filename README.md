@@ -61,17 +61,16 @@ Important notes:
 Do this as root (or a sudo'er). Subscribe to all the appropriate repositories and add the EPEL repo. Note, RHEL7 has proven to be a challenging platform to build for. Be aware that CentOS7 RPMs should work just fine on RHEL7.
 
 ```
-# sudo subscription-manager repos --enable rhel-7-server-rpms
-# sudo subscription-manager repos --enable rhel-7-server-extras-rpms
-# sudo subscription-manager repos --enable rhel-7-server-optional-rpms
-# rpm -ivh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+$ sudo subscription-manager repos --enable rhel-7-server-rpms
+$ sudo subscription-manager repos --enable rhel-7-server-extras-rpms
+$ sudo subscription-manager repos --enable rhel-7-server-optional-rpms
+$ sudo rpm -ivh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 ```
 
 **CentOS 7 Specific Instructions**
 
-As root, do this...
 ```
-# yum install epel-release
+$ sudo yum install epel-release
 ```
 
 
@@ -82,13 +81,13 @@ RPM? How? What?: https://fedoraproject.org/wiki/How_to_create_an_RPM_package (re
 In order to build from a source RPM, you first need to set up your environment. If you have not already, do this as your normal user (not root) from the commandline:
 
 ```
-# For RHEL and CentOS, it's the same, just don't include the "fedora-packager"
-sudo dnf install @development-tools fedora-packager rpmdevtools
+$ # For RHEL and CentOS, it's the same, just don't include the "fedora-packager"
+$ sudo dnf install @development-tools fedora-packager rpmdevtools
 ```
 
 ```
-# Create your working folder ~/rpmbuild/
-rpmdev-setuptree
+$ # Create your working folder ~/rpmbuild/
+$ rpmdev-setuptree
 ```
 
 
@@ -123,15 +122,17 @@ sha256sums that they should match, are listed.*
 
 From the commandline...
 
-    $ sha256sum dashcore-0.12.0.58-1.taw.*.src.rpm
+```
+$ sha256sum dashcore-0.12.0.58-1.taw.*.src.rpm
+```
 
 The result will be something like this and it needs to match the posted hash
 _(note, this example hash may be incorrect)_.
 
-`
+```
 f12edc5c22bb4bdeeb7d493de17bc8c703d2592838ddd292eff3c884d3a93a09  dashcore-0.12.0.58-1.taw.fc23.src.rpm
 d0ca8947bc71785ccac7a0f80f526b886e36d8efafa7636f4e2433fb4b53bb3b  dashcore-0.12.0.58-1.taw.el7.centos.src.rpm
-`
+```
 
 **Verification of the source RPMs digital signature**
 
@@ -142,31 +143,37 @@ public key.
 (1) Import my GPG key into your RPM keyring if you have not already done so.
 You have to do this as the root user.
 
-    $ sudo rpm --import https://raw.githubusercontent.com/taw00/public-keys/master/taw-694673ED-public-2030-01-04.asc
+```
+$ sudo rpm --import https://raw.githubusercontent.com/taw00/public-keys/master/taw-694673ED-public-2030-01-04.asc
+```
 
 Or navigate to http://github.com/taw00/public-keys and fetch the key manually
 and import it locally.
 
 (2) Check the signature
 
-    $ rpm --checksig dashcore-0.12.0.58-1.taw.*.src.rpm
+`$ rpm --checksig -v dashcore-0.12.0.58-1.taw.*.src.rpm` ...or...
+`$ rpm -Kv dashcore-0.12.0.58-1.taw.*.src.rpm`
 
 You should see something like: `dashcore-0.12.0.58-1.taw.fc23.src.rpm: rsa sha1 (md5) pgp md5 OK`
 
-If the package is not signed, or if the result is something less substantial,
-like just `sha1 md5 OK`, or no signature. Then, I would not recommend
-installing the source RPM. If it says
+And if you used the verbose flag, `-v`, then you should see my key ID: `694673ed`
+
+If the output says something like
 `(MISSING KEYS: RSA#694673ed (MD5) PGP#694673ed)`,
 you did not successfully import my key in step 1.
+
 
 
 #### [4] Install the source RPM
 
 Again, from the command line as a normal user... First, move that source RPM into the source RPMs location in the rpmbuild build tree:
 
-    $ mv dashcore-*.src.rpm ~/rpmbuild/SRPMS/
-    $ # Install the sucker:
-    $ rpm -ivh ~/rpmbuild/SRPMS/dashcore-0.12.0.58-1.taw.fc23.src.rpm #Or whatever version you are installing.
+```
+$ mv dashcore-*.src.rpm ~/rpmbuild/SRPMS/
+$ # Install the sucker:
+$ rpm -ivh ~/rpmbuild/SRPMS/dashcore-0.12.0.58-1.taw.fc23.src.rpm #Or whatever version you are installing.
+```
 
 That should explode source code and patch instruction into
 ~/rpmbuild/SOURCES/ and the build instructions into ~/rpmbuild/SPECS/.
@@ -189,17 +196,20 @@ in this document.
 Actually building the binary RPMs is as easy as running the rpmbuild command
 against a specfile. For example:
 
-    $ cd ~/rpmbuild/SPECS
-    $ rpmbuild -ba dashcore-0.12.0.58.spec
+```
+$ cd ~/rpmbuild/SPECS
+$ rpmbuild -ba dashcore-0.12.0.58.spec
+```
 
 Note, you may run into a failed build. Look at the BuildRequires in the .spec
 file. For example, you may have to install a few RPMs first, like gcc-c++ and
 and others. Or just note the output of the failed build and add the packages.
 For example, I had to do something like this for a RHEL7 build...
 
-    $ # Example only!
-    $ sudo dnf install autoconf automake boost-devel gcc-c++ java libdb4-cxx-devel libevent-devel libtool miniupnpc-devel openssl-devel protobuf-devel qrencode-devel qt5-linguist qt5-qtbase-devel
-
+```
+$ # Example only!
+$ sudo dnf install autoconf automake boost-devel gcc-c++ java libdb4-cxx-devel libevent-devel libtool miniupnpc-devel openssl-devel protobuf-devel qrencode-devel qt5-linguist qt5-qtbase-devel
+```
 
 If all goes well, the build process may take 30+ minutes and nicely bog down
 your computer. If the build succeeded, the build process will list the RPMS
@@ -244,20 +254,20 @@ linux distributions.
 f12edc5c22bb4bdeeb7d493de17bc8c703d2592838ddd292eff3c884d3a93a09  dashcore-0.12.0.58-1.taw.fc23.src.rpm
 d0ca8947bc71785ccac7a0f80f526b886e36d8efafa7636f4e2433fb4b53bb3b  dashcore-0.12.0.58-1.taw.el7.centos.src.rpm
 
-39dc8141046411efeec4711c8bab36867fc4c6d2526b3be80becbb14f41d8e56 dashcore-0.12.1-test.taw_20160929.fc24.src.rpm
-c0a761d0a8fcf7d4079b6db3de3b047f84e12f8baebf3ec6954f9c549154a264 dashcore-0.12.1-test.taw_20160929.el7.centos.src.rpm
+ed14636c34bc7d7fcc582415f3172f040d1868d46aabc3663bfcc8bc2fb91991  dashcore-0.12.1-0test.taw_20160929.fc24.src.rpm
+ec0d113e0c490a0e000879c450425672937e25d336096b166466a50ff20e34e1  dashcore-0.12.1-0test.taw_20160929.el7.centos.src.rpm
 ```
 ----
 
-### Advanced: Creating your own tagged builds
+### Advanced: Creating your own monogrammed builds
 
-If you are feeling a bit froggy, build and compile the binary RPMs specific to
-your name/initials.
+If you are feeling a bit froggy, build and compile the binary RPM packages
+specifically tagged with your name/initials.
 
 Let's say your name is Barney Miller (initials "bm").
 
 ```
-cp dashcore-0.12.0.58.spec dashcore-0.12.58-1.bm.spec
+$ cp dashcore-0.12.0.58.spec dashcore-0.12.58-1.bm.spec
 ```
 
 * Edit `dashcore-0.12.0.58-1.bm.spec`
@@ -269,7 +279,7 @@ cp dashcore-0.12.0.58.spec dashcore-0.12.58-1.bm.spec
 
 
 ```
-rpmbuild -ba dashcore-0.12.0.58-1.bm.spec
+$ rpmbuild -ba dashcore-0.12.0.58-1.bm.spec
 ```
 
 If all goes to plan, in 30 or 40 minutes you should have a set of binary
