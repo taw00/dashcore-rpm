@@ -16,22 +16,21 @@ Please remember to backup your Dash wallet before installing another version.
 * Fedora 24: `dashcore-0.12.1-test.taw_20160929.fc24.src.rpm`
 * CentOS and RHEL 7: `dashcore-0.12.1-test.taw_20160929.el7.centos.src.rpm`
 
-```
-Sourced from: https://dashpay.atlassian.net/builds/browse/DASHL-DEV/latestSuccessful
-Announcement message: https://www.dash.org/forum/threads/12-1-testnet-testing-phase-two-ignition.10818/
-Testnet documentation (and phase descriptions): https://dashpay.atlassian.net/wiki/display/DOC/Testnet
-```
+  Sourced from: https://dashpay.atlassian.net/builds/browse/DASHL-DEV/latestSuccessful<br>
+  Announcement message: https://www.dash.org/forum/threads/12-1-testnet-testing-phase-two-ignition.10818/<br>
+  Testnet documentation (and phase descriptions): https://dashpay.atlassian.net/wiki/display/DOC/Testnet
 
-**Dash (Digital Cash)** is a privacy-centric digital currency that enables
-instant transactions to anyone, anywhere in the world. It uses peer-to-peer
-technology to operate with no central authority where managing transactions and
-issuing money are carried out collectively by the network. Dash is based on the
-Bitcoin software, but it has a two tier network that improves upon it. Dash
-allows you to remain anonymous while you make transactions, similar to cash.
 
-Dash is also a platform for innovative decentralized crypto-tech.
+**Dash (Digital Cash)** is an open source peer-to-peer cryptocurrency that
+offers instant transactions ***(InstantSend)***, private transactions
+***(PrivateSend)*** and token fungibility. Dash operates a decentralized
+governance and budgeting system, making it the first decentralized autonomous
+organization (DAO). Dash is also a platform for innovative decentralized
+crypto-tech.
 
-More about Dash can be found here: https://dash.org
+Dash is open source and the name of the overarching project. Learn more
+at https://www.dash.org/
+
 Dash on github can be found here: https://github.com/dashpay/dash
 
 ----
