@@ -314,14 +314,10 @@ And if you are feeling really ambitious, you can set up a publicly facing dnf
 super-automated means to the world (keep reading the Fedora documentation for
 more information about yum and dnf).
 
-## Good Luck
+## Good Luck - That should get you started! Good luck! -todd
 
-That should get you started! Good luck! -todd<br />
-Say hello. I am _dAgrarian, agrarian, or taw00_ on
-various forums: [dash.org/forums](https://www.dash.org/forum/),
-[#dash:matrix.org](https://riot.im/app/#/room/#dash:matrix.org),
-[#dashpay on freenode IRC](http://freenode.net/), and sometimes
-[https://www.reddit.com/r/dashpay](/r/dashpay/) on Reddit.
+_And come say hello to me. I am **dAgrarian**, **agrarian,** or **taw00** in various forums: [dash.org/forums](https://www.dash.org/forum/), [#dash:matrix.org](https://riot.im/app/#/room/#dash:matrix.org), [#dashpay on freenode IRC](http://freenode.net/), and sometimes [https://www.reddit.com/r/dashpay](/r/dashpay/) on Reddit._
+
 ...
 
 _Special thanks go out to [Michael
