@@ -61,16 +61,18 @@ Important notes:
 Do this as root (or a sudo'er). Subscribe to all the appropriate repositories and add the EPEL repo. Note, RHEL7 has proven to be a challenging platform to build for. Be aware that CentOS7 RPMs should work just fine on RHEL7.
 
 ```
-$ sudo subscription-manager repos --enable rhel-7-server-rpms
-$ sudo subscription-manager repos --enable rhel-7-server-extras-rpms
-$ sudo subscription-manager repos --enable rhel-7-server-optional-rpms
-$ sudo rpm -ivh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+# As a normal user (not root)
+sudo subscription-manager repos --enable rhel-7-server-rpms
+sudo subscription-manager repos --enable rhel-7-server-extras-rpms
+sudo subscription-manager repos --enable rhel-7-server-optional-rpms
+sudo rpm -ivh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 ```
 
 **CentOS 7 Specific Instructions**
 
 ```
-$ sudo yum install epel-release
+# As a normal user (not root)
+sudo yum install epel-release
 ```
 
 
@@ -81,13 +83,15 @@ RPM? How? What?: https://fedoraproject.org/wiki/How_to_create_an_RPM_package (re
 In order to build from a source RPM, you first need to set up your environment. If you have not already, do this as your normal user (not root) from the commandline:
 
 ```
-$ # For RHEL and CentOS, it's the same, just don't include the "fedora-packager"
-$ sudo dnf install @development-tools fedora-packager rpmdevtools
+# As a normal user (not root)
+# For RHEL and CentOS, it's the same, just don't include the "fedora-packager"
+sudo dnf install @development-tools fedora-packager rpmdevtools
 ```
 
 ```
-$ # Create your working folder ~/rpmbuild/
-$ rpmdev-setuptree
+# As a normal user (not root)
+# Create your working folder ~/rpmbuild/
+rpmdev-setuptree
 ```
 
 
@@ -123,7 +127,7 @@ sha256sums that they should match, are listed.*
 From the commandline...
 
 ```
-$ sha256sum dashcore-0.12.0.58-1.taw.*.src.rpm
+sha256sum dashcore-0.12.0.58-1.taw.*.src.rpm
 ```
 
 The result will be something like this and it needs to match the posted hash
@@ -144,7 +148,8 @@ public key.
 You have to do this as the root user.
 
 ```
-$ sudo rpm --import https://raw.githubusercontent.com/taw00/public-keys/master/taw-694673ED-public-2030-01-04.asc
+# As a normal user (not root)
+sudo rpm --import https://raw.githubusercontent.com/taw00/public-keys/master/taw-694673ED-public-2030-01-04.asc
 ```
 
 Or navigate to http://github.com/taw00/public-keys and fetch the key manually
@@ -170,9 +175,10 @@ you did not successfully import my key in step 1.
 Again, from the command line as a normal user... First, move that source RPM into the source RPMs location in the rpmbuild build tree:
 
 ```
-$ mv dashcore-*.src.rpm ~/rpmbuild/SRPMS/
-$ # Install the sucker:
-$ rpm -ivh ~/rpmbuild/SRPMS/dashcore-0.12.0.58-1.taw.fc23.src.rpm #Or whatever version you are installing.
+# As a normal user (not root)
+mv dashcore-*.src.rpm ~/rpmbuild/SRPMS/
+# Install the sucker (do not use sudo here!):
+rpm -ivh ~/rpmbuild/SRPMS/dashcore-0.12.0.58-1.taw.fc23.src.rpm #Or whatever version you are installing.
 ```
 
 That should explode source code and patch instruction into
@@ -197,8 +203,9 @@ Actually building the binary RPMs is as easy as running the rpmbuild command
 against a specfile. For example:
 
 ```
-$ cd ~/rpmbuild/SPECS
-$ rpmbuild -ba dashcore-0.12.0.58.spec
+# As a normal user (not root)
+cd ~/rpmbuild/SPECS
+rpmbuild -ba dashcore-0.12.0.58.spec
 ```
 
 Note, you may run into a failed build. Look at the BuildRequires in the .spec
@@ -207,8 +214,8 @@ and others. Or just note the output of the failed build and add the packages.
 For example, I had to do something like this for a RHEL7 build...
 
 ```
-$ # Example only!
-$ sudo dnf install autoconf automake boost-devel gcc-c++ java libdb4-cxx-devel libevent-devel libtool miniupnpc-devel openssl-devel protobuf-devel qrencode-devel qt5-linguist qt5-qtbase-devel
+# As a normal user (not root) -- Example only!
+sudo dnf install autoconf automake boost-devel gcc-c++ java libdb4-cxx-devel libevent-devel libtool miniupnpc-devel openssl-devel protobuf-devel qrencode-devel qt5-linguist qt5-qtbase-devel
 ```
 
 If all goes well, the build process may take 30+ minutes and nicely bog down
@@ -267,7 +274,8 @@ specifically tagged with your name/initials.
 Let's say your name is Barney Miller (initials "bm").
 
 ```
-$ cp dashcore-0.12.0.58.spec dashcore-0.12.58-1.bm.spec
+# As a normal user (not root)
+cp dashcore-0.12.0.58.spec dashcore-0.12.58-1.bm.spec
 ```
 
 * Edit `dashcore-0.12.0.58-1.bm.spec`
@@ -279,7 +287,8 @@ $ cp dashcore-0.12.0.58.spec dashcore-0.12.58-1.bm.spec
 
 
 ```
-$ rpmbuild -ba dashcore-0.12.0.58-1.bm.spec
+# As a normal user (not root)
+rpmbuild -ba dashcore-0.12.0.58-1.bm.spec
 ```
 
 If all goes to plan, in 30 or 40 minutes you should have a set of binary
