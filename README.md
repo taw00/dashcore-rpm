@@ -5,16 +5,16 @@ Please remember to backup your Dash wallet before installing another version.
 
 # Dash Core Source RPMs
 
-**Current stable sources:**
+**Current stable sources: 0.12.0.58**
 
-* Fedora 23: `dashcore-0.12.0.58-1.taw.fc23.src.rpm`
+* Fedora Linux 23: `dashcore-0.12.0.58-1.taw.fc23.src.rpm`
 * CentOS and RHEL 7: `dashcore-0.12.0.58-1.taw.el7.centos.src.rpm`
 
-**Current Testnet Testing Phase 2 - testnet/experimental sources:**
+**Current Testnet / Experimental sources: 0.12.1 (build 00655)**
 *Use test RPMs at your own risk*
 
-* Fedora 24: `dashcore-0.12.1-1test.taw_20161002.fc24.src.rpm`
-* CentOS and RHEL 7: `dashcore-0.12.1-1test.taw_20161002.el7.centos.src.rpm`
+* Fedora Linux 24: `dashcore-0.12.1-test.b00655.0.taw_20161008.fc24.src.rpm`
+* CentOS and RHEL 7: `dashcore-0.12.1-test.b00655.0.taw_20161008.el7.centos.src.rpm`
 
   Sourced from: https://dashpay.atlassian.net/builds/browse/DASHL-DEV/latestSuccessful<br>
   Announcement message: https://www.dash.org/forum/threads/12-1-testnet-testing-phase-two-ignition.10818/<br>
@@ -254,8 +254,8 @@ linux distributions.
 f12edc5c22bb4bdeeb7d493de17bc8c703d2592838ddd292eff3c884d3a93a09  dashcore-0.12.0.58-1.taw.fc23.src.rpm
 d0ca8947bc71785ccac7a0f80f526b886e36d8efafa7636f4e2433fb4b53bb3b  dashcore-0.12.0.58-1.taw.el7.centos.src.rpm
 
-bf4b0cbbee8b5ec5f0abe16e4a9a78f74a0af2659559ee4cf555128828f20ea9  dashcore-0.12.1-1test.taw_20161002.fc24.src.rpm
-edb70441d81daf21a1407b453b23ce706eeded1713dfa9e617782d579a3f7546  dashcore-0.12.1-1test.taw_20161002.el7.centos.src.rpm
+7a0540d2f75040bd14ea17ed628447366c2147891b61f95fd3bd95a88928ab85  dashcore-0.12.1-test.b00655.0.taw_20161008.fc24.src.rpm
+69e269278a9e1191d57a15b942f976b0513b88fb341cec7aca856ed7d3d8edce  dashcore-0.12.1-test.b00655.0.taw_20161008.el7.centos.src.rpm
 ```
 ----
 
@@ -316,9 +316,12 @@ more information about yum and dnf).
 
 ## Good Luck
 
-That should get you started! Good luck! -todd _(dagrarian on dashtalk and
-slack, taw, taw00, taw0<n> in various other venues)_
-
+That should get you started! Good luck! -todd<br />
+Say hello. I am _dAgrarian, agrarian, or taw00_ on
+various forums: [dash.org/forums](https://www.dash.org/forum/),
+[#dash:matrix.org](https://riot.im/app/#/room/#dash:matrix.org),
+[#dashpay on freenode IRC](http://freenode.net/), and sometimes
+[https://www.reddit.com/r/dashpay](/r/dashpay/) on Reddit.
 ...
 
 _Special thanks go out to [Michael
