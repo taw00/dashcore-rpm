@@ -1,6 +1,6 @@
 Note, if you are looking for the "blessed" binaries (tested and runnable
 versions) built from the the source RPM packages described below, you can find them
-here: [Dash Core Packages for Fedora Linux, RHEL, and CentOS](https://docs.google.com/document/d/18qwFkDKfyZhvecuR5kxiIKmPsjPZjFhRY0EsfHYbD7I).
+here: [Dash Core Packages for Fedora Linux, RHEL, and CentOS](https://drive.google.com/open?id=18qwFkDKfyZhvecuR5kxiIKmPsjPZjFhRY0EsfHYbD7I).
 Please remember to backup your Dash wallet before installing another version.
 
 # Dash Core Source RPMs
