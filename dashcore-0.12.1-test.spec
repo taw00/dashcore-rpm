@@ -6,7 +6,7 @@
 # the bitcoin.spec file that this is based off of. Some things, like the SELinux
 # elements will likely be brought back in when I get a moment.
 #
-# Enjoy. Todd Warner, Fall 2016
+# Enjoy. Todd Warner <t0dd@protonmail.com>, Fall 2016
 
 %define _hardened_build 1
 %global selinux_variants mls strict targeted
@@ -23,14 +23,14 @@
 # date with a numeral, like 20160405.0, 20160405.1, etc.
 # Use whatever is meaningful to you. Just remember if you are iterating, it needs
 # to be consistent and progress in version (so that upgrades work)
-%define bump test.b00655.0
+%define bump test.b00662.0
 
 # "bumptag" is used to indicate additional information, usually an identifier,
 # like the builder's initials, or a date, or both, or nil.
 # Example, the original builder was "taw" or "Todd Warner", so he would use .taw
 # Note: If the value is not %{nil} there needs to be a . preceding this value
 # For final releases, one will often opt to nil-out this value.
-%define bumptag .taw_20161008
+%define bumptag .taw
 #% define bumptag %{nil}
 
 %define _release %{bump}%{bumptag}
@@ -462,33 +462,37 @@ exit 0
 %{_bindir}/dash-tx
 
 
+# More information about Testnet DashCore:
+# Announcement message: https://www.dash.org/forum/threads/12-1-testnet-testing-phase-two-ignition.10818/
+# Testnet documentation: https://dashpay.atlassian.net/wiki/display/DOC/Testnet
+# Masternode setup: https://gist.github.com/moocowmoo/66049a781f8eaa1021306072f19363d4
+#
+# Latest source builds: https://dashpay.atlassian.net/builds/artifact/DASHL-DEV/JOB1/build-latestSuccessful/
+# GitHub: https://github.com/dashpay/dash
+# GitHub for Sentinel (complimentary to dashd): https://github.com/nmarley/sentinel
+
 %changelog
-* Sat Oct 08 2016 Todd Warner <toddwarner@protonmail.com> 0.12.1-test.b00655.0
-- Testnet - Testing Phase 2 -- From the November 07, 2016 build, build 00655
+* Thu Oct 13 2016 Todd Warner <t0dd@protonmail.com> 0.12.1-test.b00662.0
+- Testnet - Testing Phase 2 -- From build 00662 on November 13, 2016
+- Source: https://dashpay.atlassian.net/builds/artifact/DASHL-DEV/JOB1/build-00662
+-
+* Sat Oct 08 2016 Todd Warner <t0dd@protonmail.com> 0.12.1-test.b00655.0
+- Testnet - Testing Phase 2 -- From build 00655 on November 07, 2016
 - Source: https://dashpay.atlassian.net/builds/artifact/DASHL-DEV/JOB1/build-00655
 - Apologies for the changing versioning scheme. I can't seem to settle on something I like.
-- 
-- Announcement message: https://www.dash.org/forum/threads/12-1-testnet-testing-phase-two-ignition.10818/
-- Testnet documentation: https://dashpay.atlassian.net/wiki/display/DOC/Testnet
-- Masternode setup: https://gist.github.com/moocowmoo/66049a781f8eaa1021306072f19363d4
-- 
-- Latest source builds: https://dashpay.atlassian.net/builds/artifact/DASHL-DEV/JOB1/build-latestSuccessful/
-- GitHub: https://github.com/dashpay/dash 
-- GitHub for Sentinel (complimentary to dashd): https://github.com/nmarley/sentinel
 -
-* Sun Oct 02 2016 Todd Warner <toddwarner@protonmail.com> 0.12.1-1test
+* Sun Oct 02 2016 Todd Warner <t0dd@protonmail.com> 0.12.1-1test
 - Testnet - Testing Phase 2 -- From the September 30, 2016 build
 -
-* Thu Sep 29 2016 Todd Warner <toddwarner@protonmail.com> 0.12.1-0test
-- Testnet - Testing Phase 2 -- From the September 27, 2016 build 
+* Thu Sep 29 2016 Todd Warner <t0dd@protonmail.com> 0.12.1-0test
+- Testnet - Testing Phase 2 -- From the September 27, 2016 build
 - Updated build requirements. Updated descriptions. Updated versioning (yet again).
 - Added test binaries.
 -
--
-* Mon Sep 26 2016 Todd Warner <toddwarner@protonmail.com> 0.12.1-b9bd116.taw_TESTNET20160926
+* Mon Sep 26 2016 Todd Warner <t0dd@protonmail.com> 0.12.1-b9bd116.taw_TESTNET20160926
 - Testnet Testing Phase 2 - don't use this version
 -
-* Tue Sep 20 2016 Todd Warner <toddwarner@protonmail.com> 0.12.1-TESTNET20160920.taw
+* Tue Sep 20 2016 Todd Warner <t0dd@protonmail.com> 0.12.1-TESTNET20160920.taw
 - Initial spec - don't use this version
 - Note: all kinds of unnatural things done with contrib/debian and contrib/fedora copied over from 0.12.0.58
 -
