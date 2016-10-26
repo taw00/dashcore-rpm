@@ -10,11 +10,11 @@ Please remember to backup your Dash wallet before installing another version.
 * Fedora Linux 23: `dashcore-0.12.0.58-1.taw.fc23.src.rpm`
 * CentOS and RHEL 7: `dashcore-0.12.0.58-1.taw.el7.centos.src.rpm`
 
-**Current Testnet / Experimental sources: 0.12.1 (build 00672)**
+**Current Testnet / Experimental sources: 0.12.1 (build 00676)**
 *Use test RPMs at your own risk*
 
-* Fedora Linux 24: `dashcore-0.12.1-test.b00672.0.taw.fc24.src.rpm`
-* CentOS and RHEL 7: `dashcore-0.12.1-test.b00672.0.taw.el7.centos.src.rpm`
+* Fedora Linux 24: `dashcore-0.12.1-test.b00676.0.taw.fc24.src.rpm`
+* CentOS and RHEL 7: `dashcore-0.12.1-test.b00676.0.taw.el7.centos.src.rpm`
 
   Sourced from: https://dashpay.atlassian.net/builds/browse/DASHL-DEV/latestSuccessful<br>
   Announcement message: https://www.dash.org/forum/threads/12-1-testnet-testing-phase-two-ignition.10818/<br>
@@ -261,8 +261,8 @@ linux distributions.
 d0ca8947bc71785ccac7a0f80f526b886e36d8efafa7636f4e2433fb4b53bb3b  dashcore-0.12.0.58-1.taw.el7.centos.src.rpm
 f12edc5c22bb4bdeeb7d493de17bc8c703d2592838ddd292eff3c884d3a93a09  dashcore-0.12.0.58-1.taw.fc23.src.rpm
 
-c7dfc34b692b9b2dbdb1bd6559f9414aff37eaed3636f721ce2cabd46fe4c4b0  dashcore-0.12.1-test.b00672.0.taw.el7.centos.src.rpm
-bd0756cf6a1db845a739faf2cc2798ecb5aa322530a1c645c5a981a6d7443358  dashcore-0.12.1-test.b00672.0.taw.fc24.src.rpm
+0f88fac18eb905e7fa0410ff4e5382d6b5c2e0ca3da9a93b9445845b39d80eb1  dashcore-0.12.1-test.b00676.0.taw.el7.centos.src.rpm
+d1e4a24b9060ee30e276e02d2558390d644892385ecd2ba986368bce76f2dfac  dashcore-0.12.1-test.b00676.0.taw.fc24.src.rpm
 ```
 ----
 
