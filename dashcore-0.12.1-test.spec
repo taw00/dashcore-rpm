@@ -23,7 +23,7 @@
 # date with a numeral, like 20160405.0, 20160405.1, etc.
 # Use whatever is meaningful to you. Just remember if you are iterating, it needs
 # to be consistent and progress in version (so that upgrades work)
-%define bump test.b00676.0
+%define bump test.b00679.0
 
 # "bumptag" is used to indicate additional information, usually an identifier,
 # like the builder's initials, or a date, or both, or nil.
@@ -472,45 +472,45 @@ exit 0
 # GitHub for Sentinel (complimentary to dashd): https://github.com/nmarley/sentinel
 
 %changelog
+* Thu Oct 27 2016 Todd Warner <t0dd@protonmail.com> 0.12.1-test.b00679.0
+- Testnet - Testing Phase 2 -- From build 00679
+- Source: https://dashpay.atlassian.net/builds/artifact/DASHL-DEV/JOB1/build-00679
+-
 * Wed Oct 26 2016 Todd Warner <t0dd@protonmail.com> 0.12.1-test.b00676.0
-- Testnet - Testing Phase 2 -- From build 00676 on October 25, 2016
+- Testnet - Testing Phase 2 -- From build 00676
 - Source: https://dashpay.atlassian.net/builds/artifact/DASHL-DEV/JOB1/build-00676
 -
-* Tue Oct 25 2016 Todd Warner <t0dd@protonmail.com> 0.12.1-test.b00674.0
-- Testnet - Testing Phase 2 -- From build 00674 on October 25, 2016
-- Source: https://dashpay.atlassian.net/builds/artifact/DASHL-DEV/JOB1/build-00674
--
 * Mon Oct 24 2016 Todd Warner <t0dd@protonmail.com> 0.12.1-test.b00672.0
-- Testnet - Testing Phase 2 -- From build 00672 on October 23, 2016
+- Testnet - Testing Phase 2 -- From build 00672
 - Source: https://dashpay.atlassian.net/builds/artifact/DASHL-DEV/JOB1/build-00672
 -
 * Sun Oct 23 2016 Todd Warner <t0dd@protonmail.com> 0.12.1-test.b00671.0
-- Testnet - Testing Phase 2 -- From build 00671 on October 23, 2016
+- Testnet - Testing Phase 2 -- From build 00671
 - Source: https://dashpay.atlassian.net/builds/artifact/DASHL-DEV/JOB1/build-00671
 - PrivateSend mixing works once again in this release.
 -
 * Sun Oct 23 2016 Todd Warner <t0dd@protonmail.com> 0.12.1-test.b00670.0
-- Testnet - Testing Phase 2 -- From build 00670 on October 23, 2016
+- Testnet - Testing Phase 2 -- From build 00670
 - Source: https://dashpay.atlassian.net/builds/artifact/DASHL-DEV/JOB1/build-00670
 -
 * Fri Oct 21 2016 Todd Warner <t0dd@protonmail.com> 0.12.1-test.b00668.0
-- Testnet - Testing Phase 2 -- From build 00668 on October 21, 2016
+- Testnet - Testing Phase 2 -- From build 00668
 - Source: https://dashpay.atlassian.net/builds/artifact/DASHL-DEV/JOB1/build-00668
 -
 * Fri Oct 21 2016 Todd Warner <t0dd@protonmail.com> 0.12.1-test.b00667.0
-- Testnet - Testing Phase 2 -- From build 00667 on October 21, 2016
+- Testnet - Testing Phase 2 -- From build 00667
 - Source: https://dashpay.atlassian.net/builds/artifact/DASHL-DEV/JOB1/build-00667
 -
 * Tue Oct 18 2016 Todd Warner <t0dd@protonmail.com> 0.12.1-test.b00666.0
-- Testnet - Testing Phase 2 -- From build 00666 on October 18, 2016
+- Testnet - Testing Phase 2 -- From build 00666
 - Source: https://dashpay.atlassian.net/builds/artifact/DASHL-DEV/JOB1/build-00666
 -
 * Thu Oct 13 2016 Todd Warner <t0dd@protonmail.com> 0.12.1-test.b00662.0
-- Testnet - Testing Phase 2 -- From build 00662 on October 13, 2016
+- Testnet - Testing Phase 2 -- From build 00662
 - Source: https://dashpay.atlassian.net/builds/artifact/DASHL-DEV/JOB1/build-00662
 -
 * Sat Oct 08 2016 Todd Warner <t0dd@protonmail.com> 0.12.1-test.b00655.0
-- Testnet - Testing Phase 2 -- From build 00655 on October 07, 2016
+- Testnet - Testing Phase 2 -- From build 00655
 - Source: https://dashpay.atlassian.net/builds/artifact/DASHL-DEV/JOB1/build-00655
 - Apologies for the changing versioning scheme. I can't seem to settle on something I like.
 -
