@@ -48,9 +48,13 @@ Dash project.
 Important notes:
 
 0. There are versions considered **stable** and versions considered
-   **experimental**. Versions with an "x" in their version number should be
-   considered the most experimental.
-0. **Stable** versions have been developed and tested on Fedora 23, RHEL7, and CentOS7, all on the x86_64 architecture. I welcome folks to experiment with other distributions and architectures.
+   **experimental**. Versions with a "test" in their version number should be
+   considered the most experimental and bleeding edge and should NOT be used
+   with real world currency. When running a testnet wallet or node, ensure
+   you add **testnet = 1** to your dash.conf file to avoid bad things happening.
+0. **Stable** versions have been developed and tested on Fedora 23, RHEL7, and
+   CentOS7, all on the x86_64 architecture. I welcome folks to experiment with
+   other distributions and architectures.
 
 ----
 
@@ -95,7 +99,7 @@ rpmdev-setuptree
 ```
 
 
-_If that fails,_ you need to read more about setting up your development
+***If that fails,*** you need to read more about setting up your development
 environment at the link that was provided earlier.
 
 Note, it suggests using a separate user on your system to build RPMs… you can
@@ -130,13 +134,22 @@ From the commandline...
 sha256sum dashcore-0.12.0.58-1.taw.*.src.rpm
 ```
 
-The result will be something like this and it needs to match the posted hash
-_(note, this example hash may be incorrect)_.
+The result should match the hash for the RPM your downloaded, otherwise the
+download was complete or the RPM is tampered with or I screwed something up in
+this document.
+
+
+**The sha256 verification hashes:**
 
 ```
-f12edc5c22bb4bdeeb7d493de17bc8c703d2592838ddd292eff3c884d3a93a09  dashcore-0.12.0.58-1.taw.fc23.src.rpm
 d0ca8947bc71785ccac7a0f80f526b886e36d8efafa7636f4e2433fb4b53bb3b  dashcore-0.12.0.58-1.taw.el7.centos.src.rpm
+f12edc5c22bb4bdeeb7d493de17bc8c703d2592838ddd292eff3c884d3a93a09  dashcore-0.12.0.58-1.taw.fc23.src.rpm
+
+0c81779058aa3dee362c355007c6e3cb14c23f19b96e64785f53a6d0f936b390  dashcore-0.12.1-test.b00679.0.taw.el7.centos.src.rpm
+28aac04ff647c475f8c1a37bd9777fbaaf2630608e6422db9622a91aa2e40e58  dashcore-0.12.1-test.b00679.0.taw.fc24.src.rpm
 ```
+
+----
 
 **Verification of the source RPMs digital signature**
 
@@ -149,7 +162,13 @@ You have to do this as the root user.
 
 ```
 # As a normal user (not root)
-sudo rpm --import https://raw.githubusercontent.com/taw00/public-keys/master/taw-694673ED-public-2030-01-04.asc
+
+   sudo rpm --import https://raw.githubusercontent.com/taw00/public-keys/master/taw-694673ED-public-2030-01-04.asc
+
+...or (cuz some folks really prefer keybase)...
+
+   sudo rpm --import https://keybase.io/toddwarner/key.asc
+
 ```
 
 Or navigate to http://github.com/taw00/public-keys and fetch the key manually
@@ -247,24 +266,12 @@ these...
   when debugging this package.  (99.999% of you do not need to install this)
 
 
-***Are you impatient?*** Binaries for Dash have already been built for these
-linux distributions.
-
-* stable: https://drive.google.com/open?id=0B0BT-eTEFVLORG03ck1tem1idEE
-* test: https://drive.google.com/open?id=0B0BT-eTEFVLOcm12Zzcza2psTzQ
+***Are you impatient?*** Binaries for Dash Core have already been built for
+these linux distributions. Again, reference the link provided at the beginning
+of this document.
 
 ----
 
-### The sha256 verification hashes:
-
-```
-d0ca8947bc71785ccac7a0f80f526b886e36d8efafa7636f4e2433fb4b53bb3b  dashcore-0.12.0.58-1.taw.el7.centos.src.rpm
-f12edc5c22bb4bdeeb7d493de17bc8c703d2592838ddd292eff3c884d3a93a09  dashcore-0.12.0.58-1.taw.fc23.src.rpm
-
-0c81779058aa3dee362c355007c6e3cb14c23f19b96e64785f53a6d0f936b390  dashcore-0.12.1-test.b00679.0.taw.el7.centos.src.rpm
-28aac04ff647c475f8c1a37bd9777fbaaf2630608e6422db9622a91aa2e40e58  dashcore-0.12.1-test.b00679.0.taw.fc24.src.rpm
-```
-----
 
 ### Advanced: Creating your own monogrammed builds
 
@@ -323,9 +330,15 @@ And if you are feeling really ambitious, you can set up a publicly facing dnf
 super-automated means to the world (keep reading the Fedora documentation for
 more information about yum and dnf).
 
-## Good Luck - That should get you started! Good luck! -todd
+## Good Luck - That should get you started! Good luck! -todd https://keybase.io/toddwarner
 
-_And come say hello to me. I am **dAgrarian**, **agrarian,** or **taw00** in various forums: [dash.org/forums](https://www.dash.org/forum/), [#dash:matrix.org](https://riot.im/app/#/room/#dash:matrix.org), [#dashpay on freenode IRC](http://freenode.net/), and sometimes [https://www.reddit.com/r/dashpay](/r/dashpay/) on Reddit._
+*And come say hello to me. I am **t0dd**, **taw00**, **agrarian**, or
+**dAgrarian** in various forums:
+[dash.org's forums](https://www.dash.org/forum/),
+[#dash:matrix.org](https://riot.im/app/#/room/#dash:matrix.org), [#dashpay on
+freenode IRC](http://freenode.net/), [Dash Knights 2.0 on
+Telegram](https://web.telegram.org/#/im?p=@DashDigitalCash), and sometimes
+[/r/dashpay/](https://www.reddit.com/r/dashpay) on Reddit.*
 
 ...
 
