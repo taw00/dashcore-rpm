@@ -23,7 +23,7 @@
 # date with a numeral, like 20160405.0, 20160405.1, etc.
 # Use whatever is meaningful to you. Just remember if you are iterating, it needs
 # to be consistent and progress in version (so that upgrades work)
-%define bump test.b00679.0
+%define bump test.b00688.0
 
 # "bumptag" is used to indicate additional information, usually an identifier,
 # like the builder's initials, or a date, or both, or nil.
@@ -35,7 +35,7 @@
 
 %define _release %{bump}%{bumptag}
 
-%define _name dash
+%define _name dashcore
 Name: dashcore
 Version: 0.12.1
 Release: %{_release}%{?dist}
@@ -43,7 +43,7 @@ Summary: Dash - Digital Cash - Peer-to-peer, privacy-centric, digital currency
 
 # upstream bitcoin team convention - v0.12.1
 #%define archivebasename v%{version}
-# upstream dash team convention - dash-0.12.1
+# upstream dash team convention - dashcore-0.12.1
 %define archivebasename %{_name}-%{version}
 %define sourcetree %{_name}-%{version}
 
@@ -472,6 +472,12 @@ exit 0
 # GitHub for Sentinel (complimentary to dashd): https://github.com/nmarley/sentinel
 
 %changelog
+* Mon Oct 31 2016 Todd Warner <t0dd@protonmail.com> 0.12.1-test.b00688.0
+- Testnet - Testing Phase 2 -- From build 00688
+- Source: https://dashpay.atlassian.net/builds/artifact/DASHL-DEV/JOB1/build-00688
+- Upstream packaging change dash-0.12.1.tar.gz becomes... dashcore-0.12.1.tar.gz
+- Loads of merges.
+-
 * Thu Oct 27 2016 Todd Warner <t0dd@protonmail.com> 0.12.1-test.b00679.0
 - Testnet - Testing Phase 2 -- From build 00679
 - Source: https://dashpay.atlassian.net/builds/artifact/DASHL-DEV/JOB1/build-00679
