@@ -5,12 +5,12 @@ Please remember to backup your Dash wallet before installing another version.
 
 # Dash Core Source RPMs
 
-**Current stable sources: 0.12.0.58**
+**Stable sources: 0.12.0.58**
 
 * Fedora Linux 23: `dashcore-0.12.0.58-1.taw.fc23.src.rpm`
 * CentOS and RHEL 7: `dashcore-0.12.0.58-1.taw.el7.centos.src.rpm`
 
-**Current Experimental sources: 0.12.1 (build 00688)**
+**Experimental sources: 0.12.1 (build 00688)**
 *Use experimental RPMs at your own risk*
 
 * Fedora Linux 24: `dashcore-0.12.1-test.b00688.0.taw.fc24.src.rpm`
