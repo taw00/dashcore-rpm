@@ -10,8 +10,8 @@ Please remember to backup your Dash wallet before installing another version.
 * Fedora Linux 23: `dashcore-0.12.0.58-1.taw.fc23.src.rpm`
 * CentOS and RHEL 7: `dashcore-0.12.0.58-1.taw.el7.centos.src.rpm`
 
-**Current Testnet / Experimental sources: 0.12.1 (build 00688)**
-*Use test RPMs at your own risk*
+**Current Experimental sources: 0.12.1 (build 00688)**
+*Use experimental RPMs at your own risk*
 
 * Fedora Linux 24: `dashcore-0.12.1-test.b00688.0.taw.fc24.src.rpm`
 * CentOS and RHEL 7: `dashcore-0.12.1-test.b00688.0.taw.el7.centos.src.rpm`
@@ -337,7 +337,7 @@ more information about yum and dnf).
 [dash.org's forums](https://www.dash.org/forum/),
 [#dash:matrix.org](https://riot.im/app/#/room/#dash:matrix.org), [#dashpay on
 freenode IRC](http://freenode.net/), [Dash Knights 2.0 on
-Telegram](https://web.telegram.org/#/im?p=@DashDigitalCash), and sometimes
+Telegram](https://web.telegram.org/#/im?p=@DashDigitalCash), and
 [/r/dashpay/](https://www.reddit.com/r/dashpay) on Reddit.*
 
 ...
