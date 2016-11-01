@@ -330,7 +330,7 @@ And if you are feeling really ambitious, you can set up a publicly facing dnf
 super-automated means to the world (keep reading the Fedora documentation for
 more information about yum and dnf).
 
-## Good Luck - That should get you started! Good luck! -todd https://keybase.io/toddwarner
+## That should get you started! Good luck! -[Todd](https://keybase.io/toddwarner)
 
 *And come say hello to me. I am **t0dd**, **taw00**, **agrarian**, or
 **dAgrarian** in various forums:
