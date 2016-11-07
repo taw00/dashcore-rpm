@@ -162,13 +162,9 @@ You have to do this as the root user.
 
 ```
 # As a normal user (not root)
-
-   sudo rpm --import https://raw.githubusercontent.com/taw00/public-keys/master/taw-694673ED-public-2030-01-04.asc
-
-...or (cuz some folks really prefer keybase)...
-
-   sudo rpm --import https://keybase.io/toddwarner/key.asc
-
+sudo rpm --import https://raw.githubusercontent.com/taw00/public-keys/master/taw-694673ED-public-2030-01-04.asc
+# ...or (cuz some folks really prefer keybase)...
+sudo rpm --import https://keybase.io/toddwarner/key.asc
 ```
 
 Or navigate to http://github.com/taw00/public-keys and fetch the key manually
