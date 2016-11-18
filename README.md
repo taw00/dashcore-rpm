@@ -10,11 +10,12 @@ Please remember to backup your Dash wallet before installing another version.
 * Fedora Linux 23: `dashcore-0.12.0.58-1.taw.fc23.src.rpm`
 * CentOS and RHEL 7: `dashcore-0.12.0.58-1.taw.el7.centos.src.rpm`
 
-**Experimental sources: 0.12.1 (build 00702)**
+**Experimental sources: 0.12.1 (build 00705)**
 *Use experimental RPMs at your own risk*
 
-* Fedora Linux 24: `dashcore-0.12.1-test.b00702.0.taw.fc24.src.rpm`
-* CentOS and RHEL 7: `dashcore-0.12.1-test.b00702.0.taw.el7.centos.src.rpm`
+* Fedora Linux 24: `dashcore-0.12.1-test.b00705.0.taw.fc24.src.rpm`
+* Fedora Linux 25: `dashcore-0.12.1-test.b00705.0.taw.fc25.src.rpm`
+* CentOS and RHEL 7: `dashcore-0.12.1-test.b00705.0.taw.el7.centos.src.rpm`
 
   Sourced from: https://dashpay.atlassian.net/builds/browse/DASHL-DEV/latestSuccessful<br>
   Announcement message: https://www.dash.org/forum/threads/12-1-testnet-testing-phase-two-ignition.10818/<br>
@@ -58,7 +59,7 @@ Important notes:
 
 ----
 
-#### [0] For RHEL and CentOS, you need to subscribe to special repositories (ignore this step if you are using Fedora)
+#### [0] For RHEL and CentOS (*not Fedora*), you need to subscribe to special repositories
 
 **RHEL 7 Specific Instructions**
 
@@ -70,6 +71,8 @@ sudo subscription-manager repos --enable rhel-7-server-rpms
 sudo subscription-manager repos --enable rhel-7-server-extras-rpms
 sudo subscription-manager repos --enable rhel-7-server-optional-rpms
 sudo rpm -ivh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+# For the needed openssl-compat-bitcoin-libs RPM...
+sudo rpm -ivh https://linux.ringingliberty.com/bitcoin/el7/x86_64/bitcoin-release-3-1.noarch.rpm
 ```
 
 **CentOS 7 Specific Instructions**
@@ -77,6 +80,8 @@ sudo rpm -ivh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch
 ```
 # As a normal user (not root)
 sudo yum install epel-release
+# For the needed openssl-compat-bitcoin-libs RPM...
+sudo rpm -ivh https://linux.ringingliberty.com/bitcoin/el7/x86_64/bitcoin-release-3-1.noarch.rpm
 ```
 
 
@@ -145,8 +150,9 @@ this document.
 d0ca8947bc71785ccac7a0f80f526b886e36d8efafa7636f4e2433fb4b53bb3b  dashcore-0.12.0.58-1.taw.el7.centos.src.rpm
 f12edc5c22bb4bdeeb7d493de17bc8c703d2592838ddd292eff3c884d3a93a09  dashcore-0.12.0.58-1.taw.fc23.src.rpm
 
-760748d8fcd1a3d20ad040537aceb78a1da29806f6e7ba9d8138dea9db798784  dashcore-0.12.1-test.b00702.0.taw.el7.centos.src.rpm
-f9a789738435c12c435934c2d01518a470e4d7094e73057fbdea34ec2d257cb7  dashcore-0.12.1-test.b00702.0.taw.fc24.src.rpm
+81685d56656866685e245516ed5dec0f6a7a495783c03e1bab3afa04c79f1e60  dashcore-0.12.1-test.b00705.0.taw.el7.centos.src.rpm
+0fcf962259d278920034a24ed45977f38c05d9d6537947eb2273a4cd8b3cdf35  dashcore-0.12.1-test.b00705.0.taw.fc24.src.rpm
+9f76c89ce750ad776d9db40feac0957672ed5b703f2ea74b864f5c0143cd5540  dashcore-0.12.1-test.b00705.0.taw.fc25.src.rpm
 ```
 
 ----
@@ -228,10 +234,17 @@ file. For example, you may have to install a few RPMs first, like gcc-c++ and
 and others. Or just note the output of the failed build and add the packages.
 For example, I had to do something like this for a RHEL7 build...
 
+**For Fedora:**
 ```
-# As a normal user (not root) -- Example only!
-sudo dnf install autoconf automake boost-devel gcc-c++ java libdb4-cxx-devel libevent-devel libtool miniupnpc-devel openssl-devel protobuf-devel qrencode-devel qt5-linguist qt5-qtbase-devel
+# As a normal user (not root) -- Note, this may not be comprehensive.
+sudo dnf install gcc-c++ qt5-qtbase-devel qt5-linguist qrencode-devel miniupnpc-devel protobuf-devel openssl-devel desktop-file-utils autoconf automake boost-devel libdb4-cxx-devel libevent-devel libtool java python3-zmq zeromq-devel
 ```
+**For CentOS7 and RHEL7:**
+```
+# As a normal user (not root) -- Note, this may not be comprehensive.
+sudo yum install gcc-c++ qt5-qtbase-devel qt5-linguist qrencode-devel miniupnpc-devel protobuf-devel openssl-devel desktop-file-utils autoconf automake boost-devel libdb4-cxx-devel libevent-devel libtool java openssl-compat-bitcoin-libs python34
+```
+
 
 If all goes well, the build process may take 30+ minutes and nicely bog down
 your computer. If the build succeeded, the build process will list the RPMS

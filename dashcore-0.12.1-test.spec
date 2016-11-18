@@ -23,7 +23,7 @@
 # date with a numeral, like 20160405.0, 20160405.1, etc.
 # Use whatever is meaningful to you. Just remember if you are iterating, it needs
 # to be consistent and progress in version (so that upgrades work)
-%define bump test.b00702.0
+%define bump test.b00705.0
 
 # "bumptag" is used to indicate additional information, usually an identifier,
 # like the builder's initials, or a date, or both, or nil.
@@ -72,34 +72,42 @@ Source4: %{extrasbasename}%{pedanticfiletag}-dashify-extra-qt-icons.tar.gz
 #taw Source9:  README.utils.redhat
 #taw Source10: README.gui.redhat
 
-#taw Dest change address patch for Lamassu Bitcoin machine
-#taw Patch1: bitcoin-0.12.0-destchange.patch
+#taw I do not think this is needed for Dash
+# Dest change address patch for Lamassu Bitcoin machine
+#Patch1: bitcoin-0.12.0-destchange.patch
 
 # patch configure.ac (autoconf template) for fedora builds
 #Patch0: %{extrasbasename}%{pedanticfiletag}-fedora.patch
 
 BuildRoot:	%(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
-BuildRequires: autoconf automake
-BuildRequires: boost-devel gcc-c++ java
-BuildRequires: libdb4-cxx-devel libevent-devel libtool miniupnpc-devel openssl-devel protobuf-devel qrencode-devel
-BuildRequires: qt5-linguist qt5-qtbase-devel
-BuildRequires: desktop-file-utils
-#taw BuildRequires:	checkpolicy selinux-policy-devel selinux-policy-doc
+BuildRequires: gcc-c++
+BuildRequires: qt5-qtbase-devel qt5-linguist
+BuildRequires: qrencode-devel miniupnpc-devel protobuf-devel openssl-devel
+BuildRequires: desktop-file-utils autoconf automake
+#BuildRequires: checkpolicy selinux-policy-devel selinux-policy-doc
+BuildRequires: boost-devel libdb4-cxx-devel libevent-devel
+BuildRequires: libtool java
 
-#taw # Python tests still use OpenSSL for secp256k1, so we still need this to run
-#taw # the testsuite on RHEL7, until Red Hat fixes OpenSSL on RHEL7. It has already
-#taw # been fixed on Fedora. Dash itself no longer needs OpenSSL for secp256k1.
-#taw %if 0%{?rhel}
-#taw BuildRequires:	openssl-compat-dashcore-libs
-#taw %endif
+# ZeroMQ not testable yet on RHEL due to lack of python3-zmq so
+# enable only for Fedora
+%if 0%{?fedora}
+BuildRequires: python3-zmq zeromq-devel
+%endif
+
+# Python tests still use OpenSSL for secp256k1, so we still need this to run
+# the testsuite on RHEL7, until Red Hat fixes OpenSSL on RHEL7. It has already
+# been fixed on Fedora. Bitcoin itself no longer needs OpenSSL for secp256k1.
+%if 0%{?rhel}
+BuildRequires: openssl-compat-bitcoin-libs
+BuildRequires: python34
+%endif
 
 
 
 # dashcore-client
 %package client
 Summary: Dash - Digital Cash - Peer-to-peer, privacy-centric, digital currency (dash-qt client)
-BuildRequires: qt5-qtbase-devel qt5-linguist
 
 
 # dashcore-server
@@ -472,6 +480,13 @@ exit 0
 # GitHub for Sentinel (complimentary to dashd): https://github.com/nmarley/sentinel
 
 %changelog
+* Thu Nov 17 2016 Todd Warner <t0dd@protonmail.com> 0.12.1-test.b00705.0
+- Testnet - Testing Phase 2 -- From build 00705, v0.12.1.0-g73568be
+- Source: https://dashpay.atlassian.net/builds/artifact/DASHL-DEV/JOB1/build-00705
+- SHA256: 8a63d216b901ad966f192410448c6e9803ce5f2c84863e83f03988885e8bb666 dashcore-0.12.1.tar.gz
+- RHEL7/CentOS7 needs BuildRequires: openssl-compat-bitcoin-libs in order to run test suites.
+- ZeroMQ BuildRequires was missing. Fixed.
+-
 * Wed Nov 16 2016 Todd Warner <t0dd@protonmail.com> 0.12.1-test.b00702.0
 - Testnet - Testing Phase 2 -- From build 00702, v0.12.1.0-g5128085
 - Source: https://dashpay.atlassian.net/builds/artifact/DASHL-DEV/JOB1/build-00702
@@ -493,7 +508,7 @@ exit 0
 - SHA256: 566b4aac1d361da7797a115c7a2c7f4769f1fbf73cc1f14f581a870e6cc4423a dashcore-0.12.1.tar.gz
 -
 * Fri Nov 11 2016 Todd Warner <t0dd@protonmail.com> 0.12.1-test.b00697.0
-- Testnet - Testing Phase 2 -- From build 00697, v0.12.1.0-gd2f1fd2 
+- Testnet - Testing Phase 2 -- From build 00697, v0.12.1.0-gd2f1fd2
 - Source: https://dashpay.atlassian.net/builds/artifact/DASHL-DEV/JOB1/build-00697
 - SHA256: 556f4e5e6c8b4c11a67d2dc6d0c3bb57112f1cde75b3b9d77c179869d8fd979d dashcore-0.12.1.tar.gz
 -
