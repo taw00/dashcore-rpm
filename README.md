@@ -17,7 +17,7 @@ Please remember to backup your Dash wallet before installing another version.
 * Fedora Linux 25: `dashcore-0.12.1-test.b00706.0.taw.fc25.src.rpm`
 * CentOS and RHEL 7: `dashcore-0.12.1-test.b00706.0.taw.el7.centos.src.rpm`
 
-  Sourced from: https://dashpay.atlassian.net/builds/browse/DASHL-DEV/latestSuccessful<br>
+  Sourced from: [Latest Successful Builds](https://dashpay.atlassian.net/builds/browse/DASHL-DEV/latestSuccessful), more specifically [here](https://dashpay.atlassian.net/builds/artifact/DASHL-DEV/JOB1/build-latestSuccessful/)<br>
   Announcement message: https://www.dash.org/forum/threads/12-1-testnet-testing-phase-two-ignition.10818/<br>
   Testnet documentation (and phase descriptions): https://dashpay.atlassian.net/wiki/display/DOC/Testnet
 
