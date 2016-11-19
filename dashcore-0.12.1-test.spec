@@ -23,7 +23,7 @@
 # date with a numeral, like 20160405.0, 20160405.1, etc.
 # Use whatever is meaningful to you. Just remember if you are iterating, it needs
 # to be consistent and progress in version (so that upgrades work)
-%define bump test.b00705.0
+%define bump test.b00706.0
 
 # "bumptag" is used to indicate additional information, usually an identifier,
 # like the builder's initials, or a date, or both, or nil.
@@ -480,12 +480,18 @@ exit 0
 # GitHub for Sentinel (complimentary to dashd): https://github.com/nmarley/sentinel
 
 %changelog
+* Fri Nov 18 2016 Todd Warner <t0dd@protonmail.com> 0.12.1-test.b00706.0
+- Testnet - Testing Phase 2 -- From build 00706, v0.12.1.0-ge59bee8
+- Source: https://dashpay.atlassian.net/builds/artifact/DASHL-DEV/JOB1/build-00706
+- SHA256: b2f90a4b667737da5d2661ca5952c9ecec51c2ec9d7bf44707c9532a73c5cbbd dashcore-0.12.1.tar.gz
+-
 * Thu Nov 17 2016 Todd Warner <t0dd@protonmail.com> 0.12.1-test.b00705.0
 - Testnet - Testing Phase 2 -- From build 00705, v0.12.1.0-g73568be
 - Source: https://dashpay.atlassian.net/builds/artifact/DASHL-DEV/JOB1/build-00705
 - SHA256: 8a63d216b901ad966f192410448c6e9803ce5f2c84863e83f03988885e8bb666 dashcore-0.12.1.tar.gz
 - RHEL7/CentOS7 needs BuildRequires: openssl-compat-bitcoin-libs in order to run test suites.
 - ZeroMQ BuildRequires was missing. Fixed.
+- Successful builds for Fedora 24, 25, and CentOS7.
 -
 * Wed Nov 16 2016 Todd Warner <t0dd@protonmail.com> 0.12.1-test.b00702.0
 - Testnet - Testing Phase 2 -- From build 00702, v0.12.1.0-g5128085
