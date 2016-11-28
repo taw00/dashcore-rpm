@@ -23,7 +23,7 @@
 # date with a numeral, like 20160405.0, 20160405.1, etc.
 # Use whatever is meaningful to you. Just remember if you are iterating, it needs
 # to be consistent and progress in version (so that upgrades work)
-%define bump test.b00714.0
+%define bump test.b00715.0
 
 # "bumptag" is used to indicate additional information, usually an identifier,
 # like the builder's initials, or a date, or both, or nil.
@@ -473,13 +473,18 @@ exit 0
 # More information about Testnet DashCore:
 # Announcement message: https://www.dash.org/forum/threads/12-1-testnet-testing-phase-two-ignition.10818/
 # Testnet documentation: https://dashpay.atlassian.net/wiki/display/DOC/Testnet
-# Masternode setup: https://gist.github.com/moocowmoo/66049a781f8eaa1021306072f19363d4
+# Testnet masternode documentation: https://gist.github.com/taw00/e978f862ee1ad66722e16bcc8cf18ca5
 #
 # Latest source builds: https://dashpay.atlassian.net/builds/artifact/DASHL-DEV/JOB1/build-latestSuccessful/
 # GitHub: https://github.com/dashpay/dash
 # GitHub for Sentinel (complimentary to dashd): https://github.com/nmarley/sentinel
 
 %changelog
+* Sun Nov 27 2016 Todd Warner <t0dd@protonmail.com> 0.12.1-test.b00715.0
+- Testnet - Testing Phase 2 -- From build 00715, v0.12.1.0-gecdc160
+- Source: https://dashpay.atlassian.net/builds/artifact/DASHL-DEV/JOB1/build-00715
+- SHA256: 8ddaf135e0072520e81e27f6e6170f33bacf935c0ce9d2f2204383c46240b1e7 dashcore-0.12.1.tar.gz
+-
 * Fri Nov 25 2016 Todd Warner <t0dd@protonmail.com> 0.12.1-test.b00714.0
 - Testnet - Testing Phase 2 -- From build 00714, v0.12.1.0-g1b90d66
 - Source: https://dashpay.atlassian.net/builds/artifact/DASHL-DEV/JOB1/build-00714
