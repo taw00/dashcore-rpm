@@ -23,7 +23,7 @@
 # date with a numeral, like 20160405.0, 20160405.1, etc.
 # Use whatever is meaningful to you. Just remember if you are iterating, it needs
 # to be consistent and progress in version (so that upgrades work)
-%define bump test.b00731.0
+%define bump test.b00735.0
 
 # "bumptag" is used to indicate additional information, usually an identifier,
 # like the builder's initials, or a date, or both, or nil.
@@ -480,6 +480,11 @@ exit 0
 # GitHub for Sentinel (complimentary to dashd): https://github.com/nmarley/sentinel
 
 %changelog
+* Wed Dec 7 2016 Todd Warner <t0dd@protonmail.com> 0.12.1-test.b00735.0
+- Testnet - Testing Phase 2 -- From build 00735, v0.12.1.0-g4dac002
+- Source: https://dashpay.atlassian.net/builds/artifact/DASHL-DEV/JOB1/build-00735
+- SHA256: 10588a082a97f7e6d8d390bbae0e72437eda76b1ec466d9075e52f9bbf049a28 dashcore-0.12.1.tar.gz
+-
 * Mon Dec 5 2016 Todd Warner <t0dd@protonmail.com> 0.12.1-test.b00731.0
 - Testnet - Testing Phase 2 -- From build 00731, v0.12.1.0-g0e28de7
 - Source: https://dashpay.atlassian.net/builds/artifact/DASHL-DEV/JOB1/build-00731
