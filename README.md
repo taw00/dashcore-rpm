@@ -150,9 +150,9 @@ this document.
 d0ca8947bc71785ccac7a0f80f526b886e36d8efafa7636f4e2433fb4b53bb3b  dashcore-0.12.0.58-1.taw.el7.centos.src.rpm
 f12edc5c22bb4bdeeb7d493de17bc8c703d2592838ddd292eff3c884d3a93a09  dashcore-0.12.0.58-1.taw.fc23.src.rpm
 
-dae6b7a2ba22a6aa6f6c5ef25d8e9f9beb34a1f06127cfc1d6018856a8faad3c  dashcore-0.12.1-test.b00737.0.taw.el7.centos.src.rpm
-1a255112ffe3371b3a25df486dd0ce62954d492c2222e71bba7e957585f33016  dashcore-0.12.1-test.b00737.0.taw.fc24.src.rpm
-6fe7429140f1ba8b84ef100deb6cd301aa5140629e28e29da7bed50358367c55  dashcore-0.12.1-test.b00737.0.taw.fc25.src.rpm
+a810f4942ca4e8a3a78a90212469b4fd882486632ff415b9ec465b757dce7acb  dashcore-0.12.1-test.b00737.1.taw.el7.centos.src.rpm
+778c40d28355974fcd8589425c39d1107166fc7b08b6cc372dd3852ba41cbc31  dashcore-0.12.1-test.b00737.1.taw.fc24.src.rpm
+7597bbec1b073cc4a00a39985cb35dbb60dfdd440a96aa992f63e91d89d71986  dashcore-0.12.1-test.b00737.1.taw.fc25.src.rpm
 ```
 
 ----

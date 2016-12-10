@@ -6,7 +6,7 @@
 # the bitcoin.spec file that this is based off of. Some things, like the SELinux
 # elements will likely be brought back in when I get a moment.
 #
-# Enjoy. Todd Warner <t0dd@protonmail.com>, Fall 2016
+# Enjoy. Todd Warner <t0dd@protonmail.com>, Winter 2016
 
 %define _hardened_build 1
 %global selinux_variants mls strict targeted
@@ -23,7 +23,7 @@
 # date with a numeral, like 20160405.0, 20160405.1, etc.
 # Use whatever is meaningful to you. Just remember if you are iterating, it needs
 # to be consistent and progress in version (so that upgrades work)
-%define bump test.b00737.0
+%define bump test.b00737.1
 
 # "bumptag" is used to indicate additional information, usually an identifier,
 # like the builder's initials, or a date, or both, or nil.
@@ -63,8 +63,8 @@ Source0: http://github.com/dashpay/%{name}/archive/%{archivebasename}.tar.gz
 # contrib/fedora/ dashd.tmpfiles, dash.sysconfig, dash.service, dash.init(never used?)
 #                 includes some future SELinux policy stuff as well (.te, .if, .fc)
 Source1: %{extrasbasename}%{pedanticfiletag}-contrib-fedora.tar.gz
-#Source2 has a pile of stuff contributed by the debian community (XXX but not currently in the 0.12.1 tarball?)
-Source2: %{extrasbasename}%{pedanticfiletag}-contrib-debian.tar.gz
+# Manpages, desktop stuff, etc.
+Source2: %{extrasbasename}%{pedanticfiletag}-contrib-extras.tar.gz
 # dash icons
 Source3: %{extrasbasename}%{pedanticfiletag}-dashify-pixmaps.tar.gz
 Source4: %{extrasbasename}%{pedanticfiletag}-dashify-extra-qt-icons.tar.gz
@@ -247,7 +247,7 @@ at www.dash.org.
 %setup -q -n %{sourcetree}
 # fedora stuff Source1
 %setup -q -T -D -b 1 -n %{sourcetree}
-# debian stuff Source2
+# extras (manpages, desktop stuff, etc) Source2
 %setup -q -T -D -b 2 -n %{sourcetree}
 # pixmaps icons Source3
 %setup -q -T -D -b 3 -n %{sourcetree}
@@ -298,7 +298,7 @@ make %{?_smp_mflags}
 rm -rf %{buildroot}
 mkdir %{buildroot}
 
-cp contrib/debian/examples/dash.conf dash.conf.example
+cp contrib/extras/examples/dash.conf dash.conf.example
 
 make INSTALL="install -p" CP="cp -p" DESTDIR=%{buildroot} install
 
@@ -316,20 +316,22 @@ mv %{buildroot}%{_bindir}/dashd %{buildroot}%{_sbindir}/dashd
 mkdir -p -m 755 %{buildroot}%{_datadir}/pixmaps
 install -D -m644 -p share/pixmaps/*.{png,xpm,ico,bmp} %{buildroot}%{_datadir}/pixmaps/
 #XXXTAW install -D -m644 -p share/pixmaps/*.{ico,bmp} %{buildroot}%{_datadir}/pixmaps/
-install -D -m644 -p contrib/debian/dash-qt.desktop %{buildroot}%{_datadir}/applications/dash-qt.desktop
+install -D -m644 -p contrib/extras/dash-qt.desktop %{buildroot}%{_datadir}/applications/dash-qt.desktop
 desktop-file-validate %{buildroot}%{_datadir}/applications/dash-qt.desktop
-install -D -m644 -p contrib/debian/dash-qt.protocol %{buildroot}%{_datadir}/kde4/services/dash-qt.protocol
+install -D -m644 -p contrib/extras/dash-qt.protocol %{buildroot}%{_datadir}/kde4/services/dash-qt.protocol
 install -D -m644 -p contrib/fedora/dashd.tmpfiles %{buildroot}%{_tmpfilesdir}/dash.conf
 install -D -m600 -p contrib/fedora/dash.sysconfig %{buildroot}%{_sysconfdir}/sysconfig/dash
 install -D -m644 -p contrib/fedora/dash.service %{buildroot}%{_unitdir}/dash.service
 install -d -m750 -p %{buildroot}%{_localstatedir}/lib/dash
 install -d -m750 -p %{buildroot}%{_sysconfdir}/dash
-install -D -m644 -p contrib/debian/manpages/dashd.1 %{buildroot}%{_mandir}/man1/dashd.1
-install -D -m644 -p contrib/debian/manpages/dash-qt.1 %{buildroot}%{_mandir}/man1/dash-qt.1
-install -D -m644 -p contrib/debian/manpages/dash.conf.5 %{buildroot}%{_mandir}/man5/dash.conf.5
+install -D -m644 -p contrib/extras/manpages/dashd.1 %{buildroot}%{_mandir}/man1/dashd.1
+install -D -m644 -p contrib/extras/manpages/dash-qt.1 %{buildroot}%{_mandir}/man1/dash-qt.1
+install -D -m644 -p contrib/extras/manpages/dash.conf.5 %{buildroot}%{_mandir}/man5/dash.conf.5
+install -D -m644 -p contrib/extras/manpages/masternode.conf.5 %{buildroot}%{_mandir}/man5/masternode.conf.5
 gzip %{buildroot}%{_mandir}/man1/dashd.1
 gzip %{buildroot}%{_mandir}/man1/dash-qt.1
 gzip %{buildroot}%{_mandir}/man5/dash.conf.5
+gzip %{buildroot}%{_mandir}/man5/masternode.conf.5
 
 #taw # Install SELinux policy
 #taw for selinuxvariant in %{selinux_variants}
@@ -417,6 +419,7 @@ exit 0
 %{_datadir}/kde4/services/dash-qt.protocol
 %{_datadir}/pixmaps/*
 %{_mandir}/man1/dash-qt.1.gz
+%{_mandir}/man5/masternode.conf.5.gz
 
 
 # dashcore-server
@@ -438,6 +441,7 @@ exit 0
 %{_tmpfilesdir}/dash.conf
 %{_mandir}/man1/dashd.1.gz
 %{_mandir}/man5/dash.conf.5.gz
+%{_mandir}/man5/masternode.conf.5.gz
 #taw %{_datadir}/selinux/*/dash.pp
 
 
@@ -480,6 +484,13 @@ exit 0
 # GitHub for Sentinel (complimentary to dashd): https://github.com/nmarley/sentinel
 
 %changelog
+* Sat Dec 10 2016 Todd Warner <t0dd@protonmail.com> 0.12.1-test.b00737.1
+- Testnet - Testing Phase 2 -- From build 00737, v0.12.1.0-ga11bd2c
+- Source: https://dashpay.atlassian.net/builds/artifact/DASHL-DEV/JOB1/build-00737
+- SHA256: afb137d1a14dab216723b26813e70d243f878031a3407d5747538b711729f987 dashcore-0.12.1.tar.gz
+- Added a masternode.conf manpage. Edited the other manpages. Beefed up the
+- dash.conf example a bit. And renamed the debian contrib tarball to extras.
+-
 * Fri Dec 9 2016 Todd Warner <t0dd@protonmail.com> 0.12.1-test.b00737.0
 - Testnet - Testing Phase 2 -- From build 00737, v0.12.1.0-ga11bd2c
 - Source: https://dashpay.atlassian.net/builds/artifact/DASHL-DEV/JOB1/build-00737
