@@ -150,9 +150,9 @@ this document.
 d0ca8947bc71785ccac7a0f80f526b886e36d8efafa7636f4e2433fb4b53bb3b  dashcore-0.12.0.58-1.taw.el7.centos.src.rpm
 f12edc5c22bb4bdeeb7d493de17bc8c703d2592838ddd292eff3c884d3a93a09  dashcore-0.12.0.58-1.taw.fc23.src.rpm
 
-a810f4942ca4e8a3a78a90212469b4fd882486632ff415b9ec465b757dce7acb  dashcore-0.12.1-test.b00737.1.taw.el7.centos.src.rpm
-778c40d28355974fcd8589425c39d1107166fc7b08b6cc372dd3852ba41cbc31  dashcore-0.12.1-test.b00737.1.taw.fc24.src.rpm
-7597bbec1b073cc4a00a39985cb35dbb60dfdd440a96aa992f63e91d89d71986  dashcore-0.12.1-test.b00737.1.taw.fc25.src.rpm
+b9dc9d19791c29b0ca14a1d260ae5a30e1dc43d5a87ee4af52a27ae6e2d59887  dashcore-0.12.1-test.b00737.1.taw.el7.centos.src.rpm
+be12b0fd01ee294cbd3b9486455b59fa5bd2cf0037bebdea72d5901007152cdc  dashcore-0.12.1-test.b00737.1.taw.fc24.src.rpm
+9f932dbd25cfaffa22539f210729cf12891145fcc6d82ae284428c735ae2e5f9  dashcore-0.12.1-test.b00737.1.taw.fc25.src.rpm
 ```
 
 ----
@@ -181,7 +181,8 @@ and import it locally.
 `$ rpm --checksig -v dashcore-0.12.0.58-1.taw.*.src.rpm` ...or...
 `$ rpm -Kv dashcore-0.12.0.58-1.taw.*.src.rpm`
 
-You should see something like: `dashcore-0.12.0.58-1.taw.fc23.src.rpm: rsa sha1 (md5) pgp md5 OK`
+You should see something like: `dashcore-0.12.0.58-1.taw.fc23.src.rpm: rsa sha1 (md5) pgp md5 OK`<br />
+*Notice the "pgp" and the "OK"*
 
 And if you used the verbose flag, `-v`, then you should see my key ID: `694673ed`
 
@@ -189,7 +190,9 @@ If the output says something like
 `(MISSING KEYS: RSA#694673ed (MD5) PGP#694673ed)`,
 you did not successfully import my key in step 1.
 
+Another way to look at this information is via...
 
+`$ rpm -qpi dashcore-0.12.0.58-1.taw.*.src.rpm | grep 'Name\|\|Version\|Release\|Signature'`
 
 #### [4] Install the source RPM
 
