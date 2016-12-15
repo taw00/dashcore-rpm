@@ -1,5 +1,3 @@
-# NOTE: FIGHTING THROUGH DEPENDENCY ISSUES AT THE MOMENT. APOLOGIES.
-
 Note, if you are looking for the "blessed" binaries (tested and runnable
 versions) built from the the source RPM packages described below, you can find them
 here: [Dash Core for Fedora Linux, CentOS, and RHEL](https://gist.github.com/taw00/b2382aaabb321b0cf9ce104185e1b3b7).
