@@ -1,5 +1,3 @@
-# NOTE: FIGHTING THROUGH DEPENDENCY ISSUES AT THE MOMENT. APOLOGIES.
-
 Note, if you are looking for the "blessed" binaries (tested and runnable
 versions) built from the the source RPM packages described below, you can find them
 here: [Dash Core for Fedora Linux, CentOS, and RHEL](https://gist.github.com/taw00/b2382aaabb321b0cf9ce104185e1b3b7).
@@ -12,12 +10,12 @@ Please remember to backup your Dash wallet before installing another version.
 * Fedora Linux 23: `dashcore-0.12.0.58-1.taw.fc23.src.rpm`
 * CentOS and RHEL 7: `dashcore-0.12.0.58-1.taw.el7.centos.src.rpm`
 
-**Experimental sources: 0.12.1 (build 00741)**
+**Experimental sources: 0.12.1 (build 00744)**
 *Use experimental RPMs at your own risk*
 
-* Fedora Linux 24: `dashcore-0.12.1-test.b00741.3.taw.fc24.src.rpm`
-* Fedora Linux 25: `dashcore-0.12.1-test.b00741.3.taw.fc25.src.rpm`
-* CentOS and RHEL 7: `dashcore-0.12.1-test.b00741.3.taw.el7.centos.src.rpm`
+* Fedora Linux 24: `dashcore-0.12.1-test.b00744.0.taw.fc24.src.rpm`
+* Fedora Linux 25: `dashcore-0.12.1-test.b00744.0.taw.fc25.src.rpm`
+* CentOS and RHEL 7: `dashcore-0.12.1-test.b00744.0.taw.el7.centos.src.rpm`
 
   Sourced from: [[latest successful builds]](https://dashpay.atlassian.net/builds/browse/DASHL-DEV/latestSuccessful), more specifically these [[latest artifacts]](https://dashpay.atlassian.net/builds/artifact/DASHL-DEV/JOB1/build-latestSuccessful/)<br>
   Announcement message: https://www.dash.org/forum/threads/12-1-testnet-testing-phase-two-ignition.10818/<br>
@@ -152,9 +150,9 @@ this document.
 d0ca8947bc71785ccac7a0f80f526b886e36d8efafa7636f4e2433fb4b53bb3b  dashcore-0.12.0.58-1.taw.el7.centos.src.rpm
 f12edc5c22bb4bdeeb7d493de17bc8c703d2592838ddd292eff3c884d3a93a09  dashcore-0.12.0.58-1.taw.fc23.src.rpm
 
-cd91878eda7615cac694a3216abbcee05e15e3dd498a4eed4bc503d2a3612c51  dashcore-0.12.1-test.b00741.3.taw.el7.centos.src.rpm
-60784161335d37f3dd86cd0cbcf2fa332c4629a2b1d9f9196b036d73a4591b1d  dashcore-0.12.1-test.b00741.3.taw.fc24.src.rpm
-f557f9ab4a7dd6d177f250e9019748fde26ea287b18f97ce3bdbee2ca5114b14  dashcore-0.12.1-test.b00741.3.taw.fc25.src.rpm
+796adb012e3c46769de9c645c360e9f4bd891434c5ec0c124cb1130dabb47fab  dashcore-0.12.1-test.b00744.0.taw.el7.centos.src.rpm
+230f2e3fc7e9cd939c34b6ae14161bfa5eea23b54110384e3e7ecb93461773d7  dashcore-0.12.1-test.b00744.0.taw.fc24.src.rpm
+728f4c6142b481a03738e82cf71174a51e2cc5e59e10a4c65c5b17d4581f67c4  dashcore-0.12.1-test.b00744.0.taw.fc25.src.rpm
 ```
 
 ----
