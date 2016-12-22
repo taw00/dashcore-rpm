@@ -10,7 +10,7 @@ Please remember to backup your Dash wallet before installing another version.
 * Fedora Linux 23: `dashcore-0.12.0.58-1.taw.fc23.src.rpm`
 * CentOS and RHEL 7: `dashcore-0.12.0.58-1.taw.el7.centos.src.rpm`
 
-**Experimental sources: 0.12.1 (build 00744)**
+**Experimental sources: 0.12.1 (build 00750)**
 *Use experimental RPMs at your own risk*
 
 * Fedora Linux 24: `dashcore-0.12.1-test.b00744.0.taw.fc24.src.rpm`
@@ -150,9 +150,9 @@ this document.
 d0ca8947bc71785ccac7a0f80f526b886e36d8efafa7636f4e2433fb4b53bb3b  dashcore-0.12.0.58-1.taw.el7.centos.src.rpm
 f12edc5c22bb4bdeeb7d493de17bc8c703d2592838ddd292eff3c884d3a93a09  dashcore-0.12.0.58-1.taw.fc23.src.rpm
 
-796adb012e3c46769de9c645c360e9f4bd891434c5ec0c124cb1130dabb47fab  dashcore-0.12.1-test.b00744.0.taw.el7.centos.src.rpm
-230f2e3fc7e9cd939c34b6ae14161bfa5eea23b54110384e3e7ecb93461773d7  dashcore-0.12.1-test.b00744.0.taw.fc24.src.rpm
-728f4c6142b481a03738e82cf71174a51e2cc5e59e10a4c65c5b17d4581f67c4  dashcore-0.12.1-test.b00744.0.taw.fc25.src.rpm
+8dd6360cd9d03890c27c4d7ce01e5bd6ddb8f08f2bf0f001bf5beb25b7cdb7d5  dashcore-0.12.1-test.b00750.0.taw.el7.centos.src.rpm
+df28c355a9331d98541b4823729d26fe85400bc67d65369a07648576d0aa92f6  dashcore-0.12.1-test.b00750.0.taw.fc24.src.rpm
+2cc9515d2576dae173b4a1e7259efb89973e6a09fa46377f19c942b2b5f62044  dashcore-0.12.1-test.b00750.0.taw.fc25.src.rpm
 ```
 
 ----
