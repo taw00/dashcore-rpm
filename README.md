@@ -10,12 +10,12 @@ Please remember to backup your Dash wallet before installing another version.
 * Fedora Linux 23: `dashcore-0.12.0.58-1.taw.fc23.src.rpm`
 * CentOS and RHEL 7: `dashcore-0.12.0.58-1.taw.el7.centos.src.rpm`
 
-**Experimental sources: 0.12.1 (build 00750)**
+**Experimental sources: 0.12.1 (build 00751, v0.12.1.0-gc438e74)**
 *Use experimental RPMs at your own risk*
 
-* Fedora Linux 24: `dashcore-0.12.1-test.b00744.0.taw.fc24.src.rpm`
-* Fedora Linux 25: `dashcore-0.12.1-test.b00744.0.taw.fc25.src.rpm`
-* CentOS and RHEL 7: `dashcore-0.12.1-test.b00744.0.taw.el7.centos.src.rpm`
+* Fedora Linux 24: `dashcore-0.12.1-test.b00751.0.taw.fc24.src.rpm`
+* Fedora Linux 25: `dashcore-0.12.1-test.b00751.0.taw.fc25.src.rpm`
+* CentOS and RHEL 7: `dashcore-0.12.1-test.b00751.0.taw.el7.centos.src.rpm`
 
   Sourced from: [[latest successful builds]](https://dashpay.atlassian.net/builds/browse/DASHL-DEV/latestSuccessful), more specifically these [[latest artifacts]](https://dashpay.atlassian.net/builds/artifact/DASHL-DEV/JOB1/build-latestSuccessful/)<br>
   Announcement message: https://www.dash.org/forum/threads/12-1-testnet-testing-phase-two-ignition.10818/<br>
@@ -150,9 +150,9 @@ this document.
 d0ca8947bc71785ccac7a0f80f526b886e36d8efafa7636f4e2433fb4b53bb3b  dashcore-0.12.0.58-1.taw.el7.centos.src.rpm
 f12edc5c22bb4bdeeb7d493de17bc8c703d2592838ddd292eff3c884d3a93a09  dashcore-0.12.0.58-1.taw.fc23.src.rpm
 
-8dd6360cd9d03890c27c4d7ce01e5bd6ddb8f08f2bf0f001bf5beb25b7cdb7d5  dashcore-0.12.1-test.b00750.0.taw.el7.centos.src.rpm
-df28c355a9331d98541b4823729d26fe85400bc67d65369a07648576d0aa92f6  dashcore-0.12.1-test.b00750.0.taw.fc24.src.rpm
-2cc9515d2576dae173b4a1e7259efb89973e6a09fa46377f19c942b2b5f62044  dashcore-0.12.1-test.b00750.0.taw.fc25.src.rpm
+11b11380ca03584ab8faaa4a657c45ad46ff36d1356883b731b5e71ea3fe85c8  dashcore-0.12.1-test.b00751.0.taw.el7.centos.src.rpm
+7b4720eafdc81563036d886783c9b10ea4a2978f6f0403f5d5620cb107b29d7f  dashcore-0.12.1-test.b00751.0.taw.fc24.src.rpm
+c8a7c58840960d92a8293ed7a15fe5b521ce20d9a982fd7fe4ee301f80d31574  dashcore-0.12.1-test.b00751.0.taw.fc25.src.rpm
 ```
 
 ----
