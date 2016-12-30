@@ -23,7 +23,7 @@
 # date with a numeral, like 20160405.0, 20160405.1, etc.
 # Use whatever is meaningful to you. Just remember if you are iterating, it needs
 # to be consistent and progress in version (so that upgrades work)
-%define bump test.b00755.0
+%define bump test.b00756.0
 
 # "bumptag" is used to indicate additional information, usually an identifier,
 # like the builder's initials, or a date, or both, or nil.
@@ -491,9 +491,18 @@ exit 0
 # GitHub for Sentinel (complimentary to dashd): https://github.com/nmarley/sentinel
 
 %changelog
+* Fri Dec 28 2016 Todd Warner <t0dd@protonmail.com> 0.12.1-test.b00756.0
+- Testnet - Testing Phase 2 -- From build 00756, v0.12.1.0-g96dda27
+- SHA256:
+- 60afb2f4d67f6a2071b0646ac485045450d4753dc1fa8212944aeec0d1a17320  dashcore-0.12.1.tar.gz
+- 362d950219ce60ca2b45acda1b94b50d305789c2c001a7203dd13946b5da8c60  dashcore-0.12.1-contrib-extras.tar.gz
+- c63cf7313cdb01eb0a14f0b4108aab94d1ea740b9cc6160a12cb1a9f4f11c9ba  dashcore-0.12.1-contrib-fedora.tar.gz
+- f945bd0f394b292223460cb063c432797f9f52dfad73141a11332a935dcfb5be  dashcore-0.12.1-dashify-extra-qt-icons.tar.gz
+- f4714741df69fa3ca785f509eecd2dd678d2c3f364aeb8102edf503350e44e57  dashcore-0.12.1-dashify-pixmaps.tar.gz
+-
 * Wed Dec 28 2016 Todd Warner <t0dd@protonmail.com> 0.12.1-test.b00755.0
-- Testnet - Testing Phase 2 -- From build 00755,
-- SHA256:  dashcore-0.12.1.tar.gz
+- Testnet - Testing Phase 2 -- From build 00755, v0.12.1.0-geddfa5a
+- SHA256: c0fdff31584c4b85233a8f82d92027d5f895bbc0844ea3125e2407b0e7e02ed5 dashcore-0.12.1.tar.gz
 -
 * Mon Dec 26 2016 Todd Warner <t0dd@protonmail.com> 0.12.1-test.b00754.0
 - Testnet - Testing Phase 2 -- From build 00754, v0.12.1.0-g32d5f4b
