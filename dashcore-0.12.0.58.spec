@@ -15,7 +15,7 @@
 # Release bump is the base release number - i.e., we tend to "bump" this often.
 # Recommend including the date for experimental builds
 # for example 20160405.0, 20160405.1, 20160405.2, 20160406.0, etc
-%define bump 1
+%define bump 2
 # release bumptag
 %define bumptag .taw
 # % define bumptag % {nil}
@@ -69,28 +69,38 @@ Patch0: %{extrasbasename}%{pedanticfiletag}-fedora.patch
 
 BuildRoot:	%(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
-BuildRequires:  qrencode-devel miniupnpc-devel protobuf-devel openssl-devel
-BuildRequires:	desktop-file-utils autoconf automake
-#taw BuildRequires:	checkpolicy selinux-policy-devel selinux-policy-doc
-BuildRequires:	boost-devel libdb4-cxx-devel libevent-devel
-BuildRequires:	libtool java gcc-c++
-#taw # Python tests still use OpenSSL for secp256k1, so we still need this to run
-#taw # the testsuite on RHEL7, until Red Hat fixes OpenSSL on RHEL7. It has already
-#taw # been fixed on Fedora. Dash itself no longer needs OpenSSL for secp256k1.
-#taw %if 0%{?rhel}
-#taw BuildRequires:	openssl-compat-dashcore-libs
-#taw %endif
+BuildRequires: gcc-c++
+BuildRequires: qt5-qtbase-devel qt5-linguist
+BuildRequires: qrencode-devel miniupnpc-devel protobuf-devel openssl-devel
+BuildRequires: desktop-file-utils autoconf automake
+#BuildRequires: checkpolicy selinux-policy-devel selinux-policy-doc
+BuildRequires: boost-devel libdb4-cxx-devel libevent-devel
+BuildRequires: libtool java
+
+# ZeroMQ not testable yet on RHEL due to lack of python3-zmq so
+# enable only for Fedora
+%if 0%{?fedora}
+BuildRequires: python3-zmq zeromq-devel
+%endif
+
+# Python tests still use OpenSSL for secp256k1, so we still need this to run
+# the testsuite on RHEL7, until Red Hat fixes OpenSSL on RHEL7. It has already
+# been fixed on Fedora. Bitcoin itself no longer needs OpenSSL for secp256k1.
+%if 0%{?rhel}
+BuildRequires: openssl-compat-bitcoin-libs
+BuildRequires: python34
+%endif
+
 
 
 # dashcore-client
 %package client
-Summary: Dash - Digital Cash - Peer-to-peer, privacy-centric, digital currency (dash-qt client)
-BuildRequires:	qt5-qtbase-devel qt5-linguist
+Summary: Dash - Digital Cash - A Peer-to-peer, privacy-centric, digital currency (dash-qt client)
 
 
 # dashcore-server
 %package server
-Summary: Dash - Digital Cash - Peer-to-peer, privacy-centric, digital currency (dashd server)
+Summary: Dash - Digital Cash - A Peer-to-peer, privacy-centric, digital currency (dashd server)
 Requires(post):	systemd
 Requires(preun): systemd
 Requires(postun): systemd
@@ -101,23 +111,26 @@ Requires(postun): /usr/sbin/semodule, /sbin/restorecon, /sbin/fixfiles
 #taw Requires: selinux-policy
 #taw Requires: policycoreutils-python
 Requires: openssl-libs
-Requires:	dashcore-utils%{_isa} = %{version}
+#Requires:	dashcore-utils%{?_isa} = %{version}
+#Requires:	dashcore-utils%{?_isa} = %{version}-%{release}
+Requires:	dashcore-utils = %{version}-%{release}
 
 
 # dashcore-libs
 %package libs
-Summary: Dash - Digital Cash - Peer-to-peer, privacy-centric, digital currency (consensus libraries)
+Summary: Dash - Digital Cash - A Peer-to-peer, privacy-centric, digital currency (consensus libraries)
 
 
 # dashcore-devel
 %package devel
-Summary: Dash - Digital Cash - Peer-to-peer, privacy-centric, digital currency (dev libraries and headers)
-Requires:	bitcoin-libs%{?_isa} = %{version}-%{release}
+Summary: Dash - Digital Cash - A Peer-to-peer, privacy-centric, digital currency (dev libraries and headers)
+#Requires:	dashcore-libs%{?_isa} = %{version}-%{release}
+Requires:	dashcore-libs = %{version}-%{release}
 
 
 # dashcore-utils
 %package utils
-Summary: Dash - Digital Cash - Peer-to-peer, privacy-centric, digital currency (commandline utils)
+Summary: Dash - Digital Cash - A Peer-to-peer, privacy-centric, digital currency (commandline utils)
 
 
 
@@ -469,7 +482,12 @@ exit 0
 
 
 %changelog
-* Mon Jun 13 2016 Todd Warner <toddwarner@protonmail.com> 0.12.0.58-1.taw
+* Fri Dec 30 2016 Todd Warner <t0dd@protonmail.com> 0.12.0.58-2.taw
+- Updating BuildRequires to include ZeroMQ and in support of newer Fedora
+- Fixing a couple packaging errors (incorrect Requires for dashcore-server)
+- Removed %{_isa} from Requires since this is now frowned upon.
+-
+* Mon Jun 13 2016 Todd Warner <t0dd@protonmail.com> 0.12.0.58-1.taw
 - Added gcc-c++ to the BuildRequires
 -
 - The only release note for this version, so I include it here.
@@ -482,37 +500,37 @@ exit 0
 - https://github.com/dashpay/dash/pull/877
 - Thanks to udjinm6, evan82, schinzelh
 -
-* Wed Apr 13 2016 Todd Warner <toddwarner@protonmail.com> 0.12.0.56-7.taw
+* Wed Apr 13 2016 Todd Warner <t0dd@protonmail.com> 0.12.0.56-7.taw
 - "dashcore" shall be the base package name.
 - I also fixed some icons.
 -
-* Sun Apr 10 2016 Todd Warner <toddwarner@protonmail.com> 0.12.0.56-6.taw
+* Sun Apr 10 2016 Todd Warner <t0dd@protonmail.com> 0.12.0.56-6.taw
 - "dash" the package name, is already claimed by dash shell--the Almquist Shell.
 - Therefpre our source RPM will remain named "dash" but the RPMs will all have
 - qualifiers added to that root name - in particular, the dash RPM becomes the
 - dash-client RPM. Most annoying.
 -
-* Tue Apr 05 2016 Todd Warner <toddwarner@protonmail.com> 0.12.0.56-5.taw
+* Tue Apr 05 2016 Todd Warner <t0dd@protonmail.com> 0.12.0.56-5.taw
 - Improved a description
 -
-* Tue Apr 05 2016 Todd Warner <toddwarner@protonmail.com> 0.12.0.56-4.taw
+* Tue Apr 05 2016 Todd Warner <t0dd@protonmail.com> 0.12.0.56-4.taw
 - Fixed missing Requires for a couple packages
 - Comment updates
 - Restructured some of the more custom release values and made them nil-able
 - OOPS! I forgot the .bmp pixmaps! Doh!
 -
-* Mon Apr 04 2016 Todd Warner <toddwarner@protonmail.com> 0.12.0.56-3.taw
+* Mon Apr 04 2016 Todd Warner <t0dd@protonmail.com> 0.12.0.56-3.taw
 - pixmaps mapped according to the intention of dash source
 - fPIC in configure.ac more like 0.12.1.x's version of the template
 - When back to patch and supplemental sources including the release
 -
-* Mon Apr 04 2016 Todd Warner <toddwarner@protonmail.com> 0.12.0.56-0.taw2
+* Mon Apr 04 2016 Todd Warner <t0dd@protonmail.com> 0.12.0.56-0.taw2
 - Fix daemon service file s/bitcoin/dash/
 - Using pristine upstream tarball now
 - Changes to configure.ac is now via a patch (keep the original source clean!)
 - Supplemental fedora files into their own tarball (keep the original source clean!)
 -
-* Sat Apr 02 2016 Todd Warner <toddwarner@protonmail.com> 0.12.0.56-0.taw0
+* Sat Apr 02 2016 Todd Warner <t0dd@protonmail.com> 0.12.0.56-0.taw0
 - aka Todd Warner <taw@pobox.com> -- taw, taw00, dagrarion, tawster, todwar, tawar, etc
 - First attempt at a build
 - Original spec file adapted from bitcoin.spec and the good work of Michael Hampton <bitcoin@ringingliberty.com>
