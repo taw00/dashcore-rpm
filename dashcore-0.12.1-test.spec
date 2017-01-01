@@ -23,7 +23,7 @@
 # date with a numeral, like 20160405.0, 20160405.1, etc.
 # Use whatever is meaningful to you. Just remember if you are iterating, it needs
 # to be consistent and progress in version (so that upgrades work)
-%define bump test.b00756.0
+%define bump test.b00757.0
 
 # "bumptag" is used to indicate additional information, usually an identifier,
 # like the builder's initials, or a date, or both, or nil.
@@ -354,10 +354,11 @@ rm -rf %{buildroot}
 
 # dashcore-server
 %pre server
-getent group dash >/dev/null || groupadd -r dash
-getent passwd dash >/dev/null ||
-	useradd -r -g dash -d /var/lib/dash -s /sbin/nologin \
-	-c "Dash wallet server" dash
+#We don't do this stuff yet --taw
+#taw getent group dash >/dev/null || groupadd -r dash
+#taw getent passwd dash >/dev/null ||
+#taw 	useradd -r -g dash -d /var/lib/dash -s /sbin/nologin \
+#taw 	-c "Dash wallet server" dash
 exit 0
 
 
@@ -491,7 +492,12 @@ exit 0
 # GitHub for Sentinel (complimentary to dashd): https://github.com/nmarley/sentinel
 
 %changelog
-* Fri Dec 28 2016 Todd Warner <t0dd@protonmail.com> 0.12.1-test.b00756.0
+* Sat Dec 31 2016 Todd Warner <t0dd@protonmail.com> 0.12.1-test.b00757.0
+- Testnet - Testing Phase 2 -- From build 00757, v0.12.1.0-g7544a70
+- SHA256: fa347dff2ad0ac57a63d73057d7d7cdf6589d76c41bb64505562d800aa9eef98  dashcore-0.12.1.tar.gz
+- No changes to the additional source tarballs.
+-
+* Fri Dec 30 2016 Todd Warner <t0dd@protonmail.com> 0.12.1-test.b00756.0
 - Testnet - Testing Phase 2 -- From build 00756, v0.12.1.0-g96dda27
 - SHA256:
 - 60afb2f4d67f6a2071b0646ac485045450d4753dc1fa8212944aeec0d1a17320  dashcore-0.12.1.tar.gz
