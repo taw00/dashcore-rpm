@@ -23,7 +23,7 @@
 # date with a numeral, like 20160405.0, 20160405.1, etc.
 # Use whatever is meaningful to you. Just remember if you are iterating, it needs
 # to be consistent and progress in version (so that upgrades work)
-%define bump test.b00757.0
+%define bump test.b00763.0
 
 # "bumptag" is used to indicate additional information, usually an identifier,
 # like the builder's initials, or a date, or both, or nil.
@@ -310,18 +310,17 @@ make INSTALL="install -p" CP="cp -p" DESTDIR=%{buildroot} install
 
 # TODO: Upstream puts dashd in the wrong directory. Need to fix the
 # upstream Makefiles to relocate it.
-mkdir -p -m 755 %{buildroot}%{_sbindir}
+#install -D -m755 -p %{buildroot}%{_bindir}/dashd %{buildroot}%{_sbindir}/dashd
+mkdir -p -m755 %{buildroot}%{_sbindir}
 mv %{buildroot}%{_bindir}/dashd %{buildroot}%{_sbindir}/dashd
 
 # The test binaries
 #rm -f %{buildroot}%{_bindir}/test_*
 #rm -f %{buildroot}%{_bindir}/bench_dash
 
-
 # Install ancillary files
-mkdir -p -m 755 %{buildroot}%{_datadir}/pixmaps
+mkdir -p -m755 %{buildroot}%{_datadir}/pixmaps
 install -D -m644 -p share/pixmaps/*.{png,xpm,ico,bmp} %{buildroot}%{_datadir}/pixmaps/
-#XXXTAW install -D -m644 -p share/pixmaps/*.{ico,bmp} %{buildroot}%{_datadir}/pixmaps/
 install -D -m644 -p contrib/extras/dash-qt.desktop %{buildroot}%{_datadir}/applications/dash-qt.desktop
 desktop-file-validate %{buildroot}%{_datadir}/applications/dash-qt.desktop
 install -D -m644 -p contrib/extras/dash-qt.protocol %{buildroot}%{_datadir}/kde4/services/dash-qt.protocol
@@ -492,6 +491,11 @@ exit 0
 # GitHub for Sentinel (complimentary to dashd): https://github.com/nmarley/sentinel
 
 %changelog
+* Sun Jan 01 2017 Todd Warner <t0dd@protonmail.com> 0.12.1-test.b00763.0
+- Testnet - Testing Phase 2 -- From build 00763, v0.12.1.0-g457c200
+- SHA256: adf9d6b8695d0fedba1d1eac1e66e00ff7cfdf616a00d0f53dcb3e7cb4c42a1f  dashcore-0.12.1.tar.gz
+- No changes to the additional source tarballs.
+-
 * Sat Dec 31 2016 Todd Warner <t0dd@protonmail.com> 0.12.1-test.b00757.0
 - Testnet - Testing Phase 2 -- From build 00757, v0.12.1.0-g7544a70
 - SHA256: fa347dff2ad0ac57a63d73057d7d7cdf6589d76c41bb64505562d800aa9eef98  dashcore-0.12.1.tar.gz
