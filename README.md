@@ -1,14 +1,15 @@
 Note, if you are looking for the "blessed" binaries (tested and runnable
-versions) built from the the source RPM packages described below, you can find them
-here: [Dash Core for Fedora Linux, CentOS, and RHEL](https://gist.github.com/taw00/b2382aaabb321b0cf9ce104185e1b3b7).
-Please remember to backup your Dash wallet before installing another version.
+versions) built from the the source RPM packages described below, you can find
+information about them here:
+[Dash Core for Fedora Linux, CentOS, and RHEL](https://gist.github.com/taw00/b2382aaabb321b0cf9ce104185e1b3b7). Please
+remember to backup your Dash wallet before installing another version.
 
 # Dash Core Source RPMs
 
-**Stable sources: 0.12.0.58**
+**Stable sources: 0.12.0.58 (v0.12.0.58-g88f3370)**
 
-* Fedora Linux 23: `dashcore-0.12.0.58-1.taw.fc23.src.rpm`
-* CentOS and RHEL 7: `dashcore-0.12.0.58-1.taw.el7.centos.src.rpm`
+* Fedora Linux 23: `dashcore-0.12.0.58-2.taw.fc23.src.rpm`
+* CentOS and RHEL 7: `dashcore-0.12.0.58-2.taw.el7.centos.src.rpm`
 
 **Experimental sources: 0.12.1 (build 00763, v0.12.1.0-g457c200)**
 *Use experimental RPMs at your own risk*
@@ -117,7 +118,7 @@ usually.
 
 For example, at the time of this writing the latest Dash src.rpm of version
 `0.12.0.58`, is considered "stable". For the purposes of this document, we are
-going use version-release `0.12.0.58-1.taw` as our example. Download the one
+going use version-release `0.12.0.58-2.taw` as our example. Download the one
 specific to your linux distribution Fedora, RHEL, or CentOS. If you are
 attempting to build in a different environment, download the source RPM that as
 closely matches your platform and experiment away.
@@ -136,7 +137,7 @@ sha256sums that they should match, are listed.*
 From the commandline...
 
 ```
-sha256sum dashcore-0.12.0.58-1.taw.*.src.rpm
+sha256sum dashcore-0.12.0.58-2.taw.*.src.rpm
 ```
 
 The result should match the hash for the RPM your downloaded, otherwise the
@@ -147,8 +148,8 @@ this document.
 **The sha256 verification hashes:**
 
 ```
-d0ca8947bc71785ccac7a0f80f526b886e36d8efafa7636f4e2433fb4b53bb3b  dashcore-0.12.0.58-1.taw.el7.centos.src.rpm
-f12edc5c22bb4bdeeb7d493de17bc8c703d2592838ddd292eff3c884d3a93a09  dashcore-0.12.0.58-1.taw.fc23.src.rpm
+fdecf46a7ea9b6dd9254cec96ad091192a2ee15932a2301d78b9d80a37868ba9  dashcore-0.12.0.58-2.taw.el7.centos.src.rpm
+5790c9f2e5a14cd22cedaf59b0f650d8a559a954c6a33b6178553be42b86e2c3  dashcore-0.12.0.58-2.taw.fc23.src.rpm
 
 16fb3f00fddea6fbb08b448cb4d0ce45e02dc558f6e0dfad8ed5793643a65690  dashcore-0.12.1-test.b00763.0.taw.el7.centos.src.rpm
 b34a445125ee4ba9fa5d83c5bc434cc60fb8f6342320afa0af432c7c8d759b6a  dashcore-0.12.1-test.b00763.0.taw.fc24.src.rpm
@@ -178,10 +179,10 @@ and import it locally.
 
 (2) Check the signature
 
-`$ rpm --checksig -v dashcore-0.12.0.58-1.taw.*.src.rpm` ...or...
-`$ rpm -Kv dashcore-0.12.0.58-1.taw.*.src.rpm`
+`$ rpm --checksig -v dashcore-0.12.0.58-2.taw.*.src.rpm` ...or...
+`$ rpm -Kv dashcore-0.12.0.58-2.taw.*.src.rpm`
 
-You should see something like: `dashcore-0.12.0.58-1.taw.fc23.src.rpm: rsa sha1 (md5) pgp md5 OK`<br />
+You should see something like: `dashcore-0.12.0.58-2.taw.fc23.src.rpm: rsa sha1 (md5) pgp md5 OK`<br />
 *Notice the "pgp" and the "OK"*
 
 And if you used the verbose flag, `-v`, then you should see my key ID: `694673ed`
@@ -192,7 +193,7 @@ you did not successfully import my key in step 1.
 
 Another way to look at this information is via...
 
-`$ rpm -qpi dashcore-0.12.0.58-1.taw.*.src.rpm | grep 'Name\|\|Version\|Release\|Signature'`
+`$ rpm -qpi dashcore-0.12.0.58-2.taw.*.src.rpm | grep 'Name\|\|Version\|Release\|Signature'`
 
 #### [4] Install the source RPM
 
@@ -202,7 +203,7 @@ Again, from the command line as a normal user... First, move that source RPM int
 # As a normal user (not root)
 mv dashcore-*.src.rpm ~/rpmbuild/SRPMS/
 # Install the sucker (do not use sudo here!):
-rpm -ivh ~/rpmbuild/SRPMS/dashcore-0.12.0.58-1.taw.fc23.src.rpm #Or whatever version you are installing.
+rpm -ivh ~/rpmbuild/SRPMS/dashcore-0.12.0.58-2.taw.fc23.src.rpm #Or whatever version you are installing.
 ```
 
 That should explode source code and patch instruction into
@@ -294,10 +295,10 @@ Let's say your name is Barney Miller (initials "bm").
 
 ```
 # As a normal user (not root)
-cp dashcore-0.12.0.58.spec dashcore-0.12.58-1.bm.spec
+cp dashcore-0.12.0.58.spec dashcore-0.12.58-2.bm.spec
 ```
 
-* Edit `dashcore-0.12.0.58-1.bm.spec`
+* Edit `dashcore-0.12.0.58-2.bm.spec`
 * Change the _bumptag_ value in that file from '.taw' to '.bm'
 * Add a stanza in the changelog at the bottom reflective of what you did (copy
   the format)...
@@ -307,7 +308,7 @@ cp dashcore-0.12.0.58.spec dashcore-0.12.58-1.bm.spec
 
 ```
 # As a normal user (not root)
-rpmbuild -ba dashcore-0.12.0.58-1.bm.spec
+rpmbuild -ba dashcore-0.12.0.58-2.bm.spec
 ```
 
 If all goes to plan, in 30 or 40 minutes you should have a set of binary
