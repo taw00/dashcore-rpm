@@ -4,7 +4,7 @@ information about them here:
 [Dash Core Binaries (pre-built) for Fedora Linux, CentOS, and RHEL](https://github.com/taw00/dashcore-rpm/blob/master/README-dashcore-binaries.md). Please
 remember to backup your Dash wallet before installing another version.
 
-# Dash Core Source RPMs
+# Dash Core Source RPM Packages
 
 **Stable sources: 0.12.0.58 (v0.12.0.58-g88f3370)**
 
