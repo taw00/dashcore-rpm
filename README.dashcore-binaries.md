@@ -12,8 +12,8 @@ their system.
 > What are these Linuxes? [Fedora](https://getfedora.org/), [CentOS](https://www.centos.org/), [RHEL](https://www.redhat.com/en/technologies/linux-platforms/enterprise-linux)<br />
 > ...<br />
 > If you know your way around yum, dnf, and Dash Core, I could reduce this document to two lines...<br />
-> **dashcore-fedora.repo:** <https://gist.github.com/taw00/4b66dcf87d7883c120544680195ba24e><br />
-> **dashcore-centos.repo:** <https://gist.github.com/taw00/0c755c153cbc43a3e1e2b5b4b671e44f><br />
+> **dashcore-fedora.repo:** <https://github.com/taw00/dashcore-rpm/dashcore-feodra.repo><br />
+> **dashcore-centos.repo:** <https://github.com/taw00/dashcore-rpm/blob/master/dashcore-centos.repo><br />
 > Otherwise, keep reading.
 
 
@@ -29,7 +29,7 @@ At the terminal command line...
 
 ```
 cd /etc/yum.repos.d/
-sudo curl https://gist.githubusercontent.com/taw00/4b66dcf87d7883c120544680195ba24e/raw -o dashcore-fedora.repo
+sudo curl https://raw.githubusercontent.com/taw00/dashcore-rpm/master/dashcore-fedora.repo -o dashcore-fedora.repo
 cd -
 sudo dnf install -y dash-qt
 dash-qt
@@ -41,8 +41,8 @@ Boom! Done! You should now see a Dash Core GUI Wallet open up on your screen.
 
 Configuration to automate install and update of Dash Core for your version of
 linux can be found here...<br />
-For Fedora: <https://gist.github.com/taw00/4b66dcf87d7883c120544680195ba24e><br />
-For CentOS and RHEL: <https://gist.github.com/taw00/0c755c153cbc43a3e1e2b5b4b671e44f>
+For Fedora: <https://github.com/taw00/dashcore-rpm/dashcore-fedora.repo><br />
+For CentOS and RHEL: <https://github.com/taw00/dashcore-rpm/dashcore-centos.repo>
 
 If you want to browse the actual repository, or manually download packages, they
 can be found here:
@@ -55,7 +55,7 @@ will be ready to rock-and-roll with the Dash Core software.
 > #### Additional reference information
 >
 > If you are interested in building your own RPM packages from source, those can
-be found here: <https://github.com/taw00/dashcore-srpms>
+be found here: <https://github.com/taw00/dashcore-rpm>
 >
 > If you are looking for Dash wallets for other platforms, those can be found here:
 <https://www.dash.org/downloads/>
@@ -73,7 +73,7 @@ access. Log into a terminal and do this...
 
 ```
 cd /etc/yum.repos.d/
-sudo curl https://gist.githubusercontent.com/taw00/4b66dcf87d7883c120544680195ba24e/raw -o dashcore-fedora.repo
+sudo curl https://raw.githubusercontent.com/taw00/dashcore-rpm/master/dashcore-fedora.repo -o dashcore-fedora.repo
 cd -
 ```
 
@@ -81,7 +81,7 @@ cd -
 
 ```
 cd /etc/yum.repos.d/
-sudo curl https://gist.githubusercontent.com/taw00/0c755c153cbc43a3e1e2b5b4b671e44f/raw -o dashcore-centos.repo
+sudo curl https://raw.githubusercontent.com/taw00/dashcore-rpm/master/dashcore-centos.repo -o dashcore-centos.repo
 cd -
 ```
 
