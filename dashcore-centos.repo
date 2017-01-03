@@ -1,0 +1,50 @@
+# Dash Core (https://dash.org) for CentOS (and Red Hat Enterprise Linux)
+# Stable and Unstable; binaries and sources
+# YUM repository configuration
+# Drop this, as root, into your /etc/yum.repos.d/ directory
+#   cd /etc/yum.repos.d/
+#   sudo curl https://gist.githubusercontent.com/taw00/0c755c153cbc43a3e1e2b5b4b671e44f/raw -o dashcore-centos.repo
+#   sudo yum list | grep dashcore
+# To install, for example the GUI client, you would do this at the commandline...
+#   sudo dnf install dashcore-client
+# To update already existing software (check dash.org to seee if there special are upgrade steps that need to be taken)
+#   sudo dnf upgrade
+# To switch from one major version of the software to the next (example, 12.0-stable to 12.1-unstable)...
+#   sudo dnf config-manager --set-disabled dashcore-12.0.stable
+#   sudo dnf config-manager --set-enabled dashcore-12.1-unstable
+# Feedback: t0dd@protonmail.com
+
+[dashcore-12.0-stable]
+name=Dash Core 12.0 - epel-$releasever-$basearch
+# Note: SRPMs (*.src.rpm files) are mingled with the binaries. It's just how Copr does it.
+baseurl=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.0/epel-$releasever-$basearch/
+type=rpm-md
+skip_if_unavailable=True
+gpgcheck=1
+gpgkey=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.0/pubkey.gpg
+repo_gpgcheck=0
+#OLD: metadata_expire=1d
+enabled=1
+enabled_metadata=1
+
+[dashcore-12.1-unstable]
+name=Dash Core (unstable) - epel-$releasever-$basearch
+baseurl=https://toddwarner.keybase.pub/repo/dashcore/unstable/centos/$releasever/$basearch/
+type=rpm-md
+# Checks for new packages on every run...
+metadata_expire=0
+gpgcheck=1
+gpgkey=https://keybase.io/toddwarner/key.asc
+skip_if_unavailable=True
+enabled=0
+
+[dashcore-12.1-unstable-source]
+name=Dash Core (unstable) - epel-$releasever-$basearch
+baseurl=https://toddwarner.keybase.pub/repo/dashcore/unstable/centos/$releasever/source/
+type=rpm-md
+# Checks for new packages on every run...
+metadata_expire=0
+gpgcheck=1
+gpgkey=https://keybase.io/toddwarner/key.asc
+skip_if_unavailable=True
+enabled=0
