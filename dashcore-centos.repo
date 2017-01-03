@@ -3,7 +3,7 @@
 # YUM repository configuration
 # Drop this, as root, into your /etc/yum.repos.d/ directory
 #   cd /etc/yum.repos.d/
-#   sudo curl https://gist.githubusercontent.com/taw00/0c755c153cbc43a3e1e2b5b4b671e44f/raw -o dashcore-centos.repo
+#   sudo curl https://raw.githubusercontent.com/taw00/dashcore-rpm/master/dashcore-centos.repo -o dashcore-centos.repo
 #   sudo yum list | grep dashcore
 # To install, for example the GUI client, you would do this at the commandline...
 #   sudo dnf install dashcore-client
