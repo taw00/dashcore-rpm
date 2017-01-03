@@ -345,13 +345,13 @@ more information about yum and dnf).
 
 ## That should get you started! Good luck! -[Todd](https://keybase.io/toddwarner)
 
-*And come say hello to me. I am **t0dd**, **taw00**, **agrarian**, or
+_And come say hello to me. I am **t0dd**, **taw00**, **agrarian**, or
 **dAgrarian** in various forums:
 [dash.org's forums](https://www.dash.org/forum/),
-[#dash:matrix.org](https://riot.im/app/#/room/#dash:matrix.org), [#dashpay on
+[#dash:chat.cryptochat.io (matrix network)](https://riot.im/app/#/room/#dash:chat.cryptochat.io), [#dashpay on
 freenode IRC](http://freenode.net/), [Dash Knights 2.0 on
 Telegram](https://web.telegram.org/#/im?p=@DashDigitalCash), and
-[/r/dashpay/](https://www.reddit.com/r/dashpay) on Reddit.*
+[/r/dashpay/](https://www.reddit.com/r/dashpay) on Reddit._
 
 ...
 
