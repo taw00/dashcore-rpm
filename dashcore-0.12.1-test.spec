@@ -23,7 +23,7 @@
 # date with a numeral, like 20160405.0, 20160405.1, etc.
 # Use whatever is meaningful to you. Just remember if you are iterating, it needs
 # to be consistent and progress in version (so that upgrades work)
-%define bump test.b00763.0
+%define bump test.b00763.1
 
 # "bumptag" is used to indicate additional information, usually an identifier,
 # like the builder's initials, or a date, or both, or nil.
@@ -353,11 +353,9 @@ rm -rf %{buildroot}
 
 # dashcore-server
 %pre server
-#We don't do this stuff yet --taw
-#taw getent group dash >/dev/null || groupadd -r dash
-#taw getent passwd dash >/dev/null ||
-#taw 	useradd -r -g dash -d /var/lib/dash -s /sbin/nologin \
-#taw 	-c "Dash wallet server" dash
+# This is for the case that you run dash as a service (systemctl start dash)
+getent group dash >/dev/null || groupadd -r dash
+getent passwd dash >/dev/null || useradd -r -g dash -d /var/lib/dash -s /sbin/nologin -c "Dash Core node, masternode, and/or wallet server" dash
 exit 0
 
 
@@ -491,6 +489,14 @@ exit 0
 # GitHub for Sentinel (complimentary to dashd): https://github.com/nmarley/sentinel
 
 %changelog
+* Tue Jan 03 2017 Todd Warner <t0dd@protonmail.com> 0.12.1-test.b00763.1
+- Testnet - Testing Phase 2 -- From build 00763, v0.12.1.0-g457c200
+- SHA256: adf9d6b8695d0fedba1d1eac1e66e00ff7cfdf616a00d0f53dcb3e7cb4c42a1f  dashcore-0.12.1.tar.gz
+- No changes to the additional source tarballs.
+-
+- Fix sytem groupadd and sysem useradd -- I commented them out when I should not have. It broke
+- loading dash as a service.
+-
 * Sun Jan 01 2017 Todd Warner <t0dd@protonmail.com> 0.12.1-test.b00763.0
 - Testnet - Testing Phase 2 -- From build 00763, v0.12.1.0-g457c200
 - SHA256: adf9d6b8695d0fedba1d1eac1e66e00ff7cfdf616a00d0f53dcb3e7cb4c42a1f  dashcore-0.12.1.tar.gz
