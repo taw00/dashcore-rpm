@@ -1,7 +1,7 @@
 # Dash (digital cash) cryptocurrency spec file
 # Dash Core QT wallet, masternode, full node, and more.
 #
-# Note about edits within the spec: Any comments beginning with #taw is my
+# Note about edits within the spec: Any comments beginning with #t0dd is my
 # attempt to block off troublesome, or inappropriate stuff that came over from
 # the bitcoin.spec file that this is based off of. Some things, like the SELinux
 # elements will likely be brought back in when I get a moment.
@@ -23,11 +23,11 @@
 # date with a numeral, like 20160405.0, 20160405.1, etc.
 # Use whatever is meaningful to you. Just remember if you are iterating, it needs
 # to be consistent and progress in version (so that upgrades work)
-%define bump test.b00766.0
+%define bump test.b00766.2
 
 # "bumptag" is used to indicate additional information, usually an identifier,
 # like the builder's initials, or a date, or both, or nil.
-# Example, the original builder was "taw" or "Todd Warner", so he would use .taw
+# Example, the original builder was "taw" or "t0dd Warner", so he could use .taw
 # Note: If the value is not %{nil} there needs to be a . preceding this value
 # For final releases, one will often opt to nil-out this value.
 %define bumptag .taw
@@ -47,37 +47,27 @@ Summary: Dash - Digital Cash - Peer-to-peer, privacy-centric, digital currency
 %define archivebasename %{_name}-%{version}
 %define sourcetree %{_name}-%{version}
 
-# my convention
-%define extrasbasename %{sourcetree}
-# during experimental builds
-%define pedanticfiletag -%{_release}
-# for official releases, get rid of the pedanticfiletag
-%define pedanticfiletag %{nil}
-
 Group: Applications/System
 License: MIT
 URL: http://dash.org/
 # upstream
-Source0: http://github.com/dashpay/%{name}/archive/%{archivebasename}.tar.gz
-#Source0: %{archivebasename}.tar.gz
-# contrib/fedora/ dashd.tmpfiles, dash.sysconfig, dash.service, dash.init(never used?)
-#                 includes some future SELinux policy stuff as well (.te, .if, .fc)
-Source1: %{extrasbasename}%{pedanticfiletag}-contrib-fedora.tar.gz
-# Manpages, desktop stuff, etc.
-Source2: %{extrasbasename}%{pedanticfiletag}-contrib-extras.tar.gz
-# dash icons
-Source3: %{extrasbasename}%{pedanticfiletag}-dashify-pixmaps.tar.gz
-Source4: %{extrasbasename}%{pedanticfiletag}-dashify-extra-qt-icons.tar.gz
-#taw Source8:  README.server.redhat
-#taw Source9:  README.utils.redhat
-#taw Source10: README.gui.redhat
+#Source0: http://github.com/dashpay/%{name}/archive/%{archivebasename}.tar.gz
+Source0: %{archivebasename}.tar.gz
+# Contributions (not yet in main package)
+# dashd.tmpfiles, dash.sysconfig, dash.service, dash.init(never used?)
+# Icons, manpages, desktop stuff, etc.
+# includes some future SELinux policy stuff as well (.te, .if, .fc)
+Source1: %{archivebasename}-contrib.tar.gz
+#t0dd Source8:  README.server.redhat
+#t0dd Source9:  README.utils.redhat
+#t0dd Source10: README.gui.redhat
 
-#taw I do not think this is needed for Dash
+#t0dd I do not think this is needed for Dash
 # Dest change address patch for Lamassu Bitcoin machine
 #Patch1: bitcoin-0.12.0-destchange.patch
 
 # patch configure.ac (autoconf template) for fedora builds
-#Patch0: %{extrasbasename}%{pedanticfiletag}-fedora.patch
+#Patch0: %{archivebasename}-fedora.patch
 
 BuildRoot:	%(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
@@ -121,8 +111,8 @@ BuildRequires: systemd
 Requires(pre): shadow-utils
 Requires(post):	/usr/sbin/semodule, /sbin/restorecon, /sbin/fixfiles
 Requires(postun): /usr/sbin/semodule, /sbin/restorecon, /sbin/fixfiles
-#taw Requires: selinux-policy
-#taw Requires: policycoreutils-python
+#t0dd Requires: selinux-policy
+#t0dd Requires: policycoreutils-python
 Requires: openssl-libs
 #Requires: dashcore-utils%{?_isa} = %{version}-%{_release}
 #Requires: dashcore-utils = %{version}-%{_release}
@@ -251,25 +241,18 @@ at www.dash.org.
 %prep
 # dash upstream stuff
 %setup -q -n %{sourcetree}
-# fedora stuff Source1
+# extra contributions - Source1
 %setup -q -T -D -b 1 -n %{sourcetree}
-# extras (manpages, desktop stuff, etc) Source2
-%setup -q -T -D -b 2 -n %{sourcetree}
-# pixmaps icons Source3
-%setup -q -T -D -b 3 -n %{sourcetree}
-# QT icons Source4 (must come after main sourcetree (overwrites))
-#taw commented out because some core devs expressed displeasure at dark dash icons
-#%setup -q -T -D -b 4 -n %{sourcetree}
-# patch addressed by removing one dir path level (-p1)
+# Patch addressed by removing one dir path level (-p1)
 #%patch0 -p1
 
 # Install README files
-#taw cp -p %{SOURCE8} %{SOURCE9} %{SOURCE10} .
+#t0dd cp -p %{SOURCE8} %{SOURCE9} %{SOURCE10} .
 
-# Prep SELinux policy -- NOT USED YET
-# not sure why this is done here in particular -taw
+# XXX Prep SELinux policy -- NOT USED YET
+# not sure why this is done here in particular -t0dd
 mkdir -p SELinux
-cp -p ./contrib/fedora/dash.{te,if,fc} SELinux
+cp -p ./additions/selinux/dash.{te,if,fc} SELinux
 
 %build
 # Build Dash
@@ -278,73 +261,98 @@ cp -p ./contrib/fedora/dash.{te,if,fc} SELinux
 
 make %{?_smp_mflags}
 
-#taw # Build SELinux policy
-#taw pushd SELinux
-#taw for selinuxvariant in %{selinux_variants}
-#taw do
-#taw # FIXME: Create and debug SELinux policy
-#taw   make NAME=${selinuxvariant} -f /usr/share/selinux/devel/Makefile
-#taw   mv dash.pp dash.pp.${selinuxvariant}
-#taw   make NAME=${selinuxvariant} -f /usr/share/selinux/devel/Makefile clean
-#taw done
-#taw popd
+#t0dd # Build SELinux policy
+#t0dd pushd SELinux
+#t0dd for selinuxvariant in %{selinux_variants}
+#t0dd do
+#t0dd # FIXME: Create and debug SELinux policy
+#t0dd   make NAME=${selinuxvariant} -f /usr/share/selinux/devel/Makefile
+#t0dd   mv dash.pp dash.pp.${selinuxvariant}
+#t0dd   make NAME=${selinuxvariant} -f /usr/share/selinux/devel/Makefile clean
+#t0dd done
+#t0dd popd
 
 
 %check
 # Run all the tests
-#taw make check
-#taw # Run all the other tests
-#taw pushd src
-#taw srcdir=. test/dashcore-util-test.py
-#taw popd
-#taw LD_LIBRARY_PATH=/opt/openssl-compat-dash/lib PYTHONUNBUFFERED=1  qa/pull-tester/rpc-tests.py -extended
+#t0dd make check
+#t0dd # Run all the other tests
+#t0dd pushd src
+#t0dd srcdir=. test/dashcore-util-test.py
+#t0dd popd
+#t0dd LD_LIBRARY_PATH=/opt/openssl-compat-dash/lib PYTHONUNBUFFERED=1  qa/pull-tester/rpc-tests.py -extended
 
 
 %install
 rm -rf %{buildroot}
 mkdir %{buildroot}
-
-cp contrib/extras/examples/dash.conf dash.conf.example
+echo "============================================= HERE BEGIN"
 
 make INSTALL="install -p" CP="cp -p" DESTDIR=%{buildroot} install
 
 # TODO: Upstream puts dashd in the wrong directory. Need to fix the
 # upstream Makefiles to relocate it.
-#install -D -m755 -p %{buildroot}%{_bindir}/dashd %{buildroot}%{_sbindir}/dashd
-mkdir -p -m755 %{buildroot}%{_sbindir}
-mv %{buildroot}%{_bindir}/dashd %{buildroot}%{_sbindir}/dashd
+#mkdir -p -m755 %{buildroot}%{_sbindir}
+#mv %{buildroot}%{_bindir}/dashd %{buildroot}%{_sbindir}/dashd
+install -d -m755 -p %{buildroot}%{_sbindir}
+install -D -m755 -p %{buildroot}%{_bindir}/dashd %{buildroot}%{_sbindir}/dashd
+rm -f %{buildroot}%{_bindir}/dashd
 
-# The test binaries
+# Remove the test binaries
+# XXX For production release, uncomment the next two lines
 #rm -f %{buildroot}%{_bindir}/test_*
 #rm -f %{buildroot}%{_bindir}/bench_dash
 
-# Install ancillary files
-mkdir -p -m755 %{buildroot}%{_datadir}/pixmaps
-install -D -m644 -p share/pixmaps/*.{png,xpm,ico,bmp} %{buildroot}%{_datadir}/pixmaps/
-install -D -m644 -p contrib/extras/dash-qt.desktop %{buildroot}%{_datadir}/applications/dash-qt.desktop
+
+# Install / config ancillary files
+# Remember:
+#   _datadir = /usr/share
+#   _mandir = /usr/share/man
+#   _sysconfdir = /etc
+#   _localstatedir = /var
+#   _tmpfilesdir = /usr/lib/tmpfiles.d
+#   _unitdir =     /usr/lib/systemd/system
+echo "============================================= HERE 1"
+install -d %{buildroot}%{_datadir}
+install -d %{buildroot}%{_mandir}
+install -d %{buildroot}%{_sysconfdir}
+install -d %{buildroot}%{_localstatedir}
+install -d %{buildroot}%{_tmpfilesdir}
+install -d %{buildroot}%{_unitdir}
+
+cp -a usr/share/* %{buildroot}%{_datadir}/
+cp -a etc/* %{buildroot}%{_sysconfdir}/
+#install -D -m755 -p %{_unitdir}/* %{buildroot}%{_unitdir}
+
+echo "============================================= HERE 2"
+ls -lh usr/share %{buildroot}%{_datadir}
+ls -lh usr/share/applications %{buildroot}%{_datadir}/applications
+#install -d -m755 -p %{buildroot}%{_datadir}
+# Test the dash GUI desktop semantics
+# XXX For production release, comment the next line
 desktop-file-validate %{buildroot}%{_datadir}/applications/dash-qt.desktop
-install -D -m644 -p contrib/extras/dash-qt.protocol %{buildroot}%{_datadir}/kde4/services/dash-qt.protocol
-install -D -m644 -p contrib/fedora/dashd.tmpfiles %{buildroot}%{_tmpfilesdir}/dash.conf
-install -D -m600 -p contrib/fedora/dash.sysconfig %{buildroot}%{_sysconfdir}/sysconfig/dash
-install -D -m644 -p contrib/fedora/dash.service %{buildroot}%{_unitdir}/dash.service
-install -d -m750 -p %{buildroot}%{_localstatedir}/lib/dash
+
+echo "============================================= HERE 3"
 install -d -m750 -p %{buildroot}%{_sysconfdir}/dash
-install -D -m644 -p contrib/extras/manpages/dashd.1 %{buildroot}%{_mandir}/man1/dashd.1
-install -D -m644 -p contrib/extras/manpages/dash-qt.1 %{buildroot}%{_mandir}/man1/dash-qt.1
-install -D -m644 -p contrib/extras/manpages/dash.conf.5 %{buildroot}%{_mandir}/man5/dash.conf.5
-install -D -m644 -p contrib/extras/manpages/masternode.conf.5 %{buildroot}%{_mandir}/man5/masternode.conf.5
+install -D -m600 -p ./%{_sysconfdir}/sysconfig/dash %{buildroot}%{_sysconfdir}/sysconfig/dash
+install -D -m644 -p ./%{_unitdir}/dash.service %{buildroot}%{_unitdir}/dash.service
+install -D -m644 -p ./%{_tmpfilesdir}/dash.conf %{buildroot}%{_tmpfilesdir}/
+install -d -m750 -p %{buildroot}%{_localstatedir}/lib/dash
+
+echo "============================================= HERE 4"
 gzip %{buildroot}%{_mandir}/man1/dashd.1
 gzip %{buildroot}%{_mandir}/man1/dash-qt.1
 gzip %{buildroot}%{_mandir}/man5/dash.conf.5
 gzip %{buildroot}%{_mandir}/man5/masternode.conf.5
 
-#taw # Install SELinux policy
-#taw for selinuxvariant in %{selinux_variants}
-#taw do
-#taw 	install -d %{buildroot}%{_datadir}/selinux/${selinuxvariant}
-#taw 	install -p -m 644 SELinux/dash.pp.${selinuxvariant} \
-#taw 		%{buildroot}%{_datadir}/selinux/${selinuxvariant}/dash.pp
-#taw done
+#t0dd # Install SELinux policy
+#t0dd for selinuxvariant in %{selinux_variants}
+#t0dd do
+#t0dd 	install -d %{buildroot}%{_datadir}/selinux/${selinuxvariant}
+#t0dd 	install -p -m 644 SELinux/dash.pp.${selinuxvariant} \
+#t0dd 		%{buildroot}%{_datadir}/selinux/${selinuxvariant}/dash.pp
+#t0dd donex
+echo "============================================= HERE DONE!"
 
 
 %clean
@@ -362,19 +370,19 @@ exit 0
 # dashcore-server
 %post server
 %systemd_post dash.service
-#taw for selinuxvariant in %{selinux_variants}
-#taw do
-#taw 	/usr/sbin/semodule -s ${selinuxvariant} -i \
-#taw 		%{_datadir}/selinux/${selinuxvariant}/dash.pp \
-#taw 		&> /dev/null || :
-#taw done
-#taw # FIXME This is less than ideal, but until dwalsh gives me a better way...
-#taw /usr/sbin/semanage port -a -t dash_port_t -p tcp 8332
-#taw /usr/sbin/semanage port -a -t dash_port_t -p tcp 8333
-#taw /usr/sbin/semanage port -a -t dash_port_t -p tcp 18332
-#taw /usr/sbin/semanage port -a -t dash_port_t -p tcp 18333
-#taw /sbin/fixfiles -R dashcore-server restore &> /dev/null || :
-#taw /sbin/restorecon -R %{_localstatedir}/lib/dash || :
+#t0dd for selinuxvariant in %{selinux_variants}
+#t0dd do
+#t0dd 	/usr/sbin/semodule -s ${selinuxvariant} -i \
+#t0dd 		%{_datadir}/selinux/${selinuxvariant}/dash.pp \
+#t0dd 		&> /dev/null || :
+#t0dd done
+#t0dd # FIXME This is less than ideal, but until dwalsh gives me a better way...
+#t0dd /usr/sbin/semanage port -a -t dash_port_t -p tcp 8332
+#t0dd /usr/sbin/semanage port -a -t dash_port_t -p tcp 8333
+#t0dd /usr/sbin/semanage port -a -t dash_port_t -p tcp 18332
+#t0dd /usr/sbin/semanage port -a -t dash_port_t -p tcp 18333
+#t0dd /sbin/fixfiles -R dashcore-server restore &> /dev/null || :
+#t0dd /sbin/restorecon -R %{_localstatedir}/lib/dash || :
 
 
 # dashcore-server
@@ -390,22 +398,22 @@ exit 0
 # dashcore-server
 %postun server
 %systemd_postun dash.service
-#taw if [ $1 -eq 0 ] ; then
-#taw 	# FIXME This is less than ideal, but until dwalsh gives me a better way...
-#taw 	/usr/sbin/semanage port -d -p tcp 8332
-#taw 	/usr/sbin/semanage port -d -p tcp 8333
-#taw 	/usr/sbin/semanage port -d -p tcp 18332
-#taw 	/usr/sbin/semanage port -d -p tcp 18333
-#taw 	for selinuxvariant in %{selinux_variants}
-#taw 	do
-#taw 		/usr/sbin/semodule -s ${selinuxvariant} -r dash \
-#taw 		&> /dev/null || :
-#taw 	done
-#taw 	/sbin/fixfiles -R dashcore-server restore &> /dev/null || :
-#taw 	[ -d %{_localstatedir}/lib/dash ] && \
-#taw 		/sbin/restorecon -R %{_localstatedir}/lib/dash \
-#taw 		&> /dev/null || :
-#taw fi
+#t0dd if [ $1 -eq 0 ] ; then
+#t0dd 	# FIXME This is less than ideal, but until dwalsh gives me a better way...
+#t0dd 	/usr/sbin/semanage port -d -p tcp 8332
+#t0dd 	/usr/sbin/semanage port -d -p tcp 8333
+#t0dd 	/usr/sbin/semanage port -d -p tcp 18332
+#t0dd 	/usr/sbin/semanage port -d -p tcp 18333
+#t0dd 	for selinuxvariant in %{selinux_variants}
+#t0dd 	do
+#t0dd 		/usr/sbin/semodule -s ${selinuxvariant} -r dash \
+#t0dd 		&> /dev/null || :
+#t0dd 	done
+#t0dd 	/sbin/fixfiles -R dashcore-server restore &> /dev/null || :
+#t0dd 	[ -d %{_localstatedir}/lib/dash ] && \
+#t0dd 		/sbin/restorecon -R %{_localstatedir}/lib/dash \
+#t0dd 		&> /dev/null || :
+#t0dd fi
 
 
 
@@ -413,8 +421,8 @@ exit 0
 %files client
 %defattr(-,root,root,-)
 %license COPYING
-#taw %doc README.md README.gui.redhat doc/assets-attribution.md doc/multiwallet-qt.md doc/release-notes.md doc/tor.md dash.conf.example
-#taw 0.12.0.58 %doc README.md doc/assets-attribution.md doc/multiwallet-qt.md doc/release-notes.md doc/tor.md dash.conf.example
+#t0dd %doc README.md README.gui.redhat doc/assets-attribution.md doc/multiwallet-qt.md doc/release-notes.md doc/tor.md dash.conf.example
+#t0dd 0.12.0.58 %doc README.md doc/assets-attribution.md doc/multiwallet-qt.md doc/release-notes.md doc/tor.md dash.conf.example
 %doc doc/assets-attribution.md doc/multiwallet-qt.md doc/release-notes.md doc/tor.md doc/keepass.md
 %{_bindir}/dash-qt
 # XXX COMMENT OUT TEST BINARY IF THIS IS A PRODUCTION RELEASE
@@ -422,6 +430,7 @@ exit 0
 %{_datadir}/applications/dash-qt.desktop
 %{_datadir}/kde4/services/dash-qt.protocol
 %{_datadir}/pixmaps/*
+%{_datadir}/icons/*
 %{_mandir}/man1/dash-qt.1.gz
 %{_mandir}/man5/masternode.conf.5.gz
 
@@ -430,30 +439,30 @@ exit 0
 %files server
 %defattr(-,root,root,-)
 %license COPYING
-#taw %doc README.md README.server.redhat doc/dnsseed-policy.md doc/release-notes.md doc/tor.md dash.conf.example
-#TAW 0.12.0.58 %doc README.md doc/dnsseed-policy.md doc/release-notes.md doc/tor.md dash.conf.example
+#t0dd %doc README.md README.server.redhat doc/dnsseed-policy.md doc/release-notes.md doc/tor.md dash.conf.example
+#t0dd 0.12.0.58 %doc README.md doc/dnsseed-policy.md doc/release-notes.md doc/tor.md dash.conf.example
 %doc doc/dnsseed-policy.md doc/release-notes.md doc/tor.md doc/multiwallet-qt.md doc/guide-startmany.md doc/reduce-traffic.md doc/zmq.md
 %dir %attr(750,dash,dash) %{_localstatedir}/lib/dash
 %dir %attr(750,dash,dash) %{_sysconfdir}/dash
 %config(noreplace) %attr(600,root,root) %{_sysconfdir}/sysconfig/dash
+%{_unitdir}/dash.service
 %doc SELinux/*
 %{_sbindir}/dashd
 # XXX COMMENT OUT TEST BINARIES IF THIS IS A PRODUCTION RELEASE
 %{_bindir}/test_dash
 %{_bindir}/bench_dash
-%{_unitdir}/dash.service
 %{_tmpfilesdir}/dash.conf
 %{_mandir}/man1/dashd.1.gz
 %{_mandir}/man5/dash.conf.5.gz
 %{_mandir}/man5/masternode.conf.5.gz
-#taw %{_datadir}/selinux/*/dash.pp
+#t0dd %{_datadir}/selinux/*/dash.pp
 
 
 # dashcore-libs
 %files libs
 %defattr(-,root,root,-)
 %license COPYING
-#TAW 0.12.0.58 %doc README.md
+#t0dd 0.12.0.58 %doc README.md
 %{_libdir}/libbitcoinconsensus.so*
 
 
@@ -461,7 +470,7 @@ exit 0
 %files devel
 %defattr(-,root,root,-)
 %license COPYING
-#TAW 0.12.0.58 %doc README.md
+#t0dd 0.12.0.58 %doc README.md
 %{_includedir}/bitcoinconsensus.h
 %{_libdir}/libbitcoinconsensus.a
 %{_libdir}/libbitcoinconsensus.la
@@ -472,8 +481,8 @@ exit 0
 %files utils
 %defattr(-,root,root,-)
 %license COPYING
-#taw %doc README.md README.utils.redhat dash.conf.example
-#TAW 0.12.0.58 %doc README.md dash.conf.example
+#t0dd %doc README.md README.utils.redhat dash.conf.example
+#t0dd 0.12.0.58 %doc README.md dash.conf.example
 %{_bindir}/dash-cli
 %{_bindir}/dash-tx
 
@@ -489,6 +498,12 @@ exit 0
 # GitHub for Sentinel (complimentary to dashd): https://github.com/nmarley/sentinel
 
 %changelog
+* Thu Jan 05 2017 Todd Warner <t0dd@protonmail.com> 0.12.1-test.b00766.2
+- Testnet - Testing Phase 2 -- From build 00766, v0.12.1.0-g7e9ad0e
+- SHA256: a5d4c9598bfa0d1eaabfa820f9419dac319c7e12acb9e976d4e178a171fb1d23  dashcore-0.12.1.tar.gz
+- Merged contributing tarballs.
+- Created and added a pile of desktop icons to better meet industry standards.
+-
 * Thu Jan 05 2017 Todd Warner <t0dd@protonmail.com> 0.12.1-test.b00766.0
 - Testnet - Testing Phase 2 -- From build 00766, v0.12.1.0-g7e9ad0e
 - SHA256: a5d4c9598bfa0d1eaabfa820f9419dac319c7e12acb9e976d4e178a171fb1d23  dashcore-0.12.1.tar.gz
