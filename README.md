@@ -95,7 +95,7 @@ In order to build from a source RPM, you first need to set up your environment. 
 ```
 # As a normal user (not root)
 # For RHEL and CentOS, it's the same, just don't include the "fedora-packager"
-sudo dnf install @development-tools fedora-packager rpmdevtools
+sudo dnf install @development-tools fedora-packager rpmdevtools rpm-sign
 ```
 
 ```
