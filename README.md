@@ -11,12 +11,12 @@ remember to backup your Dash wallet before installing another version.
 * Fedora Linux 23: `dashcore-0.12.0.58-2.taw.fc23.src.rpm`
 * CentOS and RHEL 7: `dashcore-0.12.0.58-2.taw.el7.centos.src.rpm`
 
-**Experimental sources: 0.12.1 (build 00768, v0.12.1.0-g3b9a748)**
+**Experimental sources: 0.12.1 (build 00771, v0.12.1.0-ge847967)**
 *Use experimental RPMs at your own risk*
 
-* Fedora Linux 24: `dashcore-0.12.1-test.b00768.0.taw.fc24.src.rpm`
-* Fedora Linux 25: `dashcore-0.12.1-test.b00768.0.taw.fc25.src.rpm`
-* CentOS and RHEL 7: `dashcore-0.12.1-test.b00768.0.taw.el7.centos.src.rpm`
+* Fedora Linux 24: `dashcore-0.12.1-test.b00771.0.taw.fc24.src.rpm`
+* Fedora Linux 25: `dashcore-0.12.1-test.b00771.0.taw.fc25.src.rpm`
+* CentOS and RHEL 7: `dashcore-0.12.1-test.b00771.0.taw.el7.centos.src.rpm`
 
   Sourced from: [[latest successful builds]](https://dashpay.atlassian.net/builds/browse/DASHL-DEV/latestSuccessful), more specifically these [[latest artifacts]](https://dashpay.atlassian.net/builds/artifact/DASHL-DEV/JOB1/build-latestSuccessful/)<br>
   Announcement message: https://www.dash.org/forum/threads/12-1-testnet-testing-phase-two-ignition.10818/<br>
@@ -151,9 +151,9 @@ this document.
 fdecf46a7ea9b6dd9254cec96ad091192a2ee15932a2301d78b9d80a37868ba9  dashcore-0.12.0.58-2.taw.el7.centos.src.rpm
 5790c9f2e5a14cd22cedaf59b0f650d8a559a954c6a33b6178553be42b86e2c3  dashcore-0.12.0.58-2.taw.fc23.src.rpm
 
-fd7888baa7c04ee7f3e3c801d9156581633e842108acad087dcbac9812b6e276  dashcore-0.12.1-test.b00768.0.taw.el7.centos.src.rpm
-ad850a6c8fdab0d741953d7a06239f047511ef8f6be758204b401232473e2aa1  dashcore-0.12.1-test.b00768.0.taw.fc24.src.rpm
-2903c42c53c52a2fff9f58803985a51453537168d0c239436ab19c25ac33475d  dashcore-0.12.1-test.b00768.0.taw.fc25.src.rpm
+a07e1b8ca168360c09afe4c628cde9dfa10f4179fc8287ed520ac8bfdf7bb140  dashcore-0.12.1-test.b00771.0.taw.el7.centos.src.rpm
+42a9416b37022e10d480afe854c6840fe15298f60ac20f31c591fe770f65e3f6  dashcore-0.12.1-test.b00771.0.taw.fc24.src.rpm
+4d717ec5de6d89f578dd54d0b1a522eb583979eb840ebe14a579365276ddf0de  dashcore-0.12.1-test.b00771.0.taw.fc25.src.rpm
 ```
 
 ----
@@ -345,8 +345,7 @@ more information about yum and dnf).
 
 ## That should get you started! Good luck! -[Todd](https://keybase.io/toddwarner)
 
-_And come say hello to me. I am **t0dd**, **taw00**, **agrarian**, or
-**dAgrarian** in various forums:
+_And come say hello to me. I am **t0dd**, **taw**, **taw00**, or **agrarian**, in various forums:
 [dash.org's forums](https://www.dash.org/forum/),
 [#dash:chat.cryptochat.io (matrix network)](https://riot.im/app/#/room/#dash:chat.cryptochat.io), [#dashpay on
 freenode IRC](http://freenode.net/), [Dash Knights 2.0 on
