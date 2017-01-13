@@ -23,7 +23,7 @@
 # date with a numeral, like 20160405.0, 20160405.1, etc.
 # Use whatever is meaningful to you. Just remember if you are iterating, it needs
 # to be consistent and progress in version (so that upgrades work)
-%define bump test.b00768.0
+%define bump test.b00771.0
 
 # "bumptag" is used to indicate additional information, usually an identifier,
 # like the builder's initials, or a date, or both, or nil.
@@ -286,7 +286,6 @@ make %{?_smp_mflags}
 %install
 rm -rf %{buildroot}
 mkdir %{buildroot}
-echo "============================================= HERE BEGIN"
 
 make INSTALL="install -p" CP="cp -p" DESTDIR=%{buildroot} install
 
@@ -306,17 +305,18 @@ rm -f %{buildroot}%{_bindir}/dashd
 
 # Install / config ancillary files
 # Remember:
-#   _datadir = /usr/share
-#   _mandir = /usr/share/man
-#   _sysconfdir = /etc
-#   _localstatedir = /var
-#   _tmpfilesdir = /usr/lib/tmpfiles.d
-#   _unitdir =     /usr/lib/systemd/system
-echo "============================================= HERE 1"
+#   %{_datadir} = /usr/share
+#   %{_mandir} = /usr/share/man
+#   %{_sysconfdir} = /etc
+#   %{_localstatedir} = /var
+#   %{_sharedstatedir} is /var/lib
+#   %{_tmpfilesdir} = /usr/lib/tmpfiles.d
+#   %{_unitdir} = /usr/lib/systemd/system
 install -d %{buildroot}%{_datadir}
 install -d %{buildroot}%{_mandir}
 install -d %{buildroot}%{_sysconfdir}
 install -d %{buildroot}%{_localstatedir}
+install -d %{buildroot}%{_sharedstatedir}
 install -d %{buildroot}%{_tmpfilesdir}
 install -d %{buildroot}%{_unitdir}
 
@@ -324,7 +324,6 @@ cp -a usr/share/* %{buildroot}%{_datadir}/
 cp -a etc/* %{buildroot}%{_sysconfdir}/
 #install -D -m755 -p %{_unitdir}/* %{buildroot}%{_unitdir}
 
-echo "============================================= HERE 2"
 ls -lh usr/share %{buildroot}%{_datadir}
 ls -lh usr/share/applications %{buildroot}%{_datadir}/applications
 #install -d -m755 -p %{buildroot}%{_datadir}
@@ -332,14 +331,14 @@ ls -lh usr/share/applications %{buildroot}%{_datadir}/applications
 # XXX For production release, comment the next line
 desktop-file-validate %{buildroot}%{_datadir}/applications/dash-qt.desktop
 
-echo "============================================= HERE 3"
-install -d -m750 -p %{buildroot}%{_sysconfdir}/dash
+install -d -m750 -p %{buildroot}%{_sysconfdir}/dashcore
+install -d -m750 -p %{buildroot}%{_sharedstatedir}/dashcore
+
 install -D -m600 -p ./%{_sysconfdir}/sysconfig/dash %{buildroot}%{_sysconfdir}/sysconfig/dash
 install -D -m644 -p ./%{_unitdir}/dash.service %{buildroot}%{_unitdir}/dash.service
 install -D -m644 -p ./%{_tmpfilesdir}/dash.conf %{buildroot}%{_tmpfilesdir}/
-install -d -m750 -p %{buildroot}%{_localstatedir}/lib/dash
 
-echo "============================================= HERE 4"
+
 gzip %{buildroot}%{_mandir}/man1/dashd.1
 gzip %{buildroot}%{_mandir}/man1/dash-qt.1
 gzip %{buildroot}%{_mandir}/man5/dash.conf.5
@@ -352,7 +351,6 @@ gzip %{buildroot}%{_mandir}/man5/masternode.conf.5
 #t0dd 	install -p -m 644 SELinux/dash.pp.${selinuxvariant} \
 #t0dd 		%{buildroot}%{_datadir}/selinux/${selinuxvariant}/dash.pp
 #t0dd donex
-echo "============================================= HERE DONE!"
 
 
 %clean
@@ -361,9 +359,10 @@ rm -rf %{buildroot}
 
 # dashcore-server
 %pre server
-# This is for the case that you run dash as a service (systemctl start dash)
+# This is for the case that you run dash core as a service (systemctl start dash)
+# %{_sharedstatedir} is /var/lib
 getent group dash >/dev/null || groupadd -r dash
-getent passwd dash >/dev/null || useradd -r -g dash -d /var/lib/dash -s /sbin/nologin -c "Dash Core node, masternode, and/or wallet server" dash
+getent passwd dash >/dev/null || useradd -r -g dash -d %{_sharedstatedir}/dashcore -s /sbin/nologin -c "Dash Core node, masternode, and wallet server" dash
 exit 0
 
 
@@ -382,7 +381,7 @@ exit 0
 #t0dd /usr/sbin/semanage port -a -t dash_port_t -p tcp 18332
 #t0dd /usr/sbin/semanage port -a -t dash_port_t -p tcp 18333
 #t0dd /sbin/fixfiles -R dashcore-server restore &> /dev/null || :
-#t0dd /sbin/restorecon -R %{_localstatedir}/lib/dash || :
+#t0dd /sbin/restorecon -R %{_sharedstatedir}/dashcore || :
 
 
 # dashcore-server
@@ -410,8 +409,8 @@ exit 0
 #t0dd 		&> /dev/null || :
 #t0dd 	done
 #t0dd 	/sbin/fixfiles -R dashcore-server restore &> /dev/null || :
-#t0dd 	[ -d %{_localstatedir}/lib/dash ] && \
-#t0dd 		/sbin/restorecon -R %{_localstatedir}/lib/dash \
+#t0dd 	[ -d %{_sharedstatedir}/dashcore ] && \
+#t0dd 		/sbin/restorecon -R %{_sharedstatedir}/dashcore \
 #t0dd 		&> /dev/null || :
 #t0dd fi
 
@@ -442,8 +441,8 @@ exit 0
 #t0dd %doc README.md README.server.redhat doc/dnsseed-policy.md doc/release-notes.md doc/tor.md dash.conf.example
 #t0dd 0.12.0.58 %doc README.md doc/dnsseed-policy.md doc/release-notes.md doc/tor.md dash.conf.example
 %doc doc/dnsseed-policy.md doc/release-notes.md doc/tor.md doc/multiwallet-qt.md doc/guide-startmany.md doc/reduce-traffic.md doc/zmq.md
-%dir %attr(750,dash,dash) %{_localstatedir}/lib/dash
-%dir %attr(750,dash,dash) %{_sysconfdir}/dash
+%dir %attr(750,dash,dash) %{_sharedstatedir}/dashcore
+%dir %attr(750,dash,dash) %{_sysconfdir}/dashcore
 %config(noreplace) %attr(600,root,root) %{_sysconfdir}/sysconfig/dash
 %{_unitdir}/dash.service
 %doc SELinux/*
@@ -498,6 +497,21 @@ exit 0
 # GitHub for Sentinel (complimentary to dashd): https://github.com/nmarley/sentinel
 
 %changelog
+* Thu Jan 12 2017 Todd Warner <t0dd@protonmail.com> 0.12.1-test.b00771.0
+- Testnet - Testing Phase 2 -- From build 00771, v0.12.1.0-ge847967
+- db37c869a5c2aa5c2dd8d144ab0ff653ad4a69ed018b57730177f2cd942f3f90  dashcore-0.12.1.tar.gz
+-
+* Thu Jan 12 2017 Todd Warner <t0dd@protonmail.com> 0.12.1-test.b00770.1
+- Testnet - Testing Phase 2 -- From build 00770, v0.12.1.0-g5cb6486
+- 5025679352d9d38c799436cb01f92984bd3d00653ad0aa4bd233d15a037a8f6e  dashcore-0.12.1.tar.gz
+- f225678d467cdff3ec9d1e6616ed966e6dcc940d95328208b94ce9b9c11df521  dashcore-0.12.1-contrib.tar.gz
+- Removed a bunch of test echos in the spec file (oops!).
+- Moved server daemon configuration configuration datadir default to /var/lib/dashcore/ for 12.1
+-
+* Tue Jan 10 2017 Todd Warner <t0dd@protonmail.com> 0.12.1-test.b00770.0
+- Testnet - Testing Phase 2 -- From build 00770, v0.12.1.0-g5cb6486
+- SHA256: 5025679352d9d38c799436cb01f92984bd3d00653ad0aa4bd233d15a037a8f6e  dashcore-0.12.1.tar.gz
+-
 * Tue Jan 10 2017 Todd Warner <t0dd@protonmail.com> 0.12.1-test.b00768.0
 - Testnet - Testing Phase 2 -- From build 00768, v0.12.1.0-g3b9a748
 - SHA256: 8701b1044339aaa76fe060c05a0e9e2f3950215719cc36969846845d152a348d  dashcore-0.12.1.tar.gz
