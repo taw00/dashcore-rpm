@@ -11,6 +11,8 @@ Install `firewalld`
 sudo dnf install -y firewalld # Probably already installed
 # If CentOS or RHEL...
 sudo yum install -y firewalld # Probably already installed
+# If Debian or Ubuntu
+sudo apt-get install -y firewalld
 ```
 
 Configure firewall
@@ -23,7 +25,8 @@ sudo systemctl start firewalld.service
 sudo systemctl enable firewalld.service
 
 # Determine what the default zone is.
-# On vultr, for example, default zone is FedoraServer (it is the assumption for this example)
+# On vultr, for example, default zone is "FedoraServer" (it is the assumption for this example)
+# On Ubuntu, it will often be "Public"
 sudo firewall-cmd --get-active-zone
 
 # FedoraServer usually starts with ssh, dhcp6-client, and cockpit opened up
@@ -62,6 +65,8 @@ sudo dnf install -y fail2ban
 # If CentOS or RHEL
 sudo yum install epel-release # if not already installed
 sudo yum install -y fail2ban
+# If Debian or Ubuntu
+sudo apt-get install -y fail2ban
 ```
 
 Lock-down ssh.... Edit `/etc/fail2ban/jail.local`
