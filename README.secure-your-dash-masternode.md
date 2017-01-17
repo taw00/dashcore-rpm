@@ -12,7 +12,7 @@ sudo dnf install -y firewalld # Probably already installed
 # If CentOS or RHEL...
 sudo yum install -y firewalld # Probably already installed
 # If Debian or Ubuntu
-sudo apt-get install -y firewalld
+sudo apt install -y firewalld
 ```
 
 Configure firewall
@@ -26,14 +26,14 @@ sudo systemctl enable firewalld.service
 
 # Determine what the default zone is.
 # On vultr, for example, default zone is "FedoraServer" (it is the assumption for this example)
-# On Ubuntu, it will often be "Public"
+# On Ubuntu, it will often be "public", just replace "FedoraServer" with what you are using below.
 sudo firewall-cmd --get-active-zone
 
 # FedoraServer usually starts with ssh, dhcp6-client, and cockpit opened up
 # I want the first two, but not cockpit by default
 sudo firewall-cmd --permanent --zone=FedoraServer --add-service ssh
 sudo firewall-cmd --permanent --zone=FedoraServer --add-service dhcpv6-client
-sudo firewall-cmd --permanent --zone FedoraServer --remove-service cockpit
+sudo firewall-cmd --permanent --zone=FedoraServer --remove-service cockpit
 
 # Open up the Masternode port (19999=Testnet, 9999=Live)
 sudo firewall-cmd --permanent --zone=FedoraServer --add-port=19999/tcp
