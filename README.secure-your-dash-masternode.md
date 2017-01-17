@@ -66,7 +66,7 @@ sudo dnf install -y fail2ban
 sudo yum install epel-release # if not already installed
 sudo yum install -y fail2ban
 # If Debian or Ubuntu
-sudo apt-get install -y fail2ban
+sudo apt install -y fail2ban
 ```
 
 Lock-down ssh.... Edit `/etc/fail2ban/jail.local`
