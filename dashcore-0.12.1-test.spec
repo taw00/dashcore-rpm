@@ -23,7 +23,7 @@
 # date with a numeral, like 20160405.0, 20160405.1, etc.
 # Use whatever is meaningful to you. Just remember if you are iterating, it needs
 # to be consistent and progress in version (so that upgrades work)
-%define bump test.b00772.0
+%define bump test.b00772.1
 
 # "bumptag" is used to indicate additional information, usually an identifier,
 # like the builder's initials, or a date, or both, or nil.
@@ -249,10 +249,10 @@ at www.dash.org.
 # Install README files
 #t0dd cp -p %{SOURCE8} %{SOURCE9} %{SOURCE10} .
 
-# XXX Prep SELinux policy -- NOT USED YET
-# not sure why this is done here in particular -t0dd
+# Prep SELinux policy -- XXX NOT USED YET
+# Done here because action is taken in the %build step 
 mkdir -p SELinux
-cp -p ./additions/selinux/dash.{te,if,fc} SELinux
+cp -p ./contrib/linux/selinux/dash.{te,if,fc} SELinux
 
 %build
 # Build Dash
@@ -320,29 +320,72 @@ install -d %{buildroot}%{_sharedstatedir}
 install -d %{buildroot}%{_tmpfilesdir}
 install -d %{buildroot}%{_unitdir}
 
-cp -a usr/share/* %{buildroot}%{_datadir}/
-cp -a etc/* %{buildroot}%{_sysconfdir}/
-#install -D -m755 -p %{_unitdir}/* %{buildroot}%{_unitdir}
-
-ls -lh usr/share %{buildroot}%{_datadir}
-ls -lh usr/share/applications %{buildroot}%{_datadir}/applications
-#install -d -m755 -p %{buildroot}%{_datadir}
-# Test the dash GUI desktop semantics
-# XXX For production release, comment the next line
-desktop-file-validate %{buildroot}%{_datadir}/applications/dash-qt.desktop
-
 install -d -m750 -p %{buildroot}%{_sysconfdir}/dashcore
 install -d -m750 -p %{buildroot}%{_sharedstatedir}/dashcore
 
-install -D -m600 -p ./%{_sysconfdir}/sysconfig/dash %{buildroot}%{_sysconfdir}/sysconfig/dash
-install -D -m644 -p ./%{_unitdir}/dash.service %{buildroot}%{_unitdir}/dash.service
-install -D -m644 -p ./%{_tmpfilesdir}/dash.conf %{buildroot}%{_tmpfilesdir}/
-
-
+# Man Pages
+install -d %{buildroot}%{_mandir}/man1
+install -D -m644 ./contrib/linux/man/man1/* %{buildroot}%{_mandir}/man1/
 gzip %{buildroot}%{_mandir}/man1/dashd.1
 gzip %{buildroot}%{_mandir}/man1/dash-qt.1
+install -d %{buildroot}%{_mandir}/man5
+install -D -m644 ./contrib/linux/man/man5/* %{buildroot}%{_mandir}/man5/
 gzip %{buildroot}%{_mandir}/man5/dash.conf.5
 gzip %{buildroot}%{_mandir}/man5/masternode.conf.5
+
+# Desktop elements - desktop file and kde protocol file
+install -D -m644 ./contrib/linux/desktop/dash-qt.desktop %{buildroot}%{_datadir}/applications/dash-qt.desktop
+install -D -m644 ./contrib/linux/desktop/usr-share-kde4-services_dash-qt.protocol %{buildroot}%{_datadir}/kde4/services/dash-qt.protocol
+# Desktop elements - hicolor icons
+install -D -m644 ./contrib/linux/desktop/dash-hicolor-128.png      %{buildroot}%{_datadir}/icons/hicolor/128x128/apps/dash.png
+install -D -m644 ./contrib/linux/desktop/dash-hicolor-16.png       %{buildroot}%{_datadir}/icons/hicolor/16x16/apps/dash.png
+install -D -m644 ./contrib/linux/desktop/dash-hicolor-22.png       %{buildroot}%{_datadir}/icons/hicolor/22x22/apps/dash.png
+install -D -m644 ./contrib/linux/desktop/dash-hicolor-24.png       %{buildroot}%{_datadir}/icons/hicolor/24x24/apps/dash.png
+install -D -m644 ./contrib/linux/desktop/dash-hicolor-256.png      %{buildroot}%{_datadir}/icons/hicolor/256x256/apps/dash.png
+install -D -m644 ./contrib/linux/desktop/dash-hicolor-32.png       %{buildroot}%{_datadir}/icons/hicolor/32x32/apps/dash.png
+install -D -m644 ./contrib/linux/desktop/dash-hicolor-48.png       %{buildroot}%{_datadir}/icons/hicolor/48x48/apps/dash.png
+install -D -m644 ./contrib/linux/desktop/dash-hicolor-scalable.svg %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/dash.svg
+# Desktop elements - HighContrast icons
+install -D -m644 ./contrib/linux/desktop/dash-HighContrast-128.png      %{buildroot}%{_datadir}/icons/HighContrast/128x128/apps/dash.png
+install -D -m644 ./contrib/linux/desktop/dash-HighContrast-16.png       %{buildroot}%{_datadir}/icons/HighContrast/16x16/apps/dash.png
+install -D -m644 ./contrib/linux/desktop/dash-HighContrast-22.png       %{buildroot}%{_datadir}/icons/HighContrast/22x22/apps/dash.png
+install -D -m644 ./contrib/linux/desktop/dash-HighContrast-24.png       %{buildroot}%{_datadir}/icons/HighContrast/24x24/apps/dash.png
+install -D -m644 ./contrib/linux/desktop/dash-HighContrast-256.png      %{buildroot}%{_datadir}/icons/HighContrast/256x256/apps/dash.png
+install -D -m644 ./contrib/linux/desktop/dash-HighContrast-32.png       %{buildroot}%{_datadir}/icons/HighContrast/32x32/apps/dash.png
+install -D -m644 ./contrib/linux/desktop/dash-HighContrast-48.png       %{buildroot}%{_datadir}/icons/HighContrast/48x48/apps/dash.png
+install -D -m644 ./contrib/linux/desktop/dash-HighContrast-scalable.svg %{buildroot}%{_datadir}/icons/HighContrast/scalable/apps/dash.svg
+
+# Misc pixmaps - unsure if they are even used...
+install -d %{buildroot}%{_datadir}/pixmaps
+install -D -m644 ./contrib/extras/pixmaps/* %{buildroot}%{_datadir}/pixmaps/
+
+# Install that dated dash.conf.example document TODO: need masternode.conf example also... or just update the man page?
+# Note: doesn't need to be in buildroot I don't think.
+install -D -m644 ./contrib/extras/dash.conf.example doc/dash.conf.example
+
+###NOPE###cp -a usr/share/* %{buildroot}%{_datadir}/
+###NOPE###cp -a etc/* %{buildroot}%{_sysconfdir}/
+###NOPE####install -D -m755 -p %{_unitdir}/* %{buildroot}%{_unitdir}
+
+###NOPE###ls -lh usr/share %{buildroot}%{_datadir}
+###NOPE###ls -lh usr/share/applications %{buildroot}%{_datadir}/applications
+###NOPE####install -d -m755 -p %{buildroot}%{_datadir}
+###NOPE#### Test the dash GUI desktop semantics
+###NOPE#### XXX For production release, comment the next line
+###NOPE###desktop-file-validate %{buildroot}%{_datadir}/applications/dash-qt.desktop
+
+
+# Install system services files
+install -D -m600 -p ./contrib/linux/systemd/etc-sysconfig_dash %{buildroot}%{_sysconfdir}/sysconfig/dash
+install -D -m644 -p ./contrib/linux/systemd/usr-lib-systemd-system_dash.service %{buildroot}%{_unitdir}/dash.service
+install -D -m644 -p ./contrib/linux/systemd/usr-lib-tmpfiles.d_dash.conf %{buildroot}%{_tmpfilesdir}/dash.conf
+
+###NOPE###install -D -m600 -p ./%{_sysconfdir}/sysconfig/dash %{buildroot}%{_sysconfdir}/sysconfig/dash
+###NOPE###install -D -m644 -p ./%{_unitdir}/dash.service %{buildroot}%{_unitdir}/dash.service
+###NOPE###install -D -m644 -p ./%{_tmpfilesdir}/dash.conf %{buildroot}%{_tmpfilesdir}/
+
+
+
 
 #t0dd # Install SELinux policy
 #t0dd for selinuxvariant in %{selinux_variants}
@@ -420,9 +463,9 @@ exit 0
 %files client
 %defattr(-,root,root,-)
 %license COPYING
-#t0dd %doc README.md README.gui.redhat doc/assets-attribution.md doc/multiwallet-qt.md doc/release-notes.md doc/tor.md dash.conf.example
-#t0dd 0.12.0.58 %doc README.md doc/assets-attribution.md doc/multiwallet-qt.md doc/release-notes.md doc/tor.md dash.conf.example
-%doc doc/assets-attribution.md doc/multiwallet-qt.md doc/release-notes.md doc/tor.md doc/keepass.md
+#t0dd %doc README.md README.gui.redhat doc/assets-attribution.md doc/multiwallet-qt.md doc/release-notes.md doc/tor.md doc/dash.conf.example
+#t0dd 0.12.0.58 %doc README.md doc/assets-attribution.md doc/multiwallet-qt.md doc/release-notes.md doc/tor.md doc/dash.conf.example
+%doc doc/assets-attribution.md doc/multiwallet-qt.md doc/release-notes.md doc/tor.md doc/keepass.md contrib/extras/dash.conf.example
 %{_bindir}/dash-qt
 # XXX COMMENT OUT TEST BINARY IF THIS IS A PRODUCTION RELEASE
 %{_bindir}/test_dash-qt
@@ -438,9 +481,9 @@ exit 0
 %files server
 %defattr(-,root,root,-)
 %license COPYING
-#t0dd %doc README.md README.server.redhat doc/dnsseed-policy.md doc/release-notes.md doc/tor.md dash.conf.example
-#t0dd 0.12.0.58 %doc README.md doc/dnsseed-policy.md doc/release-notes.md doc/tor.md dash.conf.example
-%doc doc/dnsseed-policy.md doc/release-notes.md doc/tor.md doc/multiwallet-qt.md doc/guide-startmany.md doc/reduce-traffic.md doc/zmq.md
+#t0dd %doc README.md README.server.redhat doc/dnsseed-policy.md doc/release-notes.md doc/tor.md doc/dash.conf.example
+#t0dd 0.12.0.58 %doc README.md doc/dnsseed-policy.md doc/release-notes.md doc/tor.md doc/dash.conf.example
+%doc doc/dnsseed-policy.md doc/release-notes.md doc/tor.md doc/multiwallet-qt.md doc/guide-startmany.md doc/reduce-traffic.md doc/zmq.md doc/dash.conf.example
 %dir %attr(750,dash,dash) %{_sharedstatedir}/dashcore
 %dir %attr(750,dash,dash) %{_sysconfdir}/dashcore
 %config(noreplace) %attr(600,root,root) %{_sysconfdir}/sysconfig/dash
@@ -497,6 +540,12 @@ exit 0
 # GitHub for Sentinel (complimentary to dashd): https://github.com/nmarley/sentinel
 
 %changelog
+* Mon Jan 16 2017 Todd Warner <t0dd@protonmail.com> 0.12.1-test.b00772.1
+- Testnet - Testing Phase 2 -- From build 00772, v0.12.1.0-gf995a26
+- f61f6fe59cc8959c947ad9b49850f3989a895813055f143c012f8a4a053616b3  dashcore-0.12.1.tar.gz
+- 91312aa81a4b1a8967cd2b0640938321205a34e01cfa4a9e12172f4337f4a5f2  dashcore-0.12.1-contrib.tar.gz
+- Redid the contrib tarball again. I think I am finally happy. We'll see. :)
+-
 * Thu Jan 12 2017 Todd Warner <t0dd@protonmail.com> 0.12.1-test.b00772.0
 - Testnet - Testing Phase 2 -- From build 00772, v0.12.1.0-gf995a26
 - f61f6fe59cc8959c947ad9b49850f3989a895813055f143c012f8a4a053616b3  dashcore-0.12.1.tar.gz
