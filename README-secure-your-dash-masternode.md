@@ -60,10 +60,11 @@ Install `fail2ban`...
 # If Fedora...
 sudo dnf install -y fail2ban
 # If CentOS or RHEL
+sudo yum install epel-release # if not already installed
 sudo yum install -y fail2ban
 ```
 
-Lock-down ssh.... Edit /etc/fail2ban/jail.local
+Lock-down ssh.... Edit `/etc/fail2ban/jail.local`
 
 ```
 sudo nano /etc/fail2ban/jail.local
