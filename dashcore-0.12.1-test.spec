@@ -23,7 +23,7 @@
 # date with a numeral, like 20160405.0, 20160405.1, etc.
 # Use whatever is meaningful to you. Just remember if you are iterating, it needs
 # to be consistent and progress in version (so that upgrades work)
-%define bump test.b00774.1
+%define bump test.b00774.2
 
 # "bumptag" is used to indicate additional information, usually an identifier,
 # like the builder's initials, or a date, or both, or nil.
@@ -412,6 +412,9 @@ exit 0
 # dashcore-server
 %post server
 %systemd_post dash.service
+# firewalld only partially picks up changes to its services files without this
+test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
+
 #t0dd for selinuxvariant in %{selinux_variants}
 #t0dd do
 #t0dd 	/usr/sbin/semodule -s ${selinuxvariant} -i \
@@ -542,12 +545,13 @@ exit 0
 # GitHub for Sentinel (complimentary to dashd): https://github.com/nmarley/sentinel
 
 %changelog
-* Tue Jan 17 2017 Todd Warner <t0dd@protonmail.com> 0.12.1-test.b00774.1
+* Wed Jan 18 2017 Todd Warner <t0dd@protonmail.com> 0.12.1-test.b00774.2
 - Testnet - Testing Phase 2 -- From build 00774, v0.12.1.0-ge847967
 - 5c916db5dc2f7d95b7ed23de918e9c4174e14836c0ba8820a970561d9300a5ba  dashcore-0.12.1.tar.gz
 - 33e4dcc2efd523de331d024d92d0c9065033c7519d8e670bb30761a32cd38e90  dashcore-0.12.1-contrib.tar.gz
+- Changes for 774.0 - 774.2
 - Updated dashcore-server RPM package description.
-- Wrote and added firewalld service definition files.
+- Wrote and added firewalld service definition files ...which requires a %post firewalld bounce.
 - TODO: Include node/masternode firewall-cmd documenation.
 - Note: 0.12.1-test.b00774.0 had a spec error that put the firewall files in the wrong place
 -
