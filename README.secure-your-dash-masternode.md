@@ -6,7 +6,7 @@
 git-er-done instructions. You may want to investigate further refinement. It
 will get you started though.*
 
-Install `firewalld`
+#### Install `firewalld`
 
 ```
 # If Fedora...
@@ -17,7 +17,7 @@ sudo yum install -y firewalld # Probably already installed
 sudo apt install -y firewalld
 ```
 
-Configure firewall
+#### Configure `firewalld`
 
 ```
 # Is firewalld running?
@@ -73,7 +73,7 @@ sudo firewall-cmd --list-all
 
 Fail2ban analyzes log files for folks trying to do bad things on your system. It doesn't have a lot of breadth of functionality, but it can be effective, especially against folks poking SSH.
 
-Install `fail2ban`...
+#### Install `fail2ban`...
 ```
 # If Fedora...
 sudo dnf install -y fail2ban
@@ -84,8 +84,9 @@ sudo yum install -y fail2ban
 sudo apt install -y fail2ban
 ```
 
-Analyze ssh traffic.... Edit `/etc/fail2ban/jail.local`
+#### Configure `fail2ban`...
 
+Edit `/etc/fail2ban/jail.local`
 ```
 sudo nano /etc/fail2ban/jail.local
 ```
@@ -102,12 +103,14 @@ banaction = iptables-multiport
 enabled = true
 ```
 
-Start and enable `fail2ban`...
+#### Start and enable `fail2ban`...
 
 ```
 sudo systemctl start fail2ban
 sudo systemctl enable fail2ban
 ```
+
+#### Monitor / Analyze
 
 Watch the IP addresses slowly pile up by occassionally looking in the SSH jail...
 ```
