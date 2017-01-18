@@ -23,7 +23,7 @@
 # date with a numeral, like 20160405.0, 20160405.1, etc.
 # Use whatever is meaningful to you. Just remember if you are iterating, it needs
 # to be consistent and progress in version (so that upgrades work)
-%define bump test.b00772.1
+%define bump test.b00774.1
 
 # "bumptag" is used to indicate additional information, usually an identifier,
 # like the builder's initials, or a date, or both, or nil.
@@ -173,19 +173,27 @@ at www.dash.org.
 # dashcore-server
 %description server
 This package provides dashd, a peer-to-peer node and wallet server. It is the
-command line installation without a GUI.  It can be used as a commandline wallet
-and is typically used to run a Dash Masternode. Requires the dashcore-utils RPM
-package to be installed.
+command line installation without a GUI. It can be used as a commandline wallet
+but is typically used to run a Dash Full Node or Masternode. This package
+requires the dashcore-utils RPM package to be installed.
 
-If you are running this as a masternode, it is highly recommended that you also
-install Sentinel. Read more here: https://github.com/nmarley/sentinel Please refer
-to Dash documentation at dash.org for more information about running a Masternode.
+If run as a masternode, a complementary program must also be installed: Sentinel
+(not yet packaged). Read more here: https://github.com/nmarley/sentinel Please
+refer to Dash Core documentation at dash.org for more information about running
+a Masternode.
+
+-
 
 Dash (Digital Cash) is an open source peer-to-peer cryptocurrency that offers
 instant transactions (InstantSend), private transactions (PrivateSend) and token
 fungibility. Dash operates a decentralized governance and budgeting system,
 making it the first decentralized autonomous organization (DAO). Dash is also a
 platform for innovative decentralized crypto-tech.
+
+A Dash Full Node is a un-collatoralized member of a decentralized network of
+servers that validate transactions and blocks. A Dash Masternode is a member
+of a network of incentivized servers that perform expanded critical services
+for the Dash cryptocurrency protocol.
 
 Dash is open source and the name of the overarching project. Learn more
 at www.dash.org.
@@ -250,7 +258,7 @@ at www.dash.org.
 #t0dd cp -p %{SOURCE8} %{SOURCE9} %{SOURCE10} .
 
 # Prep SELinux policy -- XXX NOT USED YET
-# Done here because action is taken in the %build step 
+# Done here because action is taken in the %build step
 mkdir -p SELinux
 cp -p ./contrib/linux/selinux/dash.{te,if,fc} SELinux
 
@@ -304,19 +312,23 @@ rm -f %{buildroot}%{_bindir}/dashd
 
 
 # Install / config ancillary files
-# Remember:
+# Cheatsheet for macros:
 #   %{_datadir} = /usr/share
 #   %{_mandir} = /usr/share/man
 #   %{_sysconfdir} = /etc
 #   %{_localstatedir} = /var
 #   %{_sharedstatedir} is /var/lib
+#   %{_prefix} = /usr
 #   %{_tmpfilesdir} = /usr/lib/tmpfiles.d
 #   %{_unitdir} = /usr/lib/systemd/system
+#   %{_libdir} = /usr/lib or /usr/lib64 (depending on system)
+#   https://fedoraproject.org/wiki/Packaging:RPMMacros
 install -d %{buildroot}%{_datadir}
 install -d %{buildroot}%{_mandir}
 install -d %{buildroot}%{_sysconfdir}
 install -d %{buildroot}%{_localstatedir}
 install -d %{buildroot}%{_sharedstatedir}
+install -d %{buildroot}%{_prefix}
 install -d %{buildroot}%{_tmpfilesdir}
 install -d %{buildroot}%{_unitdir}
 
@@ -359,33 +371,21 @@ install -D -m644 ./contrib/linux/desktop/dash-HighContrast-scalable.svg %{buildr
 install -d %{buildroot}%{_datadir}/pixmaps
 install -D -m644 ./contrib/extras/pixmaps/* %{buildroot}%{_datadir}/pixmaps/
 
+# XXX For production release, comment the next line
+desktop-file-validate %{buildroot}%{_datadir}/applications/dash-qt.desktop
+
 # Install that dated dash.conf.example document TODO: need masternode.conf example also... or just update the man page?
 # Note: doesn't need to be in buildroot I don't think.
 install -D -m644 ./contrib/extras/dash.conf.example doc/dash.conf.example
-
-###NOPE###cp -a usr/share/* %{buildroot}%{_datadir}/
-###NOPE###cp -a etc/* %{buildroot}%{_sysconfdir}/
-###NOPE####install -D -m755 -p %{_unitdir}/* %{buildroot}%{_unitdir}
-
-###NOPE###ls -lh usr/share %{buildroot}%{_datadir}
-###NOPE###ls -lh usr/share/applications %{buildroot}%{_datadir}/applications
-###NOPE####install -d -m755 -p %{buildroot}%{_datadir}
-###NOPE#### Test the dash GUI desktop semantics
-###NOPE#### XXX For production release, comment the next line
-###NOPE###desktop-file-validate %{buildroot}%{_datadir}/applications/dash-qt.desktop
-
 
 # Install system services files
 install -D -m600 -p ./contrib/linux/systemd/etc-sysconfig_dash %{buildroot}%{_sysconfdir}/sysconfig/dash
 install -D -m644 -p ./contrib/linux/systemd/usr-lib-systemd-system_dash.service %{buildroot}%{_unitdir}/dash.service
 install -D -m644 -p ./contrib/linux/systemd/usr-lib-tmpfiles.d_dash.conf %{buildroot}%{_tmpfilesdir}/dash.conf
 
-###NOPE###install -D -m600 -p ./%{_sysconfdir}/sysconfig/dash %{buildroot}%{_sysconfdir}/sysconfig/dash
-###NOPE###install -D -m644 -p ./%{_unitdir}/dash.service %{buildroot}%{_unitdir}/dash.service
-###NOPE###install -D -m644 -p ./%{_tmpfilesdir}/dash.conf %{buildroot}%{_tmpfilesdir}/
-
-
-
+# Service definition files for firewalld for full nodes and masternodes
+install -D -m644 -p ./contrib/linux/firewalld/usr-lib-firewalld-services_dashcore-node.xml %{buildroot}%{_prefix}/lib/firewalld/services/dashcore-node.xml
+install -D -m644 -p ./contrib/linux/firewalld/usr-lib-firewalld-services_dashcore-node-testnet.xml %{buildroot}%{_prefix}/lib/firewalld/services/dashcore-node-testnet.xml
 
 #t0dd # Install SELinux policy
 #t0dd for selinuxvariant in %{selinux_variants}
@@ -488,6 +488,8 @@ exit 0
 %dir %attr(750,dash,dash) %{_sysconfdir}/dashcore
 %config(noreplace) %attr(600,root,root) %{_sysconfdir}/sysconfig/dash
 %{_unitdir}/dash.service
+%{_prefix}/lib/firewalld/services/dashcore-node.xml
+%{_prefix}/lib/firewalld/services/dashcore-node-testnet.xml
 %doc SELinux/*
 %{_sbindir}/dashd
 # XXX COMMENT OUT TEST BINARIES IF THIS IS A PRODUCTION RELEASE
@@ -540,6 +542,15 @@ exit 0
 # GitHub for Sentinel (complimentary to dashd): https://github.com/nmarley/sentinel
 
 %changelog
+* Tue Jan 17 2017 Todd Warner <t0dd@protonmail.com> 0.12.1-test.b00774.1
+- Testnet - Testing Phase 2 -- From build 00774, v0.12.1.0-ge847967
+- 5c916db5dc2f7d95b7ed23de918e9c4174e14836c0ba8820a970561d9300a5ba  dashcore-0.12.1.tar.gz
+- 33e4dcc2efd523de331d024d92d0c9065033c7519d8e670bb30761a32cd38e90  dashcore-0.12.1-contrib.tar.gz
+- Updated dashcore-server RPM package description.
+- Wrote and added firewalld service definition files.
+- TODO: Include node/masternode firewall-cmd documenation.
+- Note: 0.12.1-test.b00774.0 had a spec error that put the firewall files in the wrong place
+-
 * Mon Jan 16 2017 Todd Warner <t0dd@protonmail.com> 0.12.1-test.b00772.1
 - Testnet - Testing Phase 2 -- From build 00772, v0.12.1.0-gf995a26
 - f61f6fe59cc8959c947ad9b49850f3989a895813055f143c012f8a4a053616b3  dashcore-0.12.1.tar.gz
