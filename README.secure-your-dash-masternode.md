@@ -1,4 +1,6 @@
-# Configure the Firewall on Masternode Server
+# Configure the Firewall and Fail2Ban on Masternode Server
+
+## FirewallD
 
 *Note: Firewall rules can be a complicated topic. These are bare bones
 git-er-done instructions. You may want to investigate further refinement. It
@@ -57,7 +59,7 @@ sudo firewall-cmd --state
 sudo firewall-cmd --list-all
 ```
 
-**Some references:**
+#### Some references:
 
 * Rate limiting as we do above: <https://www.rootusers.com/how-to-use-firewalld-rich-rules-and-zones-for-filtering-and-nat/>
 * More on rate limiting: <https://serverfault.com/questions/683671/is-there-a-way-to-rate-limit-connection-attempts-with-firewalld>
@@ -65,7 +67,11 @@ sudo firewall-cmd --list-all
 * Interesting discussion on fighting DOS attacks on http: <https://www.certdepot.net/rhel7-mitigate-http-attacks/>
 * Do some web searching for more about firewalld
 
-# Configure fail2ban on a Dash Masternode server
+----
+
+## Fail2Ban
+
+Fail2ban analyzes log files for folks trying to do bad things on your system. It doesn't have a lot of breadth of functionality, but it can be effective, especially against folks poking SSH.
 
 Install `fail2ban`...
 ```
@@ -78,4 +84,41 @@ sudo yum install -y fail2ban
 sudo apt install -y fail2ban
 ```
 
-0
+Analyze ssh traffic.... Edit `/etc/fail2ban/jail.local`
+
+```
+sudo nano /etc/fail2ban/jail.local
+```
+CUT-N-PASTE this and save...
+```
+[DEFAULT]
+# Ban hosts for one hour:
+bantime = 3600
+
+# Override /etc/fail2ban/jail.d/00-firewalld.conf:
+banaction = iptables-multiport
+
+[sshd]
+enabled = true
+```
+
+Start and enable `fail2ban`...
+
+```
+sudo systemctl start fail2ban
+sudo systemctl enable fail2ban
+```
+
+Watch the IP addresses slowly pile up by occassionally looking in the SSH jail...
+```
+sudo fail2ban status sshd
+```
+...and even...
+```
+sudo tail -F /var/log/fail2ban.log
+```
+
+#### Reference:
+
+* https://en.wikipedia.org/wiki/Fail2ban
+* http://www.fail2ban.org/
