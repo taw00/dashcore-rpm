@@ -1,12 +1,12 @@
 # Dash (digital cash) cryptocurrency spec file
-# Dash Core QT wallet, masternode, full node, and more.
+# Dash Core GUI wallet, masternode, full node, and more.
 #
 # Note about edits within the spec: Any comments beginning with #t0dd is my
 # attempt to block off troublesome, or inappropriate stuff that came over from
 # the bitcoin.spec file that this is based off of. Some things, like the SELinux
 # elements will likely be brought back in when I get a moment.
 #
-# Enjoy. Todd Warner <t0dd@protonmail.com>, Winter 2016
+# Enjoy. Todd Warner <t0dd@protonmail.com>
 
 %define _hardened_build 1
 %global selinux_variants mls strict targeted
@@ -23,7 +23,7 @@
 # date with a numeral, like 20160405.0, 20160405.1, etc.
 # Use whatever is meaningful to you. Just remember if you are iterating, it needs
 # to be consistent and progress in version (so that upgrades work)
-%define bump test.b00774.2
+%define bump test.b00775.0
 
 # "bumptag" is used to indicate additional information, usually an identifier,
 # like the builder's initials, or a date, or both, or nil.
@@ -545,6 +545,10 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 # GitHub for Sentinel (complimentary to dashd): https://github.com/nmarley/sentinel
 
 %changelog
+* Wed Jan 18 2017 Todd Warner <t0dd@protonmail.com> 0.12.1-test.b00775.0
+- Testnet - Testing Phase 2 -- From build 00775, v0.12.1.0-gb5239b7
+- d2a69d3e6f4b8834149b0b4c45950f9b87abfa37117f8bbd991647356f2c49d8  dashcore-0.12.1.tar.gz
+-
 * Wed Jan 18 2017 Todd Warner <t0dd@protonmail.com> 0.12.1-test.b00774.2
 - Testnet - Testing Phase 2 -- From build 00774, v0.12.1.0-ge847967
 - 5c916db5dc2f7d95b7ed23de918e9c4174e14836c0ba8820a970561d9300a5ba  dashcore-0.12.1.tar.gz
