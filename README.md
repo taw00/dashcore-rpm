@@ -143,13 +143,10 @@ The result should match the hash for the RPM your downloaded, otherwise the
 download was complete or the RPM is tampered with or I screwed something up in
 this document.
 
-----
-
 **Verification of the source RPMs digital signature**
 
 If I built these packages correctly, their appropriate sha256 hash should be
-posted below _and_ they should pass a gpg digital signature check signed by my
-public key.
+posted within the sha256sum.txt files included in this repository _and_ they should pass a gpg digital signature check signed by my public key.
 
 (1) Import my GPG key into your RPM keyring if you have not already done so.
 You have to do this as the root user.
