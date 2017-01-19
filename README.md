@@ -11,12 +11,12 @@ remember to backup your Dash wallet before installing another version.
 * Fedora Linux 23: `dashcore-0.12.0.58-2.taw.fc23.src.rpm`
 * CentOS and RHEL 7: `dashcore-0.12.0.58-2.taw.el7.centos.src.rpm`
 
-**Experimental sources: 0.12.1 (build 00774, v0.12.1.0-ge847967)**
+**Experimental sources: 0.12.1 (build 00775, v0.12.1.0-gb5239b7)**
 *Use experimental RPMs at your own risk*
 
-* Fedora Linux 24: `dashcore-0.12.1-test.b00774.1.taw.fc24.src.rpm`
-* Fedora Linux 25: `dashcore-0.12.1-test.b00774.1.taw.fc25.src.rpm`
-* CentOS and RHEL 7: `dashcore-0.12.1-test.b00774.1.taw.el7.centos.src.rpm`
+* Fedora Linux 24: `dashcore-0.12.1-test.b00775.0.taw.fc24.src.rpm`
+* Fedora Linux 25: `dashcore-0.12.1-test.b00775.0.taw.fc25.src.rpm`
+* CentOS and RHEL 7: `dashcore-0.12.1-test.b00775.0.taw.el7.centos.src.rpm`
 
   Sourced from: [[latest successful builds]](https://dashpay.atlassian.net/builds/browse/DASHL-DEV/latestSuccessful), more specifically these [[latest artifacts]](https://dashpay.atlassian.net/builds/artifact/DASHL-DEV/JOB1/build-latestSuccessful/)<br>
   Announcement message: https://www.dash.org/forum/threads/12-1-testnet-testing-phase-two-ignition.10818/<br>
@@ -131,8 +131,7 @@ signature verification is vastly more secure, but more complicated.
 
 **Verification via sha256sum**
 
-*Note, at the end of this document, a list of the source RPMs and the
-sha256sums that they should match, are listed.*
+*Note, sha256 hashes are provided within this github repository.*
 
 From the commandline...
 
@@ -143,18 +142,6 @@ sha256sum dashcore-0.12.0.58-2.taw.*.src.rpm
 The result should match the hash for the RPM your downloaded, otherwise the
 download was complete or the RPM is tampered with or I screwed something up in
 this document.
-
-
-**The sha256 verification hashes:**
-
-```
-fdecf46a7ea9b6dd9254cec96ad091192a2ee15932a2301d78b9d80a37868ba9  dashcore-0.12.0.58-2.taw.el7.centos.src.rpm
-5790c9f2e5a14cd22cedaf59b0f650d8a559a954c6a33b6178553be42b86e2c3  dashcore-0.12.0.58-2.taw.fc23.src.rpm
-
-d2482d26dc1fb7db73a600e28e248a6448cf82800a87b882639eb5ce6dc4e1eb  dashcore-0.12.1-test.b00774.1.taw.el7.centos.src.rpm
-a5d65fd73384de75b0d8af076f2b3ff5cfed72754337605c8a3fd8c85eb3aea1  dashcore-0.12.1-test.b00774.1.taw.fc24.src.rpm
-3e2d6372d5be6ef887efb1b931889cc9a274adb7395e3be720ab9304b36ab92b  dashcore-0.12.1-test.b00774.1.taw.fc25.src.rpm
-```
 
 ----
 
