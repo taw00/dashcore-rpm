@@ -6,7 +6,7 @@
 git-er-done instructions. You may want to investigate further refinement. It
 will get you started though.*
 
-Install `firewalld`
+#### Install `firewalld`
 
 ```
 # If Fedora...
@@ -17,7 +17,7 @@ sudo yum install -y firewalld # Probably already installed
 sudo apt install -y firewalld
 ```
 
-Configure firewall
+#### Configure `firewalld`
 
 ```
 # Is firewalld running?
@@ -34,16 +34,16 @@ sudo firewall-cmd --get-active-zone
 # FedoraServer usually starts with ssh, dhcp6-client, and cockpit opened up
 # I want ssh. dhcpv6 should be unneccessary for a static IP host, and cockpit is something used intermittently.
 # And of course, we want the dash full node/masternode ports available.
-sudo firewall-cmd --permanent --zone=FedoraServer --add-service ssh
-sudo firewall-cmd --permanent --zone=FedoraServer --remove-service dhcpv6-client
-#sudo firewall-cmd --permanent --zone=FedoraServer --add-service cockpit
-sudo firewall-cmd --permanent --zone=FedoraServer --remove-service cockpit
+sudo firewall-cmd --permanent --add-service ssh
+sudo firewall-cmd --permanent --remove-service dhcpv6-client
+#sudo firewall-cmd --permanent --add-service cockpit
+sudo firewall-cmd --permanent --remove-service cockpit
 # Open up the Mastnernode port
-sudo firewall-cmd --permanent --zone=FedoraServer --add-service dash-node
-#sudo firewall-cmd --permanent --zone=FedoraServer --add-service dash-node-testnet
+sudo firewall-cmd --permanent --add-service dash-node
+#sudo firewall-cmd --permanent --add-service dash-node-testnet
 # If you are running and older masternode or a masternode that was not installed via RPM, you must do things manually
-#sudo firewall-cmd --permanent --zone=FedoraServer --add-port=19999/tcp
-#sudo firewall-cmd --permanent --zone=FedoraServer --add-port=9999/tcp
+#sudo firewall-cmd --permanent --add-port=19999/tcp
+#sudo firewall-cmd --permanent --add-port=9999/tcp
 
 # Rate limit incoming ssh and cockpit (if configured) traffic to 10 requests per minute
 sudo firewall-cmd --permanent --add-rich-rule='rule service name=ssh limit value=10/m accept'
@@ -73,7 +73,7 @@ sudo firewall-cmd --list-all
 
 Fail2ban analyzes log files for folks trying to do bad things on your system. It doesn't have a lot of breadth of functionality, but it can be effective, especially against folks poking SSH.
 
-Install `fail2ban`...
+#### Install `fail2ban`...
 ```
 # If Fedora...
 sudo dnf install -y fail2ban
@@ -84,8 +84,9 @@ sudo yum install -y fail2ban
 sudo apt install -y fail2ban
 ```
 
-Analyze ssh traffic.... Edit `/etc/fail2ban/jail.local`
+#### Configure `fail2ban`...
 
+Edit `/etc/fail2ban/jail.local`
 ```
 sudo nano /etc/fail2ban/jail.local
 ```
@@ -102,12 +103,14 @@ banaction = iptables-multiport
 enabled = true
 ```
 
-Start and enable `fail2ban`...
+#### Start and enable `fail2ban`...
 
 ```
 sudo systemctl start fail2ban
 sudo systemctl enable fail2ban
 ```
+
+#### Monitor / Analyze
 
 Watch the IP addresses slowly pile up by occassionally looking in the SSH jail...
 ```
