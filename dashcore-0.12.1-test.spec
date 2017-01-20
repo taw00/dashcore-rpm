@@ -23,7 +23,7 @@
 # date with a numeral, like 20160405.0, 20160405.1, etc.
 # Use whatever is meaningful to you. Just remember if you are iterating, it needs
 # to be consistent and progress in version (so that upgrades work)
-%define bump test.b00775.0
+%define bump test.b00778.0
 
 # "bumptag" is used to indicate additional information, usually an identifier,
 # like the builder's initials, or a date, or both, or nil.
@@ -478,6 +478,8 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 %{_datadir}/icons/*
 %{_mandir}/man1/dash-qt.1.gz
 %{_mandir}/man5/masternode.conf.5.gz
+%{_prefix}/lib/firewalld/services/dashcore-node.xml
+%{_prefix}/lib/firewalld/services/dashcore-node-testnet.xml
 
 
 # dashcore-server
@@ -542,9 +544,16 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 # Latest source builds: https://dashpay.atlassian.net/builds/artifact/DASHL-DEV/JOB1/build-latestSuccessful/
 # Direct source: https://dashpay.atlassian.net/builds/artifact/DASHL-DEV/JOB1/build-00<BUILD ID>
 # GitHub: https://github.com/dashpay/dash
+# GitHub for RPM builds: https://github.com/taw00/dashcore-rpm
 # GitHub for Sentinel (complimentary to dashd): https://github.com/nmarley/sentinel
 
 %changelog
+* Fri Jan 20 2017 Todd Warner <t0dd@protonmail.com> 0.12.1-test.b00778.0
+- Testnet - Testing Phase 2 -- From build 00778, v0.12.1.0-g4b7bd6b
+- 4ed84b16bd50d16ead5e75e5adcc9f8e0bf1bf091add150f540df3a470b7b290  dashcore-0.12.1.tar.gz
+- The GUI wallet acts as a full node when running, so we need the firewalld
+- service definition in that RPM as well.
+-
 * Wed Jan 18 2017 Todd Warner <t0dd@protonmail.com> 0.12.1-test.b00775.0
 - Testnet - Testing Phase 2 -- From build 00775, v0.12.1.0-gb5239b7
 - d2a69d3e6f4b8834149b0b4c45950f9b87abfa37117f8bbd991647356f2c49d8  dashcore-0.12.1.tar.gz
