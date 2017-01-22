@@ -6,21 +6,35 @@ remember to backup your Dash wallet before installing another version.
 
 # Dash Core Source RPM Packages
 
-**Stable sources: 0.12.0.58 (v0.12.0.58-g88f3370)**
+**Stable sources: 0.12.0.58**    
+Latest version and git commit id: v0.12.0.58-g88f3370
 
 * Fedora Linux 23: `dashcore-0.12.0.58-2.taw.fc23.src.rpm`
 * CentOS and RHEL 7: `dashcore-0.12.0.58-2.taw.el7.centos.src.rpm`
 
-**Experimental sources: 0.12.1 (build 00778, v0.12.1.0-g4b7bd6b)**
-*Use experimental RPMs at your own risk*
+**Experimental sources: 0.12.1**    
+*Use experimental RPMs at your own risk*    
+dashcore - latest build #, and git commit id: build 00780, v0.12.1.0-g4b7bd6b    
+dashcore-sentinel - latest version-release: 0.12.1-test.0.taw
 
-* Fedora Linux 24: `dashcore-0.12.1-test.b00778.0.taw.fc24.src.rpm`
-* Fedora Linux 25: `dashcore-0.12.1-test.b00778.0.taw.fc25.src.rpm`
-* CentOS and RHEL 7: `dashcore-0.12.1-test.b00778.0.taw.el7.centos.src.rpm`
+* Fedora Linux 24:
+  - `dashcore-0.12.1-test.b00780.0.taw.fc24.src.rpm`
+  - `dashcore-sentinel-0.12.1-test.0.taw.fc24.src.rpm`
+* Fedora Linux 25:
+  - `dashcore-0.12.1-test.b00780.0.taw.fc25.src.rpm`
+  - `dashcore-sentinel-0.12.1-test.0.taw.fc25.src.rpm`
+* CentOS and RHEL 7:
+  - `dashcore-0.12.1-test.b00780.0.taw.el7.centos.src.rpm`
+  - `dashcore-sentinel-0.12.1-test.0.taw.el7.centos.src.rpm`
 
-  Sourced from: [[latest successful builds]](https://dashpay.atlassian.net/builds/browse/DASHL-DEV/latestSuccessful), more specifically these [[latest artifacts]](https://dashpay.atlassian.net/builds/artifact/DASHL-DEV/JOB1/build-latestSuccessful/)<br>
-  Announcement message: https://www.dash.org/forum/threads/12-1-testnet-testing-phase-two-ignition.10818/<br>
-  Testnet documentation (and phase descriptions): https://dashpay.atlassian.net/wiki/display/DOC/Testnet
+Sourced from: [[latest successful
+builds]](https://dashpay.atlassian.net/builds/browse/DASHL-DEV/latestSuccessful),
+more specifically these [[latest
+artifacts]](https://dashpay.atlassian.net/builds/artifact/DASHL-DEV/JOB1/build-latestSuccessful/)<br>
+Announcement message:
+https://www.dash.org/forum/threads/12-1-testnet-testing-phase-two-ignition.10818/<br>
+Testnet documentation (and phase descriptions):
+https://dashpay.atlassian.net/wiki/display/DOC/Testnet
 
 
 **Dash (Digital Cash)** is an open source peer-to-peer cryptocurrency that

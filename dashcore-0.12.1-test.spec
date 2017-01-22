@@ -1,14 +1,12 @@
 # Dash (digital cash) cryptocurrency spec file
 # Dash Core GUI wallet, masternode, full node, and more.
 #
-# Note about edits within the spec: Any comments beginning with #t0dd is my
-# attempt to block off troublesome, or inappropriate stuff that came over from
-# the bitcoin.spec file that this is based off of. Some things, like the SELinux
-# elements will likely be brought back in when I get a moment.
+# Note about edits within the spec:
+# Any comments beginning with #t0dd is associated to future work or
+# experimental elements of this spec file and build.
 #
 # Enjoy. Todd Warner <t0dd@protonmail.com>
 
-%define _hardened_build 1
 %global selinux_variants mls strict targeted
 
 # To produce a dashcore-debuginfo package:
@@ -16,6 +14,8 @@
 #   2. Separate the %'s from their variable (this screws things up)
 # Otherwise, leave it uncommented
 %define debug_package %{nil}
+# https://fedoraproject.org/wiki/Changes/Harden_All_Packages
+#%define _hardened_build 0
 
 # "bump" refers to "release bump" and is a build identifier For full releases,
 # one will often just name this a numberal for every build: 1, 2, 3, etc. For
@@ -23,7 +23,7 @@
 # date with a numeral, like 20160405.0, 20160405.1, etc.
 # Use whatever is meaningful to you. Just remember if you are iterating, it needs
 # to be consistent and progress in version (so that upgrades work)
-%define bump test.b00778.0
+%define bump test.b00780.0
 
 # "bumptag" is used to indicate additional information, usually an identifier,
 # like the builder's initials, or a date, or both, or nil.
@@ -39,6 +39,8 @@
 Name: dashcore
 Version: 0.12.1
 Release: %{_release}%{?dist}
+Vendor: Dash.org
+Packager: Todd Warner <t0dd@protonmail.com>
 Summary: Dash - Digital Cash - Peer-to-peer, privacy-centric, digital currency
 
 # upstream bitcoin team convention - v0.12.1
@@ -51,25 +53,18 @@ Group: Applications/System
 License: MIT
 URL: http://dash.org/
 # upstream
-#Source0: http://github.com/dashpay/%{name}/archive/%{archivebasename}.tar.gz
 Source0: %{archivebasename}.tar.gz
-# Contributions (not yet in main package)
-# dashd.tmpfiles, dash.sysconfig, dash.service, dash.init(never used?)
+
+# Source archive of contributions (not yet in main upstream package)
+# dashd.tmpfiles, dash.sysconfig, dash.service, dash.init(never used?), etc.
 # Icons, manpages, desktop stuff, etc.
 # includes some future SELinux policy stuff as well (.te, .if, .fc)
 Source1: %{archivebasename}-contrib.tar.gz
-#t0dd Source8:  README.server.redhat
-#t0dd Source9:  README.utils.redhat
-#t0dd Source10: README.gui.redhat
 
-#t0dd I do not think this is needed for Dash
-# Dest change address patch for Lamassu Bitcoin machine
-#Patch1: bitcoin-0.12.0-destchange.patch
-
-# patch configure.ac (autoconf template) for fedora builds
+# patch configure.ac (autoconf template) for fedora builds (a 0.12.0 thing)
 #Patch0: %{archivebasename}-fedora.patch
 
-BuildRoot:	%(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
+BuildRoot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
 BuildRequires: gcc-c++
 BuildRequires: qt5-qtbase-devel qt5-linguist
@@ -98,7 +93,8 @@ BuildRequires: python34
 
 # dashcore-client
 %package client
-Summary: Dash - Digital Cash - Peer-to-peer, privacy-centric, digital currency (dash-qt client)
+Summary: Dash - Digital Cash - Peer-to-peer, privacy-centric, digital currency (dash-qt GUI client)
+Requires: dashcore-utils = %{version}-%{release}
 
 
 # dashcore-server
@@ -118,6 +114,7 @@ Requires: openssl-libs
 #Requires: dashcore-utils = %{version}-%{_release}
 #Requires: dashcore-utils = %{version}
 Requires: dashcore-utils = %{version}-%{release}
+Requires: dashcore-sentinel = %{version}
 
 
 # dashcore-libs
@@ -141,8 +138,8 @@ Summary: Dash - Digital Cash - Peer-to-peer, privacy-centric, digital currency (
 
 # dashcore SRPM
 %description
-This is the source package for building the Dash Core set of binary packages.
-It will build dashcore-{client,server,utils,libs,devel,debuginfo}.
+This is the source package for building most of the Dash Core set of binary
+packages.  It will build dashcore-{client,server,utils,libs,devel,debuginfo}.
 
 Dash (Digital Cash) is an open source peer-to-peer cryptocurrency that offers
 instant transactions (InstantSend), private transactions (PrivateSend) and token
@@ -157,8 +154,10 @@ at www.dash.org.
 
 # dashcore-client
 %description client
-This package provides dash-qt, a user-friendly wallet manager for
-personal use.
+This package provides dash-qt, a user-friendly GUI wallet manager for personal
+use. This package requires the dashcore-utils RPM package to be installed as
+well.
+
 
 Dash (Digital Cash) is an open source peer-to-peer cryptocurrency that offers
 instant transactions (InstantSend), private transactions (PrivateSend) and token
@@ -175,12 +174,10 @@ at www.dash.org.
 This package provides dashd, a peer-to-peer node and wallet server. It is the
 command line installation without a GUI. It can be used as a commandline wallet
 but is typically used to run a Dash Full Node or Masternode. This package
-requires the dashcore-utils RPM package to be installed.
+requires the dashcore-utils and dashcore-sentinel RPM packages to be installed.
 
-If run as a masternode, a complementary program must also be installed: Sentinel
-(not yet packaged). Read more here: https://github.com/nmarley/sentinel Please
-refer to Dash Core documentation at dash.org for more information about running
-a Masternode.
+Please refer to Dash Core documentation at dash.org for more information about
+running a Masternode.
 
 -
 
@@ -400,6 +397,11 @@ install -D -m644 -p ./contrib/linux/firewalld/usr-lib-firewalld-services_dashcor
 rm -rf %{buildroot}
 
 
+# dashcore-client
+%post client
+# firewalld only partially picks up changes to its services files without this
+test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
+
 # dashcore-server
 %pre server
 # This is for the case that you run dash core as a service (systemctl start dash)
@@ -466,8 +468,7 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 %files client
 %defattr(-,root,root,-)
 %license COPYING
-#t0dd %doc README.md README.gui.redhat doc/assets-attribution.md doc/multiwallet-qt.md doc/release-notes.md doc/tor.md doc/dash.conf.example
-#t0dd 0.12.0.58 %doc README.md doc/assets-attribution.md doc/multiwallet-qt.md doc/release-notes.md doc/tor.md doc/dash.conf.example
+#t0dd %doc README.md README.server.redhat 
 %doc doc/assets-attribution.md doc/multiwallet-qt.md doc/release-notes.md doc/tor.md doc/keepass.md contrib/extras/dash.conf.example
 %{_bindir}/dash-qt
 # XXX COMMENT OUT TEST BINARY IF THIS IS A PRODUCTION RELEASE
@@ -486,8 +487,7 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 %files server
 %defattr(-,root,root,-)
 %license COPYING
-#t0dd %doc README.md README.server.redhat doc/dnsseed-policy.md doc/release-notes.md doc/tor.md doc/dash.conf.example
-#t0dd 0.12.0.58 %doc README.md doc/dnsseed-policy.md doc/release-notes.md doc/tor.md doc/dash.conf.example
+#t0dd %doc README.md README.server.redhat 
 %doc doc/dnsseed-policy.md doc/release-notes.md doc/tor.md doc/multiwallet-qt.md doc/guide-startmany.md doc/reduce-traffic.md doc/zmq.md doc/dash.conf.example
 %dir %attr(750,dash,dash) %{_sharedstatedir}/dashcore
 %dir %attr(750,dash,dash) %{_sysconfdir}/dashcore
@@ -511,7 +511,7 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 %files libs
 %defattr(-,root,root,-)
 %license COPYING
-#t0dd 0.12.0.58 %doc README.md
+#t0dd %doc README.md
 %{_libdir}/libbitcoinconsensus.so*
 
 
@@ -519,7 +519,7 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 %files devel
 %defattr(-,root,root,-)
 %license COPYING
-#t0dd 0.12.0.58 %doc README.md
+#t0dd %doc README.md
 %{_includedir}/bitcoinconsensus.h
 %{_libdir}/libbitcoinconsensus.a
 %{_libdir}/libbitcoinconsensus.la
@@ -530,8 +530,6 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 %files utils
 %defattr(-,root,root,-)
 %license COPYING
-#t0dd %doc README.md README.utils.redhat dash.conf.example
-#t0dd 0.12.0.58 %doc README.md dash.conf.example
 %{_bindir}/dash-cli
 %{_bindir}/dash-tx
 
@@ -548,7 +546,13 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 # GitHub for Sentinel (complimentary to dashd): https://github.com/nmarley/sentinel
 
 %changelog
-* Fri Jan 20 2017 Todd Warner <t0dd@protonmail.com> 0.12.1-test.b00778.0
+* Sun Jan 22 2017 Todd Warner <t0dd@protonmail.com> 0.12.1-test.b00780.0
+- Testnet - Testing Phase 2 -- From build 00780, v0.12.1.0-g4b7bd6b
+- 1c8328c357cbc334b909b0dc6675ad5cb271da7f4c077c296b89192a1d3f32c4  dashcore-0.12.1.tar.gz
+- The GUI client really needs dashcore-utils, added as a Requires.
+- dashcore-sentinel exists now. Added as a Requires for dashcore-server
+-
+* Fri Jan 19 2017 Todd Warner <t0dd@protonmail.com> 0.12.1-test.b00780.0
 - Testnet - Testing Phase 2 -- From build 00778, v0.12.1.0-g4b7bd6b
 - 4ed84b16bd50d16ead5e75e5adcc9f8e0bf1bf091add150f540df3a470b7b290  dashcore-0.12.1.tar.gz
 - The GUI wallet acts as a full node when running, so we need the firewalld

@@ -1,9 +1,13 @@
 fdecf46a7ea9b6dd9254cec96ad091192a2ee15932a2301d78b9d80a37868ba9  dashcore-0.12.0.58-2.taw.el7.centos.src.rpm
 5790c9f2e5a14cd22cedaf59b0f650d8a559a954c6a33b6178553be42b86e2c3  dashcore-0.12.0.58-2.taw.fc23.src.rpm
 48700701fce9cac84a8484ec054c19411e4fa2958f826685b9c5b134e7f4bc92  dashcore-0.12.0.58.spec
-b7f902328887dc424343b7095247c9315893d18e649843b0745907485985df5f  dashcore-0.12.1-test.b00778.0.taw.el7.centos.src.rpm
-aa3eed8dc1d235cb7cc56ef8e0941ab25039c5742a196fa496023f9f118c1dee  dashcore-0.12.1-test.b00778.0.taw.fc24.src.rpm
-f5590b69c834d36265b6bc04840bf6d6b1242381bc118e6cd312c6d9d44d9f2a  dashcore-0.12.1-test.b00778.0.taw.fc25.src.rpm
-6c2784bd744e07394ca22c1f3b75e9c23c2d3c2f55ed89699a3bb12f9e4466eb  dashcore-0.12.1-test.spec
+99756a5e3f4be6aa728264f3c1d4a0106dc47841ef3a7b7d1a96047104ca18cd  dashcore-0.12.1-test.b00780.0.taw.el7.centos.src.rpm
+0961a4f1cddd3ff191a31f0af417506130a088c691b8f99c410f132914b5ca02  dashcore-0.12.1-test.b00780.0.taw.fc24.src.rpm
+fe565a2cf26d46df517fdf971dfad95c34ba358e342d4fa785fd147e2d55c38b  dashcore-0.12.1-test.b00780.0.taw.fc25.src.rpm
+0cfb284ba31b342e3a17cecfad6aa79c4db2fa59e9046f4f2a25ec4b092317c8  dashcore-0.12.1-test.spec
 c1814b802c5839c4d4c3334542fc0f6202e35cfa40da333480de0db098e3630a  dashcore-centos.repo
 7c28af9c9266ee10d0b4015223bdb1ea140a388e8b07fcb06684b9b443707b34  dashcore-fedora.repo
+ed79d4910d067fc84e14024910be2fbe30c4e674eb52a95ca8ad26957824c15b  dashcore-sentinel-0.12.1-test.0.taw.el7.centos.src.rpm
+d30e6ae62bbfff1407db545e35fcdefbb2e0dfcbfae6333ffb1d22672db4d6e8  dashcore-sentinel-0.12.1-test.0.taw.fc24.src.rpm
+e4095949ff05bcde00566033c755d04efe377b8a3af81ee0357d72a1e04173fe  dashcore-sentinel-0.12.1-test.0.taw.fc25.src.rpm
+49b9dc814ae1cd0cbefa3cefabe9cd926f3ac2e762caceda6832b4f2dd6ddf71  dashcore-sentinel-0.12.1-test.spec
