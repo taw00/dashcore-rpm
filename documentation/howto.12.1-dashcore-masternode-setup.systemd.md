@@ -438,12 +438,14 @@ Edit the /var/lib/dashcore-sentinel/sentinel.conf file and comment out `network=
 ```
 cd /var/lib/dashcore-sentinel && sudo -u dash SENTINEL_DEBUG=1 venv/bin/python scripts/crontab.py
 ```
+
 It should create a database and populate it.
 
 Run it again...
 ```
 cd /var/lib/dashcore-sentinel && sudo -u dash SENTINEL_DEBUG=1 ./venv/bin/python scripts/crontab.py
 ```
+
 There should be no output.
 
 ### Edit cron and add an "run it every two minutes entry"
@@ -452,6 +454,7 @@ On the commandline, edit `crontab`...
 ```
 sudo -u dash EDITOR="nano" crontab -e
 ```
+
 ...and add this line...
 ```
 */2 * * * * cd /var/lib/dashcore-sentinel && SENTINEL_DEBUG=1 ./venv/bin/python scripts/crontab.py >/dev/null 2>&1
@@ -465,9 +468,13 @@ sudo journalctl -f
 
 ## YOU ARE DONE!
 
-Continue to monitor the enablement status as illustrated in step 8. The status should start as PRE_ENABLED, maybe move to WATCHDOG_EXPIRED, but finally is should settled on ENABLED. If your wallet failed to restart it, it will say something like NEW_START_REQUIRED.
+Continue to monitor the enablement status as illustrated in step 8. The status
+should start as `PRE_ENABLED`, maybe move to `WATCHDOG_EXPIRED`, but finally is
+should settled on `ENABLED`. If your wallet failed to restart it, it will say
+something like `NEW_START_REQUIRED`
 
-If all went well, you have a working Dash Masternode! Congratulations. I hope this was helpful.
+If all went well, you have a working Dash Masternode! Congratulations. I hope
+this was helpful.
 
-Got a dash of feedback? *...har har...* Send it my way [t0dd@protonmail.com](mailto:t0dd@protonmail.com)    
+Got a dash of feedback? *...har har...* Send it my way <t0dd@protonmail.com>    
 And of course, donations welcome: [XyxQq4qgp9B53QWQgSqSxJb4xddhzk5Zhh](dash:XyxQq4qgp9B53QWQgSqSxJb4xddhzk5Zhh)

@@ -214,7 +214,7 @@ the new "stable" version) in January 2017.
 
 **Announcement and getting started instruction:** <https://www.dash.org/forum/threads/12-1-testnet-testing-phase-two-ignition.10818/><br />
 **Testnet documentation:** <https://dashpay.atlassian.net/wiki/display/DOC/Testnet><br />
-**Testnet Masternode setup:** <https://gist.github.com/taw00/e978f862ee1ad66722e16bcc8cf18ca5>
+**Testnet Masternode setup:** <https://github.com/taw00/dashcore-rpm/blob/master/documentation/overview.12.1-dashcore-masternode-setup.md>
 
 ### An important note about `Sentinel`
 
@@ -274,16 +274,20 @@ Michael Hampton did with his Bitcoin packages. His work can be found here:
 <https://www.ringingliberty.com/bitcoin/> His hard work helped me get to working
 builds faster.
 
-#### Good luck! Send me feedback.<br />
-\-*t0dd@protonmail.com*
+#### Good luck!
+
+Got a dash of feedback? *...har har...* Send it my way <t0dd@protonmail.com>    
+And of course, donations welcome: [XyxQq4qgp9B53QWQgSqSxJb4xddhzk5Zhh](dash:XyxQq4qgp9B53QWQgSqSxJb4xddhzk5Zhh)
+
 
 
 ----
 
 | Changes |
 | ------- |
+| 2017-01: Rewrote Dash Masternode documentation and updated the reference to it here. |
 | 2017-01: Moved this file from [here](https://gist.github.com/taw00/b2382aaabb321b0cf9ce104185e1b3b7) to here. |
-| 2016-09-through-12, 2017-01: Updated testnet/experimental packages. |
+| 2016-09 -through- 2017-01: Updated testnet/experimental packages. |
 | 2016-12-03: Complete overhaul and simplification because we now have packages in a real repository |
 | 2016-12-02: [Moved these instructions to github](https://gist.github.com/taw00/b2382aaabb321b0cf9ce104185e1b3b7) |
 | 2016-11-28: Added [testnet masternode setup instruction](https://gist.github.com/taw00/e978f862ee1ad66722e16bcc8cf18ca5) |

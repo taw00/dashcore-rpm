@@ -537,7 +537,7 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 # More information about DashCore Testnet:
 # Announcement message: https://www.dash.org/forum/threads/12-1-testnet-testing-phase-two-ignition.10818/
 # Testnet documentation: https://dashpay.atlassian.net/wiki/display/DOC/Testnet
-# Testnet masternode documentation: https://gist.github.com/taw00/e978f862ee1ad66722e16bcc8cf18ca5
+# Testnet masternode documentation: https://github.com/taw00/dashcore-rpm/blob/master/documentation/overview.12.1-dashcore-masternode-setup.md
 #
 # Latest source builds: https://dashpay.atlassian.net/builds/artifact/DASHL-DEV/JOB1/build-latestSuccessful/
 # Direct source: https://dashpay.atlassian.net/builds/artifact/DASHL-DEV/JOB1/build-00<BUILD ID>
