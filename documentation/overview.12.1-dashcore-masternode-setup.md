@@ -1,8 +1,8 @@
-# Overview: v12.1 Dash Masternode as SystemD Service on Fedora, CentOS or RHEL
+# Overview: v12.1 Dash Masternode on Fedora, CentOS or RHEL
 
-:::info
-The objective of these set of documents is to illustrate how you can operate a Dash Masternode using the sof as a systemd service on one of the a Red Hat-family of Linuxes. Viewing a Masternode as a server service lends itself to ensuring that it is enabled as a properly configured systemd-managed service. This has advantages in general robustness of the service as well as how the service is secured.
-:::
+> The objective of this set of documents is to illustrate how you can operate a Dash Masternode which requires setting up a collateral-holding wallet on one system and a full node configured to be a masternode on a another.
+>
+> These instructions are specific to the Red Hat-family of linuxes.
 
 ## Wallets and Masternodes
 
@@ -13,12 +13,19 @@ To run a masternode, you set up a small server running a masternode as a service
 ## The high-level process
 
 1. Install and populate a collateralized Wallet
+   * [Instruction](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.12.1-dashcore-wallet-setup.gui.md) for GUI Wallets
+   * [Instruction](https://not_done_yet) for commandline only wallets
 2. Install a Full Node and configure it as if it will operate as a Masternode
+   * Part one of [this instruction](https://not_done_yet)
 3. Trigger the Full Node to operate as a Masternode via a command from the Wallet
+   * Part two of [this instruction](https://not_done_yet)
 4. Install Sentinel on the same server as the Masternode
+   * Part three of [this instruction](https://not_done_yet)
 
+Sounds easy, right? Well, on the whole, it is not complicated, just "tricky". Maybe "twitchy" is the right term.
 
 # Good luck!
 
 Please send feedback and comments to t0dd@protonmail.com
+
 

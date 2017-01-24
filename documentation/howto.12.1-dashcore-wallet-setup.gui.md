@@ -1,8 +1,6 @@
 # HowTo: v12.1 Dash Wallet as Collateral Holding Agent for a Dash Masternode<br />...on Fedora, CentOS or Red Hat Enterprise Linux
 
-:::info
-This edition of the document is for GUI versions of the Dash Core Wallet (`dash-qt`).
-:::
+> This edition of the document is for GUI versions of the Dash Core Wallet (`dash-qt`).
 
 Installing the Dash Core GUI client on linux in the Red Hat family is almost trivial.
 
