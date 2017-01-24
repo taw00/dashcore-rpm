@@ -4,6 +4,24 @@
 >
 > These instructions are specific to the Red Hat-family of linuxes.
 
+
+## What is Dash and what is a Dash Masternode?
+
+Dash (Digital Cash) is an open source peer-to-peer cryptocurrency that offers
+instant transactions (InstantSend), private transactions (PrivateSend) and token
+fungibility. Dash operates a decentralized governance and budgeting system,
+making it the first decentralized autonomous organization (DAO). Dash is also a
+platform for innovative decentralized crypto-tech.
+
+A Dash Full Node is a un-collatoralized member of a decentralized network of
+servers that validate transactions and blocks. A Dash Masternode is a member
+of a network of incentivized servers that perform expanded critical services
+for the Dash cryptocurrency protocol.
+
+Dash is open source and the name of the overarching project. Learn more
+at www.dash.org.
+
+
 ## Wallets and Masternodes
 
 _Note that there are two systems involved here, one for the wallet and the other for the masternode._
@@ -33,4 +51,3 @@ Sounds easy, right? Well, on the whole, it is not complicated, just "tricky". Ma
 
 Got a dash of feedback? *...har har...* Send it my way <t0dd@protonmail.com>    
 And of course, donations welcome: [XyxQq4qgp9B53QWQgSqSxJb4xddhzk5Zhh](dash:XyxQq4qgp9B53QWQgSqSxJb4xddhzk5Zhh)
-
