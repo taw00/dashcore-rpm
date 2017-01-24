@@ -1,5 +1,4 @@
-﻿# v12.1 Dash Masternode as SystemD Service<br />_...on Fedora, CentOS or RHEL_
-
+# HowTo: v12.1 Dash Masternode as SystemD Service<br />_...on Fedora, CentOS or RHEL_
 
 > This edition of these instructions is for those who wish to install and
 > configure a Dash Masternode running as a traditional `systemd` service.
@@ -16,6 +15,14 @@
 > I did most of my testing on Fedora 24. I tested with the masternode running on a
 > local virtual instance as well as a VPS cloud instance.
 
+
+## FIRST: Set up your collateral-bearing wallet
+
+For a general overview of what a masternode is and how it is set up at a high level, please refer to the overview document found here: [overview.12.1-dashcore-masternode-setup.md](https://github.com/taw00/dashcore-rpm/blob/master/documentation/overview.12.1-dashcore-masternode-setup.md)
+
+As of this writing (early 2017), before setting up a masternode, you need to acquire 1000 DASH and hold it in a specially configured wallet. Do that first. You can find instruction for how to set that up here: [howto.12.1-dashcore-collateral-bearing-wallet-setup.gui.md](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.12.1-dashcore-collateral-bearing-wallet-setup.gui.md)
+
+Once completed, you may continue.
 
 ## [0] Install the operating system
 
@@ -283,7 +290,7 @@ watch sudo -u dash dash-cli -conf=/etc/dashcore/dash.conf getblockcount
 
 First, write down the value of `curl https://icanhazip.com` that you get at the commandline of this masternode server. For this example, we are going to use `93.184.216.34` (yours will be different, of course).
 
-Then take the data you gathered from setting up your wallet in [howto.12.1-dashcore-wallet-setup.gui.md](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.12.1-dashcore-wallet-setup.gui.md) and reconfigured `/etc/dashcore/dash.conf`
+Then take the data you gathered from setting up your wallet in [howto.12.1-dashcore-collateral-bearing-wallet-setup.gui.md](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.12.1-dashcore-collateral-bearing-wallet-setup.gui.md) and reconfigured `/etc/dashcore/dash.conf`
 
 ```
 # Use your favorite editor, in this example, "nano"
@@ -319,7 +326,7 @@ restart as well. It is worth remembering that a masternode does not need to be "
 
 ## [5] Configure firewall rules
 
-You can follow the instruction in [howto.secure-your-dash-masternode.md](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.secure-your-dash-masternode.md), or just take these steps here.
+You can follow the instruction in [howto.12.1-dashcore-collateral-bearing-wallet-setup.gui.md](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.12.1-dashcore-collateral-bearing-wallet-setup.gui.md), or just take these steps here.
 
 
 > _Note: Firewall rules can be a complicated topic. These are bare bones
@@ -381,7 +388,7 @@ _NOTE2: at this time, I do not have rich rules for rate managing the 9999 or 199
 
 ## [6] ON WALLET: Add masternode IP address
 
-Go back to your wallet (see [howto.12.1-dashcore-wallet-setup.gui.md](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.12.1-dashcore-wallet-setup.gui.md)) and edit the `masternode.conf` file referenced there and replace the example IP address with the IP address of this masternode as found in prior steps above.
+Go back to your wallet (see [howto.12.1-dashcore-collateral-bearing-wallet-setup.gui.md](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.12.1-dashcore-collateral-bearing-wallet-setup.gui.md)) and edit the `masternode.conf` file referenced there and replace the example IP address with the IP address of this masternode as found in prior steps above.
 
 Following our examples, that line in the `masternode.conf` file will look something like this...
 ```
@@ -395,7 +402,7 @@ _**Notice that port number. Choose 9999 for mainnet and 19999 for testnet.**_
 
 This is it! Flip that bit! This is really a "validation" step that connects that 1000 DASH collateral to this masternode and says "Okay, full node, you can now operate on the network as a masternode!"
 
-Go back to your wallet (see [howto.12.1-dashcore-wallet-setup.gui.md](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.12.1-dashcore-wallet-setup.gui.md)).
+Go back to your wallet (see [howto.12.1-dashcore-collateral-bearing-wallet-setup.gui.md](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.12.1-dashcore-collateral-bearing-wallet-setup.gui.md)).
 
 * Navigate the menus: Tools > Debug console
 * Enter in that dialogue: `masternode start-alias mn1`

@@ -5,6 +5,15 @@
 > 
 > These instructions are specific to the Red Hat-family of linuxes.
 
+## Masternode?
+
+For a general overview of what a masternode is and how it is set up at a high level, please refer to the overview document found here: [overview.12.1-dashcore-masternode-setup.md](https://github.com/taw00/dashcore-rpm/blob/master/documentation/overview.12.1-dashcore-masternode-setup.md)
+
+As you read that document, this is the first step in that process: Setting up a collateral-bearing dash wallet. This is one way of doing it. There are others.
+
+The next step is to set up the masternode itself. Those instructions (to be completed after the wallet is correctly configured) can be found here: [howto.12.1-dashcore-masternode-setup.systemd.md](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.12.1-dashcore-masternode-setup.systemd.md)
+
+Once you complete all the steps in this document, you may proceed to the masternode setup linked to above.
 
 ## [0] Install the operating system
 
@@ -39,7 +48,7 @@ sudo yum update -y
 sudo reboot
 ```
 
-## [1] Install the Dash Core GUI Client
+## [1] Install the Dash Core GUI Client and FirewallD
 
 Log onto the system as a normal user (not root), install the Dash wallet:
 
@@ -51,7 +60,7 @@ sudo curl https://raw.githubusercontent.com/taw00/dashcore-rpm/master/dashcore-f
 cd -
 sudo dnf config-manager --set-disabled dashcore-stable
 sudo dnf config-manager --set-enabled dashcore-unstable ## version 12.1 is currently "unstable"
-sudo dnf install -y dashcore-client
+sudo dnf install -y dashcore-client firewalld
 ```
 
 ...if using CentOS or RHEL
@@ -62,20 +71,108 @@ sudo curl https://raw.githubusercontent.com/taw00/dashcore-rpm/master/dashcore-c
 cd -
 sudo yum-config-manager --disable dashcore-stable
 sudo yum-config-manager --enable dashcore-unstable ## version 12.1 is currently "unstable"
-sudo yum install -y dashcore-client
+sudo yum install -y dashcore-client firewalld
 ```
 
-## [2] Run the Dash Core GUI Wallet
+## [2] Configure firewall rules to better secure your wallet
 
-If you are planning on running the wallet on the mainnet (versus testnet) you really need to just start it up, but let me be a little pedantic here since these instructions will work always.
+You are about to transfer 1000 DASH to your wallet. That's a lot of money. You want to both save and backup your wallet, but also reduce the odds of someone hacking into your system.
 
-Create a `.dashcore` directory, edit the `dash.conf` configuration (text) file, and set the testnet variable on or off:
+You can glean a lot of information by reviewing the instruction in [howto.secure-your-dash-masternode.md](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.secure-your-dash-masternode.md), or just take these steps here.
+
+> _Note: Firewall rules can be a complicated topic. These are bare bones
+git-er-done instructions. You may want to investigate further refinement. It
+will get you started though._
+
+
+```
+# Is firewalld running?
+# Turn on and enable firewalld if not already done...
+sudo firewall-cmd --state
+sudo systemctl start firewalld.service
+sudo systemctl enable firewalld.service
+
+# Determine what the default zone is.
+# On vultr, for example, the default zone is FedoraWorkstation (it is the
+# assumption for this example)
+sudo firewall-cmd --get-active-zone
+
+# FedoraWorkstation usually starts with ssh, dhcp6-client, and samba-client opened up
+# Review your needs, but I don't want samba-client enabled and I want to 
+# rate limit ssh traffic
+sudo firewall-cmd --permanent --zone=FedoraServer --add-service ssh
+sudo firewall-cmd --permanent --zone=FedoraServer --remove-service samba-client
+
+# Rate limit incoming sshtraffic to 10 per minute
+sudo firewall-cmd --permanent --add-rich-rule='rule service name=ssh limit value=10/m accept'
+
+# did it take?
+sudo firewall-cmd --reload
+sudo firewall-cmd --state
+sudo firewall-cmd --list-all
+```
+
+
+
+## [2] Create and edit your `dash.conf` configuration file
+
+Create a `.dashcore` directory, edit the `dash.conf` configuration (text) file. A good default editor is `nano`, or you can use `gedit` if it install, or whatever you are familiar with.
 
 ```
 cd ~
 mkdir .dashcore
-echo "testnet=1" >> .dashcore/dash.conf  # 1 for testnet, and 0 for mainnet
+nano ~/.dashcore/dash.conf
 ```
+
+Cut-n-paste this template...
+```
+# This is a Masternode Collateral-bearing Wallet configuration file
+# Run on the test network (testnet=1) or the main network (testnet=0)
+testnet=1
+# Run dashd as a daemon (in the background) - only relevant for advanced users
+#daemon=1
+# Listening mode, enabled by default except when 'connect' is being used
+listen=1
+logtimestamps=1
+maxconnections=8
+
+# Remote Procedure Call access configuration...
+# server=1 tells Dash-QT and dashd to accept JSON-RPC commands
+server=1
+# You must set rpcuser and rpcpassword to secure the JSON-RPC api
+rpcuser=<make_up_an_rpc_username>
+rpcpassword=<anything_you_like_but_make_it_not_obvious>
+rpcport=9998
+# A note about RPC connection control...
+# Opening up the RPC port to hosts outside your local trusted network
+# is NOT RECOMMENDED, because the rpcpassword is transmitted over the
+# network unencrypted -- unless you set up SSL (beyond scope of this doc)
+# Fortunately, as a small security measure, by default, only RPC connections
+# from localhost are allowed. Specify as many rpcallowip= settings as you
+# like to allow connections from other hosts, either as a single IPv4/IPv6
+# or with a subnet specification.
+rpcallowip=127.0.0.1
+```
+
+Choose whether you are running on the testnet or not and alter the setting above as necessary. If you are planning to work with real money and run a real masternode, that setting needs to be `testnet=0`.
+
+### Change your RPC (remote procedure call username and password)
+
+Edit `/etc/dashcore/dash.conf` and change...
+
+```
+rpcuser=<make_up_an_rpc_username>
+rpcpassword=<anything_you_like_but_make_it_not_obvious>
+```
+...to something else (these are examples)...
+```
+rpcuser=rpc_user_9084042423423
+rpcpassword=this_is_a_random_password_98u22n982nf98562334n329vmasdfg
+```
+These are used by your on-system, internal commandline tools for the most part, so you don't have to memorize them or use them outside of this wallet.
+
+
+## [4] Run the Dash Core GUI Wallet
 
 Click through your menus and click on the Dash icon, or right this from the commandline...
 
@@ -83,11 +180,17 @@ Click through your menus and click on the Dash icon, or right this from the comm
 dash-qt
 ```
 
-Wait for everything to sync completely and your wallet is then ready for the next steps
+> Hint! If you are running on the testnet, the initial splash screen will be orange themed. If you are running on the mainnet, the initial splash screen will be blue themed.
+
+### **Wait for everything to sync completely**
+
+Once sync'ed your wallet is then ready for the next steps. This can take awhile.
 
 
-## [3] Send 1000 Dash to the wallet
+## [5] Send 1000 Dash to the wallet
 
+
+### Get the receiving address
 
 From your GUI wallet interface do this...
 
@@ -99,13 +202,32 @@ From your GUI wallet interface do this...
 
 You can do the same thing from the commandline with the `dash-cli` interface: `dash-cli getnewaddress`
 
+### Send the 1000 DASH
+
 From whatever other source has that 1000 Dash, send precisely 1000 Dash (or tDash if this is testnet) to that address. Important. It has to be precisely 1000 Dash; fees must be accounted for.
 
 If you need tDash for testnet testing purposes, have it sent from https://test.faucet.dash.org/
 
-Record this in some scratchpad somewhere, you will need it when you set up your masternode
 
-## [4] Generate Masternode private key (a key that only the masternode and the wallet share)
+## [6] SAVE YOUR WALLET
+
+### Consider encrypting your wallet...
+
+* Navigate the menus: Settings > Encrypt wallet
+* Set the password
+
+### Backup your wallet...
+
+* Navigate the menus: File > Backup Wallet
+
+You'll be asked to pick a name for the backup file and where to save it. Call it what you will, `my-masternode-collateral-wallet.dat` is an example.
+
+### Store your wallet somewhere securely
+
+Personally, I would copy that to two different USB keys and throw them in a firebox. Maybe even two different fireboxes. Again. This is a lot of money. Don't skimp on your safety practices.
+
+
+## [7] Generate Masternode private key (a key that only the masternode and the wallet share)
 
 From your GUI wallet interface do this...
 
@@ -118,7 +240,7 @@ Or from the commandline: `dash-cli masternode genkey`
 Record this in some scratchpad somewhere, you will need it when you set up your masternode
 
 
-## [5] Get your funding transaction ID and index
+## [8] Get your funding transaction ID and index for that 1000 DASH transfer
 
 From your GUI wallet interface do this...
 
@@ -127,14 +249,62 @@ From your GUI wallet interface do this...
 
 Or from the commandline: `dash-cli masternode outputs`
 
+You'll get a transaction ID and index value (usually a 1 or a 0). Record these. You will need these values. They will look something like this (these are examples):
+
+`b34ad623453453456423454643541325c98d2f8b7a967551f31dd7cefdd67457 1`
+
 Record this in some scratchpad somewhere, you will need it when you set up your masternode
 
 
+## [9] Configured your `masternode.conf`
 
-## All done!
+The wallet needs to know what masternode it is communicating with and needs to be able to send proof of that 1000 DASH (or tDASH) to the network. It does this with a properly configured `masternode.conf` file.
+
+This file is located in...
+
+* ~/.dashcore/ if operating on the mainnet
+* ~/.dashcore/testnet3/ if operating on the testnettestnet
+
+If you are using the testnet that `testnet3` directory should have been created for you when you started your GUI wallet.
+
+### Edit `masternode.conf` (again use `nano` or some other text editor)
+
+```
+nano ~/.dashcore/masternoode.conf # if mainnet
+# ...or...
+nano ~/.dashcore/testnet3/masternode.conf # if testnet
+```
+
+Pick an alias for your masternode. It can be anything. It's a label in this configuration file that is used in reference to the masternode by the wallet when communicating with the masternode. Since this is our first masternode, I labled it `mn1`. But if could be `bob` or `my_masternode` or whatever you want.
+
+**Note 1: I filled in the masternode private key, the funding transaction ID and the funding index from the values received earlier. The IP address will be added later after I set up the masternode. _These are examples only!_**
+
+**Note 2: The port is set to 9999 for mainnet and 19999 for testnet.
+
+Fill in this template and save the file...
+```
+# add the following line to the end of the conf, replacing your values from above
+# ALIAS <externalip>:<PORT> <masternodeprivkey> <funding_txid> <funding_index>
+# it should look something like this (9999 for live net, and 19999 for testnet)
+mn1 110.111.112.113:9999 92yZY5b8bYD5G2Qh1C7Un6Tf3TG3mH4LUZha2rdj3QUDGHNg4W9 b34ad623453453456423454643541325c98d2f8b7a967551f31dd7cefdd67457 1
+```
+
+
+## All (mostly) done!
 
 You have a functioning wallet set up with 1000 DASH or tDASH ready to serve as the collateralizing agent for a masternode.
 
-Please send feedback and comments to t0dd@protonmail.com
+Next steps to completion are...
 
+1. Set up your masternode
+2. Configure your masternode with wallet identifying information
+3. Configure your wallet with the masternode IP address
+4. Start your masternode server as a full node
+5. Use your wallet to tell the full node it is really a masternode
+6. Configure Sentinel
+
+These steps are covered in another set of documents
+
+Got a dash of feedback? *...har har...* Send it my way [t0dd@protonmail.com](mailto:t0dd@protonmail.com)    
+And of course, donations welcome: [XyxQq4qgp9B53QWQgSqSxJb4xddhzk5Zhh](dash:XyxQq4qgp9B53QWQgSqSxJb4xddhzk5Zhh)
 

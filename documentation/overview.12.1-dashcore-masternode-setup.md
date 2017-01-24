@@ -16,19 +16,21 @@ To run a masternode, you set up a small server running a masternode as a service
 
 ## The high-level process
 
+0. Save up 1000 DASH
 1. Install and populate a collateralized Wallet
-   * [Instruction](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.12.1-dashcore-wallet-setup.gui.md) for GUI Wallets
-   * [Instruction](https://not_done_yet) for commandline only wallets
+   * [Instruction](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.12.1-dashcore-collateral-bearing-wallet-setup.gui.md) for GUI Wallets
+   * Instruction &mdash; not done yet &mdash; for commandline only wallets
 2. Install a Full Node and configure it as if it will operate as a Masternode
-   * Part one of [this instruction](https://not_done_yet)
+   * Part one of [this instruction](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.12.1-dashcore-masternode-setup.systemd.md)
 3. Trigger the Full Node to operate as a Masternode via a command from the Wallet
-   * Part two of [this instruction](https://not_done_yet)
+   * Part two of [this instruction](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.12.1-dashcore-masternode-setup.systemd.md)
 4. Install Sentinel on the same server as the Masternode
-   * Part three of [this instruction](https://not_done_yet)
+   * Part three of [this instruction](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.12.1-dashcore-masternode-setup.systemd.md)
 
 Sounds easy, right? Well, on the whole, it is not complicated, just "tricky". Maybe "twitchy" is the right term.
 
 # Good luck!
 
-Please send feedback and comments to t0dd@protonmail.com
+Got a dash of feedback? *...har har...* Send it my way [t0dd@protonmail.com](mailto:t0dd@protonmail.com)    
+And of course, donations welcome: [XyxQq4qgp9B53QWQgSqSxJb4xddhzk5Zhh](dash:XyxQq4qgp9B53QWQgSqSxJb4xddhzk5Zhh)
 
