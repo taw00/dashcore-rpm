@@ -1,10 +1,12 @@
-# HowTo: v12.1 Dash Wallet as Collateral Holding Agent for a Dash Masternode<br />...on Fedora, CentOS or Red Hat Enterprise Linux
+# HowTo: v12.1 Dash Wallet as Collateral Holding Agent for a Dash Masternode
+# ...on Fedora, CentOS or Red Hat Enterprise Linux
 
 > This edition of the document is for GUI versions of the Dash Core Wallet (`dash-qt`).
+> 
+> These instructions are specific to the Red Hat-family of linuxes.
 
-Installing the Dash Core GUI client on linux in the Red Hat family is almost trivial.
 
-## Install the operating system
+## [0] Install the operating system
 
 I leave it as an excercise for the reader to install Fedora, CentOS, or even RHEL. For Fedora, go here - https://getfedora.org/ For CentOS, go here - https://www.centos.org/download/ For Fedora, I recommend the "Workstation" install.
 
@@ -37,7 +39,7 @@ sudo yum update -y
 sudo reboot
 ```
 
-## Install the Dash Core GUI Client
+## [1] Install the Dash Core GUI Client
 
 Log onto the system as a normal user (not root), install the Dash wallet:
 
@@ -63,7 +65,7 @@ sudo yum-config-manager --enable dashcore-unstable ## version 12.1 is currently 
 sudo yum install -y dashcore-client
 ```
 
-## Run the Dash Core GUI Wallet
+## [2] Run the Dash Core GUI Wallet
 
 If you are planning on running the wallet on the mainnet (versus testnet) you really need to just start it up, but let me be a little pedantic here since these instructions will work always.
 
@@ -81,7 +83,10 @@ Click through your menus and click on the Dash icon, or right this from the comm
 dash-qt
 ```
 
-## Send 1000 Dash to the wallet
+Wait for everything to sync completely and your wallet is then ready for the next steps
+
+
+## [3] Send 1000 Dash to the wallet
 
 
 From your GUI wallet interface do this...
@@ -100,7 +105,7 @@ If you need tDash for testnet testing purposes, have it sent from https://test.f
 
 Record this in some scratchpad somewhere, you will need it when you set up your masternode
 
-## Generate Masternode private key (a key that only the masternode and the wallet share)
+## [4] Generate Masternode private key (a key that only the masternode and the wallet share)
 
 From your GUI wallet interface do this...
 
@@ -113,7 +118,7 @@ Or from the commandline: `dash-cli masternode genkey`
 Record this in some scratchpad somewhere, you will need it when you set up your masternode
 
 
-## Get your funding transaction ID and index
+## [5] Get your funding transaction ID and index
 
 From your GUI wallet interface do this...
 

@@ -10,6 +10,10 @@ _Note that there are two systems involved here, one for the wallet and the other
 
 To run a masternode, you set up a small server running a masternode as a service. But the owner of the masternode has to have 1000 DASH as collateral. Ownership of that collateral is provable by having a specially configured wallet, separate from the masternode that is used to start the masternode once configured. This of that wallet with that particular 1000 DASH as the ignitiion key for the masternode.
 
+> ***"I'm not tech savvy! Help!"***    
+> *There are a number of services that will remove the headaches of managing a  masternode yourself, host one for you, and walk you through the process of  getting set up. [Here is a listing](ttps://dashpay.atlassian.net/wiki/pages/viewpage.action?pageId=1867885) of the current providers recommended by the Dash community.*
+
+
 ## The high-level process
 
 1. Install and populate a collateralized Wallet
