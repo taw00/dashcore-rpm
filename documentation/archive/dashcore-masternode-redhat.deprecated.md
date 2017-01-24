@@ -1,6 +1,9 @@
 ----
 
-## This document has been _deprecated_. Please visit <https://github.com/taw00/dashcore-rpm> for new documentation efforts. In particular, as of this writing, <https://github.com/taw00/dashcore-rpm/blob/master/documentation/overview.12.1-dashcore-masternode-setup.md>.
+
+# Deprecated
+
+#### Please visit...<br /><https://github.com/taw00/dashcore-rpm> for new documentation efforts. In particular, as of this writing,<br /><https://github.com/taw00/dashcore-rpm/blob/master/documentation/overview.12.1-dashcore-masternode-setup.md><br />...for current and updated documenation.
 
 ----
 
