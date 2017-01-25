@@ -7,7 +7,7 @@
 
 ## Masternode?
 
-For a general overview of what a masternode is and how it is set up at a high level, please refer to the overview document found here: [overview.12.1-dashcore-masternode-setup.md](https://github.com/taw00/dashcore-rpm/blob/master/documentation/overview.12.1-dashcore-masternode-setup.md)
+For a general overview of what a masternode is and how it is set up at a high level, please refer to the overview document found [here](https://github.com/taw00/dashcore-rpm/blob/master/documentation/README.md)
 
 As you read that document, this is the first step in that process: Setting up a collateral-bearing dash wallet. This is one way of doing it. There are others.
 
