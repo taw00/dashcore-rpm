@@ -7,11 +7,11 @@
 
 ## The Documents
 
-* All documents: <https://github.com/taw00/dashcore-rpm/tree/master/documentation>
-* The overview (this document): <https://github.com/taw00/dashcore-rpm/edit/master/documentation/README.md>
-* Wallet setup: <https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.12.1-dashcore-collateral-bearing-wallet-setup.gui.md>
-* Masternode setup: <https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.12.1-dashcore-masternode-setup.systemd.md>
-* Discussion about securing your dash systems: <https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.secure-your-dash-masternode.md>
+* All documents:<br /><https://github.com/taw00/dashcore-rpm/tree/master/documentation>
+* The overview (this document):<br /><https://github.com/taw00/dashcore-rpm/edit/master/documentation/README.md>
+* Wallet setup:<br /><https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.12.1-dashcore-collateral-bearing-wallet-setup.gui.md>
+* Masternode setup:<br /><https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.12.1-dashcore-masternode-setup.systemd.md>
+* Discussion about securing your dash systems:<br /><https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.secure-your-dash-masternode.md>
 
 
 ## What is Dash and what is a Dash Masternode?
