@@ -4,7 +4,14 @@
 >
 > These instructions are specific to the Red Hat-family of linuxes.
 
-**Looking for other guides for other platforms?**<br />Check out the countless guides that can be found starting here:  https://dashpay.atlassian.net/wiki/display/DOC/Masternode
+
+## The Documents
+
+* All documents: <https://github.com/taw00/dashcore-rpm/tree/master/documentation>
+* The overview (this document): <https://github.com/taw00/dashcore-rpm/edit/master/documentation/README.md>
+* Wallet setup: <https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.12.1-dashcore-collateral-bearing-wallet-setup.gui.md>
+* Masternode setup: <https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.12.1-dashcore-masternode-setup.systemd.md>
+* Discussion about securing your dash systems: <https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.secure-your-dash-masternode.md>
 
 
 ## What is Dash and what is a Dash Masternode?
@@ -16,9 +23,11 @@ making it the first decentralized autonomous organization (DAO). Dash is also a
 platform for innovative decentralized crypto-tech.
 
 A Dash Full Node is a un-collatoralized member of a decentralized network of
-servers that validate transactions and blocks. A Dash Masternode is a member
-of a network of incentivized servers that perform expanded critical services
-for the Dash cryptocurrency protocol.
+servers that validate transactions and blocks.
+
+A Dash Masternode is a member of a network of incentivized servers that perform
+expanded critical services for the Dash cryptocurrency protocol above an beyond
+the services of a full node.
 
 Dash is open source and the name of the overarching project. Learn more
 at www.dash.org.
@@ -33,16 +42,11 @@ To run a masternode, you set up a small server running a masternode as a service
 > ***"I'm not tech savvy! Help!"***    
 > *There are a number of services that will remove the headaches of managing a  masternode yourself, host one for you, and walk you through the process of  getting set up. [Here is a listing](ttps://dashpay.atlassian.net/wiki/pages/viewpage.action?pageId=1867885) of the current providers recommended by the Dash community.*
 
+> **I was really looking for a guide for a different platform. Help!"***    
+> *Check out the countless guides that can be found starting here:* https://dashpay.atlassian.net/wiki/display/DOC/Masternode
 
-## The high-level process
 
-This process is articulated in several documents:
-* All documents: <https://github.com/taw00/dashcore-rpm/tree/master/documentation>
-* The overview (this document): <https://github.com/taw00/dashcore-rpm/edit/master/documentation/overview.12.1-dashcore-masternode-setup.md>
-* Wallet setup: <https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.12.1-dashcore-collateral-bearing-wallet-setup.gui.md>
-* Masternode setup: <https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.12.1-dashcore-masternode-setup.systemd.md>
-* Discussion about securing your dash systems: <https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.secure-your-dash-masternode.md>
-
+## Setting up a Dash Masternode: The high-level process
 
 0. Save up 1000 DASH
 1. Install and populate a collateralized Wallet
