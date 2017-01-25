@@ -36,20 +36,24 @@ To run a masternode, you set up a small server running a masternode as a service
 
 ## The high-level process
 
+This process is articulated in several documents:
+* All documents: <https://github.com/taw00/dashcore-rpm/tree/master/documentation>
+* The overview (this document): <https://github.com/taw00/dashcore-rpm/edit/master/documentation/overview.12.1-dashcore-masternode-setup.md>
+* Wallet setup: <https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.12.1-dashcore-collateral-bearing-wallet-setup.gui.md>
+* Masternode setup: <https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.12.1-dashcore-masternode-setup.systemd.md>
+* Discussion about securing your dash systems: <https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.secure-your-dash-masternode.md>
+
+
 0. Save up 1000 DASH
 1. Install and populate a collateralized Wallet
-   * [Instruction](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.12.1-dashcore-collateral-bearing-wallet-setup.gui.md) for GUI Wallets
-   * Instruction &mdash; not done yet &mdash; for commandline only wallets
-2. Install a Full Node and configure it as if it will operate as a Masternode
-   * Part one of [this instruction](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.12.1-dashcore-masternode-setup.systemd.md)
-3. Trigger the Full Node to operate as a Masternode via a command from the Wallet
-   * Part two of [this instruction](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.12.1-dashcore-masternode-setup.systemd.md)
+2. Install a Dash Full Node with dreams of being a Masternode
+3. Bind the wallet to the node and have it "start" the Masternode
 4. Install Sentinel on the same server as the Masternode
-   * Part three of [this instruction](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.12.1-dashcore-masternode-setup.systemd.md)
+5. DONE!
 
 Sounds easy, right? Well, on the whole, it is not complicated, just "tricky". Maybe "twitchy" is the right term.
 
 # Good luck!
 
 Got a dash of feedback? *...har har...* Send it my way <t0dd@protonmail.com>    
-And of course, donations welcome: [XyxQq4qgp9B53QWQgSqSxJb4xddhzk5Zhh](dash:XyxQq4qgp9B53QWQgSqSxJb4xddhzk5Zhh)
+And of course, donations welcome: <a href="dash:XyxQq4qgp9B53QWQgSqSxJb4xddhzk5Zhh">XyxQq4qgp9B53QWQgSqSxJb4xddhzk5Zhh</a>
