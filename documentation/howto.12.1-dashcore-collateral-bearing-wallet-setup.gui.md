@@ -78,7 +78,7 @@ sudo yum install -y dashcore-client firewalld
 
 You are about to transfer 1000 DASH to your wallet. That's a lot of money. You want to both save and backup your wallet, but also reduce the odds of someone hacking into your system.
 
-You can glean a lot of information by reviewing the instruction in [howto.secure-your-dash-masternode.md](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.secure-your-dash-masternode.md), or just take these steps here.
+You can glean a lot of information by reviewing the instruction in [howto.secure-your-dash-masternode.md](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.secure-your-dash-masternode.md), or just take these steps here. It's recommended that you review that document and perhaps implement some of the additional suggestions it may provide.
 
 > _Note: Firewall rules can be a complicated topic. These are bare bones
 git-er-done instructions. You may want to investigate further refinement. It
