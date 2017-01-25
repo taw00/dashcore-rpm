@@ -18,7 +18,7 @@
 
 ## FIRST: Set up your collateral-bearing wallet
 
-For a general overview of what a masternode is and how it is set up at a high level, please refer to the overview document found here: [overview.12.1-dashcore-masternode-setup.md](https://github.com/taw00/dashcore-rpm/blob/master/documentation/overview.12.1-dashcore-masternode-setup.md)
+For a general overview of what a masternode is and how it is set up at a high level, please refer to the overview document found [here](https://github.com/taw00/dashcore-rpm/blob/master/documentation/README.md).
 
 As of this writing (early 2017), before setting up a masternode, you need to acquire 1000 DASH and hold it in a specially configured wallet. Do that first. You can find instruction for how to set that up here: [howto.12.1-dashcore-collateral-bearing-wallet-setup.gui.md](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.12.1-dashcore-collateral-bearing-wallet-setup.gui.md)
 
