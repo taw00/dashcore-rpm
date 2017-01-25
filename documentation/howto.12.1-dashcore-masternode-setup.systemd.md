@@ -326,7 +326,7 @@ restart as well. It is worth remembering that a masternode does not need to be "
 
 ## [5] Configure firewall rules
 
-You can follow the instruction in [howto.12.1-dashcore-collateral-bearing-wallet-setup.gui.md](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.12.1-dashcore-collateral-bearing-wallet-setup.gui.md), or just take these steps here.
+You can follow the instruction in [howto.12.1-dashcore-collateral-bearing-wallet-setup.gui.md](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.12.1-dashcore-collateral-bearing-wallet-setup.gui.md), or just take these steps here. It's recommended that you review that document though and perhaps implement some of the additional suggestions it may provide.
 
 
 > _Note: Firewall rules can be a complicated topic. These are bare bones
