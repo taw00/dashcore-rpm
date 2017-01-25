@@ -1,8 +1,10 @@
-# Overview: v12.1 Dash Masternode on Fedora, CentOS or RHEL
+# Overview: v12.1 Dash Masternode<br />_...on Fedora, CentOS or Red Hat Enterprise Linux_
 
 > The objective of this set of documents is to illustrate how you can operate a Dash Masternode which requires setting up a collateral-holding wallet on one system and a full node configured to be a masternode on a another.
 >
 > These instructions are specific to the Red Hat-family of linuxes.
+
+**Looking for other guides for other platforms?**<br />Check out the countless guides that can be found starting here:  https://dashpay.atlassian.net/wiki/display/DOC/Masternode
 
 
 ## What is Dash and what is a Dash Masternode?
