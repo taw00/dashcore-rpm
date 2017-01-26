@@ -23,7 +23,7 @@
 # date with a numeral, like 20160405.0, 20160405.1, etc.
 # Use whatever is meaningful to you. Just remember if you are iterating, it needs
 # to be consistent and progress in version (so that upgrades work)
-%define bump test.b00781.0
+%define bump test.b00781.1
 
 # "bumptag" is used to indicate additional information, usually an identifier,
 # like the builder's initials, or a date, or both, or nil.
@@ -375,6 +375,9 @@ desktop-file-validate %{buildroot}%{_datadir}/applications/dash-qt.desktop
 # Note: doesn't need to be in buildroot I don't think.
 install -D -m644 ./contrib/extras/dash.conf.example doc/dash.conf.example
 
+# Install default configuration file
+install -D -m640 ./contrib/linux/systemd/etc-dashcore_dash.conf %{buildroot}%{_sysconfdir}/dashcore/dash.conf
+
 # Install system services files
 install -D -m600 -p ./contrib/linux/systemd/etc-sysconfig_dash %{buildroot}%{_sysconfdir}/sysconfig/dash
 install -D -m644 -p ./contrib/linux/systemd/usr-lib-systemd-system_dash.service %{buildroot}%{_unitdir}/dash.service
@@ -481,6 +484,7 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 %{_mandir}/man5/masternode.conf.5.gz
 %{_prefix}/lib/firewalld/services/dashcore-node.xml
 %{_prefix}/lib/firewalld/services/dashcore-node-testnet.xml
+%config(noreplace) %attr(640,dash,dash) %{_sysconfdir}/dashcore/dash.conf
 
 
 # dashcore-server
@@ -492,6 +496,7 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 %dir %attr(750,dash,dash) %{_sharedstatedir}/dashcore
 %dir %attr(750,dash,dash) %{_sysconfdir}/dashcore
 %config(noreplace) %attr(600,root,root) %{_sysconfdir}/sysconfig/dash
+%config(noreplace) %attr(640,dash,dash) %{_sysconfdir}/dashcore/dash.conf
 %{_unitdir}/dash.service
 %{_prefix}/lib/firewalld/services/dashcore-node.xml
 %{_prefix}/lib/firewalld/services/dashcore-node-testnet.xml
@@ -537,7 +542,7 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 # More information about DashCore Testnet:
 # Announcement message: https://www.dash.org/forum/threads/12-1-testnet-testing-phase-two-ignition.10818/
 # Testnet documentation: https://dashpay.atlassian.net/wiki/display/DOC/Testnet
-# Testnet masternode documentation: https://github.com/taw00/dashcore-rpm/blob/master/documentation/overview.12.1-dashcore-masternode-setup.md
+# Testnet masternode documentation: https://gist.github.com/taw00/e978f862ee1ad66722e16bcc8cf18ca5
 #
 # Latest source builds: https://dashpay.atlassian.net/builds/artifact/DASHL-DEV/JOB1/build-latestSuccessful/
 # Direct source: https://dashpay.atlassian.net/builds/artifact/DASHL-DEV/JOB1/build-00<BUILD ID>
@@ -546,11 +551,15 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 # GitHub for Sentinel (complimentary to dashd): https://github.com/nmarley/sentinel
 
 %changelog
+* Thu Jan 26 2017 Todd Warner <t0dd@protonmail.com> 0.12.1-test.b00781.1
+- Testnet - Testing Phase 2 -- From build 00781, v0.12.1.0-g534effa
+- 6a1a289020f9d2260aa19448d8f74a4d55eb372883e4408f63d2c2d28063ce2d  dashcore-0.12.1.tar.gz
+- 485a3705285e79d301ed839150191d0c3b30dee77555cd25210fda59d308b337  dashcore-0.12.1-contrib.tar.gz
+- The default systemd dash.conf really should set datadir=/var/lib/dashcore Fixed!
+-
 * Wed Jan 25 2017 Todd Warner <t0dd@protonmail.com> 0.12.1-test.b00781.0
 - Testnet - Testing Phase 2 -- From build 00781, v0.12.1.0-g534effa
 - 6a1a289020f9d2260aa19448d8f74a4d55eb372883e4408f63d2c2d28063ce2d  dashcore-0.12.1.tar.gz
-- The GUI client really needs dashcore-utils, added as a Requires.
-- dashcore-sentinel exists now. Added as a Requires for dashcore-server
 -
 * Sun Jan 22 2017 Todd Warner <t0dd@protonmail.com> 0.12.1-test.b00780.0
 - Testnet - Testing Phase 2 -- From build 00780, v0.12.1.0-g4b7bd6b
@@ -558,7 +567,7 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 - The GUI client really needs dashcore-utils, added as a Requires.
 - dashcore-sentinel exists now. Added as a Requires for dashcore-server
 -
-* Fri Jan 19 2017 Todd Warner <t0dd@protonmail.com> 0.12.1-test.b00780.0
+* Thu Jan 19 2017 Todd Warner <t0dd@protonmail.com> 0.12.1-test.b00780.0
 - Testnet - Testing Phase 2 -- From build 00778, v0.12.1.0-g4b7bd6b
 - 4ed84b16bd50d16ead5e75e5adcc9f8e0bf1bf091add150f540df3a470b7b290  dashcore-0.12.1.tar.gz
 - The GUI wallet acts as a full node when running, so we need the firewalld

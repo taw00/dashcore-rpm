@@ -21,7 +21,7 @@
 # date with a numeral, like 20160405.0, 20160405.1, etc.
 # Use whatever is meaningful to you. Just remember if you are iterating, it needs
 # to be consistent an progress in version (so that upgrades work)
-%define bump test.1
+%define bump test.2
 
 # "bumptag" is used to indicate additional information, usually an identifier,
 # like the builder's initials, or a date, or both, or nil.
@@ -180,6 +180,10 @@ exit 0
 
 
 %changelog
+* Thu Jan 26 2017 Todd Warner <t0dd@protonmail.com> 0.12.1-test.2
+- 4aec14d739f5216d11a805619acda67cf57df4017efa73b11e49284a1e46f99c  dashcore-sentinel.tar.gz
+- updated build
+-
 * Wed Jan 25 2017 Todd Warner <t0dd@protonmail.com> 0.12.1-test.1
 - updated build
 -
