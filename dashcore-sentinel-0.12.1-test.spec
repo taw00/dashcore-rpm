@@ -21,7 +21,7 @@
 # date with a numeral, like 20160405.0, 20160405.1, etc.
 # Use whatever is meaningful to you. Just remember if you are iterating, it needs
 # to be consistent an progress in version (so that upgrades work)
-%define bump test.0
+%define bump test.1
 
 # "bumptag" is used to indicate additional information, usually an identifier,
 # like the builder's initials, or a date, or both, or nil.
@@ -74,7 +74,7 @@ Requires: dashcore-server >= %{version}
 %description
 Dash Core Sentinel is an autonomous agent for persisting, processing and
 automating Dash v12.1 governance objects and tasks, and for expanded functions
-in the upcoming Dash V13 release (Evolution).
+in the upcoming Dash v13 release (Evolution).
 
 Sentinel is implemented as a Python application that binds to a local version
 12.1 dashd instance on each Dash v12.1 Masternode.
@@ -180,6 +180,9 @@ exit 0
 
 
 %changelog
+* Wed Jan 25 2017 Todd Warner <t0dd@protonmail.com> 0.12.1-test.1
+- updated build
+-
 * Sun Jan 22 2017 Todd Warner <t0dd@protonmail.com> 0.12.1-test.0
 - initial build
 -
