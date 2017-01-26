@@ -1,8 +1,13 @@
-Note, if you are looking for the "blessed" binaries (tested and runnable
+**Note1: If you are looking for the "blessed" binaries** (tested and runnable
 versions) built from the the source RPM packages described below, you can find
-information about them here:
-[Dash Core Binaries (pre-built) for Fedora Linux, CentOS, and RHEL](https://github.com/taw00/dashcore-rpm/blob/master/README-dashcore-binaries.md). Please
-remember to backup your Dash wallet before installing another version.
+information about them here: [Dash Core Binaries (pre-built) for Fedora Linux,
+CentOS, and
+RHEL](https://github.com/taw00/dashcore-rpm/blob/master/README-dashcore-binaries.md).
+Please remember to backup your Dash wallet before installing another version.
+
+**Note2: If you are looking for instruction about how to set up a dash
+masternode** with these packages, please refer to the "Overview" document in
+the "documentation" folder of this git repository.
 
 # Dash Core Source RPM Packages
 
