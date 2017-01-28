@@ -216,12 +216,12 @@ out there.
 
 1. The default data directory will be `/var/lib/dashcore`
 2. The default configuration file will be `/etc/dashcore/dash.conf`
-3. Both are owned by system user `dash`
+3. Both are owned by system user (and group) `dashcore`
 4. All elements in 1, 2, and 3 above were installed automatically by the dashcore-server RPM package.
 
-Since the Dash service runs out of `dash` user owned directories and
+Since the Dash service runs out of `dashcore` user owned directories and
 configuration, many of our configuration and ongoing maintenance actions will
-be performed by sudo'ing as that user. `dash` is a system user, as such that
+be performed by sudo'ing as that user. `dashcore` is a system user, as such that
 user can't be logged into and has no home directory. What this means will
 become self evident shortly.
 
@@ -238,7 +238,7 @@ With your favorited editor &mdash; some use `nano`, I use `vim` &mdash; open up
 `/etc/dashcore/dash.conf` and add the starting template shown below....
 
 ```
-sudo -u dash nano /etc/dashcore/dash.conf
+sudo -u dashcore nano /etc/dashcore/dash.conf
 ```
 
 Edit that file and save this data in it...
@@ -300,15 +300,15 @@ Log in as the normal user, `mnuser` in this example.
 
 ```
 # You kick off systemd services as root
-sudo systemctl start dash
+sudo systemctl start dashd
 ```
 
 #### SSH into two terminals and watch the logs in one...
 
 ```
 # ^C out of this tail feed when you are done
-sudo -u dash tail -f /var/lib/dashcore/debug.log # if mainnet
-#sudo -u dash tail -f /var/lib/dashcore/testnet3/debug.log # if testnet
+sudo -u dashcore tail -f /var/lib/dashcore/debug.log # if mainnet
+#sudo -u dashcore tail -f /var/lib/dashcore/testnet3/debug.log # if testnet
 ```
 
 #### ...and watch the blockcount rise (hopefully) in the other...
@@ -320,7 +320,7 @@ You will know you have sync'ed the entire blockchain when it matches the current
 
 ```
 # ^C out of this loop when you are done
-watch sudo -u dash dash-cli -conf=/etc/dashcore/dash.conf getblockcount
+watch sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf getblockcount
 ```
 
 
@@ -339,7 +339,7 @@ and reconfigured `/etc/dashcore/dash.conf`
 
 ```
 # Use your favorite editor, in this example, "nano"
-sudo -u dash nano /etc/dashcore/dash.conf
+sudo -u dashcore nano /etc/dashcore/dash.conf
 ```
 
 Convert these lines from...
@@ -359,10 +359,9 @@ externalip=93.184.216.34
 ## [4] Restart the `dash` systemd service and enable it for restart upon boot
 
 ```
-sudo systemctl stop dash
-sleep 15
-sudo systemctl start dash
-sudo systemctl enable dash
+sudo systemctl restart dashd
+# there will be a 15 to 30 second pause as systemd allows dashd to shut down properly
+sudo systemctl enable dashd
 ```
 
 Now, if you have to reboot your system for whatever reason, the dash service
@@ -492,7 +491,7 @@ itself.
 From the commandline do this (this is an example; use your masternode's IP
 address)...
 ```
-sudo -u dash watch "dash-cli -conf=/etc/dashcore/dash.conf masternode list full | grep 93.184.216.34"
+sudo -u dashcore watch "dash-cli -conf=/etc/dashcore/dash.conf masternode list full | grep 93.184.216.34"
 ```
 
 While that is going on in one terminal, open up another terminal and...
@@ -507,7 +506,7 @@ user so that it executes every 2 minutes...
 
 ### Turn off testnet/mainnet checking in `sentinel.conf`
 
-Edit the /var/lib/dashcore-sentinel/sentinel.conf file and comment out
+Edit the /var/lib/dashcore/sentinel/sentinel.conf file and comment out
 `network=testnet` and `network=mainnet` if one of them is set in there. Your
 `dash.conf` file properly sets that and the Sentinel default configuration file
 may wronging override your `dash.conf` file. At least it does in the earlier
@@ -515,41 +514,41 @@ versions of Sentinel.
 
 ### Run it for the first time...
 ```
-cd /var/lib/dashcore-sentinel && sudo -u dash ./venv/bin/python scripts/crontab.py
+cd /var/lib/dashcore/sentinel && sudo -u dashcore ./venv/bin/python scripts/crontab.py
 ```
 
 It should create a database and populate it.
 
 Run it again...
 ```
-cd /var/lib/dashcore-sentinel && sudo -u dash ./venv/bin/python scripts/crontab.py
+cd /var/lib/dashcore/sentinel && sudo -u dashcore ./venv/bin/python scripts/crontab.py
 ```
 
 There should be no output.
 
 > Note1, another way you can run that command is...
 > ```
-> sudo -u dash -- bash -c "cd /var/lib/dashcore-sentinel && ./venv/bin/python scripts/crontab.py"
+> sudo -u dashcore -- bash -c "cd /var/lib/dashcore/sentinel && ./venv/bin/python scripts/crontab.py"
 > ```
 > 
 > Note2, if something seems to be going wrong, set SENTINEL_DEBUG=1 and try to
 > make sense of the output
 > ```
-> sudo -u dash -- bash -c "cd /var/lib/dashcore-sentinel && SENTINEL_DEBUG=1 venv/bin/python scripts/crontab.py >> /tmp/troubleshooting-sentinel.log 2>&1"
+> sudo -u dashcore -- bash -c "cd /var/lib/dashcore/sentinel && SENTINEL_DEBUG=1 venv/bin/python scripts/crontab.py >> /tmp/troubleshooting-sentinel.log 2>&1"
 > less /tmp/troubleshooting-sentinel.log
 > ```
 
 ### Edit cron and add a "run it every two minutes" entry
 
 On the commandline, edit `crontab` &mdash; notice, that we, like in most
-commands, are doing it as the `dash` system user...
+commands, are doing it as the `dashcore` system user...
 ```
-sudo -u dash EDITOR="nano" crontab -e
+sudo -u dashcore EDITOR="nano" crontab -e
 ```
 
 ...and add this line...
 ```
-*/2 * * * * cd /var/lib/dashcore-sentinel && ./venv/bin/python scripts/crontab.py >/dev/null 2>&1
+*/2 * * * * cd /var/lib/dashcore/sentinel && ./venv/bin/python scripts/crontab.py >/dev/null 2>&1
 ```
 
 

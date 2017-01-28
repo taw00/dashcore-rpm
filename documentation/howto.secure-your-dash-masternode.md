@@ -114,7 +114,7 @@ sudo systemctl enable fail2ban
 
 Watch the IP addresses slowly pile up by occassionally looking in the SSH jail...
 ```
-sudo fail2ban status sshd
+sudo fail2ban-client status sshd
 ```
 ...and even...
 ```

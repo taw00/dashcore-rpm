@@ -57,6 +57,37 @@ To run a masternode, you set up a small server running a masternode as a service
 
 Sounds easy, right? Well, on the whole, it is not complicated, just "tricky". Maybe "twitchy" is the right term.
 
+## A note about Testnet versus Mainnet
+
+There are two Dash networks. Two blockchains, separate sets of miners, wallets,
+nodes, and masternodes. Testnet exists to as a proving grounds for new code and
+new ideas. You too can use it to get familiar with Dash and how all these
+pieces fit together. It uses freely available testnet Dash (tDash) which can be
+acquired [here](https://test.explorer.dash.org). Mainnet is the network that
+secures, mines, and transacts real Dash of real value.
+
+You can actually switch freely between Mainnet and Testnet. It's almost like a
+shadow network. Always there... just beyond our ability to see clearly... ;)
+
+There are a number of places where you tell all the various Dash Core
+executables that you are operating on the testnet or not.
+
+`dash.conf` - for `dashd`, `dash-qt`, and tools like `dash.cli`
+
+* `testnet=1` or `testnet=0` &mdash; Default is usually `testnet=0` for stable releases.
+
+Data directory: Usually either `/var/lib/dashcore` or `$HOME/.dashcore`
+
+* If `testnet=1`, your data-directory becomes your data-directory/testnet3
+* `dash.conf` is independent of this, even if you choose to store it in your data-directory.
+
+`sentinel.conf`
+
+* `network=testnet` or `network=mainnet` &mdash; Leave this commented out and allow `dash.conf` to determine Sentinel's operating posture.
+
+
+
+
 # Good luck!
 
 Got a dash of feedback? *...har har...* Send it my way <t0dd@protonmail.com>    

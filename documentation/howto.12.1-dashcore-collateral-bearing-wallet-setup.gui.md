@@ -147,7 +147,7 @@ Cut-n-paste this template...
 ```
 # This is a Masternode Collateral-bearing Wallet configuration file
 # Run on the test network (testnet=1) or the main network (testnet=0)
-testnet=1
+testnet=0
 # Run dashd as a daemon (in the background) - only relevant for advanced users
 #daemon=1
 # Listening mode, enabled by default except when 'connect' is being used
