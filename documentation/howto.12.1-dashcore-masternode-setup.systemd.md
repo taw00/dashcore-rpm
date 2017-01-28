@@ -436,34 +436,41 @@ Edit the /var/lib/dashcore-sentinel/sentinel.conf file and comment out `network=
 
 ### Run it for the first time...
 ```
-cd /var/lib/dashcore-sentinel && sudo -u dash SENTINEL_DEBUG=1 venv/bin/python scripts/crontab.py
+cd /var/lib/dashcore-sentinel && sudo -u dash ./venv/bin/python scripts/crontab.py
 ```
 
 It should create a database and populate it.
 
 Run it again...
 ```
-cd /var/lib/dashcore-sentinel && sudo -u dash SENTINEL_DEBUG=1 ./venv/bin/python scripts/crontab.py
+cd /var/lib/dashcore-sentinel && sudo -u dash ./venv/bin/python scripts/crontab.py
 ```
 
 There should be no output.
 
-### Edit cron and add an "run it every two minutes entry"
+> Note1, another way you can run that command is...
+> ```
+> sudo -u dash -- bash -c "cd /var/lib/dashcore-sentinel && ./venv/bin/python scripts/crontab.py"
+> ```
+> 
+> Note2, if something seems to be going wrong, set SENTINEL_DEBUG=1 and try to make sense of the output
+> ```
+> sudo -u dash -- bash -c "cd /var/lib/dashcore-sentinel && SENTINEL_DEBUG=1 venv/bin/python scripts/crontab.py >> /tmp/troubleshooting-sentinel.log 2>&1"
+> less /tmp/troubleshooting-sentinel.log
+> ```
 
-On the commandline, edit `crontab`...
+### Edit cron and add a "run it every two minutes" entry
+
+On the commandline, edit `crontab` (notice, that we, like in most commands, are doing it as the `dash` system user...
 ```
 sudo -u dash EDITOR="nano" crontab -e
 ```
 
 ...and add this line...
 ```
-*/2 * * * * cd /var/lib/dashcore-sentinel && SENTINEL_DEBUG=1 ./venv/bin/python scripts/crontab.py >/dev/null 2>&1
+*/2 * * * * cd /var/lib/dashcore-sentinel && ./venv/bin/python scripts/crontab.py >/dev/null 2>&1
 ```
 
-You can monitor Sentinel debug information in the syslog files with...
-```
-sudo journalctl -f
-```
 
 
 ## YOU ARE DONE!
