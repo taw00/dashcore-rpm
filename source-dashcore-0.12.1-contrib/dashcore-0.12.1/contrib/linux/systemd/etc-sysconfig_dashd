@@ -1,0 +1,10 @@
+# Provide overriding options to the dash core daemon here, for example
+# OPTIONS="-testnet -disable-wallet"
+# Note: These options will override dash.conf settings.
+OPTIONS=""
+
+# System service defaults.
+# Don't change these unless you know what you're doing.
+CONFIG_FILE="/etc/dashcore/dash.conf"
+DATA_DIR="/var/lib/dashcore"
+PID_FILE="/run/dashd/dashd.pid"

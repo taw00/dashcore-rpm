@@ -1,0 +1,26 @@
+[Unit]
+Description=Dash Core Daemon
+After=syslog.target network.target
+
+[Service]
+Type=forking
+ExecStart=/usr/sbin/dashd -daemon -conf=${CONFIG_FILE} -datadir=${DATA_DIR} -disablewallet -pid=${PID_FILE} $OPTIONS
+# If ExecStop is not set, systemd sends a SIGTERM, which is "okay", just not ideal
+ExecStop=/usr/bin/dash-cli -conf=${CONFIG_FILE} -datadir=${DATA_DIR} stop
+# Need to allow dashd to shutdown properly before taking additional actions.
+ExecStopPost=/usr/bin/sleep 30
+EnvironmentFile=/etc/sysconfig/dashd
+User=dashcore
+Group=dashcore
+
+Restart=on-failure
+PrivateTmp=true
+TimeoutStopSec=90
+TimeoutStartSec=90
+# If something triggers an auto-restart, let's wait a bit before going ahead
+RestartSec=30
+StartLimitInterval=240
+StartLimitBurst=5
+
+[Install]
+WantedBy=multi-user.target

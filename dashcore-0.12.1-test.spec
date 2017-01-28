@@ -23,7 +23,7 @@
 # date with a numeral, like 20160405.0, 20160405.1, etc.
 # Use whatever is meaningful to you. Just remember if you are iterating, it needs
 # to be consistent and progress in version (so that upgrades work)
-%define bump test.b00781.2
+%define bump test.b00782.0
 
 # "bumptag" is used to indicate additional information, usually an identifier,
 # like the builder's initials, or a date, or both, or nil.
@@ -379,9 +379,9 @@ install -D -m644 ./contrib/extras/dash.conf.example doc/dash.conf.example
 install -D -m640 ./contrib/linux/systemd/etc-dashcore_dash.conf %{buildroot}%{_sysconfdir}/dashcore/dash.conf
 
 # Install system services files
-install -D -m600 -p ./contrib/linux/systemd/etc-sysconfig_dash %{buildroot}%{_sysconfdir}/sysconfig/dash
-install -D -m644 -p ./contrib/linux/systemd/usr-lib-systemd-system_dash.service %{buildroot}%{_unitdir}/dash.service
-install -D -m644 -p ./contrib/linux/systemd/usr-lib-tmpfiles.d_dash.conf %{buildroot}%{_tmpfilesdir}/dash.conf
+install -D -m600 -p ./contrib/linux/systemd/etc-sysconfig_dashd %{buildroot}%{_sysconfdir}/sysconfig/dashd
+install -D -m644 -p ./contrib/linux/systemd/usr-lib-systemd-system_dashd.service %{buildroot}%{_unitdir}/dashd.service
+install -D -m644 -p ./contrib/linux/systemd/usr-lib-tmpfiles.d_dashcore.conf %{buildroot}%{_tmpfilesdir}/dashcore.conf
 
 # Service definition files for firewalld for full nodes and masternodes
 install -D -m644 -p ./contrib/linux/firewalld/usr-lib-firewalld-services_dashcore-node.xml %{buildroot}%{_prefix}/lib/firewalld/services/dashcore-node.xml
@@ -409,14 +409,14 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 %pre server
 # This is for the case that you run dash core as a service (systemctl start dash)
 # %{_sharedstatedir} is /var/lib
-getent group dash >/dev/null || groupadd -r dash
-getent passwd dash >/dev/null || useradd -r -g dash -d %{_sharedstatedir}/dashcore -s /sbin/nologin -c "Dash Core node, masternode, and wallet server" dash
+getent group dashcore >/dev/null || groupadd -r dashcore
+getent passwd dashcore >/dev/null || useradd -r -g dashcore -d %{_sharedstatedir}/dashcore -s /sbin/nologin -c "System user 'dashcore' to isolate Dash Core execution" dashcore
 exit 0
 
 
 # dashcore-server
 %post server
-%systemd_post dash.service
+%systemd_post dashd.service
 # firewalld only partially picks up changes to its services files without this
 test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 
@@ -442,12 +442,12 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 
 # dashcore-server
 %preun server
-%systemd_preun dash.service
+%systemd_preun dashd.service
 
 
 # dashcore-server
 %postun server
-%systemd_postun dash.service
+%systemd_postun dashd.service
 #t0dd if [ $1 -eq 0 ] ; then
 #t0dd 	# FIXME This is less than ideal, but until dwalsh gives me a better way...
 #t0dd 	/usr/sbin/semanage port -d -p tcp 8332
@@ -484,7 +484,7 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 %{_mandir}/man5/masternode.conf.5.gz
 %{_prefix}/lib/firewalld/services/dashcore-node.xml
 %{_prefix}/lib/firewalld/services/dashcore-node-testnet.xml
-%config(noreplace) %attr(640,dash,dash) %{_sysconfdir}/dashcore/dash.conf
+%config(noreplace) %attr(640,dashcore,dashcore) %{_sysconfdir}/dashcore/dash.conf
 
 
 # dashcore-server
@@ -493,11 +493,11 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 %license COPYING
 #t0dd %doc README.md README.server.redhat 
 %doc doc/dnsseed-policy.md doc/release-notes.md doc/tor.md doc/multiwallet-qt.md doc/guide-startmany.md doc/reduce-traffic.md doc/zmq.md doc/dash.conf.example
-%dir %attr(750,dash,dash) %{_sharedstatedir}/dashcore
-%dir %attr(750,dash,dash) %{_sysconfdir}/dashcore
-%config(noreplace) %attr(600,root,root) %{_sysconfdir}/sysconfig/dash
-%config(noreplace) %attr(640,dash,dash) %{_sysconfdir}/dashcore/dash.conf
-%{_unitdir}/dash.service
+%dir %attr(750,dashcore,dashcore) %{_sharedstatedir}/dashcore
+%dir %attr(750,dashcore,dashcore) %{_sysconfdir}/dashcore
+%config(noreplace) %attr(600,root,root) %{_sysconfdir}/sysconfig/dashd
+%config(noreplace) %attr(640,dashcore,dashcore) %{_sysconfdir}/dashcore/dash.conf
+%{_unitdir}/dashd.service
 %{_prefix}/lib/firewalld/services/dashcore-node.xml
 %{_prefix}/lib/firewalld/services/dashcore-node-testnet.xml
 %doc SELinux/*
@@ -505,7 +505,7 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 # XXX COMMENT OUT TEST BINARIES IF THIS IS A PRODUCTION RELEASE
 %{_bindir}/test_dash
 %{_bindir}/bench_dash
-%{_tmpfilesdir}/dash.conf
+%{_tmpfilesdir}/dashcore.conf
 %{_mandir}/man1/dashd.1.gz
 %{_mandir}/man5/dash.conf.5.gz
 %{_mandir}/man5/masternode.conf.5.gz
@@ -540,17 +540,33 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 
 
 # More information about DashCore Testnet:
+# 
 # Announcement message: https://www.dash.org/forum/threads/12-1-testnet-testing-phase-two-ignition.10818/
 # Testnet documentation: https://dashpay.atlassian.net/wiki/display/DOC/Testnet
-# Testnet masternode documentation: https://gist.github.com/taw00/e978f862ee1ad66722e16bcc8cf18ca5
+# Mainnet/Testnet masternode documentation: https://github.com/taw00/dashcore-rpm/tree/master/documentation
 #
 # Latest source builds: https://dashpay.atlassian.net/builds/artifact/DASHL-DEV/JOB1/build-latestSuccessful/
 # Direct source: https://dashpay.atlassian.net/builds/artifact/DASHL-DEV/JOB1/build-00<BUILD ID>
-# GitHub: https://github.com/dashpay/dash
-# GitHub for RPM builds: https://github.com/taw00/dashcore-rpm
-# GitHub for Sentinel (complimentary to dashd): https://github.com/nmarley/sentinel
+# GitHub - Dash Core upstream:
+#   * Dash: https://github.com/dashpay/dash
+#   * Sentinel: https://github.com/nmarley/sentinel
+# GitHub - Dash Core for Red Hat: https://github.com/taw00/dashcore-rpm
 
 %changelog
+* Sat Jan 28 2017 Todd Warner <t0dd@protonmail.com> 0.12.1-test.b00782.0
+- Fixed restart time so that there are a full 30 seconds after dashd shutdown
+- Fixed for both the systemd and older init use cases.
+- Set mainnet to be the explicit default in /etc/dashcore/dash.conf for the
+- systemd use case.
+- Dramatic shift:
+-   * services are now dashd and not just dash.
+-   * user and group are dashcore and not just dash
+-   * tmpfile.d conf file is now dashcore.conf instead of dash.conf
+- 149400a70b87f4c36a9fb3088cf87b010c3b6b3cc49588ed45652a9ad0ccadaa  dashcore-0.12.1-contrib.tar.gz
+-
+- New build, 782, v0.12.1.0-g9c5db04
+- 683683cd017b0d160eb3e92b85b648547f5f39635cceb1b6e6bd4da9318a408f  dashcore-0.12.1.tar.gz
+- 
 * Thu Jan 26 2017 Todd Warner <t0dd@protonmail.com> 0.12.1-test.b00781.2
 - Updated dash.service restart times
 - 8d25d2df6a94923daa52eb760dcac321786be56e2ae22a7b104636a306c2449b  dashcore-0.12.1-contrib.tar.gz

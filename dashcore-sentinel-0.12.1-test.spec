@@ -21,7 +21,7 @@
 # date with a numeral, like 20160405.0, 20160405.1, etc.
 # Use whatever is meaningful to you. Just remember if you are iterating, it needs
 # to be consistent an progress in version (so that upgrades work)
-%define bump test.2
+%define bump test.3
 
 # "bumptag" is used to indicate additional information, usually an identifier,
 # like the builder's initials, or a date, or both, or nil.
@@ -109,7 +109,7 @@ at www.dash.org.
 %install
 rm -rf %{buildroot}
 mkdir %{buildroot}
-%define varlibtarget %{_sharedstatedir}/dashcore-sentinel
+%define varlibtarget %{_sharedstatedir}/dashcore/sentinel
 
 #install -d %{buildroot}%{_sharedstatedir}
 install -d %{buildroot}%{varlibtarget}
@@ -119,7 +119,7 @@ cp -a ./* %{buildroot}%{varlibtarget}/
 # Replace core sentinel configuration file with contributed configuration file
 install -D -m640 ./contrib/linux/sentinel.conf %{buildroot}%{varlibtarget}/sentinel.conf
 
-# Right now, things are being run out of /var/lib/dashcore-sentinel
+# Right now, things are being run out of /var/lib/dashcore/sentinel
 #
 # Should this program live in /var/lib? Or should it live elsewhere? Good
 # questions. The executable is ./scripts/crontab.py. It's an oddity, and oddly
@@ -127,7 +127,7 @@ install -D -m640 ./contrib/linux/sentinel.conf %{buildroot}%{varlibtarget}/senti
 # /usr/sbin. But it doesn't. The rest of the program should probably live in
 # /var/lib.
 #
-# Consideration: Maybe punt and shove everything in /opt/dashcore-sentinel
+# Consideration: Maybe punt and shove everything in /opt/dashcore/sentinel
 # and call it a day. That's ugly packaging though. For now, it stays in /var/lib
 
 
@@ -136,10 +136,10 @@ rm -rf %{buildroot}
 
 
 %pre
-getent group dash >/dev/null || groupadd -r dash
-getent passwd dash >/dev/null ||
-	useradd -r -g dash -d /var/lib/dash -s /sbin/nologin \
-	-c "System user 'dash' to isolate Dash Core execution" dash
+getent group dashcore >/dev/null || groupadd -r dashcore
+getent passwd dashcore >/dev/null ||
+	useradd -r -g dashcore -d %{_sharedstatedir}/dashcore -s /sbin/nologin \
+	-c "System user 'dashcore' to isolate Dash Core execution" dashcore
 exit 0
 
 
@@ -147,39 +147,37 @@ exit 0
 
 
 %files
-%defattr(-,dash,dash,-)
+%defattr(-,dashcore,dashcore,-)
 
-%define varlibtarget %{_sharedstatedir}/dashcore-sentinel
+%define varlibtarget %{_sharedstatedir}/dashcore/sentinel
 
 %license %attr(-,root,root) LICENSE
 %doc %attr(-,root,root) README.md contrib/linux/README.redhat.md
 
 %dir %{varlibtarget}
 %{varlibtarget}/*
-%config(noreplace) %{_sharedstatedir}/dashcore-sentinel/sentinel.conf
+%config(noreplace) %{_sharedstatedir}/dashcore/sentinel/sentinel.conf
 
-
-#%files
-#%defattr(-,root,root,-)
-#%define varlibtarget %{_sharedstatedir}/dashcore-sentinel
-#%license %attr(-,root,root) LICENSE
-#%doc %attr(-,root,root) README.md contrib/linux/README.redhat.md
-#%dir %attr(750,dash,dash) %{varlibtarget}
-#%attr(-,dash,dash) %{varlibtarget}/*
-#%config(noreplace) %attr(660,dash,dash) %{_sharedstatedir}/dashcore-sentinel/sentinel.conf
 
 
 # Testnet test phase 2
 # 
 # Announcement message: https://www.dash.org/forum/threads/12-1-testnet-testing-phase-two-ignition.10818/
 # Testnet documentation: https://dashpay.atlassian.net/wiki/display/DOC/Testnet
-# Testnet masternode documentation: https://gist.github.com/taw00/e978f862ee1ad66722e16bcc8cf18ca5
+# Mainnet/Testnet masternode documentation: https://github.com/taw00/dashcore-rpm/tree/master/documentation
 #
-# GitHub for RPM builds: https://github.com/taw00/dashcore-rpm
-# GitHub for original source: https://github.com/nmarley/sentinel
+# GitHub - Dash Core Sentinel for Red Hat: https://github.com/taw00/dashcore-rpm
+# GitHub - upstream: https://github.com/nmarley/sentinel
 
 
 %changelog
+* Sat Jan 28 2017 Todd Warner <t0dd@protonmail.com> 0.12.1-test.3
+- includes still not merged commit that fixes logging bug
+- system user and group are dashcore now, and not just dash
+- moved "data directory" to /var/lib/dashcore/sentinel instead of just /var/lib/dashcore-sentinel
+- ed233ecd46876f4a1c1c235e11f3ef35c482ee8153bf799bb13822c17a99b312  dashcore-sentinel-contrib.tar.gz
+- 78866911f292dcc66da8d15b8f87def23b41d40e5480ee63f09e8fcf7604930f  dashcore-sentinel.tar.gz
+-
 * Thu Jan 26 2017 Todd Warner <t0dd@protonmail.com> 0.12.1-test.2
 - 4aec14d739f5216d11a805619acda67cf57df4017efa73b11e49284a1e46f99c  dashcore-sentinel.tar.gz
 - updated build
