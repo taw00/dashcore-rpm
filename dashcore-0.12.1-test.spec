@@ -23,7 +23,7 @@
 # date with a numeral, like 20160405.0, 20160405.1, etc.
 # Use whatever is meaningful to you. Just remember if you are iterating, it needs
 # to be consistent and progress in version (so that upgrades work)
-%define bump test.b00782.0
+%define bump test.b00785.0
 
 # "bumptag" is used to indicate additional information, usually an identifier,
 # like the builder's initials, or a date, or both, or nil.
@@ -553,6 +553,14 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 # GitHub - Dash Core for Red Hat: https://github.com/taw00/dashcore-rpm
 
 %changelog
+* Mon Jan 30 2017 Todd Warner <t0dd@protonmail.com> 0.12.1-test.b00785.0
+- Build 785, v0.12.1.0-ge2eaf1d
+- 45bac305077740301b9200b5232aa624295ca611c77e2db0b6f62e8e010453e1  dashcore-0.12.1.tar.gz
+- 
+* Sun Jan 29 2017 Todd Warner <t0dd@protonmail.com> 0.12.1-test.b00784.0
+- Build 784, v0.12.1.0-g04ed5db
+- 212f18cf06082b3c5c41bb8710c738ec13583f9eda054fc794d6f1b025615d26  dashcore-0.12.1.tar.gz
+- 
 * Sat Jan 28 2017 Todd Warner <t0dd@protonmail.com> 0.12.1-test.b00782.0
 - Fixed restart time so that there are a full 30 seconds after dashd shutdown
 - Fixed for both the systemd and older init use cases.
