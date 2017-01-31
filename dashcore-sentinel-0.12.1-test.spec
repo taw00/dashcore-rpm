@@ -21,7 +21,7 @@
 # date with a numeral, like 20160405.0, 20160405.1, etc.
 # Use whatever is meaningful to you. Just remember if you are iterating, it needs
 # to be consistent an progress in version (so that upgrades work)
-%define bump test.4
+%define bump test.5
 
 # "bumptag" is used to indicate additional information, usually an identifier,
 # like the builder's initials, or a date, or both, or nil.
@@ -143,18 +143,27 @@ exit 0
 
 
 %post
+## Reference: https://fedoraproject.org/wiki/Packaging:Scriptlets
+## Always runs on install or upgrade
+#if [$1 -gt 0 ] ; then
+#  # Only runs on upgrades
+#  if [$1 -gt 1 ] ; then
+#  fi
+#fi
+
+%preun
+# Nuke the database and then uninstall the thing. This will ensure the sentinel
+# directory is properly cleaned up as well if need be.
+/usr/bin/rm -f %{_sharedstatedir}/dashcore/sentinel/database/sentinel.db >> /dev/null 2>&1
 
 
 %files
 %defattr(-,dashcore,dashcore,-)
-
-%define varlibtarget %{_sharedstatedir}/dashcore/sentinel
-
 %license %attr(-,root,root) LICENSE
 %doc %attr(-,root,root) README.md contrib/linux/README.redhat.md
-
-%dir %{varlibtarget}
-%{varlibtarget}/*
+%dir %attr(750,dashcore,dashcore) %{_sharedstatedir}/dashcore
+%dir %attr(750,dashcore,dashcore) %{_sharedstatedir}/dashcore/sentinel
+%{_sharedstatedir}/dashcore/sentinel/*
 %config(noreplace) %{_sharedstatedir}/dashcore/sentinel/sentinel.conf
 
 
@@ -170,6 +179,12 @@ exit 0
 
 
 %changelog
+* Tue Jan 31 2017 Todd Warner <t0dd@protonmail.com> 0.12.1-test.5
+- This package really needs to own /var/lib/dashcore as well as dashcore-server.
+- Cleanup database upon uninstall. And update the sentinel codebase again.
+- 6c1981a62221ce8291b35ab889de33488aa8b34205414542034c3b0f5594f995  dashcore-sentinel.tar.gz
+- ed233ecd46876f4a1c1c235e11f3ef35c482ee8153bf799bb13822c17a99b312  dashcore-sentinel-contrib.tar.gz
+-
 * Tue Jan 31 2017 Todd Warner <t0dd@protonmail.com> 0.12.1-test.4
 - Includes change from scripts/crontab.py to bin/sentinel.py
 - 69b510031e79352a39bfc4bb31f539bfec84eb6a662ab52edd22b1254ce400e3  dashcore-sentinel.tar.gz
