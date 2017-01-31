@@ -514,27 +514,27 @@ versions of Sentinel.
 
 ### Run it for the first time...
 ```
-cd /var/lib/dashcore/sentinel && sudo -u dashcore ./venv/bin/python scripts/crontab.py
+cd /var/lib/dashcore/sentinel && sudo -u dashcore venv/bin/python bin/sentinel.py
 ```
 
 It should create a database and populate it.
 
 Run it again...
 ```
-cd /var/lib/dashcore/sentinel && sudo -u dashcore ./venv/bin/python scripts/crontab.py
+cd /var/lib/dashcore/sentinel && sudo -u dashcore venv/bin/python bin/sentinel.py
 ```
 
 There should be no output.
 
 > Note1, another way you can run that command is...
 > ```
-> sudo -u dashcore -- bash -c "cd /var/lib/dashcore/sentinel && ./venv/bin/python scripts/crontab.py"
+> sudo -u dashcore -- bash -c "cd /var/lib/dashcore/sentinel && venv/bin/python bin/sentinel.py"
 > ```
 > 
 > Note2, if something seems to be going wrong, set SENTINEL_DEBUG=1 and try to
 > make sense of the output
 > ```
-> sudo -u dashcore -- bash -c "cd /var/lib/dashcore/sentinel && SENTINEL_DEBUG=1 venv/bin/python scripts/crontab.py >> /tmp/troubleshooting-sentinel.log 2>&1"
+> sudo -u dashcore -- bash -c "cd /var/lib/dashcore/sentinel && SENTINEL_DEBUG=1 venv/bin/python bin/sentinel.py >> /tmp/troubleshooting-sentinel.log 2>&1"
 > less /tmp/troubleshooting-sentinel.log
 > ```
 
@@ -548,7 +548,7 @@ sudo -u dashcore EDITOR="nano" crontab -e
 
 ...and add this line...
 ```
-*/2 * * * * cd /var/lib/dashcore/sentinel && ./venv/bin/python scripts/crontab.py >/dev/null 2>&1
+*/2 * * * * cd /var/lib/dashcore/sentinel && venv/bin/python bin/sentinel.py >/dev/null 2>&1
 ```
 
 

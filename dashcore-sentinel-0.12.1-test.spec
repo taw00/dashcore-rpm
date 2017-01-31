@@ -21,7 +21,7 @@
 # date with a numeral, like 20160405.0, 20160405.1, etc.
 # Use whatever is meaningful to you. Just remember if you are iterating, it needs
 # to be consistent an progress in version (so that upgrades work)
-%define bump test.3
+%define bump test.4
 
 # "bumptag" is used to indicate additional information, usually an identifier,
 # like the builder's initials, or a date, or both, or nil.
@@ -122,10 +122,9 @@ install -D -m640 ./contrib/linux/sentinel.conf %{buildroot}%{varlibtarget}/senti
 # Right now, things are being run out of /var/lib/dashcore/sentinel
 #
 # Should this program live in /var/lib? Or should it live elsewhere? Good
-# questions. The executable is ./scripts/crontab.py. It's an oddity, and oddly
-# named. It probably should be named sentinel or sentinel.py and live in
-# /usr/sbin. But it doesn't. The rest of the program should probably live in
-# /var/lib.
+# questions. The executable is ./bin/sentinel.py. It's an oddity. It probably
+# should live in /usr/sbin. But it doesn't. The rest of the program should
+# probably live in /var/lib.
 #
 # Consideration: Maybe punt and shove everything in /opt/dashcore/sentinel
 # and call it a day. That's ugly packaging though. For now, it stays in /var/lib
@@ -171,6 +170,11 @@ exit 0
 
 
 %changelog
+* Tue Jan 31 2017 Todd Warner <t0dd@protonmail.com> 0.12.1-test.4
+- Includes change from scripts/crontab.py to bin/sentinel.py
+- 69b510031e79352a39bfc4bb31f539bfec84eb6a662ab52edd22b1254ce400e3  dashcore-sentinel.tar.gz
+- ed233ecd46876f4a1c1c235e11f3ef35c482ee8153bf799bb13822c17a99b312  dashcore-sentinel-contrib.tar.gz
+-
 * Sat Jan 28 2017 Todd Warner <t0dd@protonmail.com> 0.12.1-test.3
 - includes still not merged commit that fixes logging bug
 - system user and group are dashcore now, and not just dash
