@@ -548,7 +548,7 @@ sudo -u dashcore EDITOR="nano" crontab -e
 
 ...and add this line...
 ```
-*/2 * * * * cd /var/lib/dashcore/sentinel && venv/bin/python bin/sentinel.py >/dev/null 2>&1
+*/5 * * * * cd /var/lib/dashcore/sentinel && venv/bin/python bin/sentinel.py >/dev/null 2>&1
 ```
 
 
