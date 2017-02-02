@@ -502,7 +502,7 @@ There are really two services associated to a masternode, the node itself and a
 "sentinel" that performs certain actions and manages expanded processes for the
 network. It was already installed when your dashcore-server package was
 installed. You just have to turn it on and edit crontab for the `dash` system
-user so that it executes every 2 minutes...
+user so that it executes every five minutes...
 
 ### Turn off testnet/mainnet checking in `sentinel.conf`
 
@@ -538,7 +538,7 @@ There should be no output.
 > less /tmp/troubleshooting-sentinel.log
 > ```
 
-### Edit cron and add a "run it every two minutes" entry
+### Edit cron and add a "run it every five minutes" entry
 
 On the commandline, edit `crontab` &mdash; notice, that we, like in most
 commands, are doing it as the `dashcore` system user...
