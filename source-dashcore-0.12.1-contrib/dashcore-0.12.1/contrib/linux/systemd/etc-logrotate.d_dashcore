@@ -1,0 +1,20 @@
+/var/lib/dashcore/debug.log {
+    rotate 5
+    missingok
+    notifempty
+    crompress
+    maxsize 100k
+    monthly
+    create 0600 dashcore dashcore
+}
+
+/var/lib/dashcore/testnet3/debug.log {
+    rotate 5
+    missingok
+    notifempty
+    crompress
+    maxsize 100k
+    monthly
+    create 0600 dashcore dashcore
+}
+

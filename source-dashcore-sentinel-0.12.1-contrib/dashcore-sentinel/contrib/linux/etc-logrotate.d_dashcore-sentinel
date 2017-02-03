@@ -1,0 +1,8 @@
+/var/log/dashcore/sentinel.log {
+    missingok
+    notifempty
+    maxsize 30k
+    monthly
+    create 0600 dashcore dashcore
+}
+
