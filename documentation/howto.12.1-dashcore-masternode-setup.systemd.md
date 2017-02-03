@@ -546,9 +546,12 @@ commands, are doing it as the `dashcore` system user...
 sudo -u dashcore EDITOR="nano" crontab -e
 ```
 
-...and add this line...
+...and add these lines, save and exit...
+
 ```
-*/5 * * * * cd /var/lib/dashcore/sentinel && venv/bin/python bin/sentinel.py >/dev/null 2>&1
+#SENTINEL_DEBUG=1
+#*/5 * * * * cd /var/lib/dashcore/sentinel && venv/bin/python bin/sentinel.py > /dev/null 2>&1
+*/5 * * * * cd /var/lib/dashcore/sentinel && ./venv/bin/python bin/sentinel.py >> /var/log/dashcore/sentinel.log 2>&1
 ```
 
 
