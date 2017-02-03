@@ -1,5 +1,7 @@
 # HowTo: v12.1 Dash Masternode as SystemD Service<br />_...on Fedora, CentOS or Red Hat Enterprise Linux_
 
+> DO NOT FOLLOW THIS FOR MAINNET UNTIL FEBUARY 5, 2017!
+
 > This edition of these instructions is for those who wish to install and
 > configure a Dash Masternode running as a traditional `systemd` service.
 > 
@@ -546,9 +548,12 @@ commands, are doing it as the `dashcore` system user...
 sudo -u dashcore EDITOR="nano" crontab -e
 ```
 
-...and add this line...
+...and add these lines, save and exit...
+
 ```
-*/5 * * * * cd /var/lib/dashcore/sentinel && venv/bin/python bin/sentinel.py >/dev/null 2>&1
+#SENTINEL_DEBUG=1
+#*/5 * * * * cd /var/lib/dashcore/sentinel && venv/bin/python bin/sentinel.py > /dev/null 2>&1
+*/5 * * * * cd /var/lib/dashcore/sentinel && ./venv/bin/python bin/sentinel.py >> /var/log/dashcore/sentinel.log 2>&1
 ```
 
 
