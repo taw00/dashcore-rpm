@@ -208,13 +208,14 @@ versions: Fedora 24, 25 & CentOS7 / RHEL7**
 
 This experimental version represents efforts surrounding current **Testnet
 Testing** for the next major version of the software which should ship (become
-the new "stable" version) in January 2017.
+the new "stable" version) on February 5, 2017.
 
-**Default testnet Dash data directory for v12.1:** `/home/<username>/.dashcore/`
+**Default testnet Dash data directory for v12.1 (normal user):** `/home/<username>/.dashcore/`<br />
+**Default testnet Dash data directory for v12.1 (`systemd` setup):** `/var/lib/dashcore/` _(see masternode setup below)_
 
 **Announcement and getting started instruction:** <https://www.dash.org/forum/threads/12-1-testnet-testing-phase-two-ignition.10818/><br />
 **Testnet documentation:** <https://dashpay.atlassian.net/wiki/display/DOC/Testnet><br />
-**Testnet Masternode setup:** <https://github.com/taw00/dashcore-rpm/blob/master/documentation/overview.12.1-dashcore-masternode-setup.md>
+**Testnet Masternode setup:** <https://github.com/taw00/dashcore-rpm/blob/master/documentation>
 
 ### An important note about `Sentinel`
 
@@ -238,6 +239,7 @@ governance and budgeting system, making it ***the first Decentralized Autonomous
 Organization (DAO)***. Dash is also a platform for innovative decentralized
 crypto-tech. Dash is open source and the name of the overarching project. Learn
 more at <http://www.dash.org>
+
 The RPMs
 
 * **dashcore-client** -- The dash-qt wallet and full node.

@@ -19,27 +19,26 @@ Latest version and git commit id: v0.12.0.58-g88f3370
 
 **Experimental sources: 0.12.1**    
 *Use experimental RPMs at your own risk*    
-dashcore - latest build #, and git commit id: build 00785, v0.12.1.0-ge2eaf1d
-dashcore-sentinel - latest version-release: 0.12.1-test.5.taw
+dashcore - latest build #, and git commit id: build rc.b010, v0.12.1.0-g1486acf
+dashcore-sentinel - latest version-release: 0.12.1-rc.0.taw
 
 * Fedora Linux 24:
-  - `dashcore-0.12.1-test.b00785.0.taw.fc24.src.rpm`
-  - `dashcore-sentinel-0.12.1-test.5.taw.fc24.src.rpm`
+  - `dashcore-0.12.1-rc.b010.0.taw.fc24.src.rpm`
+  - `dashcore-sentinel-0.12.1-rc.0.taw.fc24.src.rpm`
 * Fedora Linux 25:
-  - `dashcore-0.12.1-test.b00785.0.taw.fc25.src.rpm`
-  - `dashcore-sentinel-0.12.1-test.5.taw.fc25.src.rpm`
+  - `dashcore-0.12.1-rc.b010.0.taw.fc25.src.rpm`
+  - `dashcore-sentinel-0.12.1-rc.0.taw.fc25.src.rpm`
 * CentOS and RHEL 7:
-  - `dashcore-0.12.1-test.b00785.0.taw.el7.centos.src.rpm`
-  - `dashcore-sentinel-0.12.1-test.5.taw.el7.centos.src.rpm`
+  - `dashcore-0.12.1-rc.b010.0.taw.el7.centos.src.rpm`
+  - `dashcore-sentinel-0.12.1-rc.0.taw.el7.centos.src.rpm`
 
 Sourced from: [[latest successful
-builds]](https://dashpay.atlassian.net/builds/browse/DASHL-DEV/latestSuccessful),
-more specifically these [[latest
-artifacts]](https://dashpay.atlassian.net/builds/artifact/DASHL-DEV/JOB1/build-latestSuccessful/)<br>
+builds]](https://bamboo.dash.org/browse/DASHL-DEV/latestSuccessful)<br>
 Announcement message:
 https://www.dash.org/forum/threads/12-1-testnet-testing-phase-two-ignition.10818/<br>
 Testnet documentation (and phase descriptions):
-https://dashpay.atlassian.net/wiki/display/DOC/Testnet
+https://dashpay.atlassian.net/wiki/display/DOC/Testnet<br>
+Our documentation: https://github.com/taw00/dashcore-rpm/tree/master/documentation
 
 
 **Dash (Digital Cash)** is an open source peer-to-peer cryptocurrency that
