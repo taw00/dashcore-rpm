@@ -1,6 +1,8 @@
 # Overview: v12.1 Dash Masternode<br />_...on Fedora, CentOS or Red Hat Enterprise Linux_
 
-> The objective of this set of documents is to illustrate how you can operate a Dash Masternode which requires setting up a collateral-holding wallet on one system and a full node configured to be a masternode on a another.
+> The objective of this set of documents is to illustrate how you can operate a
+> Dash Masternode which requires setting up a collateral-holding wallet on one
+> system and a full node configured to be a masternode on a another.
 >
 > These instructions are specific to the Red Hat-family of linuxes.
 
@@ -12,6 +14,8 @@
 * Wallet setup:<br /><https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.12.1-dashcore-collateral-bearing-wallet-setup.gui.md>
 * Masternode setup:<br /><https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.12.1-dashcore-masternode-setup.systemd.md>
 * Discussion about securing your dash systems:<br /><https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.secure-your-dash-masternode.md>
+* Upgrading from 12.0 to 12.1:<br /><https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.12.1-dashcore-upgrade.md>
+* Troubleshooting guide:<br /><https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.12.1-dashcore-troubleshooting.md>
 
 
 ## What is Dash and what is a Dash Masternode?
