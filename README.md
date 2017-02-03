@@ -20,17 +20,17 @@ Latest version and git commit id: v0.12.0.58-g88f3370
 **Experimental sources: 0.12.1**    
 *Use experimental RPMs at your own risk*    
 dashcore - latest build #, and git commit id: build rc.b010, v0.12.1.0-g1486acf
-dashcore-sentinel - latest version-release: 0.12.1-rc.0.taw
+dashcore-sentinel - latest version-release: 0.12.1-rc.1.taw
 
 * Fedora Linux 24:
   - `dashcore-0.12.1-rc.b010.1.taw.fc24.src.rpm`
-  - `dashcore-sentinel-0.12.1-rc.0.taw.fc24.src.rpm`
+  - `dashcore-sentinel-0.12.1-rc.1.taw.fc24.src.rpm`
 * Fedora Linux 25:
   - `dashcore-0.12.1-rc.b010.1.taw.fc25.src.rpm`
-  - `dashcore-sentinel-0.12.1-rc.0.taw.fc25.src.rpm`
+  - `dashcore-sentinel-0.12.1-rc.1.taw.fc25.src.rpm`
 * CentOS and RHEL 7:
   - `dashcore-0.12.1-rc.b010.1.taw.el7.centos.src.rpm`
-  - `dashcore-sentinel-0.12.1-rc.0.taw.el7.centos.src.rpm`
+  - `dashcore-sentinel-0.12.1-rc.1.taw.el7.centos.src.rpm`
 
 Sourced from: [[latest successful
 builds]](https://bamboo.dash.org/browse/DASHL-DEV/latestSuccessful)<br>

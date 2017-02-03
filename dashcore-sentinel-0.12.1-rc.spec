@@ -21,7 +21,7 @@
 # date with a numeral, like 20160405.0, 20160405.1, etc.
 # Use whatever is meaningful to you. Just remember if you are iterating, it needs
 # to be consistent an progress in version (so that upgrades work)
-%define bump rc.0
+%define bump rc.1
 
 # "bumptag" is used to indicate additional information, usually an identifier,
 # like the builder's initials, or a date, or both, or nil.
@@ -114,10 +114,18 @@ mkdir %{buildroot}
 #install -d %{buildroot}%{_sharedstatedir}
 install -d %{buildroot}%{varlibtarget}
 cp -a ./* %{buildroot}%{varlibtarget}/
+rm -rf %{buildroot}%{varlibtarget}/contrib # Contrib files placed individually
 #install -D -m640 ./* %{buildroot}%{varlibtarget}/
 
 # Replace core sentinel configuration file with contributed configuration file
-install -D -m640 ./contrib/linux/sentinel.conf %{buildroot}%{varlibtarget}/sentinel.conf
+install -D -m640 ./contrib/linux/var-lib-dashcore-sentinel_sentinel.conf %{buildroot}%{varlibtarget}/sentinel.conf
+
+# Logrotate file rules
+install -D -m644 ./contrib/linux/etc-logrotate.d_dashcore-sentinel %{buildroot}/etc/logrotate.d/dashcore-sentinel
+
+# Ghosting a log file - we have to own the directory and log file
+install -d -m700 %{buildroot}%{_localstatedir}/log/dashcore
+touch %{buildroot}%{_localstatedir}/log/dashcore/sentinel.log
 
 # Right now, things are being run out of /var/lib/dashcore/sentinel
 #
@@ -136,9 +144,10 @@ rm -rf %{buildroot}
 
 %pre
 getent group dashcore >/dev/null || groupadd -r dashcore
+# dashcore system user's home directory will be /var/lib/dashcore
 getent passwd dashcore >/dev/null ||
-	useradd -r -g dashcore -d %{_sharedstatedir}/dashcore -s /sbin/nologin \
-	-c "System user 'dashcore' to isolate Dash Core execution" dashcore
+  useradd -r -g dashcore -d %{_sharedstatedir}/dashcore -s /sbin/nologin \
+  -c "System user 'dashcore' to isolate Dash Core execution" dashcore
 exit 0
 
 
@@ -161,6 +170,11 @@ exit 0
 %defattr(-,dashcore,dashcore,-)
 %license %attr(-,root,root) LICENSE
 %doc %attr(-,root,root) README.md contrib/linux/README.redhat.md
+# Log directory and file
+%dir %attr(700,dashcore,dashcore) %{_localstatedir}/log/dashcore
+%ghost %{_localstatedir}/log/dashcore/sentinel.log
+/etc/logrotate.d/dashcore-sentinel
+# Code and Data Directories (combined, for now), includes config file
 %dir %attr(750,dashcore,dashcore) %{_sharedstatedir}/dashcore
 %dir %attr(750,dashcore,dashcore) %{_sharedstatedir}/dashcore/sentinel
 %{_sharedstatedir}/dashcore/sentinel/*
@@ -179,6 +193,11 @@ exit 0
 
 
 %changelog
+* Fri Feb 03 2017 Todd Warner <t0dd@protonmail.com> 0.12.1-rc.1
+- Created and permissioned /var/log/dashcore and /var/log/dashcore/sentinel.log
+- Added log rotate rules
+- 48a3a752f203aa6661d59b9f67e878110f7abee17943a28e06d991a99528926c  dashcore-sentinel-contrib.tar.gz
+-
 * Thu Feb 02 2017 Todd Warner <t0dd@protonmail.com> 0.12.1-rc.0
 - 66d8e50bd107ff155e5922aed95c33733a0559abf4a25a78e25a7a784625b99a  dashcore-sentinel.tar.gz
 - ed233ecd46876f4a1c1c235e11f3ef35c482ee8153bf799bb13822c17a99b312  dashcore-sentinel-contrib.tar.gz
