@@ -23,7 +23,7 @@
 # date with a numeral, like 20160405.0, 20160405.1, etc.
 # Use whatever is meaningful to you. Just remember if you are iterating, it needs
 # to be consistent and progress in version (so that upgrades work)
-%define bump rc.b010.0
+%define bump rc.b010.1
 
 # "bumptag" is used to indicate additional information, usually an identifier,
 # like the builder's initials, or a date, or both, or nil.
@@ -559,6 +559,10 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 # GitHub - Dash Core for Red Hat: https://github.com/taw00/dashcore-rpm
 
 %changelog
+* Fri Feb 03 2017 Todd Warner <t0dd@protonmail.com> 0.12.1-rc.b010.1
+- Fixed critical dashd.pid permissions issue - systemd configuration scenario only
+- 2ef624d611db9cd9dc817097672bcda81da56a56c037585f68a25186307db94b  dashcore-0.12.1-contrib.tar.gz
+-
 * Thu Feb 02 2017 Todd Warner <t0dd@protonmail.com> 0.12.1-rc.b010.0
 - Release Candidate, Build 10, v0.12.1.0-g1486acf
 - 2fd44e2d6b5e94f258e3950acad367103fe2706972844f424d12d8550d558c6f  dashcore-0.12.1.tar.gz
