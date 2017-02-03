@@ -1,5 +1,7 @@
 # HowTo: v12.1 Dash Masternode as SystemD Service<br />_...on Fedora, CentOS or Red Hat Enterprise Linux_
 
+> DO NOT FOLLOW THIS FOR MAINNET UNTIL FEBUARY 5, 2017!
+
 > This edition of these instructions is for those who wish to install and
 > configure a Dash Masternode running as a traditional `systemd` service.
 > 
