@@ -497,11 +497,13 @@ Go back to your wallet (see
 [howto.12.1-dashcore-collateral-bearing-wallet-setup.gui.md](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.12.1-dashcore-collateral-bearing-wallet-setup.gui.md)).
 
 * Navigate the menus: Tools > Debug console
-* Enter in that dialogue: `masternode start-alias mn1`
+* Enter in that dialogue: `masternode start-alias mn1`<br />
+  Alternatively, you can start all masternodes (if you have multiple) with: `masternode start-missing`
 
 Remember `mn1` is our example alias.
 
-Or from the commandline: `dash-cli masternode start-alias mn1`
+Or from the commandline: `dash-cli masternode start-alias mn1`<br />
+...optionally: `dash-cli masternode start-missing`
 
 If the command was sent successfully, you should see... "successful" or
 something similar. This means the command was sent successfully, not that the
