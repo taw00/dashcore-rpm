@@ -590,7 +590,7 @@ _end="- run end ---"
 _logfile=/var/log/dashcore/sentinel.log
 #SENTINEL_DEBUG=1
 #*/5 * * * * cd /var/lib/dashcore/sentinel && ./venv/bin/python bin/sentinel.py >/dev/null 2>&1
-*/5 * * * * cd /var/lib/dashcore/sentinel && date --utc +"\%b \%d \%T UTC $_begin" >> $_logfile && ./venv/bin/python bin/sentinel.py >> $_logfile 2>&1 && date +"\%b \%d \%T $_end" >> $_logfile
+*/5 * * * * cd /var/lib/dashcore/sentinel && date --utc +"\%b \%d \%T UTC $_begin" >> $_logfile && ./venv/bin/python bin/sentinel.py >> $_logfile 2>&1 && date --utc +"\%b \%d \%T UTC $_end" >> $_logfile
 ```
 
 
