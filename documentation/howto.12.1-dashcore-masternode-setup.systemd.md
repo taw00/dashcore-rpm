@@ -65,7 +65,23 @@ The objectives are straight-forward:
     system.
   - **Change your root password** &mdash; `passwd` &mdash; to something longer
     and ideally random. I use Lastpass to generate passwords.
-  - **Add swap space** to give your system memory some elbow room (Vultr mysteriously starts you with none)...<br />
+  - **[optional] Change your timezone settings** &mdash; The default is set to
+    UTC. If you prefer times listed in your local timezone, change it. FYI:
+    Some time-date stamps are always listed in UTC, like many log files.
+
+```
+# As root user
+# Find and cut-n-paste your timezone...
+timedatectl list-timezones # arrow keys to navigate, "q" to quit
+# Change it (example, eastern time, USA)...
+timedatectl set-timezone 'America/New_York'
+# Don't like that? Change it back...
+timedatectl set-timezone 'UTC'
+# Test it...
+date
+```
+
+  - **Add swap space** to give your system memory some elbow room (Vultr mysteriously starts you with none)...
 ```
 # As root...
 # Make swap the same size as your existing RAM
@@ -315,14 +331,25 @@ sudo -u dashcore tail -f /var/lib/dashcore/debug.log # if mainnet
 
 #### ...and watch the blockcount rise (hopefully) in the other...
 
-You will know you have sync'ed the entire blockchain when it matches the current block-heigth:
-
-* https://explorer.dash.org/ &mdash; for mainnet
-* https://test.explorer.dash.org/ &mdash; for testnet
-
 ```
 # ^C out of this loop when you are done
 watch sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf getblockcount
+```
+
+You will know you have sync'ed the entire blockchain when it matches the current block-heigth:
+
+* <https://explorer.dash.org/> &mdash; for mainnet
+* <https://test.explorer.dash.org/> &mdash; for testnet
+
+...or if you are comfortable on the commandline, these are helpful...
+```
+# "mainnet" block height
+curl -o - https://explorer.dash.org/chain/Dash/q/getblockcount
+# "testnet" block height
+curl -o - https://test.explorer.dash.org/chain/tDash/q/getblockcount
+# This command will spit out the block height for this network as your
+# masternode sees it (ie, it could be wrong)
+sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf getchaintips |grep -m1 height | sed 's/[^0-9]*//g'
 ```
 
 
@@ -536,8 +563,8 @@ There should be no output.
 > Note2, if something seems to be going wrong, set SENTINEL_DEBUG=1 and try to
 > make sense of the output
 > ```
-> sudo -u dashcore -- bash -c "cd /var/lib/dashcore/sentinel && SENTINEL_DEBUG=1 venv/bin/python bin/sentinel.py >> /tmp/troubleshooting-sentinel.log 2>&1"
-> less /tmp/troubleshooting-sentinel.log
+> sudo -u dashcore -- bash -c "cd /var/lib/dashcore/sentinel && SENTINEL_DEBUG=1 venv/bin/python bin/sentinel.py >> /var/log/dashcore/sentinel.log 2>&1"
+> less /var/log/dashcore/sentinel.log
 > ```
 
 ### Edit cron and add a "run it every five minutes" entry
@@ -556,6 +583,15 @@ sudo -u dashcore EDITOR="nano" crontab -e
 */5 * * * * cd /var/lib/dashcore/sentinel && ./venv/bin/python bin/sentinel.py >> /var/log/dashcore/sentinel.log 2>&1
 ```
 
+...or if you want to get really fancy, use these lines instead (really helps better understand the logs)...
+```
+_begin="- run begin -"
+_end="- run end ---"
+_logfile=/var/log/dashcore/sentinel.log
+#SENTINEL_DEBUG=1
+#*/5 * * * * cd /var/lib/dashcore/sentinel && ./venv/bin/python bin/sentinel.py >/dev/null 2>&1
+*/5 * * * * cd /var/lib/dashcore/sentinel && date --utc +"\%b \%d \%T UTC $_begin" >> $_logfile && ./venv/bin/python bin/sentinel.py >> $_logfile 2>&1 && date +"\%b \%d \%T $_end" >> $_logfile
+```
 
 
 ## YOU ARE DONE!
