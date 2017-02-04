@@ -1,6 +1,7 @@
 # Provide overriding options to the dash core daemon here, for example
 # OPTIONS="-testnet -disable-wallet"
-# Note: These options will override dash.conf settings.
+# Note1: These options will override dash.conf settings.
+# Note2: You may have to reload systemd for changes to take effect: systemctl daemon-reload 
 OPTIONS=""
 
 # System service defaults.
@@ -8,3 +9,5 @@ OPTIONS=""
 CONFIG_FILE="/etc/dashcore/dash.conf"
 DATA_DIR="/var/lib/dashcore"
 PID_FILE="/run/dashd/dashd.pid"
+# How long to sleep in seconds after a stop, regardless of pid status
+STOP_SLEEP_TIME=20
