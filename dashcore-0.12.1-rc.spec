@@ -23,7 +23,7 @@
 # date with a numeral, like 20160405.0, 20160405.1, etc.
 # Use whatever is meaningful to you. Just remember if you are iterating, it needs
 # to be consistent and progress in version (so that upgrades work)
-%define bump rc.b010.1
+%define bump rc.16.0
 
 # "bumptag" is used to indicate additional information, usually an identifier,
 # like the builder's initials, or a date, or both, or nil.
@@ -382,6 +382,14 @@ install -D -m640 ./contrib/linux/systemd/etc-dashcore_dash.conf %{buildroot}%{_s
 install -D -m600 -p ./contrib/linux/systemd/etc-sysconfig_dashd %{buildroot}%{_sysconfdir}/sysconfig/dashd
 install -D -m644 -p ./contrib/linux/systemd/usr-lib-systemd-system_dashd.service %{buildroot}%{_unitdir}/dashd.service
 install -D -m644 -p ./contrib/linux/systemd/usr-lib-tmpfiles.d_dashcore.conf %{buildroot}%{_tmpfilesdir}/dashcore.conf
+# ...logrotate file rules
+install -D -m644 -p ./contrib/linux/logrotate/etc-logrotate.d_dashcore %{buildroot}/etc/logrotate.d/dashcore
+# ...ghosting a log file - we have to own the log file
+#install -d %{buildroot}%{_sharedstatedir}/dashcore # already created above
+install -d %{buildroot}%{_sharedstatedir}/dashcore/testnet3
+touch %{buildroot}%{_sharedstatedir}/dashcore/debug.log
+touch %{buildroot}%{_sharedstatedir}/dashcore/testnet3/debug.log
+
 
 # Service definition files for firewalld for full nodes and masternodes
 install -D -m644 -p ./contrib/linux/firewalld/usr-lib-firewalld-services_dashcore-node.xml %{buildroot}%{_prefix}/lib/firewalld/services/dashcore-node.xml
@@ -495,9 +503,14 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #t0dd %doc README.md README.server.redhat 
 %doc doc/dnsseed-policy.md doc/release-notes.md doc/tor.md doc/multiwallet-qt.md doc/guide-startmany.md doc/reduce-traffic.md doc/zmq.md doc/dash.conf.example
 %dir %attr(750,dashcore,dashcore) %{_sharedstatedir}/dashcore
+%dir %attr(750,dashcore,dashcore) %{_sharedstatedir}/dashcore/testnet3
 %dir %attr(750,dashcore,dashcore) %{_sysconfdir}/dashcore
 %config(noreplace) %attr(600,root,root) %{_sysconfdir}/sysconfig/dashd
 %config(noreplace) %attr(640,dashcore,dashcore) %{_sysconfdir}/dashcore/dash.conf
+# Log files - they don't initially exist, but we still own them
+%ghost %{_sharedstatedir}/dashcore/debug.log
+%ghost %{_sharedstatedir}/dashcore/testnet3/debug.log
+%attr(644,root,root) /etc/logrotate.d/dashcore
 %{_unitdir}/dashd.service
 %{_prefix}/lib/firewalld/services/dashcore-node.xml
 %{_prefix}/lib/firewalld/services/dashcore-node-testnet.xml
@@ -555,10 +568,17 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * https://dashpay.atlassian.net/builds/artifact/DASHL-DEV/JOB1/build-00<BUILD ID>
 # GitHub - Dash Core upstream:
 #   * Dash: https://github.com/dashpay/dash
-#   * Sentinel: https://github.com/nmarley/sentinel
+#   * Sentinel: https://github.com/dashpay/sentinel
 # GitHub - Dash Core for Red Hat: https://github.com/taw00/dashcore-rpm
 
 %changelog
+* Sun Feb 05 2017 Todd Warner <t0dd@protonmail.com> 0.12.1-rc.16.0
+- Added log-rotate rules for <datadir>/debug.log and <datadir>/testnet3/debug.log
+- Properly handle packaging of log files (they are ghosted), etc.
+- Changed RC version format a smidge.
+- 35a5e57b7daa71e1b7306ea9d38b790bebd9e2c6cd08140c20543f7d638065ea  dashcore-0.12.1.tar.gz
+- e5d4581784fe2ff39f2ab9410b8058a25ad15187dceead22844fc88cff7bf1df  dashcore-0.12.1-contrib.tar.gz
+-
 * Fri Feb 03 2017 Todd Warner <t0dd@protonmail.com> 0.12.1-rc.b010.1
 - Fixed critical dashd.pid permissions issue - systemd configuration scenario only
 - 2ef624d611db9cd9dc817097672bcda81da56a56c037585f68a25186307db94b  dashcore-0.12.1-contrib.tar.gz
