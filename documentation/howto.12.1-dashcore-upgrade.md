@@ -90,14 +90,12 @@ repository configuration file.
 
 If you are running Fedora Linux...
 ```
-sudo su -
 cd /etc/yum.repos.d/
 sudo curl -O https://raw.githubusercontent.com/taw00/dashcore-12.1/master/dashcore-fedora.repo
 ```
 
 If you are running CentOS or Red Hat Enterprise Linux
 ```
-sudo su -
 cd /etc/yum.repos.d/
 sudo curl -O https://raw.githubusercontent.com/taw00/dashcore-12.1/master/dashcore-centos.repo
 ```

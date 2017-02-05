@@ -7,39 +7,42 @@ Please remember to backup your Dash wallet before installing another version.
 
 **Note2: If you are looking for instruction about how to set up a dash
 masternode** with these packages, please refer to the "Overview" document in
-the "documentation" folder of this git repository.
+the ["documentation"
+folder](https://github.com/taw00/dashcore-rpm/tree/master/documentation) of
+this git repository.
 
 # Dash Core Source RPM Packages
 
-**Stable sources: 0.12.0.58**    
-Latest version and git commit id: v0.12.0.58-g88f3370
+**Stable sources: 0.12.1**    
+dashcore - latest version is: 0.12.1-1.0.taw, aka 
+dashcore-sentinel - latest version: 0.12.1-1.0.taw
+
+* Fedora Linux 25:
+  - `dashcore-0.12.1-1.0.taw.fc25.src.rpm`
+  - `dashcore-sentinel-0.12.1-1.0.taw.fc25.src.rpm`
+* Fedora Linux 24:
+  - `dashcore-0.12.1-1.0.taw.fc24.src.rpm`
+  - `dashcore-sentinel-0.12.1-1.0.taw.fc24.src.rpm`
+* CentOS and RHEL 7:
+  - `dashcore-0.12.1-1.0.taw.el7.centos.src.rpm`
+  - `dashcore-sentinel-0.12.1-1.0.taw.el7.centos.src.rpm`
+
+Sourced from: [[latest successful
+builds]](https://bamboo.dash.org/browse/DASHL-DEV/latestSuccessful)<br>
+Documentation: https://github.com/taw00/dashcore-rpm/tree/master/documentation
+
+
+**Deprecated sources: 0.12.0.58**    
+*Don't use these packages.*    
+Version and git commit id: v0.12.0.58-g88f3370
+
+Dashcore-0.12.0.58 is no longer usable by the mainnet. Provided here for
+archival purposes.
 
 * Fedora Linux 23: `dashcore-0.12.0.58-2.taw.fc23.src.rpm`
 * CentOS and RHEL 7: `dashcore-0.12.0.58-2.taw.el7.centos.src.rpm`
 
-**Experimental sources: 0.12.1**    
-*Use experimental RPMs at your own risk*    
-dashcore - latest build #, and git commit id: build rc.b010, v0.12.1.0-g1486acf
-dashcore-sentinel - latest version-release: 0.12.1-rc.1.taw
-
-* Fedora Linux 24:
-  - `dashcore-0.12.1-rc.b010.1.taw.fc24.src.rpm`
-  - `dashcore-sentinel-0.12.1-rc.1.taw.fc24.src.rpm`
-* Fedora Linux 25:
-  - `dashcore-0.12.1-rc.b010.1.taw.fc25.src.rpm`
-  - `dashcore-sentinel-0.12.1-rc.1.taw.fc25.src.rpm`
-* CentOS and RHEL 7:
-  - `dashcore-0.12.1-rc.b010.1.taw.el7.centos.src.rpm`
-  - `dashcore-sentinel-0.12.1-rc.1.taw.el7.centos.src.rpm`
-
-Sourced from: [[latest successful
-builds]](https://bamboo.dash.org/browse/DASHL-DEV/latestSuccessful)<br>
-Announcement message:
-https://www.dash.org/forum/threads/12-1-testnet-testing-phase-two-ignition.10818/<br>
-Testnet documentation (and phase descriptions):
-https://dashpay.atlassian.net/wiki/display/DOC/Testnet<br>
-Our documentation: https://github.com/taw00/dashcore-rpm/tree/master/documentation
-
+----
 
 **Dash (Digital Cash)** is an open source peer-to-peer cryptocurrency that
 offers instant transactions ***(InstantSend)***, private transactions
@@ -51,7 +54,7 @@ crypto-tech.
 Dash is open source and the name of the overarching project. Learn more
 at https://www.dash.org/
 
-Dash on github can be found here: https://github.com/dashpay/dash
+Dash on github can be found here: https://github.com/dashpay
 
 ----
 
@@ -67,16 +70,18 @@ Dash project.
 
 Important notes:
 
-0. There are versions considered **stable** and versions considered
-   **experimental**. Versions with a "test" in their version number should be
-   considered the most experimental and bleeding edge and should NOT be used
-   with real world currency. When running a testnet wallet or node, ensure
-   you add **testnet = 1** to your dash.conf file to avoid bad things happening.
-0. **Stable** versions have been developed and tested on Fedora 23, RHEL7, and
-   CentOS7, all on the x86_64 architecture. I welcome folks to experiment with
-   other distributions and architectures.
+0. We categorize the various versions into **stable**, **deprecated**, and
+   **unstable**.
+0. Use only **stable** versions on the mainnet (`testnet=0`).
+0. **Deprecated** versions will simply not function. They are provided for
+   archival purposes.
+0. **Unstable** versions are test versions and great to play with on the
+   testnet (`testnet=1`). Please don't use them on the mainnet.
 
 ----
+
+
+# Building from source RPM packages
 
 #### [0] For RHEL and CentOS (*not Fedora*), you need to subscribe to special repositories
 
@@ -141,6 +146,7 @@ specific to your linux distribution Fedora, RHEL, or CentOS. If you are
 attempting to build in a different environment, download the source RPM that as
 closely matches your platform and experiment away.
 
+
 #### [3] Verify the RPM has not been tampered with
 
 This is done in one of two ways: (1) with an sha256sum hash check and (2) with
@@ -196,6 +202,7 @@ you did not successfully import my key in step 1.
 Another way to look at this information is via...
 
 `$ rpm -qpi dashcore-0.12.0.58-2.taw.*.src.rpm | grep 'Name\|\|Version\|Release\|Signature'`
+
 
 #### [4] Install the source RPM
 

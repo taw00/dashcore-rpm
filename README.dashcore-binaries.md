@@ -29,9 +29,11 @@ At the terminal command line...
 
 ```
 cd /etc/yum.repos.d/
-sudo curl https://raw.githubusercontent.com/taw00/dashcore-rpm/master/dashcore-fedora.repo -o dashcore-fedora.repo
+sudo curl -O https://raw.githubusercontent.com/taw00/dashcore-rpm/master/dashcore-fedora.repo
+#sudo curl -O https://raw.githubusercontent.com/taw00/dashcore-rpm/master/dashcore-centos.repo
 cd -
 sudo dnf install -y dash-qt
+#sudo yum install -y dash-qt
 dash-qt
 ```
 
@@ -45,8 +47,7 @@ For Fedora: <https://github.com/taw00/dashcore-rpm/blob/master/dashcore-fedora.r
 For CentOS and RHEL: <https://github.com/taw00/dashcore-rpm/blob/master/dashcore-centos.repo>
 
 If you want to browse the actual repository, or manually download packages, they
-can be found here:
-<https://toddwarner.keybase.pub/repo/dashcore/>
+can be found here in the various `dashcore-*` repositories - <https://copr.fedorainfracloud.org/coprs/taw> - ...and some of the unstable builds can be found here: <https://toddwarner.keybase.pub/repo/dashcore/>
 
 All you have do to configure your Linux system is to download and copy the appropriate
 `dashcore-*.repo` file into your package manager configuration directory and you
@@ -60,11 +61,12 @@ be found here: <https://github.com/taw00/dashcore-rpm>
 > If you are looking for Dash wallets for other platforms, those can be found here:
 <https://www.dash.org/downloads/>
 >
-> **General Documentation:** <https://dashpay.atlassian.net/wiki/pages/><br />
-  **Masternode Documentation:** <https://dashpay.atlassian.net/wiki/display/DOC/Masternode>
+> **Masternode Documentation:** <https://github.com/taw00/dashcore-rpm/tree/master/documentation><br />   
+  **Other Documentation:** <https://dashpay.atlassian.net/wiki/pages/><br />
+  **Other Masternode Documentation:** <https://dashpay.atlassian.net/wiki/display/DOC/Masternode>
 
 
-## Configuring your system to have access to the Dash Core RPM repositories
+## Configuring your system to have access to the Dash Core RPM package repositories
 
 We are going to do this at the command line from an account that has `sudo`ers
 access. Log into a terminal and do this...
@@ -73,7 +75,7 @@ access. Log into a terminal and do this...
 
 ```
 cd /etc/yum.repos.d/
-sudo curl https://raw.githubusercontent.com/taw00/dashcore-rpm/master/dashcore-fedora.repo -o dashcore-fedora.repo
+sudo curl -O https://raw.githubusercontent.com/taw00/dashcore-rpm/master/dashcore-fedora.repo
 cd -
 ```
 
@@ -81,7 +83,7 @@ cd -
 
 ```
 cd /etc/yum.repos.d/
-sudo curl https://raw.githubusercontent.com/taw00/dashcore-rpm/master/dashcore-centos.repo -o dashcore-centos.repo
+sudo curl -O https://raw.githubusercontent.com/taw00/dashcore-rpm/master/dashcore-centos.repo
 cd -
 ```
 
@@ -99,14 +101,14 @@ should get a nice listing of all the packages available to your linux system.
 By default, those `*.repo` files configure your system to only pull from the
 "stable" repository.
 
-If you want install the "unstable" software instead, do this:<br />
+NOT RECOMMENDED: If you want install the "unstable" software instead, do this:<br />
 
 *...fedora:*
 
 ```
 sudo dnf config-manager --set-disabled dashcore-stable
 sudo dnf config-manager --set-enabled dashcore-unstable
-sudo dnf list|grep dashcore
+sudo dnf list --refresh|grep dashcore
 ```
 
 *...centos or rhel:*
