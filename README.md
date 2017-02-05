@@ -14,7 +14,7 @@ this git repository.
 # Dash Core Source RPM Packages
 
 **Stable sources: 0.12.1**    
-dashcore - latest version is: 0.12.1-1.0.taw, aka 
+dashcore - latest version is: 0.12.1-1.0.taw, aka v0.12.1.0-g5520bf6
 dashcore-sentinel - latest version: 0.12.1-1.0.taw
 
 * Fedora Linux 25:
