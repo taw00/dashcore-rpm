@@ -1,0 +1,10 @@
+/var/lib/dashcore/debug.log /var/lib/dashcore/testnet3/debug.log {
+    su dashcore dashcore
+    rotate 5
+    missingok
+    notifempty
+    compress
+    maxsize 500k
+    copytruncate
+}
+
