@@ -1,7 +1,5 @@
 # HowTo: v12.1 Dash Masternode as SystemD Service<br />_...on Fedora, CentOS or Red Hat Enterprise Linux_
 
-> DO NOT FOLLOW THIS FOR MAINNET UNTIL FEBUARY 5, 2017!
-
 > This edition of these instructions is for those who wish to install and
 > configure a Dash Masternode running as a traditional `systemd` service.
 > 
@@ -324,9 +322,9 @@ sudo systemctl start dashd
 #### SSH into two terminals and watch the logs in one...
 
 ```
-# ^C out of this tail feed when you are done
+# ^C out of this tail feed when you are done...
 sudo -u dashcore tail -f /var/lib/dashcore/debug.log # if mainnet
-#sudo -u dashcore tail -f /var/lib/dashcore/testnet3/debug.log # if testnet
+#sudo -u dashcore tail -f /var/lib/dashcore/testnet3/debug.log
 ```
 
 #### ...and watch the blockcount rise (hopefully) in the other...
@@ -535,6 +533,7 @@ network. It was already installed when your dashcore-server package was
 installed. You just have to turn it on and edit crontab for the `dash` system
 user so that it executes every five minutes...
 
+<!-- if you installed from an RPM package, this step goes away
 ### Turn off testnet/mainnet checking in `sentinel.conf`
 
 Edit the /var/lib/dashcore/sentinel/sentinel.conf file and comment out
@@ -542,6 +541,7 @@ Edit the /var/lib/dashcore/sentinel/sentinel.conf file and comment out
 `dash.conf` file properly sets that and the Sentinel default configuration file
 may wronging override your `dash.conf` file. At least it does in the earlier
 versions of Sentinel.
+-->
 
 ### Run it for the first time...
 ```
@@ -582,7 +582,7 @@ sudo -u dashcore EDITOR="nano" crontab -e
 ```
 #SENTINEL_DEBUG=1
 #*/5 * * * * cd /var/lib/dashcore/sentinel && venv/bin/python bin/sentinel.py > /dev/null 2>&1
-*/5 * * * * cd /var/lib/dashcore/sentinel && ./venv/bin/python bin/sentinel.py >> /var/log/dashcore/sentinel.log 2>&1
+*/5 * * * * cd /var/lib/dashcore/sentinel && venv/bin/python bin/sentinel.py >> /var/log/dashcore/sentinel.log 2>&1
 ```
 
 ...or if you want to get really fancy, use these lines instead (really helps better understand the logs)...
@@ -591,8 +591,8 @@ _begin="- run begin -"
 _end="- run end ---"
 _logfile=/var/log/dashcore/sentinel.log
 #SENTINEL_DEBUG=1
-#*/5 * * * * cd /var/lib/dashcore/sentinel && ./venv/bin/python bin/sentinel.py >/dev/null 2>&1
-*/5 * * * * cd /var/lib/dashcore/sentinel && date --utc +"\%b \%d \%T UTC $_begin" >> $_logfile && ./venv/bin/python bin/sentinel.py >> $_logfile 2>&1 && date --utc +"\%b \%d \%T UTC $_end" >> $_logfile
+#*/5 * * * * cd /var/lib/dashcore/sentinel && venv/bin/python bin/sentinel.py >/dev/null 2>&1
+*/5 * * * * cd /var/lib/dashcore/sentinel && date --utc +"\%b \%d \%T UTC $_begin" >> $_logfile && venv/bin/python bin/sentinel.py >> $_logfile 2>&1 && date --utc +"\%b \%d \%T UTC $_end" >> $_logfile
 ```
 
 

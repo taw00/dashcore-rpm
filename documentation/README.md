@@ -17,6 +17,9 @@
 * Upgrading from 12.0 to 12.1:<br /><https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.12.1-dashcore-upgrade.md>
 * Troubleshooting guide:<br /><https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.12.1-dashcore-troubleshooting.md>
 
+COMING: Simple wallet guide -- The Masternode setup document above has a wallet
+section that is probably enough for you to get started with the wallet, but a
+specific guide is really needed. Coming soon.
 
 ## What is Dash and what is a Dash Masternode?
 
