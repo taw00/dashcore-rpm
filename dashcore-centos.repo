@@ -1,21 +1,39 @@
 # Dash Core (https://dash.org) for CentOS (and Red Hat Enterprise Linux)
-# Stable and Unstable; binaries and sources
+# Stable, Deprecated, Unstable - binaries and sources
+#
 # YUM repository configuration
 # Drop this, as root, into your /etc/yum.repos.d/ directory
 #   cd /etc/yum.repos.d/
-#   sudo curl https://raw.githubusercontent.com/taw00/dashcore-rpm/master/dashcore-centos.repo -o dashcore-centos.repo
+#   sudo curl -O https://raw.githubusercontent.com/taw00/dashcore-rpm/master/dashcore-centos.repo
 #   sudo yum list | grep dashcore
+#
 # To install, for example the GUI client, you would do this at the commandline...
 #   sudo dnf install dashcore-client
 # To update already existing software (check dash.org to seee if there special are upgrade steps that need to be taken)
 #   sudo dnf upgrade
+#   
 # To switch from one major version of the software to the next (example, 12.0-stable to 12.1-unstable)...
-#   sudo dnf config-manager --set-disabled dashcore-12.0.stable
-#   sudo dnf config-manager --set-enabled dashcore-12.1-unstable
+#   sudo dnf config-manager --set-disabled dashcore-stable
+#   sudo dnf config-manager --set-enabled dashcore-unstable
+#
 # Feedback: t0dd@protonmail.com
 
-[dashcore-12.0-stable]
-name=Dash Core 12.0 - epel-$releasever-$basearch
+[dashcore-stable]
+name=Dash Core 12.1 - stable - epel-$releasever-$basearch
+# Note: SRPMs (*.src.rpm files) are mingled with the binaries. It's just how Copr does it.
+baseurl=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.1/epel-$releasever-$basearch/
+type=rpm-md
+skip_if_unavailable=True
+gpgcheck=1
+gpgkey=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.1/pubkey.gpg
+repo_gpgcheck=0
+# Check for new packages is typically 2d (2 days)
+metadata_expire=1d
+enabled=1
+enabled_metadata=1
+
+[dashcore-deprecated]
+name=Dash Core 12.0 - deprecated - epel-$releasever-$basearch
 # Note: SRPMs (*.src.rpm files) are mingled with the binaries. It's just how Copr does it.
 baseurl=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.0/epel-$releasever-$basearch/
 type=rpm-md
@@ -25,11 +43,11 @@ gpgkey=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.0/pubkey.
 repo_gpgcheck=0
 # Check for new packages is typically 2d (2 days)
 metadata_expire=1d
-enabled=1
+enabled=0
 enabled_metadata=1
 
-[dashcore-12.1-unstable]
-name=Dash Core (unstable) - epel-$releasever-$basearch
+[dashcore-unstable]
+name=Dash Core - unstable - epel-$releasever-$basearch
 baseurl=https://toddwarner.keybase.pub/repo/dashcore/unstable/centos/$releasever/$basearch/
 type=rpm-md
 # Checks for new test packages more often than the default 2d (2 days)a
@@ -39,8 +57,8 @@ gpgkey=https://keybase.io/toddwarner/key.asc
 skip_if_unavailable=True
 enabled=0
 
-[dashcore-12.1-unstable-source]
-name=Dash Core (unstable) - epel-$releasever-$basearch
+[dashcore-unstable-source]
+name=Dash Core - unstable source - epel-$releasever-$basearch
 baseurl=https://toddwarner.keybase.pub/repo/dashcore/unstable/centos/$releasever/source/
 type=rpm-md
 # Checks for new test packages more often than the default 2d (2 days)a
