@@ -2,24 +2,18 @@
 # ...on Fedora, CentOS or Red Hat Enterprise Linux
 
 > This edition of the document is for GUI versions of the Dash Core Wallet (`dash-qt`).
-> 
+>
 > These instructions are specific to the Red Hat-family of linuxes.
 
 ## Masternode?
 
-For a general overview of what a masternode is and how it is set up at a high
-level, please refer to the overview document found
+For a general overview of Dash Masternode setup, please refer to the overview document found
 [here](https://github.com/taw00/dashcore-rpm/blob/master/documentation/README.md).
 
-As you read that document, this is the first step in that process: Setting up a
-collateral-bearing dash wallet. This is one way of doing it. There are others.
+This document chronicals the first step in the process: Setting up a
+collateral-bearing dash wallet. This document describes one way of doing it. There are other ways, but we will focus on simplicity here.
 
-The next step is to set up the masternode itself. Those instructions (to be
-completed after the wallet is correctly configured) can be found here:
-[howto.12.1-dashcore-masternode-setup.systemd.md](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.12.1-dashcore-masternode-setup.systemd.md)
-
-Once you complete all the steps in this document, you may proceed to the
-masternode setup linked to above.
+Once you complete all the steps in this document, you may continue with the to the masternode setup process. Refer to the masternode setup guide referenced in the overview document above.
 
 ## [0] Install the operating system
 
@@ -70,23 +64,34 @@ Log onto the system as a normal user (not root), install the Dash wallet:
 
 ```
 cd /etc/yum.repos.d/
-sudo curl https://raw.githubusercontent.com/taw00/dashcore-rpm/master/dashcore-fedora.repo -o dashcore-fedora.repo
+sudo curl -O  https://raw.githubusercontent.com/taw00/dashcore-rpm/master/dashcore-fedora.repo
 cd -
-sudo dnf config-manager --set-disabled dashcore-stable
-sudo dnf config-manager --set-enabled dashcore-unstable ## version 12.1 is currently "unstable"
 sudo dnf install -y dashcore-client firewalld
 ```
+
+<!--
+```
+#sudo dnf config-manager --set-disabled dashcore-stable
+#sudo dnf config-manager --set-enabled dashcore-unstable
+```
+-->
+
 
 ...if using CentOS or RHEL
 
 ```
 cd /etc/yum.repos.d/
-sudo curl https://raw.githubusercontent.com/taw00/dashcore-rpm/master/dashcore-centos.repo -o dashcore-centos.repo
+sudo curl -O  https://raw.githubusercontent.com/taw00/dashcore-rpm/master/dashcore-centos.repo
 cd -
-sudo yum-config-manager --disable dashcore-stable
-sudo yum-config-manager --enable dashcore-unstable ## version 12.1 is currently "unstable"
 sudo yum install -y dashcore-client firewalld
 ```
+<!--
+```
+#sudo yum-config-manager --disable dashcore-stable
+#sudo yum-config-manager --enable dashcore-unstable
+```
+-->
+
 
 ## [2] Configure firewall rules to better secure your wallet
 
@@ -115,7 +120,7 @@ sudo systemctl enable firewalld.service
 sudo firewall-cmd --get-active-zone
 
 # FedoraWorkstation usually starts with ssh, dhcp6-client, and samba-client opened up
-# Review your needs, but I don't want samba-client enabled and I want to 
+# Review your needs, but I don't want samba-client enabled and I want to
 # rate limit ssh traffic
 sudo firewall-cmd --permanent --zone=FedoraServer --add-service ssh
 sudo firewall-cmd --permanent --zone=FedoraServer --remove-service samba-client
@@ -350,4 +355,3 @@ These steps are covered in another set of documents
 
 Got a dash of feedback? *...har har...* Send it my way <t0dd@protonmail.com>    
 And of course, donations welcome: [XyxQq4qgp9B53QWQgSqSxJb4xddhzk5Zhh](dash:XyxQq4qgp9B53QWQgSqSxJb4xddhzk5Zhh)
-

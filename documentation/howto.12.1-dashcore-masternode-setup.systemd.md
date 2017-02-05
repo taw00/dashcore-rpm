@@ -189,25 +189,31 @@ trivial. This is how easy it is.
 
 ```
 cd /etc/yum.repos.d/
-sudo curl https://raw.githubusercontent.com/taw00/dashcore-rpm/master/dashcore-fedora.repo -o dashcore-fedora.repo
+sudo curl -O https://raw.githubusercontent.com/taw00/dashcore-rpm/master/dashcore-fedora.repo
 cd -
-sudo dnf config-manager --set-disabled dashcore-stable
-sudo dnf config-manager --set-enabled dashcore-unstable ## 12.1 is "unstable" right now
 ```
+<!--
+```
+#sudo dnf config-manager --set-disabled dashcore-stable
+#sudo dnf config-manager --set-enabled dashcore-unstable
+```
+-->
+
 
 ...if this is CentOS or Red Hat Enterprise Linux
 
 ```
 cd /etc/yum.repos.d/
-sudo curl https://raw.githubusercontent.com/taw00/dashcore-rpm/master/dashcore-centos.repo -o dashcore-centos.repo
+sudo curl -O https://raw.githubusercontent.com/taw00/dashcore-rpm/master/dashcore-centos.repo
 cd -
-sudo yum-config-manager --disable dashcore-stable
-sudo yum-config-manager --enable dashcore-unstable ## 12.1 is "unstable" right now
 ```
 
-> _**Note: We'll have to change these settings once 12.1 leaves beta and is
-> generally available. These repositories may actually become restructured.**_
-
+<!--
+```
+#sudo yum-config-manager --disable dashcore-stable
+#sudo yum-config-manager --enable dashcore-unstable
+```
+-->
 
 #### Install Dash Core server and FirewallD
 
