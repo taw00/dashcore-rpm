@@ -21,7 +21,7 @@
 # date with a numeral, like 20160405.0, 20160405.1, etc.
 # Use whatever is meaningful to you. Just remember if you are iterating, it needs
 # to be consistent an progress in version (so that upgrades work)
-%define bump rc.1
+%define bump rc.2
 
 # "bumptag" is used to indicate additional information, usually an identifier,
 # like the builder's initials, or a date, or both, or nil.
@@ -56,7 +56,7 @@ License: MIT
 URL: http://dash.org/
 # upstream
 Source0: %{archivebasename}.tar.gz
-#Source0: https://github.com/nmarley/sentinel
+#Source0: https://github.com/dashpay/sentinel
 Source1: %{archivebasename}-contrib.tar.gz
 
 BuildRoot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
@@ -173,7 +173,7 @@ exit 0
 # Log directory and file
 %dir %attr(700,dashcore,dashcore) %{_localstatedir}/log/dashcore
 %ghost %{_localstatedir}/log/dashcore/sentinel.log
-/etc/logrotate.d/dashcore-sentinel
+%attr(644,root,root) /etc/logrotate.d/dashcore-sentinel
 # Code and Data Directories (combined, for now), includes config file
 %dir %attr(750,dashcore,dashcore) %{_sharedstatedir}/dashcore
 %dir %attr(750,dashcore,dashcore) %{_sharedstatedir}/dashcore/sentinel
@@ -189,10 +189,19 @@ exit 0
 # Mainnet/Testnet masternode documentation: https://github.com/taw00/dashcore-rpm/tree/master/documentation
 #
 # GitHub - Dash Core Sentinel for Red Hat: https://github.com/taw00/dashcore-rpm
-# GitHub - upstream: https://github.com/nmarley/sentinel
+# GitHub - upstream: https://github.com/dashpay/sentinel
 
 
 %changelog
+* Sun Feb 05 2017 Todd Warner <t0dd@protonmail.com> 0.12.1-rc.2
+- Updated log rotate rules and log file is appropriately "packaged" as a
+- ghosted file.
+-
+- Updated sentinel code.
+- 
+- a58489818d519af3280750310fd6a324795498be8b24910fa02dddbce1b90156  dashcore-sentinel.tar.gz  
+- fa73744abbb8a1b53354ea315834fbf2958b0514b6c5bf97328803bcb4281935  dashcore-sentinel-contrib.tar.gz
+- 
 * Fri Feb 03 2017 Todd Warner <t0dd@protonmail.com> 0.12.1-rc.1
 - Created and permissioned /var/log/dashcore and /var/log/dashcore/sentinel.log
 - Added log rotate rules
