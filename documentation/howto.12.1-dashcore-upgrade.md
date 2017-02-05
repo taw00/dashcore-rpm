@@ -128,12 +128,13 @@ sudo reboot
 
 The default data directory trees changed for 12.1
 
-|                       | dash.conf               | data directory    |
-|-----------------------|-------------------------|-------------------|
-|12.0                   | ~/.dash/dash.conf       | ~/.dash           |
-|                       |                         |                   |
-|12.1 systemd managed<br />service   | /etc/dashcore/dash.conf | /var/lib/dashcore |
-|12.1 run by user       | ~/.dashcore/dash.conf   | ~/.dashcore       |
+| version | configuration type      | dash.conf               | data directory    |
+|---------|-------------------------|-------------------------|-------------------|
+|12.0     | run from user directory | ~/.dash/dash.conf       | ~/.dash           |
+|12.1     | run from user directory | ~/.dashcore/dash.conf   | ~/.dashcore       |
+|...      | ...                     | ...                     | ...               |
+|12.0     | systemd managed service | /etc/dash/dash.conf     | /var/lib/dash     |
+|12.1     | systemd managed service | /etc/dashcore/dash.conf | /var/lib/dashcore |
 
 
 If your data directory was in `~/.dash`, do this...
