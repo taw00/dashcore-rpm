@@ -1,8 +1,10 @@
 /var/log/dashcore/sentinel.log {
+    su dashcore dashcore
+    rotate 5
     missingok
     notifempty
-    maxsize 30k
-    monthly
-    create 0600 dashcore dashcore
+    compress
+    maxsize 50k
+    copytruncate
 }
 
