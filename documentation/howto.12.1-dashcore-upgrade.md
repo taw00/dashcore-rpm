@@ -102,10 +102,6 @@ cd /etc/yum.repos.d/
 sudo curl -O https://raw.githubusercontent.com/taw00/dashcore-12.1/master/dashcore-centos.repo
 ```
 
-Note, if you are familiar with COPR, you can use their process if you like.
-Just browse to <https://copr.fedorainfracloud.org/coprs/taw/dashcore-12.1/> and
-follow the enablement instructions.
-
 
 ### [3] Upgrade Dash Core binaries from 12.0 to 12.1
 

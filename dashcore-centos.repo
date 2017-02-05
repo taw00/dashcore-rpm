@@ -16,6 +16,11 @@
 #   sudo dnf config-manager --set-disabled dashcore-stable
 #   sudo dnf config-manager --set-enabled dashcore-unstable
 #
+# Note: This file is a convenience file that categorizes the releases nicely.
+# If you are familiar with Fedora COPR, you can follow the direct enablement
+# procedures here instead if you like:
+# https://copr.fedorainfracloud.org/coprs/taw/dashcore-12.1/
+#
 # Feedback: t0dd@protonmail.com
 
 [dashcore-stable]
