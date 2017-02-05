@@ -42,6 +42,12 @@ The objectives are straight-forward:
 3. Configure SSH so you can log in without a password into root and a normal user who has sudo'ers rights
 4. Fully update and reboot
 
+> A note about minimum requirements. Masternodes are no longer "glorified full
+> nodes". They are doing more and more things and they will need beefier specs
+> over time. The old, 1G RAM and 1G Swap shorthand may not cut it anymore. To
+> read more, please visit this page:
+> <https://dashpay.atlassian.net/wiki/display/DOC/Masternode+Update>
+
 ### A cloud service installation, for example Vultr
 
 #### Install to Vultr
@@ -49,7 +55,7 @@ The objectives are straight-forward:
   - Create an account and login.
   - Click the ( + ) button.
   - Choose: 64 bit OS and Fedora
-  - Choose: 15 GB SSD (cheapest offering) with supposedly 768MB RAM (which is actually 740MB)
+  - Choose: 2048MB RAM, 2CPU 45GB SSD (you may be able to have a cheaper offering limp along, but I don't recommend it.
   - Set up SSH keys. It will make your life more pleasant. Vult.com provides pretty solid instruction on this process.
   - Pick a hostname, `master00`, or whatever.
   - Deploy!
@@ -79,13 +85,16 @@ timedatectl set-timezone 'UTC'
 date
 ```
 
-  - **Add swap space** to give your system memory some elbow room (Vultr mysteriously starts you with none)...
+  - **Add swap space** to give your system memory some elbow room...
+
+Vulr mysteriously starts you with no swap. At minimum you should have equal to
+your RAM. Double your RAM is a good rule-of-thumb.
 ```
 # As root...
-# Make swap the same size as your existing RAM
+# Make swap the 2x size as your existing RAM (XMEM * 1024 * 2)
 XMEM=$(free -k|grep Mem|awk '{print $2}')
 # Create a swapfile
-dd if=/dev/zero of=/swapfile bs=1024 count=$XMEM
+dd if=/dev/zero of=/swapfile bs=2048 count=$XMEM
 mkswap /swapfile
 chmod 0600 /swapfile
 # Turn it on
@@ -112,13 +121,14 @@ the "Server" install. You need only a minimum configuration. Dependency
 resolution of installed RPM packages per these instructions will bring in
 anything you need.
 
-Ensure that your bare-metal server meets at least these requirements:
+Ensure that your bare-metal server meets at least these requirements:<br />
+_Again, revisit this page for more information: <https://dashpay.atlassian.net/wiki/display/DOC/Masternode+Update>_
 
-* 1GB RAM
-* 15 GB disk
+* 2GB RAM
+* 40 GB disk
 
 As you walk through the installation process, choose to enable swap, it needs
-to be at least equal to the size of RAM, 1GB.
+to be at least equal to the size of RAM, 2GB and ideally twice that, 4GB.
 
 Once installed, follow similar process as the Vultr VPS example for SSH configuration.
 
