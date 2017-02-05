@@ -90,6 +90,7 @@ Edit `/etc/fail2ban/jail.local`
 ```
 sudo nano /etc/fail2ban/jail.local
 ```
+
 CUT-N-PASTE this and save...
 ```
 [DEFAULT]
@@ -103,11 +104,13 @@ banaction = iptables-multiport
 enabled = true
 ```
 
-#### Start and enable `fail2ban`...
+#### Enable `fail2ban` and reboot...
+
+_Note: If you don't reboot, a socket doesn't get created correctly. I am not sure why._
 
 ```
-sudo systemctl start fail2ban
 sudo systemctl enable fail2ban
+sudo reboot
 ```
 
 #### Monitor / Analyze
@@ -116,6 +119,7 @@ Watch the IP addresses slowly pile up by occassionally looking in the SSH jail..
 ```
 sudo fail2ban-client status sshd
 ```
+
 ...and even...
 ```
 sudo tail -F /var/log/fail2ban.log
