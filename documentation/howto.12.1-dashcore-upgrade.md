@@ -8,7 +8,8 @@
 The process for upgrade is actually rather trivial. But it is recommended that
 you, especially masternode owners, get a testnet version running first as
 closely configured to your production masternode as possible on a separate
-system.
+system. You may also want to review the dash.org official documentation found
+here: <https://dashpay.atlassian.net/wiki/display/DOC/Dash+v12.1+-+2017-02-05>
 
 ## The process
 
@@ -40,6 +41,7 @@ system.
 
 ### [1] Backup everything up
 
+
 Note: If you are just running a node with no funds associated, you don't really need to back it up. If disaster strikes, you can just rebuild it. A masternode can be similarly rebuilt, but a backup makes everything easier. And of course, with a wallet, a backup is critical for ensuring your funds are protected.
 
 The easiest way to back up your wallet is to shut it down and then copy any configuration and wallet data files.
@@ -47,7 +49,7 @@ The easiest way to back up your wallet is to shut it down and then copy any conf
 * Shut down your dash-qt or dashd -- You should have already done this
 * Open up a terminal
 * Create a tar-archive of your configuration and wallet data files<br />
-  _Note: If these are overly complicated for you, just be sure to backup `wallet.dat` and any `.conf` files and you will be fine._
+  _Note: If these are overly complicated for you, just be sure to copy `wallet.dat` and any `.conf` files somewhere and you will be fine._
 
 This is the general scheme...
 ```
