@@ -561,24 +561,19 @@ versions of Sentinel.
 
 ### Run it for the first time...
 ```
-cd /var/lib/dashcore/sentinel && sudo -u dashcore venv/bin/python bin/sentinel.py
+sudo -u dashcore -- bash -c "cd /var/lib/dashcore/sentinel && venv/bin/python bin/sentinel.py
 ```
 
 It should create a database and populate it.
 
 Run it again...
 ```
-cd /var/lib/dashcore/sentinel && sudo -u dashcore venv/bin/python bin/sentinel.py
+sudo -u dashcore -- bash -c "cd /var/lib/dashcore/sentinel && venv/bin/python bin/sentinel.py
 ```
 
 There should be no output.
 
-> Note1, another way you can run that command is...
-> ```
-> sudo -u dashcore -- bash -c "cd /var/lib/dashcore/sentinel && venv/bin/python bin/sentinel.py"
-> ```
-> 
-> Note2, if something seems to be going wrong, set SENTINEL_DEBUG=1 and try to
+> Note, if something seems to be going wrong, set SENTINEL_DEBUG=1 and try to
 > make sense of the output
 > ```
 > sudo -u dashcore -- bash -c "cd /var/lib/dashcore/sentinel && SENTINEL_DEBUG=1 venv/bin/python bin/sentinel.py >> /var/log/dashcore/sentinel.log 2>&1"
