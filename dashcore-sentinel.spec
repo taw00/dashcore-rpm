@@ -16,7 +16,7 @@
 #%define _hardened_build 0
 
 # "bump" refers to "release bump" and is a build identifier.
-%define bump 0
+%define bump 1
 
 # "bumptag" is used to indicate additional information, usually an identifier,
 # like the builder's initials, or a date, or both, or nil.
@@ -228,7 +228,10 @@ exit 0
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
-* Sun Feb 05 2017 Todd Warner <t0dd@protonmail.com> 1.0.taw
+* Mon Feb 06 2017 Todd Warner <t0dd@protonmail.com> 1.0-1.taw
+- Fixed a broken file in the contribs that hosed the sentinel.conf file.
+- 
+* Sun Feb 05 2017 Todd Warner <t0dd@protonmail.com> 1.0-0.taw
 - v12.1 GA
 - 
 
