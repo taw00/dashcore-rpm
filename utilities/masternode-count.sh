@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-# run this with 'watch -n15 ./masternode-count.sh'
+# run this with 'watch -n15 . ./masternode-count.sh'
 
 # If systemd-managed...
 LF="sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf masternode list full"
