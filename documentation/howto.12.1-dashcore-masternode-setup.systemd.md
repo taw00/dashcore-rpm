@@ -467,7 +467,7 @@ sudo firewall-cmd --list-all
 ```
 
 _NOTE1: you may want to comment out the `--add-service` line for testnet or
-mainnet depending on your setup.
+mainnet depending on your setup._
 
 _NOTE2: at this time, I do not have rich rules for rate managing the 9999 or
 19999 ports (dashcore-node and dashcore-node-testnet)_
