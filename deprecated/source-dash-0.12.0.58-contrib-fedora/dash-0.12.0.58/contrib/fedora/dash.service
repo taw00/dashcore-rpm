@@ -1,0 +1,20 @@
+[Unit]
+Description=Dash daemon
+After=syslog.target network.target
+
+[Service]
+Type=forking
+ExecStart=/usr/sbin/dashd -daemon -conf=${CONFIG_FILE} -datadir=${DATA_DIR} -pid=${PID_FILE} $OPTIONS
+EnvironmentFile=/etc/sysconfig/dash
+User=dash
+Group=dash
+
+Restart=on-failure
+PrivateTmp=true
+TimeoutStopSec=120
+TimeoutStartSec=60
+StartLimitInterval=240
+StartLimitBurst=5
+
+[Install]
+WantedBy=multi-user.target

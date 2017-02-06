@@ -14,22 +14,25 @@ this git repository.
 # Dash Core Source RPM Packages
 
 **Stable sources: 0.12.1**    
-dashcore - latest version is: 0.12.1-1.0.taw, aka v0.12.1.0-g5520bf6
-dashcore-sentinel - latest version: 0.12.1-1.0.taw
+dashcore - latest version is: 0.12.1.0-0.taw, aka vv0.12.1.0-g56971f8
+dashcore-sentinel - latest version: 0.12.1.0-0.taw
 
 * Fedora Linux 25:
-  - `dashcore-0.12.1-1.0.taw.fc25.src.rpm`
-  - `dashcore-sentinel-0.12.1-1.0.taw.fc25.src.rpm`
+  - `dashcore-0.12.1.0-0.taw.fc25.src.rpm`
+  - `dashcore-sentinel-0.12.1.0-0.taw.fc25.src.rpm`
 * Fedora Linux 24:
-  - `dashcore-0.12.1-1.0.taw.fc24.src.rpm`
-  - `dashcore-sentinel-0.12.1-1.0.taw.fc24.src.rpm`
+  - `dashcore-0.12.1.0-0.taw.fc24.src.rpm`
+  - `dashcore-sentinel-0.12.1.0-0.taw.fc24.src.rpm`
 * CentOS and RHEL 7:
-  - `dashcore-0.12.1-1.0.taw.el7.centos.src.rpm`
-  - `dashcore-sentinel-0.12.1-1.0.taw.el7.centos.src.rpm`
+  - `dashcore-0.12.1.0-0.taw.el7.centos.src.rpm`
+  - `dashcore-sentinel-0.12.1.0-0.taw.el7.centos.src.rpm`
 
-Sourced from: [[latest successful
-builds]](https://bamboo.dash.org/browse/DASHL-DEV/latestSuccessful)<br>
-Documentation: https://github.com/taw00/dashcore-rpm/tree/master/documentation
+Sourced from:
+
+* Tagged release builds: <https://github.com/dashpay/dash/tags>
+* Test builds: <https://bamboo.dash.org/browse/DASHL-DEV/latestSuccessful>
+* Documentation: <https://github.com/taw00/dashcore-rpm/tree/master/documentation>
+
 
 
 **Deprecated sources: 0.12.0.58**    
