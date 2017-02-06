@@ -35,12 +35,12 @@ sudo tail -f /var/lib/dashcore/testnet3/debug.log
 Watch these..
 ```
 # General info
-watch "sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf getinfo"
+watch -n10 "sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf getinfo"
 ```
 
 ```
 # Masternode sync status
-watch "sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf mnsync status"
+watch -n10 "sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf mnsync status"
 ```
 
 ```
@@ -49,7 +49,7 @@ watch "sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf mnsync status"
 # WARNING: It's better to verify this with a fully-synced wallet or other node.
 #   If you masternode is not fully synced and not communicating correctly, it
 #   will likely give you false information.
-sudo -u dashcore watch "dash-cli -conf=/etc/dashcore/dash.conf masternode list full | grep <MASTERNODE_IP_ADDRESS>"
+sudo -u dashcore watch -n10 "dash-cli -conf=/etc/dashcore/dash.conf masternode list full | grep <MASTERNODE_IP_ADDRESS>"
 ```
 
 
@@ -90,6 +90,11 @@ watch dash-cli mnsync status"
 #   If you masternode is not fully synced and not communicating correctly, it
 #   will likely give you false information.
 dash-cli masternode list full | grep <MASTERNODE_IP_ADDRESS>"
+```
+
+How many masternodes are enabled at the moment?
+```
+sudo -u dashcore watch -n15 "dash-cli -conf=/etc/dashcore/dash.conf masternode list full| grep ENABLED|grep -v PRE_ENABLED|wc -l"
 ```
 
 

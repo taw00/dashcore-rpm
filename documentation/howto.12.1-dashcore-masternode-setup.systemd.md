@@ -347,7 +347,7 @@ sudo -u dashcore tail -f /var/lib/dashcore/debug.log # if mainnet
 
 ```
 # ^C out of this loop when you are done
-watch sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf getblockcount
+watch -n10 sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf getblockcount
 ```
 
 You will know you have sync'ed the entire blockchain when it matches the current block-heigth:
@@ -536,7 +536,7 @@ itself.
 From the commandline do this (this is an example; use your masternode's IP
 address)...
 ```
-sudo -u dashcore watch "dash-cli -conf=/etc/dashcore/dash.conf masternode list full | grep 93.184.216.34"
+sudo -u dashcore watch -n10 "dash-cli -conf=/etc/dashcore/dash.conf masternode list full | grep 93.184.216.34"
 ```
 
 While that is going on in one terminal, open up another terminal and...
