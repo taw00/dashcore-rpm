@@ -20,7 +20,8 @@
 
 testnet=1
 config=/etc/dashcore/dash.conf
-ip=45.32.211.155
+# USE YOUR MN IP ADDRESS HERE
+ip=93.184.216.34
 logfile=/var/log/dashcore/mnstate.log
 
 #username=dashcore
