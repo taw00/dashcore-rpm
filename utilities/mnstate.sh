@@ -18,7 +18,7 @@
 
 
 
-testnet=1
+testnet=0
 config=/etc/dashcore/dash.conf
 # USE YOUR MN IP ADDRESS HERE
 ip=93.184.216.34
