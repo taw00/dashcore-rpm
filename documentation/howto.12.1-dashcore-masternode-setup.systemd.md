@@ -87,21 +87,30 @@ date
 
   - **Add swap space** to give your system memory some elbow room...
 
-Vulr mysteriously starts you with no swap. At minimum you should have equal to
-your RAM. Double your RAM is a good rule-of-thumb.
+Vulr mysteriously starts you with no swap. A good [rule of thumb](https://gist.github.com/taw00/f6dc6040a86e3bbe434dab4c1ab23b2b) is to configure swap to be that is twice the size of your RAM.
+
 ```
 # As root...
-# Make swap the 2x size as your existing RAM (XMEM * 1024 * 2)
-XMEM=$(free -k|grep Mem|awk '{print $2}')
-# Create a swapfile
-dd if=/dev/zero of=/swapfile bs=2048 count=$XMEM
-mkswap /swapfile
+sudo su -
+
+bs=2048 # Twice the size of RAM -- recommended
+#bs=1024 # One times the size of RAM
+#bs=1536 # 1.5 times the size of RAM
+
+# Create a swapfile 2x size as your existing RAM (TOTAL_MEM * 1024 * 2)
+TOTAL_MEM=$(free -k|grep Mem|awk '{print $2}')
+dd if=/dev/zero of=/swapfile bs=$bs count=$TOTAL_MEM
 chmod 0600 /swapfile
+mkswap /swapfile
+
 # Turn it on
 swapon /swapfile
-# You can see it running with a "swapon -s" or "top" command
+
+# You can see it running with a "swapon -s" or "free" command
+free -h
+
 # Enable even after reboot
-cp -a /etc/fstab /etc/fstab.mybackup # just in case
+cp -a /etc/fstab /etc/fstab.mybackup # backup your fstab file
 echo '/swapfile swap swap defaults 0 0' >> /etc/fstab
 cat /etc/fstab # double check your fstab file looks fine
 ```
