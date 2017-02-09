@@ -97,7 +97,7 @@ bs=2048 # Twice the size of RAM -- recommended
 #bs=1024 # One times the size of RAM
 #bs=1536 # 1.5 times the size of RAM
 
-# Create a swapfile 2x size as your existing RAM (TOTAL_MEM * 1024 * 2)
+# Create a swap file 2x size as your existing RAM (TOTAL_MEM * 1024 * 2)
 TOTAL_MEM=$(free -k|grep Mem|awk '{print $2}')
 dd if=/dev/zero of=/swapfile bs=$bs count=$TOTAL_MEM
 chmod 0600 /swapfile
@@ -456,10 +456,6 @@ sudo firewall-cmd --permanent --zone=FedoraServer --add-service dashcore-node # 
 sudo firewall-cmd --permanent --zone=FedoraServer --add-service dashcore-node-testnet
 sudo firewall-cmd --permanent --zone=FedoraServer --remove-service dhcpv6-client
 sudo firewall-cmd --permanent --zone=FedoraServer --remove-service cockpit
-
-# Open up the Masternode port (19999=Testnet, 9999=Live)
-sudo firewall-cmd --permanent --zone=FedoraServer --add-port=19999/tcp
-sudo firewall-cmd --permanent --zone=FedoraServer --add-port=9999/tcp
 
 # Rate limit incoming ssh and cockpit (if configured on) traffic to 10 per minute
 sudo firewall-cmd --permanent --add-rich-rule='rule service name=ssh limit value=10/m accept'
