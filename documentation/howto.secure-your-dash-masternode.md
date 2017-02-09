@@ -32,16 +32,20 @@ sudo systemctl enable firewalld.service
 sudo firewall-cmd --get-active-zone
 
 # FedoraServer usually starts with ssh, dhcp6-client, and cockpit opened up
-# I want ssh. dhcpv6 should be unneccessary for a static IP host, and cockpit is something used intermittently.
-# And of course, we want the dash full node/masternode ports available.
+# I want ssh. dhcpv6 should be unneccessary for a static IP host, and cockpit
+# is something used intermittently. And of course, we want the dash full
+# node/masternode ports available.
 sudo firewall-cmd --permanent --add-service ssh
 sudo firewall-cmd --permanent --remove-service dhcpv6-client
 #sudo firewall-cmd --permanent --add-service cockpit
 sudo firewall-cmd --permanent --remove-service cockpit
-# Open up the Mastnernode port
+
+# Open up the Mastnernode port (service files provided by our RPM packages)
 sudo firewall-cmd --permanent --add-service dash-node
 #sudo firewall-cmd --permanent --add-service dash-node-testnet
-# If you are running and older masternode or a masternode that was not installed via RPM, you must do things manually
+
+# If you are running a masternode that was not installed via our RPM packages,
+# you must be explicit in your port configuration
 #sudo firewall-cmd --permanent --add-port=19999/tcp
 #sudo firewall-cmd --permanent --add-port=9999/tcp
 
@@ -61,6 +65,7 @@ sudo firewall-cmd --list-all
 
 #### Some references:
 
+* FirewallD documentation: <https://fedoraproject.org/wiki/Firewalld>
 * Rate limiting as we do above: <https://www.rootusers.com/how-to-use-firewalld-rich-rules-and-zones-for-filtering-and-nat/>
 * More on rate limiting: <https://serverfault.com/questions/683671/is-there-a-way-to-rate-limit-connection-attempts-with-firewalld>
 * And more: <https://itnotesandscribblings.blogspot.com/2014/08/firewalld-adding-services-and-direct.html>
@@ -71,7 +76,9 @@ sudo firewall-cmd --list-all
 
 ## Fail2Ban
 
-Fail2ban analyzes log files for folks trying to do bad things on your system. It doesn't have a lot of breadth of functionality, but it can be effective, especially against folks poking SSH.
+Fail2ban analyzes log files for folks trying to do bad things on your system.
+It doesn't have a lot of breadth of functionality, but it can be very
+effective, especially against folks poking SSH.
 
 #### Install `fail2ban`...
 ```
@@ -91,7 +98,7 @@ Edit `/etc/fail2ban/jail.local`
 sudo nano /etc/fail2ban/jail.local
 ```
 
-CUT-N-PASTE this and save...
+COPY-AND-PASTE this and save...
 ```
 [DEFAULT]
 # Ban hosts for one hour:
