@@ -601,17 +601,6 @@ sudo -u dashcore EDITOR="nano" crontab -e
 */5 * * * * cd /var/lib/dashcore/sentinel && venv/bin/python bin/sentinel.py >> /var/log/dashcore/sentinel.log 2>&1
 ```
 
-...or if you want to get really fancy, use these lines instead (really helps better understand the logs)...
-```
-_begin="- run begin -"
-_end="- run end ---"
-_logfile=/var/log/dashcore/sentinel.log
-#SENTINEL_DEBUG=1
-#*/5 * * * * cd /var/lib/dashcore/sentinel && venv/bin/python bin/sentinel.py >/dev/null 2>&1
-*/5 * * * * cd /var/lib/dashcore/sentinel && date --utc +"\%b \%d \%T UTC $_begin" >> $_logfile && venv/bin/python bin/sentinel.py >> $_logfile 2>&1 && date --utc +"\%b \%d \%T UTC $_end" >> $_logfile
-```
-
-
 ## YOU ARE DONE!
 
 Continue to monitor the enablement status as illustrated in step 8. The status
@@ -624,3 +613,38 @@ this was helpful.
 
 Got a dash of feedback? *...har har...* Send it my way <t0dd@protonmail.com>    
 And of course, donations welcome: [XyxQq4qgp9B53QWQgSqSxJb4xddhzk5Zhh](dash:XyxQq4qgp9B53QWQgSqSxJb4xddhzk5Zhh)
+
+---
+
+---
+
+## Addendum - Advanced...
+
+
+#### Super fancy crontab settings
+
+Remember to edit with `sudo -u dashcore crontab -e` if dashcore-sentinel is installed with
+our RPM packages.
+
+```
+#SENTINEL_DEBUG=1
+# Run Sentinel every five minutes; no extra information sent to the log files.
+*/5 * * * * cd /var/lib/dashcore/sentinel && venv/bin/python bin/sentinel.py > /dev/null 2>&1
+```
+
+```
+#SENTINEL_DEBUG=1
+# Run Sentinel every five minutes; each run is time-date stamped in the logs 
+_begin="run begin ----"
+_logfile=/var/log/dashcore/sentinel.log
+*/5 * * * * cd /var/lib/dashcore/sentinel && date --utc +"\%b \%d \%T UTC $_begin" >> $_logfile && venv/bin/python bin/sentinel.py >> $_logfile 2>&1
+```
+
+```
+#SENTINEL_DEBUG=1
+# Run Sentinel every 3 to 8 minutes; each run is time-date stamped in the logs 
+_begin="run begin ----"
+_logfile=/var/log/dashcore/sentinel.log
+*/3 * * * * sleep $((RANDOM \% 6)) && cd /var/lib/dashcore/sentinel && date --utc +"\%b \%d \%T UTC $_begin" >> $_logfile && venv/bin/python bin/sentinel.py >> $_logfile 2>&1
+```
+
