@@ -326,7 +326,7 @@ labled it `mn1`. But if could be `bob` or `my_masternode` or whatever you want.
 and the funding index from the values received earlier. The IP address will be
 added later after I set up the masternode. _These are examples only!_**
 
-**Note 2: The port is set to 9999 for mainnet and 19999 for testnet.
+**Note 2: The port is set to 9999 for mainnet and 19999 for testnet.**
 
 Fill in this template and save the file...
 ```
