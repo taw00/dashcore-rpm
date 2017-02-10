@@ -627,26 +627,34 @@ Remember to edit with `sudo -u dashcore crontab -e` if dashcore-sentinel is inst
 our RPM packages.
 
 ```
-#SENTINEL_DEBUG=1
 # Run Sentinel every five minutes; no extra information sent to the log files.
 */5 * * * * cd /var/lib/dashcore/sentinel && venv/bin/python bin/sentinel.py > /dev/null 2>&1
 ```
 
 ```
-#SENTINEL_DEBUG=1
-# Run Sentinel every five minutes; each run is time-date stamped in the logs 
-_begin="----Sentinel job started"
-_end=  "----Sentinel job completed" # Not used in this example
-_logfile=/var/log/dashcore/sentinel.log
-*/5 * * * * cd /var/lib/dashcore/sentinel && date --utc +"\%b \%d \%T UTC $_begin" >> $_logfile && venv/bin/python bin/sentinel.py >> $_logfile 2>&1
+# Run Sentinel every five minutes; dump copious amounts of debug information to logfile
+SENTINEL_DEBUG=1
+*/5 * * * * cd /var/lib/dashcore/sentinel && venv/bin/python bin/sentinel.py > /dev/null 2>&1
 ```
 
 ```
-#SENTINEL_DEBUG=1
-# Run Sentinel every 5 to 6 minutes (adding a bit of randomization); each run is time-date stamped in the logs 
-_begin="----Sentinel job started"
-_end=  "----Sentinel job completed" # Not used in this example
-_logfile=/var/log/dashcore/sentinel.log
-*/5 * * * * r=$((RANDOM \% 61)) ; sleep ${r}s ; cd /var/lib/dashcore/sentinel ; date --utc +"\%b \%d \%T UTC $_begin" >> $_logfile && venv/bin/python bin/sentinel.py >> $_logfile 2>&1
+# Run Sentinel every five minutes; each run is time stamped in the logs 
+m0="----Sentinel job started --- pid:"
+m1="----Sentinel job completed - pid:" # Not used in this example
+t="%b %d %T UTC"
+logfile=/var/log/dashcore/sentinel.log
+
+*/5 * * * * cd /var/lib/dashcore/sentinel && date --utc +"$t $m0 $$" >> $logfile && venv/bin/python bin/sentinel.py >> $logfile 2>&1
+```
+
+```
+# Run Sentinel every 5 to 7 minutes (adding a bit of randomization); each run is time stamped in the logs 
+m0="----Sentinel job started --- pid:"
+m1="----Sentinel job completed - pid:"
+t="%b %d %T UTC"
+r2min="RANDOM % 121"
+r3min="RANDOM % 181"
+logfile=/var/log/dashcore/sentinel.log
+*/5 * * * * r=$(($r2min)) ; sleep ${r}s ; cd /var/lib/dashcore/sentinel ; date --utc +"$t $m0 $$" >> $logfile && venv/bin/python bin/sentinel.py >> $logfile 2>&1 && date --utc +"$t $m1 $$"
 ```
 
