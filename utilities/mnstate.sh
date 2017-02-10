@@ -16,57 +16,73 @@
 # 1 = Block heights do not match
 # 2 = Masternode not in ENABLED or PRE_ENABLED state
 
-
-
 testnet=0
 config=/etc/dashcore/dash.conf
-# USE YOUR MN IP ADDRESS HERE
-ip=93.184.216.34
-logfile=/var/log/dashcore/mnstate.log
+ip=93.184.216.34 # Your masternode IP address
+logfile=
+#logfile="/var/log/dashcore/mnstate.log" # If no logfile, only goes to stdout
+noise=2 # 0=silence (except errors), 1=silent except timestamp of run, 2=loud
 
 #username=dashcore
-true_height=-1
-my_height=-1
+true_height=
+my_height=
 mn_enablement="ENABLED"
 _network_string='[mainnet]'
+_height_url="https://explorer.dash.org/chain/Dash/q/getblockcount"
 
 if [[ testnet -eq 1 ]] ; then
-  true_height=$(curl --silent -o - https://test.explorer.dash.org/chain/tDash/q/getblockcount)
   _network_string='[testnet]'
-else
-  true_height=$(curl --silent -o - https://explorer.dash.org/chain/Dash/q/getblockcount)
+  _height_url="https://test.explorer.dash.org/chain/tDash/q/getblockcount"
 fi
 
 _d=$(date --utc +"%b %d %T UTC $_network_string")
-echo "$_d ---"
-echo "$_d ---" >> $logfile
+
+if [[ noise -gt 0 ]] ; then
+  m="$_d ---"
+  echo $m
+  if [[ $logfile ]] ; then echo $m >> $logfile ; fi
+fi
+
+true_height=$(curl --silent -o - $_height_url)
+while [[ true_height -lt 1 ]] ; do
+  m="$_d --- No results from $_height_url Trying again."
+  echo $m
+  if [[ $logfile ]] ; then echo $m >> $logfile ; fi
+  sleep 3
+  true_height=$(curl --silent -o - $_height_url)
+done
 
 my_height=$(dash-cli -conf=$config getblockcount)
-mn_enablement=$(dash-cli -conf=/etc/dashcore/dash.conf masternode list full | grep $ip | tr -s [:space:] | cut -d ' ' -f4)
+while [[ my_height -lt 1 ]] ; do
+  m="$_d --- No results from 'dash-cli getblockcount' Trying again."
+  echo $m
+  if [[ $logfile ]] ; then echo $m >> $logfile ; fi
+  sleep 3
+  my_height=$(dash-cli -conf=$config getblockcount)
+done
 
 msg1="$_d Current block height is $true_height"
-
-
 if [[ $true_height -ne $my_height ]] ; then
   msg1="$_d WARNING! Height mismatch! Network height versus this node: $true_height : $my_height"
   echo $msg1
-  echo $msg1 >> $logfile
+  if [[ $logfile ]] ; then echo $msg1 >> $logfile ; fi
   exit 1
-else
+elif [[ noise -gt 1 ]] ; then
   echo $msg1
-  echo $msg1 >> $logfile
+  if [[ $logfile ]] ; then echo $msg1 >> $logfile ; fi
 fi
 
 
+mn_enablement=$(dash-cli -conf=/etc/dashcore/dash.conf masternode list full | grep $ip | tr -s [:space:] | cut -d ' ' -f4)
 msg2="$_d Masternode enablement status: $mn_enablement"
 if [[ $mn_enablement -ne "ENABLED" && $mn_enablement -ne "PRE_ENABLED" ]] ; then
   msg2="$_d WARNING! Masternode state is not reporting as 'ENABLED' or 'PRE_ENABLED'. Reporting as: $mn_enablement"
   echo $msg2
-  echo $msg2 >> $logfile
+  if [[ $logfile ]] ; then echo $msg2 >> $logfile ; fi
   exit 2
-else
+elif [[ noise -gt 1 ]] ; then
   echo $msg2
-  echo $msg2 >> $logfile
+  if [[ $logfile ]] ; then echo $msg2 >> $logfile ; fi
 fi
 
 exit 0
