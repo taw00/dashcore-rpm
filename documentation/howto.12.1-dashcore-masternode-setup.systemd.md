@@ -635,16 +635,18 @@ our RPM packages.
 ```
 #SENTINEL_DEBUG=1
 # Run Sentinel every five minutes; each run is time-date stamped in the logs 
-_begin="run begin ----"
+_begin="----Sentinel job started"
+_end=  "----Sentinel job completed" # Not used in this example
 _logfile=/var/log/dashcore/sentinel.log
 */5 * * * * cd /var/lib/dashcore/sentinel && date --utc +"\%b \%d \%T UTC $_begin" >> $_logfile && venv/bin/python bin/sentinel.py >> $_logfile 2>&1
 ```
 
 ```
 #SENTINEL_DEBUG=1
-# Run Sentinel every 3 to 8 minutes; each run is time-date stamped in the logs 
-_begin="run begin ----"
+# Run Sentinel every 5 to 6 minutes (adding a bit of randomization); each run is time-date stamped in the logs 
+_begin="----Sentinel job started"
+_end=  "----Sentinel job completed" # Not used in this example
 _logfile=/var/log/dashcore/sentinel.log
-*/3 * * * * sleep $((RANDOM \% 6)) && cd /var/lib/dashcore/sentinel && date --utc +"\%b \%d \%T UTC $_begin" >> $_logfile && venv/bin/python bin/sentinel.py >> $_logfile 2>&1
+*/5 * * * * r=$((RANDOM \% 61)) ; sleep ${r}s ; cd /var/lib/dashcore/sentinel ; date --utc +"\%b \%d \%T UTC $_begin" >> $_logfile && venv/bin/python bin/sentinel.py >> $_logfile 2>&1
 ```
 
