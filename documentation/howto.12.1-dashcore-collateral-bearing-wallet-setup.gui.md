@@ -375,7 +375,7 @@ Is the root partition mounted as an _ext4_ file system? And check for firmware c
 
 ```
 mount |grep ext4
-fileexists /sys/block/sda/queue/discard_granularity
+ls -l /sys/block/sda/queue/discard_granularity # Does this file exist?
 ```
 
 If so, edit _fstab_ and add a "discards" parameter to the settings....
