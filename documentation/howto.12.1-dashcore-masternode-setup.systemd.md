@@ -2,14 +2,14 @@
 
 > This edition of these instructions is for those who wish to install and
 > configure a Dash Masternode running as a traditional `systemd` service.
-> 
+>
 > A Dash Masternode is a server service, therefore it lends itself to the
 > improved security and robustness that `systemd` offers. I.e., It really is
 > the "right way" of running your masternode. Another "right way" would be
 > to run it as a container. But that is beyond the scope of this document.
 >
 > These instructions are specific to the Red Hat-family of linuxes.
-> 
+>
 > These instructions should work for all supported linuxes found at the link
 > above. As of this writing that is Fedora Linux 24 and 25, CentOS 7, and RHEL 7.
 > I did most of my testing on Fedora 24. I tested with the masternode running on a
@@ -115,6 +115,7 @@ echo '/swapfile swap swap defaults 0 0' >> /etc/fstab
 cat /etc/fstab # double check your fstab file looks fine
 ```
 
+  - Log out and log back in using your new _ssh_ credentials
 
 Finally, try logging back in with ssh (see above). If you had to use a
 password, the ssh key setup isn't right. Troubleshoot and fix it. If you can't
@@ -123,7 +124,7 @@ log in at all... destroy the instance and start over.
 
 ### A traditional bare-metal server installation
 
-I leave it as an excercise for the reader to perform a bare-metal installation
+I leave it as an exercise for the reader to perform a bare-metal installation
 of  Fedora, CentOS, or even RHEL. For Fedora, go here - https://getfedora.org/
 For CentOS, go here - https://www.centos.org/download/ For Fedora, I recommend
 the "Server" install. You need only a minimum configuration. Dependency
@@ -638,7 +639,7 @@ SENTINEL_DEBUG=1
 ```
 
 ```
-# Run Sentinel every five minutes; each run is time stamped in the logs 
+# Run Sentinel every five minutes; each run is time stamped in the logs
 m0="----Sentinel job started --- pid:"
 m1="----Sentinel job completed - pid:" # Not used in this example
 t="%b %d %T UTC"
@@ -648,7 +649,7 @@ logfile=/var/log/dashcore/sentinel.log
 ```
 
 ```
-# Run Sentinel every 5 to 7 minutes (adding a bit of randomization); each run is time stamped in the logs 
+# Run Sentinel every 5 to 7 minutes (adding a bit of randomization); each run is time stamped in the logs
 m0="----Sentinel job started --- pid:"
 m1="----Sentinel job completed - pid:"
 t="%b %d %T UTC"
@@ -658,3 +659,29 @@ logfile=/var/log/dashcore/sentinel.log
 */5 * * * * r=$(($r2min)) ; sleep ${r}s ; cd /var/lib/dashcore/sentinel ; date --utc +"$t $m0 $$" >> $logfile && venv/bin/python bin/sentinel.py >> $logfile 2>&1 && date --utc +"$t $m1 $$"
 ```
 
+
+#### Turn on TRIM discards for SSD drive mounts
+
+Read about it here: _[Opensource.com: Solid state drives in Linux: Enabling TRIM for SSDs](https://opensource.com/article/17/1/solid-state-drives-linux-enabling-trim-ssds)_
+
+> _IMPORTANT: Only perform this step if your hard drive is an SSD drive_
+
+> _IMPORTANT: If the file `/sys/block/sda/queue/discard_granularity`  does not exist, your firmware DOES NOT SUPPORT THIS!_  Since TRIM is touchy about supported firmware, it's recommended that you choose this careful and monitor the results. The payoff is worth it ultimately, but if buggy firmware leads to a corrupted file system, well, none of us want that. Mount carefully out there!
+
+Is the root partition mounted as an _ext4_ file system? And check for firmware capability...
+
+```
+mount |grep ext4
+fileexists /sys/block/sda/queue/discard_granularity
+```
+
+If so, edit _fstab_ and add a "discards" parameter to the settings....
+
+```
+sudo nano /etc/fstab
+```
+
+Replace the line that looks like this (this is an example)...    
+`UUID=2865a236-ab20-4bdf-b15b-ffdb5ae60a93 /                       ext4    defaults        1 1`    
+...with one that looks like this...    
+`UUID=2865a236-ab20-4bdf-b15b-ffdb5ae60a93 /                       ext4    defaults,discard        1 1`

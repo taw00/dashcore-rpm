@@ -125,7 +125,7 @@ sudo firewall-cmd --get-active-zone
 sudo firewall-cmd --permanent --zone=FedoraServer --add-service ssh
 sudo firewall-cmd --permanent --zone=FedoraServer --remove-service samba-client
 
-# Rate limit incoming sshtraffic to 10 per minute
+# Rate limit incoming ssh traffic to 10 per minute
 sudo firewall-cmd --permanent --add-rich-rule='rule service name=ssh limit value=10/m accept'
 
 # did it take?
@@ -355,3 +355,36 @@ These steps are covered in another set of documents
 
 Got a dash of feedback? *...har har...* Send it my way <t0dd@protonmail.com>    
 And of course, donations welcome: [XyxQq4qgp9B53QWQgSqSxJb4xddhzk5Zhh](dash:XyxQq4qgp9B53QWQgSqSxJb4xddhzk5Zhh)
+
+---
+
+---
+
+## Addendum - Advanced...
+
+
+#### Turn on TRIM discards for SSD drive mounts
+
+Read about it here: _[Opensource.com: Solid state drives in Linux: Enabling TRIM for SSDs](https://opensource.com/article/17/1/solid-state-drives-linux-enabling-trim-ssds)_
+
+> _IMPORTANT: Only perform this step if your hard drive is an SSD drive_
+
+> _IMPORTANT: If the file `/sys/block/sda/queue/discard_granularity` does not exist, your firmware DOES NOT SUPPORT THIS!_ Since TRIM is touchy about supported firmware, it's recommended that you choose this careful and monitor the results. The payoff is worth it ultimately, but if buggy firmware leads to a corrupted file system, well, none of us want that. Mount carefully out there!
+
+Is the root partition mounted as an _ext4_ file system? And check for firmware capability...
+
+```
+mount |grep ext4
+fileexists /sys/block/sda/queue/discard_granularity
+```
+
+If so, edit _fstab_ and add a "discards" parameter to the settings....
+
+```
+sudo nano /etc/fstab
+```
+
+Replace the line that looks like this (this is an example)...    
+`UUID=2865a236-ab20-4bdf-b15b-ffdb5ae60a93 /                       ext4    defaults        1 1`    
+...with one that looks like this...    
+`UUID=2865a236-ab20-4bdf-b15b-ffdb5ae60a93 /                       ext4    defaults,discard        1 1`
