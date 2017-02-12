@@ -72,8 +72,14 @@ elif [[ noise -gt 1 ]] ; then
   if [[ $logfile ]] ; then echo $msg1 >> $logfile ; fi
 fi
 
-
-mn_enablement=$(dash-cli -conf=/etc/dashcore/dash.conf masternode list full | grep $ip | tr -s [:space:] | cut -d ' ' -f4)
+# Get masternode status string
+mn_enablement=$(dash-cli -conf=/etc/dashcore/dash.conf masternode list full | grep $ip)
+# Convert all double-quotes to spaces -- and then squash all the spaces into 1 each
+mn_enablement=$(echo -e "${mn_enablement}" | tr -d [\"]|tr -s [:space:])
+# Trim off beginning and ending whitespace
+mn_enablement=$(echo -e "${mn_enablement}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
+# Snag the actual enablement value
+mn_enablement=$(echo -e "${mn_enablement}" | cut -d ' ' -f2)
 msg2="$_d Masternode enablement status: $mn_enablement"
 if [[ $mn_enablement -ne "ENABLED" && $mn_enablement -ne "PRE_ENABLED" ]] ; then
   msg2="$_d WARNING! Masternode state is not reporting as 'ENABLED' or 'PRE_ENABLED'. Reporting as: $mn_enablement"
