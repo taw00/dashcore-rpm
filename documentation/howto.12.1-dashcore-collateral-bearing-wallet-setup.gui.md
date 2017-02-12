@@ -164,8 +164,8 @@ maxconnections=8
 # server=1 tells Dash-QT and dashd to accept JSON-RPC commands
 server=1
 # You must set rpcuser and rpcpassword to secure the JSON-RPC api
-rpcuser=<make_up_an_rpc_username>
-rpcpassword=<anything_you_like_but_make_it_not_obvious>
+rpcuser=<make_up_an_alphanumeric_username>
+rpcpassword=<make_up_an_alphanumeric_password>
 rpcport=9998
 # A note about RPC connection control...
 # Opening up the RPC port to hosts outside your local trusted network
@@ -187,8 +187,8 @@ production, mainnet masternode, that setting needs to be `testnet=0`.
 Edit `/etc/dashcore/dash.conf` and change...
 
 ```
-rpcuser=<make_up_an_rpc_username>
-rpcpassword=<anything_you_like_but_make_it_not_obvious>
+rpcuser=<make_up_an_alphanumeric_username>
+rpcpassword=<make_up_an_alphanumeric_password>
 ```
 ...to something else (these are examples)...
 ```
