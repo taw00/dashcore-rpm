@@ -662,20 +662,45 @@ logfile=/var/log/dashcore/sentinel.log
 
 #### Turn on TRIM discards for SSD drive mounts
 
-Read about it here: _[Opensource.com: Solid state drives in Linux: Enabling TRIM for SSDs](https://opensource.com/article/17/1/solid-state-drives-linux-enabling-trim-ssds)_
+Because of the way SSDs (Solid State Drives) work, saving new data can impact performance. Namely, data marked as "deleted" have to be completely erased before write. With traditional magnetic drives thusly marked data is simply overwritten. Because SSDs have to take this extra step, performance can be impacted.
 
-> _IMPORTANT: Only perform this step if your hard drive is an SSD drive_
+If, on the other hand, you can alert the operating system that it needs to wipe deleted data in the background, wipes (and deletes) can improve in performance.
 
-> _IMPORTANT: If the file `/sys/block/sda/queue/discard_granularity`  does not exist, your firmware DOES NOT SUPPORT THIS!_  Since TRIM is touchy about supported firmware, it's recommended that you choose this careful and monitor the results. The payoff is worth it ultimately, but if buggy firmware leads to a corrupted file system, well, none of us want that. Mount carefully out there!
+Caveats, not all SSDs can support this as of this writing, nor do all variety of filesystem format, and you have to be using a newer linux kernel...
 
-Is the root partition mounted as an _ext4_ file system? And check for firmware capability...
+* Am I running at least Linux kernel 3.2?: `uname -a`
+* Are my disks formatted as ext4?: `mount | grep ext4`    
+  This shows (on my laptop) that `/` (root), `/boot`, and `/home` are formatted as ext4
+* Can my SSD support this functionality?:`lsblk --discard`    
+  This shows you two things, (1) what devices are at play and (2) do they, and their partitions support TRIM. If you see 0 values under DISC-GRAN and DISC-MAX, then don't continue, your SSD does not support TRIM.    
+  On my laptop, I see...
+  - 512B for the first and 2G for the second values for all mount points listed above and swap
+  - that they are all "luks" encrypted
+  - and that there is only one SSD called device "sda". Since I know it is one device "sda" I should also see a filed called "discard_granularity" in "/sys/block/sda/queue/": `ls -l /sys/block/sda/queue/discard_granularity # Does this file exist?`
+* Some have noted that LUKS-encrypted mounts may have weakened encryption if    you enable TRIM. I honestly don't know what this means or why, so do further research if this is a concern.
 
-```
-mount |grep ext4
-ls -l /sys/block/sda/queue/discard_granularity # Does this file exist?
-```
+> _Special note: Those the swap partition may be listed for TRIM capable, do not
+> set it to take extra action here. The way swap works makes this a non-issue._
 
-If so, edit _fstab_ and add a "discards" parameter to the settings....
+Okay. Do you meet those criteria? Continue on..
+
+Read more about this topic here...
+
+* Generally: _[Opensource.com: Solid state drives in Linux: Enabling TRIM for SSDs](https://opensource.com/article/17/1/solid-state-drives-linux-enabling-trim-ssds)_
+* Better detail that also addresses LUKS encrypted drives: _[Blog: How to TRIM your encrypted SSD in Fedora 19
+](https://lukas.zapletalovi.com/2013/11/how-to-trim-your-ssd-in-fedora-19.html)_
+
+
+There are three routes you can take to enable TRIMing. (1) add "discard" to you mount settings, and/or (2) set up a cronjob to perform periodic TRIM cleanup of
+deleted files, and/or (3) turn on systemd-managed periodic TRIM cleanup. Method 1 can cause undo deletion performance loss (always wiping on every delete) so that is not recommended, instead focus on method 2 or method 3 because they will clean up deleted data periodically as a background process.
+
+**Method 1: "discard" in mount settings**
+
+Described here in order to be complete. This will tell the OS to wipe
+upon delete instead of just marking the data. Downside: There is a performance
+loss upon deletion.
+
+Edit _fstab_ and add a "discard" parameter to the settings....
 
 ```
 sudo nano /etc/fstab
@@ -685,3 +710,81 @@ Replace the line that looks like this (this is an example)...
 `UUID=2865a236-ab20-4bdf-b15b-ffdb5ae60a93 /                       ext4    defaults        1 1`    
 ...with one that looks like this...    
 `UUID=2865a236-ab20-4bdf-b15b-ffdb5ae60a93 /                       ext4    defaults,discard        1 1`
+
+
+**Method 2: cron job that periodically reaps data marked for deletion**
+
+For performance reasons, this is the recommended method UNLESS you have the TRIM systemd service available to you.
+
+Do you have the systemd service available? `sudo systemctl status fstrim.timer` If your computer says "what the heck is that?" then continue on. If that service is available, you should probably use that (see Method 3).
+
+For my example, I am going to TRIM my `/` and `/home` partitions. My `/boot` partition is read-only 99.999% of the time so write/delete performance is not a consideration.
+
+Edit a new weekly cron job: `sudo nano /etc/cron.weekly/01-fstrim` as such and save...
+
+```
+#!/bin/sh
+fstrim /
+fstrim /home
+```
+
+Then make that job executable: `sudo chmod +x /etc/cron.weekly/01-fstrim`
+
+**Method 3: systemd-managed service that periodically reaps data marked for deletion**
+
+For performance reasons, this is the recommended method unless the service is simply unavailable to you. If it is not available, choose "method 2" above.
+
+Do you have the systemd service available? `sudo systemctl status fstrim.timer` If your computer says "what the heck is that?" then choose "method 2" described above.
+
+This is simple to enable...
+```
+sudo systemctl enable fstrim.timer
+sudo systemctl start fstrim.service
+```
+
+**Extra step for LUKS-encrypted partitions***
+
+Again, noted: There have been reports that enabling TRIM decreases encryption strength for LUKS encrypted mountpoints. I honestly don't know what this means or why, so do further research if this is a concern.
+
+Take a look at your block device again with `lsblk --discard`. Mine looks like this...
+
+```
+[taw@rh ~]$ lsblk --discard
+NAME                                          DISC-ALN DISC-GRAN DISC-MAX DISC-ZERO
+sda                                                  0      512B       2G         0
+├─sda2                                               0      512B       2G         0
+│ └─luks-a97ccef7-619b-4cee-8b2c-478f1f96e8e5        0      512B       2G         0
+│   ├─fedora_rh-root                                 0      512B       2G         0
+│   ├─fedora_rh-swap                                 0      512B       2G         0
+│   └─fedora_rh-home                                 0      512B       2G         0
+└─sda1                                               0      512B       2G         0
+```
+
+And let's take a look at that luks partition with `sudo cat /etc/crypttab`...
+
+```
+[taw@rh ~]$ sudo cat /etc/crypttab
+luks-a97ccef7-619b-4cee-8b2c-478f1f96e8e5 UUID=a97ccef7-619b-4cee-8b2c-478f1f96e8e5 none
+```
+
+...and `sudo cryptsetup status luks-a97ccef7-619b-4cee-8b2c-478f1f96e8e5`...
+
+```
+[taw@rh ~]$ sudo cryptsetup status luks-a97ccef7-619b-4cee-8b2c-478f1f96e8e5
+/dev/mapper/luks-a97ccef7-619b-4cee-8b2c-478f1f96e8e5 is active and is in use.
+  type:    LUKS1
+  cipher:  aes-xts-plain64
+  keysize: 512 bits
+  device:  /dev/sda2
+  offset:  4096 sectors
+  size:    999184384 sectors
+  mode:    read/write
+```
+
+You will need to add a `discard` value to that "crypttab" configuration: `sudo nano /etc/crypttab` (edit and save -- a reboot to enable)...
+
+```
+luks-a97ccef7-619b-4cee-8b2c-478f1f96e8e5 UUID=a97ccef7-619b-4cee-8b2c-478f1f96e8e5 none discard
+```
+
+All done! Good luck. Comments and feedback to <t0dd@protonmail.com>

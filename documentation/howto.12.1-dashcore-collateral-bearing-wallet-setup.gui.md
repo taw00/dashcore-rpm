@@ -365,26 +365,4 @@ And of course, donations welcome: [XyxQq4qgp9B53QWQgSqSxJb4xddhzk5Zhh](dash:XyxQ
 
 #### Turn on TRIM discards for SSD drive mounts
 
-Read about it here: _[Opensource.com: Solid state drives in Linux: Enabling TRIM for SSDs](https://opensource.com/article/17/1/solid-state-drives-linux-enabling-trim-ssds)_
-
-> _IMPORTANT: Only perform this step if your hard drive is an SSD drive_
-
-> _IMPORTANT: If the file `/sys/block/sda/queue/discard_granularity` does not exist, your firmware DOES NOT SUPPORT THIS!_ Since TRIM is touchy about supported firmware, it's recommended that you choose this careful and monitor the results. The payoff is worth it ultimately, but if buggy firmware leads to a corrupted file system, well, none of us want that. Mount carefully out there!
-
-Is the root partition mounted as an _ext4_ file system? And check for firmware capability...
-
-```
-mount |grep ext4
-ls -l /sys/block/sda/queue/discard_granularity # Does this file exist?
-```
-
-If so, edit _fstab_ and add a "discards" parameter to the settings....
-
-```
-sudo nano /etc/fstab
-```
-
-Replace the line that looks like this (this is an example)...    
-`UUID=2865a236-ab20-4bdf-b15b-ffdb5ae60a93 /                       ext4    defaults        1 1`    
-...with one that looks like this...    
-`UUID=2865a236-ab20-4bdf-b15b-ffdb5ae60a93 /                       ext4    defaults,discard        1 1`
+See "Advanced" section in the masternode howto in this documentation directory.
