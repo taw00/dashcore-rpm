@@ -52,7 +52,7 @@ echo -e " [old] !ENABLED: $(printf '%4s' $total_not_enabled_old) - $percent_not_
 echo -e " [new] !ENABLED: $(printf '%4s' $total_not_enabled_new) - $percent_not_enabled_new% (of !enabled) . $percent_not_enabled_new_of_total_new% (of total new) . $total_percent_not_enabled_new% (of total)"
 echo -e "          Total: $(printf '%4s' $total_not_enabled) - $percent_not_enabled%"
 echo
-echo -e " [old]  ENABLED: $(printf '%4s' $total_enabled_old) -  $percent_enabled_old% (of enabled) . $percent_enabled_old_of_total_old% (of total old) . $total_percent_enabled_old% (of total)"
-echo -e " [new]  ENABLED: $(printf '%4s' $total_enabled_new) -  $percent_enabled_new% (of enabled) . $percent_enabled_new_of_total_new% (of total new) . $total_percent_enabled_new% (of total)"
+echo -e " [old]  ENABLED: $(printf '%4s' $total_enabled_old) - $percent_enabled_old%  (of enabled) . $percent_enabled_old_of_total_old% (of total old) . $total_percent_enabled_old% (of total)"
+echo -e " [new]  ENABLED: $(printf '%4s' $total_enabled_new) - $percent_enabled_new%  (of enabled) . $percent_enabled_new_of_total_new% (of total new) . $total_percent_enabled_new% (of total)"
 echo -e "          Total: $(printf '%4s' $total_enabled) -  $percent_enabled%"
 rm $F
