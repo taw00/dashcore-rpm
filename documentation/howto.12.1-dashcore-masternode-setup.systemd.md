@@ -742,6 +742,10 @@ sudo systemctl enable fstrim.timer
 sudo systemctl start fstrim.service
 ```
 
+**Extra step for LVM volumes**
+
+You disk partitioning is likely managed by LVM. Edit lvm.conf and flip the bit that tells LVM to issue discards when it is used to shrink or delete volumes: `sudo nano /etc/lvm/lvm.conf` and set `issue_discards = 1`
+
 **Extra step for LUKS-encrypted partitions***
 
 Again, noted: There have been reports that enabling TRIM decreases encryption strength for LUKS encrypted mountpoints. I honestly don't know what this means or why, so do further research if this is a concern.
