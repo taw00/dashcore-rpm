@@ -748,7 +748,7 @@ You disk partitioning is likely managed by LVM. Edit lvm.conf and flip the bit t
 
 **Extra step for LUKS-encrypted partitions***
 
-Again, noted: There have been reports that enabling TRIM decreases encryption strength for LUKS encrypted mountpoints. I honestly don't know what this means or why, so do further research if this is a concern.
+Again, noted: There have been reports that enabling TRIM decreases encryption strength for LUKS-encrypted mountpoints. I honestly don't know what this means or why, so do further research if this is a concern.
 
 Take a look at your block device again with `lsblk --discard`. Mine looks like this...
 
@@ -785,10 +785,14 @@ luks-a97ccef7-619b-4cee-8b2c-478f1f96e8e5 UUID=a97ccef7-619b-4cee-8b2c-478f1f96e
   mode:    read/write
 ```
 
-You will need to add a `discard` value to that "crypttab" configuration: `sudo nano /etc/crypttab` (edit and save -- a reboot to enable)...
+You will need to add a `discard` value to that "crypttab" configuration: `sudo nano /etc/crypttab` (edit and save)...
 
 ```
 luks-a97ccef7-619b-4cee-8b2c-478f1f96e8e5 UUID=a97ccef7-619b-4cee-8b2c-478f1f96e8e5 none discard
 ```
+
+And if your root partition is LUKS-encrypted AND you set the partition to be TRIMed AND you want LVM trimming when shrinking and deleting (see lvm.conf step above), the initial RAM disk needs to be regenerated using the following command: `sudo dracut -f`
+
+You need to reboot for these changes to take effect.
 
 All done! Good luck. Comments and feedback to <t0dd@protonmail.com>
