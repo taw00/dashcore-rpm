@@ -355,14 +355,3 @@ These steps are covered in another set of documents
 
 Got a dash of feedback? *...har har...* Send it my way <t0dd@protonmail.com>    
 And of course, donations welcome: [XyxQq4qgp9B53QWQgSqSxJb4xddhzk5Zhh](dash:XyxQq4qgp9B53QWQgSqSxJb4xddhzk5Zhh)
-
----
-
----
-
-## Addendum - Advanced...
-
-
-#### Turn on TRIM discards for SSD drive mounts
-
-See "Advanced" section in the masternode howto in this documentation directory.
