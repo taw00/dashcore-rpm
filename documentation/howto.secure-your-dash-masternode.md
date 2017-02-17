@@ -1,4 +1,4 @@
-# Configure the Firewall and Fail2Ban on Masternode Server
+# Configure FirewallD and Fail2Ban on a Masternode Server
 
 ## FirewallD
 
