@@ -20,17 +20,30 @@ sudo apt install -y firewalld
 #### Configure `firewalld`
 
 ```
-# Is firewalld running?
-# Turn on and enable firewalld if not already done...
+# Is firewalld running? If not, turn it on
 sudo firewall-cmd --state
 sudo systemctl start firewalld.service
+```
+
+```
+# Enable firewalld to start upon boot
 sudo systemctl enable firewalld.service
+```
 
+```
 # Determine what the default zone is.
-# On vultr, for example, default zone is "FedoraServer" (it is the assumption for this example)
+# On vultr, for example, default zone is "FedoraServer"
 # On Ubuntu, it will often be "public", just replace "FedoraServer" with what you are using below.
+sudo firewall-cmd --get-default-zone
 sudo firewall-cmd --get-active-zone
+```
 
+Whatever zone, came up, that is the starting conditions for your configuration.
+For this example, I am going to demonstrate how to edit my default configuration
+on my Fedora Linux system: FedoraServer. You _could_ create your own zone
+definition, but for now, we will be editing the configuration that is in place.
+
+```
 # FedoraServer usually starts with ssh, dhcp6-client, and cockpit opened up
 # I want ssh. dhcpv6 should be unneccessary for a static IP host, and cockpit
 # is something used intermittently. And of course, we want the dash full
@@ -41,11 +54,12 @@ sudo firewall-cmd --permanent --remove-service dhcpv6-client
 sudo firewall-cmd --permanent --remove-service cockpit
 
 # Open up the Mastnernode port (service files provided by our RPM packages)
-sudo firewall-cmd --permanent --add-service dash-node
-#sudo firewall-cmd --permanent --add-service dash-node-testnet
+sudo firewall-cmd --permanent --add-service dashcore-node
+#sudo firewall-cmd --permanent --add-service dashcore-node-testnet
 
 # If you are running a masternode that was not installed via our RPM packages,
-# you must be explicit in your port configuration
+# you must be explicit in your port configuration - if dashcore-node can be
+# done above, just delete these lines.
 #sudo firewall-cmd --permanent --add-port=19999/tcp
 #sudo firewall-cmd --permanent --add-port=9999/tcp
 
