@@ -8,15 +8,17 @@
 
 
 # To produce a debuginfo package:
-#   1. Comment out this define
-#   2. Separate the %'s from their variable (this screws things up)
-# Otherwise, leave it uncommented
-%define debug_package %{nil}
+#   1. Comment out the debug package define
+#   2. Even commented, it causes problems, so turn it into something like
+#      this:  % define debug _ package % { n i l }
+# To squelch debuginfo package creation, uncomment the line, and then
+# reconstruct the debug package define as it should be
+#% define debug _package % { n i l }
 # https://fedoraproject.org/wiki/Changes/Harden_All_Packages
 #%define _hardened_build 0
 
 # "bump" refers to "release bump" and is a build identifier.
-%define bump 1
+%define bump 2
 
 # "bumptag" is used to indicate additional information, usually an identifier,
 # like the builder's initials, or a date, or both, or nil.
@@ -228,6 +230,9 @@ exit 0
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
+* Fri Feb 10 2017 Todd Warner <t0dd@protonmail.com> 1.0-2.taw
+- Building debuginfo RPMs as well now.
+-
 * Mon Feb 06 2017 Todd Warner <t0dd@protonmail.com> 1.0-1.taw
 - Fixed a broken file in the contribs that hosed the sentinel.conf file.
 - 
