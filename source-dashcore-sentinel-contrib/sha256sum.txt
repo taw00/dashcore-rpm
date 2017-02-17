@@ -1,1 +1,1 @@
-ed233ecd46876f4a1c1c235e11f3ef35c482ee8153bf799bb13822c17a99b312  dashcore-sentinel-contrib.tar.gz
+fa73744abbb8a1b53354ea315834fbf2958b0514b6c5bf97328803bcb4281935  dashcore-sentinel-contrib.tar.gz
