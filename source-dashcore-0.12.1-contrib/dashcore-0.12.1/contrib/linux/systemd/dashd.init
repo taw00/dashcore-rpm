@@ -14,7 +14,7 @@
 
 
 ### BEGIN INIT INFO
-# Provides: dash
+# Provides: dashd
 # Required-Start: $local_fs $network $remote_fs $time
 # Required-Stop: $local_fs $network $remote_fs $time
 # Should-Start:
@@ -48,6 +48,7 @@ start() {
 	echo -n $"Starting Dash Core Daemon $prog: "
 	daemon --user dashcore $exec -daemon -conf=$CONFIG_FILE -datadir=$DATA_DIR -disablewallet -pid=$PID_FILE $OPTIONS &>/dev/null
 	retval=$?
+	/etc/sysconfig/dashd-scripts/dashd.send-email.sh start $EMAIL_FROM $EMAIL_TO $MASTERNODE_ALIAS &>/dev/null
 	echo
 	[ $retval -eq 0 ] && touch $lockfile
 	return $retval
@@ -57,7 +58,8 @@ stop() {
 	echo -n $"Stopping Dash Core Daemon $prog: "
 	killproc ${prog}
 	retval=$?
-	/usr/bin/sleep 30
+	/usr/bin/sleep $STOP_SLEEP_TIME
+	/etc/sysconfig/dashd-scripts/dashd.send-email.sh stop $EMAIL_FROM $EMAIL_TO $MASTERNODE_ALIAS &>/dev/null
 	echo
 	[ $retval -eq 0 ] && rm -f $lockfile
 	return $retval

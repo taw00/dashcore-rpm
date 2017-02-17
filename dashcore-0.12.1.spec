@@ -11,7 +11,8 @@
 # Specialized...
 # * dashcore-libs
 # * dashcore-devel
-# 
+# * dashcore-debuginfo
+#
 # Note about edits within the spec: Any comments beginning with #t0dd are
 # associated to future work or experimental elements of this spec file and
 # build.
@@ -20,16 +21,17 @@
 
 %global selinux_variants mls strict targeted
 
-# To produce a dashcore-debuginfo package:
-#   1. Comment out this define
-#   2. Separate the %'s from their variable (this screws things up)
-# Otherwise, leave it uncommented
-%define debug_package %{nil}
+#   1. Comment out the debug package define
+#   2. Even commented, it causes problems, so turn it into something like
+#      this:  % define debug _ package % { n i l }
+# To squelch debuginfo package creation, uncomment the line, and then
+# reconstruct the debug package define as it should be
+#% define debug _package % { n i l }
 # https://fedoraproject.org/wiki/Changes/Harden_All_Packages
 #%define _hardened_build 0
 
 # "bump" refers to "release bump" and is a build identifier.
-%define bump 0
+%define bump 2
 
 # "bumptag" is used to indicate additional information, usually an identifier,
 # like the builder's initials, or a date, or both, or nil.
@@ -61,8 +63,7 @@ URL: http://dash.org/
 Source0: %{archivebasename}.tar.gz
 
 # Source archive of contributions not yet in main upstream package.
-# dashd.tmpfiles, dash.sysconfig, dash.service, dash.init(never used?), etc.
-# Icons, manpages, desktop stuff, etc.
+# Icons, manpages, desktop stuff, systemd stuff, etc.
 # includes some future SELinux policy stuff as well (.te, .if, .fc)
 Source1: %{archivebasename}-contrib.tar.gz
 
@@ -383,6 +384,8 @@ install -D -m640 ./contrib/linux/systemd/etc-dashcore_dash.conf %{buildroot}%{_s
 
 # Install system services files
 install -D -m600 -p ./contrib/linux/systemd/etc-sysconfig_dashd %{buildroot}%{_sysconfdir}/sysconfig/dashd
+install -d %{buildroot}%{_sysconfdir}/sysconfig/sysconfig/dashd-scripts
+install -D -m755 -p ./contrib/linux/systemd/etc-sysconfig-dashd-scripts_dashd.send-email.sh %{buildroot}%{_sysconfdir}/sysconfig/sysconfig/dashd-scripts/dashd.send-email.sh
 install -D -m644 -p ./contrib/linux/systemd/usr-lib-systemd-system_dashd.service %{buildroot}%{_unitdir}/dashd.service
 install -D -m644 -p ./contrib/linux/systemd/usr-lib-tmpfiles.d_dashcore.conf %{buildroot}%{_tmpfilesdir}/dashcore.conf
 # ...logrotate file rules
@@ -483,7 +486,7 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 %files client
 %defattr(-,root,root,-)
 %license COPYING
-#t0dd %doc README.md README.server.redhat 
+#t0dd %doc README.md README.server.redhat
 %doc doc/assets-attribution.md doc/multiwallet-qt.md doc/release-notes.md doc/tor.md doc/keepass.md contrib/extras/dash.conf.example
 %{_bindir}/dash-qt
 %{_datadir}/applications/dash-qt.desktop
@@ -504,12 +507,14 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 %files server
 %defattr(-,root,root,-)
 %license COPYING
-#t0dd %doc README.md README.server.redhat 
+#t0dd %doc README.md README.server.redhat
 %doc doc/dnsseed-policy.md doc/release-notes.md doc/tor.md doc/multiwallet-qt.md doc/guide-startmany.md doc/reduce-traffic.md doc/zmq.md doc/dash.conf.example
 %dir %attr(750,dashcore,dashcore) %{_sharedstatedir}/dashcore
 %dir %attr(750,dashcore,dashcore) %{_sharedstatedir}/dashcore/testnet3
 %dir %attr(750,dashcore,dashcore) %{_sysconfdir}/dashcore
+%dir %attr(755,dashcore,dashcore) %{_sysconfdir}/sysconfig/dashd-scripts
 %config(noreplace) %attr(600,root,root) %{_sysconfdir}/sysconfig/dashd
+%attr(755,root,root) %{_sysconfdir}/sysconfig/dashd-scripts/dashd.send-email.sh
 %config(noreplace) %attr(640,dashcore,dashcore) %{_sysconfdir}/dashcore/dash.conf
 # Log files - they don't initially exist, but we still own them
 %ghost %{_sharedstatedir}/dashcore/debug.log
@@ -559,7 +564,7 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 
 
 # Dash Core Information
-# 
+#
 # Dash...
 #   * Project website: https://www.dash.org
 #
@@ -583,6 +588,14 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
+* Fri Feb 17 2017 Todd Warner <t0dd@protonmail.com> 0.12.1.0-2.taw
+- dashd.service can be configured to send email upon start, stop,
+- restart
+-
+* Fri Feb 10 2017 Todd Warner <t0dd@protonmail.com> 0.12.1.0-1.taw
+- With Debuginfo Package built -- there have been segfaults. This
+- should help troubleshoot.
+-
 * Sun Feb 05 2017 Todd Warner <t0dd@protonmail.com> 0.12.1.0-0.taw
 - v12.1 GA
 -

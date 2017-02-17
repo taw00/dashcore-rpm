@@ -1,7 +1,30 @@
-# Provide overriding options to the dash core daemon here, for example
-# OPTIONS="-testnet -disable-wallet"
-# Note1: These options will override dash.conf settings.
-# Note2: You may have to reload systemd for changes to take effect: systemctl daemon-reload 
+# Configuration settings leveraged by the systemd-managed dashd.service
+
+# EMAIL_FROM, EMAIL_TO, MASTERNODE_ALIAS
+# Send email upon start, stop, and restart of the dashd.service
+#
+# If these values are set, emails will be sent "from" EMAIL_FROM, "to" EMAIL_TO,
+# and with MASTERNODE_ALIAS as a subject line differentiator.
+# Therefore, edit these settings as appropriate for your circumstance.
+#
+# NOTE:
+# To function without error, your system MUST be configured to be able to send
+# email successfully using these settings. Configuring your system to be able
+# to email is left as an exercise to the reader of this comment. You can test
+# if your system is appropriately configured with a simple...
+#
+# echo "body" | mail -s "test subject" -r your_from@example.com your_to@example.com
+#
+# You may have to issue an systemctl daemon-reload for these changes to take
+# effect.
+
+EMAIL_TO=""
+EMAIL_FROM=""
+MASTERNODE_ALIAS="MASTERNODE"
+
+# ---- settings below this line are rarely manually edited ----------
+
+# OPTIONS will override dash.conf settings
 OPTIONS=""
 
 # System service defaults.
@@ -10,4 +33,6 @@ CONFIG_FILE="/etc/dashcore/dash.conf"
 DATA_DIR="/var/lib/dashcore"
 PID_FILE="/run/dashd/dashd.pid"
 # How long to sleep in seconds after a stop, regardless of pid status
-STOP_SLEEP_TIME=20
+STOP_SLEEP_TIME=30
+
+
