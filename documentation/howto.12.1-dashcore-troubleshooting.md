@@ -40,7 +40,7 @@ watch -n10 "sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf getinfo"
 
 ```
 # Masternode sync status
-watch -n10 "sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf mnsync status"
+watch -n10 "sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf -datadir=/var/lib/dashcore mnsync status"
 ```
 
 ```
@@ -49,7 +49,13 @@ watch -n10 "sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf mnsync statu
 # WARNING: It's better to verify this with a fully-synced wallet or other node.
 #   If you masternode is not fully synced and not communicating correctly, it
 #   will likely give you false information.
-sudo -u dashcore watch -n10 "dash-cli -conf=/etc/dashcore/dash.conf masternode list full | grep <MASTERNODE_IP_ADDRESS>"
+sudo -u dashcore watch -n10 "dash-cli -conf=/etc/dashcore/dash.conf -datadir=/var/lib/dashcore masternode list full | grep <MASTERNODE_IP_ADDRESS>"
+```
+
+Finally, watch the system journal. If `dashd` crashes, this is where you will really notice.
+
+```
+sudo journalctl -u dashd.service -f
 ```
 
 
