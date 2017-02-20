@@ -25,14 +25,17 @@ MASTERNODE_ALIAS="MASTERNODE"
 # ---- settings below this line are rarely manually edited ----------
 
 # OPTIONS will override dash.conf settings
-OPTIONS=""
+# DEPRECATED / not used anymore -- edit your dash.conf file or dashd.service
+#OPTIONS=""
 
 # System service defaults.
 # Don't change these unless you know what you're doing.
 CONFIG_FILE="/etc/dashcore/dash.conf"
 DATA_DIR="/var/lib/dashcore"
 PID_FILE="/run/dashd/dashd.pid"
-# How long to sleep in seconds after a stop, regardless of pid status
+
+# How long to sleep in seconds after a start and stop, regardless of pid status
+START_SLEEP_TIME=0
 STOP_SLEEP_TIME=30
 
 

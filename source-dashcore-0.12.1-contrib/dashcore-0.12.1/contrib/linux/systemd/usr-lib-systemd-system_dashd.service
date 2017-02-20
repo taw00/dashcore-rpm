@@ -10,12 +10,17 @@ After=syslog.target network.target
 
 [Service]
 Type=forking
+PIDFile=${PID_FILE}
 User=dashcore
 Group=dashcore
 EnvironmentFile=/etc/sysconfig/dashd
 
-ExecStart=/usr/sbin/dashd -daemon -conf=${CONFIG_FILE} -datadir=${DATA_DIR} -disablewallet -pid=${PID_FILE} $OPTIONS
-# Send email at start
+ExecStart=/usr/sbin/dashd -daemon -disablewallet -conf=${CONFIG_FILE} -datadir=${DATA_DIR} -pid=${PID_FILE}
+#ExecStart=/usr/sbin/dashd -daemon -disablewallet -conf=${CONFIG_FILE} -datadir=${DATA_DIR} -pid=${PID_FILE} $OPTIONS # OPTIONS IS DEPRECATED
+# Experimental: sleep then mnsync reset
+#ExecStartPost=/usr/bin/sleep $START_SLEEP_TIME
+#ExecStartPost=/usr/bin/dash-cli -conf=${CONFIG_FILE} -datadir=${DATA_DIR} mnsync reset
+# Send email after start
 ExecStartPost=-/etc/sysconfig/dashd-scripts/dashd.send-email.sh start $EMAIL_FROM $EMAIL_TO $MASTERNODE_ALIAS
 
 # If ExecStop is not set, systemd sends a SIGTERM, which is "okay", just not ideal
@@ -29,7 +34,7 @@ ExecStopPost=-/etc/sysconfig/dashd-scripts/dashd.send-email.sh stop $EMAIL_FROM 
 Restart=on-failure
 # Time that systemd gives a process to stop / start before shooting it in the head
 TimeoutStopSec=90
-TimeoutStartSec=45
+TimeoutStartSec=90
 # If something triggers an auto-restart, let's wait a bit before going ahead
 RestartSec=45
 # "Burst" a number of restarts in quick succession? Okay, then we take a

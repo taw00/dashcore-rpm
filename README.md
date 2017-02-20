@@ -1,31 +1,35 @@
+# Dash RPM Packages<br />for Fedora, CentOS, and Red Hat Enterprise Linux<br />_...wallet, node, and masternode_
+
 **Note1: If you are looking for the "blessed" binaries** (tested and runnable
 versions) built from the the source RPM packages described below, you can find
 information about them here: [Dash Core Binaries (pre-built) for Fedora Linux,
 CentOS, and
 RHEL](https://github.com/taw00/dashcore-rpm/blob/master/README-dashcore-binaries.md).
-Please remember to backup your Dash wallet before installing another version.
+Please remember to shut down and backup your Dash wallet before installing
+another version.
 
 **Note2: If you are looking for instruction about how to set up a dash
-masternode** with these packages, please refer to the "Overview" document in
+masternode** with these packages, please refer to the "README.md" document in
 the ["documentation"
 folder](https://github.com/taw00/dashcore-rpm/tree/master/documentation) of
 this git repository.
 
-# Dash Core Source RPM Packages
+**Stable source packages: 0.12.1**    
+dashcore - latest version is: 0.12.1.1-0.taw, aka v0.12.1.1-ge9e5a24
+dashcore-sentinel - latest version: 1.0-2.taw
 
-**Stable sources: 0.12.1**    
-dashcore - latest version is: 0.12.1.0-0.taw, aka vv0.12.1.0-g56971f8
-dashcore-sentinel - latest version: 1.0-1.taw
-
+* Fedora Linux 26 (f26 is still considered unstable):
+  - `dashcore-0.12.1.1-0.taw.fc25.src.rpm`
+  - `dashcore-sentinel-1.0-2.taw.fc25.src.rpm`
 * Fedora Linux 25:
-  - `dashcore-0.12.1.0-0.taw.fc25.src.rpm`
-  - `dashcore-sentinel-1.0-1.taw.fc25.src.rpm`
+  - `dashcore-0.12.1.1-0.taw.fc25.src.rpm`
+  - `dashcore-sentinel-1.0-2.taw.fc25.src.rpm`
 * Fedora Linux 24:
-  - `dashcore-0.12.1.0-0.taw.fc24.src.rpm`
-  - `dashcore-sentinel-1.0-1.taw.fc24.src.rpm`
+  - `dashcore-0.12.1.1-0.taw.fc24.src.rpm`
+  - `dashcore-sentinel-1.0-2.taw.fc24.src.rpm`
 * CentOS and RHEL 7:
-  - `dashcore-0.12.1.0-0.taw.el7.centos.src.rpm`
-  - `dashcore-sentinel-1.0-1.taw.el7.centos.src.rpm`
+  - `dashcore-0.12.1.1-0.taw.el7.centos.src.rpm`
+  - `dashcore-sentinel-1.0-2.taw.el7.centos.src.rpm`
 
 Sourced from:
 
@@ -35,7 +39,7 @@ Sourced from:
 
 
 
-**Deprecated sources: 0.12.0.58**    
+**Deprecated source packages: 0.12.0.58**    
 *Don't use these packages.*    
 Version and git commit id: v0.12.0.58-g88f3370
 
@@ -61,25 +65,38 @@ Dash on github can be found here: https://github.com/dashpay
 
 ----
 
-**This repository houses source RPMs for the latest stable (and experimental)
-releases of Dash.** Using these SRPMs one should be able to build binary RPMs
-for your specific linux variety and architecture.
+**This repository houses source (and links to binary) RPM packages for the
+latest stable (and experimental) releases of Dash.** Using these SRPMs one
+should be able to build binary RPMs for your specific linux variety and
+architecture.
 
 A source RPM (SRPM or .src.rpm) nicely packages up the source code of a
 program/project and contains all the instruction needed to build (compile and
-package) corresponding binary RPMs. In the case of Dash, one source RPM will
-compile the code and generate all the binary runnable RPMs associated to the
-Dash project.
+package) corresponding binary RPM packages. To include build requirements. In
+the case of Dash, one source RPM will compile the code and generate all the
+binary runnable RPM packages associated to the Dash project.
 
 Important notes:
 
-0. We categorize the various versions into **stable**, **deprecated**, and
-   **unstable**.
-0. Use only **stable** versions on the mainnet (`testnet=0`).
-0. **Deprecated** versions will simply not function. They are provided for
-   archival purposes.
-0. **Unstable** versions are test versions and great to play with on the
-   testnet (`testnet=1`). Please don't use them on the mainnet.
+* In this github repo, we bucket the various versions into **stable**,
+  **deprecated**, **unstable**, and **archive**.
+  - "Stable" packages are in the root of the github repo and "archive"
+  - "Deprecated" packages have their own folder in the "archive" folder.
+  - "Unstable" packages in an "unstable" folder.    
+    ...the tree looks like this...
+
+dashcore-rpm (and the stable packages)
+├── archive
+│   └── deprecated
+└── unstable
+
+* Only use **stable** versions on the mainnet (`testnet=0`).
+  - **Unstable** versions are test versions and great to play with on the
+    testnet (`testnet=1`). Please don't use them on the mainnet.
+  - **Deprecated** versions will simply not function anymore on the main or
+    testnet. They are provided for archival purposes.
+
+
 
 ----
 

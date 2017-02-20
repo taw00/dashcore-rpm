@@ -1,4 +1,4 @@
-# Dash Core Binary (pre-built) RPM Packages<br />for Fedora, CentOS, and Red Hat Enterprise Linux<br />_...wallet, node, and masternode_
+# Dash binary (pre-built) RPM packages<br />for Fedora, CentOS, and Red Hat Enterprise Linux<br />_...wallet, node, and masternode_
 
 This document describes what is available for Fedora, CentOS, and Red Hat
 Enterprise Linux (RHEL) users seeking natively compiled Dash Core software. This
@@ -12,7 +12,7 @@ their system.
 > What are these Linuxes? [Fedora](https://getfedora.org/), [CentOS](https://www.centos.org/), [RHEL](https://www.redhat.com/en/technologies/linux-platforms/enterprise-linux)<br />
 > ...<br />
 > If you know your way around yum, dnf, and Dash Core, I could reduce this document to two lines...<br />
-> **dashcore-fedora.repo:** <https://github.com/taw00/dashcore-rpm/blob/master/dashcore-feodra.repo><br />
+> **dashcore-fedora.repo:** <https://github.com/taw00/dashcore-rpm/blob/master/dashcore-fedora.repo><br />
 > **dashcore-centos.repo:** <https://github.com/taw00/dashcore-rpm/blob/master/dashcore-centos.repo><br />
 > Otherwise, keep reading.
 
@@ -66,7 +66,7 @@ be found here: <https://github.com/taw00/dashcore-rpm>
   **Other Masternode Documentation:** <https://dashpay.atlassian.net/wiki/display/DOC/Masternode>
 
 
-## Configuring your system to have access to the Dash Core RPM package repositories
+## Configuring your system to have access to the Dash RPM package repositories
 
 We are going to do this at the command line from an account that has `sudo`ers
 access. Log into a terminal and do this...

@@ -1,5 +1,5 @@
 # Dash Core (https://dash.org) for CentOS (and Red Hat Enterprise Linux)
-# Stable, Deprecated, Unstable - binaries and sources
+# Stable, Unstable, Deprecated - binaries and sources
 #
 # YUM repository configuration
 # Drop this, as root, into your /etc/yum.repos.d/ directory
@@ -12,10 +12,6 @@
 # To update already existing software (check dash.org to seee if there special are upgrade steps that need to be taken)
 #   sudo dnf upgrade
 #   
-# To switch from one major version of the software to the next (example, 12.0-stable to 12.1-unstable)...
-#   sudo dnf config-manager --set-disabled dashcore-stable
-#   sudo dnf config-manager --set-enabled dashcore-unstable
-#
 # Note: This file is a convenience file that categorizes the releases nicely.
 # If you are familiar with Fedora COPR, you can follow the direct enablement
 # procedures here instead if you like:
@@ -35,20 +31,6 @@ repo_gpgcheck=0
 # Check for new packages is typically 2d (2 days)
 metadata_expire=1d
 enabled=1
-enabled_metadata=1
-
-[dashcore-deprecated]
-name=Dash Core 12.0 - deprecated - epel-$releasever-$basearch
-# Note: SRPMs (*.src.rpm files) are mingled with the binaries. It's just how Copr does it.
-baseurl=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.0/epel-$releasever-$basearch/
-type=rpm-md
-skip_if_unavailable=True
-gpgcheck=1
-gpgkey=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.0/pubkey.gpg
-repo_gpgcheck=0
-# Check for new packages is typically 2d (2 days)
-metadata_expire=1d
-enabled=0
 enabled_metadata=1
 
 [dashcore-unstable]
@@ -72,3 +54,20 @@ gpgcheck=1
 gpgkey=https://keybase.io/toddwarner/key.asc
 skip_if_unavailable=True
 enabled=0
+
+
+[dashcore-deprecated]
+name=Dash Core 12.0 - deprecated - epel-$releasever-$basearch
+# Note: SRPMs (*.src.rpm files) are mingled with the binaries. It's just how Copr does it.
+baseurl=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.0/epel-$releasever-$basearch/
+type=rpm-md
+skip_if_unavailable=True
+gpgcheck=1
+gpgkey=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.0/pubkey.gpg
+repo_gpgcheck=0
+# Check for new packages is typically 2d (2 days)
+metadata_expire=1d
+enabled=0
+enabled_metadata=1
+
+
