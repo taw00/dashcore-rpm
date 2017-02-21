@@ -23,16 +23,16 @@ DATE_LOG=$(/usr/bin/date --utc +"%b %d %T UTC")
 
 start() {
   if [[ ! -z $EMAIL_FROM && ! -z $EMAIL_TO && ! -z $MASTERNODE_ALIAS ]] ; then
-    /usr/bin/echo "Sending systemd-managed dashd start email- $DATE_LOG"
-    /usr/bin/echo "Notification: systemd-managed dashd start" | /usr/bin/mail -S sendwait -s "[$MASTERNODE_ALIAS] dashd.service started - $DATE_LOG" -r $EMAIL_FROM $EMAIL_TO >> /dev/null 2>&1
+    /usr/bin/echo "[$MASTERNODE_ALIAS] START notification: Sending systemd-managed email- $DATE_LOG"
+    /usr/bin/echo "[$MASTERNODE_ALIAS] START notification: systemd-managed dashd start" | /usr/bin/mail -S sendwait -s "[$MASTERNODE_ALIAS] dashd.service started - $DATE_LOG" -r $EMAIL_FROM $EMAIL_TO >> /dev/null 2>&1
   fi
 }
 
 
 stop() {
   if [[ ! -z $EMAIL_FROM && ! -z $EMAIL_TO && ! -z $MASTERNODE_ALIAS ]] ; then
-    /usr/bin/echo "Sending systemd-managed dashd stop email- $DATE_LOG"
-    /usr/bin/echo "Notification: systemd-managed dashd stop" | /usr/bin/mail -S sendwait -s "[$MASTERNODE_ALIAS] dashd.service stopped - $DATE_LOG" -r $EMAIL_FROM $EMAIL_TO >> /dev/null 2>&1
+    /usr/bin/echo "[$MASTERNODE_ALIAS] STOP notification: Sending systemd-managed email- $DATE_LOG"
+    /usr/bin/echo "[$MASTERNODE_ALIAS] STOP notification: systemd-managed dashd stop" | /usr/bin/mail -S sendwait -s "[$MASTERNODE_ALIAS] dashd.service stopped - $DATE_LOG" -r $EMAIL_FROM $EMAIL_TO >> /dev/null 2>&1
   fi
 }
 
