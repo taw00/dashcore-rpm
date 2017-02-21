@@ -85,10 +85,12 @@ Important notes:
   - "Unstable" packages in an "unstable" folder.    
     ...the tree looks like this...
 
+```
 dashcore-rpm (and the stable packages)
 ├── archive
 │   └── deprecated
 └── unstable
+```
 
 * Only use **stable** versions on the mainnet (`testnet=0`).
   - **Unstable** versions are test versions and great to play with on the
