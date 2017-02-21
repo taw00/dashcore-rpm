@@ -31,7 +31,7 @@
 #%define _hardened_build 0
 
 # "bump" refers to "release bump" and is a build identifier.
-%define bump 2
+%define bump 1
 
 # "bumptag" is used to indicate additional information, usually an identifier,
 # like the builder's initials, or a date, or both, or nil.
@@ -40,7 +40,7 @@
 
 %define _name dashcore
 %define _version_major 0.12.1
-%define _version_minor 0
+%define _version_minor 1
 %define _release %{bump}.%{bumptag}
 
 Name: %{_name}
@@ -384,10 +384,10 @@ install -D -m640 ./contrib/linux/systemd/etc-dashcore_dash.conf %{buildroot}%{_s
 
 # Install system services files
 install -D -m600 -p ./contrib/linux/systemd/etc-sysconfig_dashd %{buildroot}%{_sysconfdir}/sysconfig/dashd
-install -d %{buildroot}%{_sysconfdir}/sysconfig/sysconfig/dashd-scripts
-install -D -m755 -p ./contrib/linux/systemd/etc-sysconfig-dashd-scripts_dashd.send-email.sh %{buildroot}%{_sysconfdir}/sysconfig/sysconfig/dashd-scripts/dashd.send-email.sh
+install -d %{buildroot}%{_sysconfdir}/sysconfig/dashd-scripts
+install -D -m755 -p ./contrib/linux/systemd/etc-sysconfig-dashd-scripts_dashd.send-email.sh %{buildroot}%{_sysconfdir}/sysconfig/dashd-scripts/dashd.send-email.sh
 install -D -m644 -p ./contrib/linux/systemd/usr-lib-systemd-system_dashd.service %{buildroot}%{_unitdir}/dashd.service
-install -D -m644 -p ./contrib/linux/systemd/usr-lib-tmpfiles.d_dashcore.conf %{buildroot}%{_tmpfilesdir}/dashcore.conf
+install -D -m644 -p ./contrib/linux/systemd/usr-lib-tmpfiles.d_dashd.conf %{buildroot}%{_tmpfilesdir}/dashd.conf
 # ...logrotate file rules
 install -D -m644 -p ./contrib/linux/logrotate/etc-logrotate.d_dashcore %{buildroot}/etc/logrotate.d/dashcore
 # ...ghosting a log file - we have to own the log file
@@ -525,7 +525,7 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 %{_prefix}/lib/firewalld/services/dashcore-node-testnet.xml
 %doc SELinux/*
 %{_sbindir}/dashd
-%{_tmpfilesdir}/dashcore.conf
+%{_tmpfilesdir}/dashd.conf
 %{_mandir}/man1/dashd.1.gz
 %{_mandir}/man5/dash.conf.5.gz
 %{_mandir}/man5/masternode.conf.5.gz
@@ -588,6 +588,20 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
+* Mon Feb 20 2017 Todd Warner <t0dd@protonmail.com> 0.12.1.1-1.taw
+- Still massaging systemd service and configuration settings.
+- Boosting startup timeout window significantly to avoid shooting ourselves
+- in the foot too quickly. Also PIDFile= is not necessary.
+- Reduced default maxconnections to 8 since we have so many masternodes.
+- Fixed a systemd-managed tmpfile perms issue.
+-
+* Sun Feb 19 2017 Todd Warner <t0dd@protonmail.com> 0.12.1.1-0.taw
+- Build 0.12.1.1  (commit ID e9e5a24)
+- Annoucement: https://github.com/dashpay/dash/releases/tag/v0.12.1.1
+- Stability improvements. Governance object sync time improvements.
+- systemd service file and configuration tweaks.
+- lots of other bug fixes
+-
 * Fri Feb 17 2017 Todd Warner <t0dd@protonmail.com> 0.12.1.0-2.taw
 - dashd.service can be configured to send email upon start, stop,
 - restart
@@ -598,4 +612,5 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 -
 * Sun Feb 05 2017 Todd Warner <t0dd@protonmail.com> 0.12.1.0-0.taw
 - v12.1 GA
+- Annoucement: https://github.com/dashpay/dash/releases/tag/v0.12.1.0
 -

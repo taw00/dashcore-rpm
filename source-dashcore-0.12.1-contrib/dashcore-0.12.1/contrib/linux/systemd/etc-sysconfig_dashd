@@ -18,24 +18,32 @@
 # You may have to issue an systemctl daemon-reload for these changes to take
 # effect.
 
-EMAIL_TO=""
 EMAIL_FROM=""
+EMAIL_TO=""
 MASTERNODE_ALIAS="MASTERNODE"
 
-# ---- settings below this line are rarely manually edited ----------
 
-# OPTIONS will override dash.conf settings
-# DEPRECATED / not used anymore -- edit your dash.conf file or dashd.service
-#OPTIONS=""
+# ---- settings below this line are rarely manually edited ----------
 
 # System service defaults.
 # Don't change these unless you know what you're doing.
 CONFIG_FILE="/etc/dashcore/dash.conf"
 DATA_DIR="/var/lib/dashcore"
-PID_FILE="/run/dashd/dashd.pid"
 
-# How long to sleep in seconds after a start and stop, regardless of pid status
+# How long to sleep in seconds after a start / stop, regardless of pid status
 START_SLEEP_TIME=0
 STOP_SLEEP_TIME=30
+
+
+# ---- Variables no longer used or deprecated ---------------------------------
+# OPTIONS will override dash.conf settings
+# not used anymore -- edit your dash.conf file instead
+#OPTIONS=""
+
+# PID_FILE configuration not used anymore because you can't set PIDFile in the
+# dashd.service with an environment variable. So, if you configured multiple
+# systemd managed services, you need to copy dashd.service and edit the pid
+# file setting.
+#PID_FILE="/run/dashd/dashd.pid"
 
 
