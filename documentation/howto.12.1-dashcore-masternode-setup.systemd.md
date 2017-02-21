@@ -293,7 +293,7 @@ daemon=1
 # Listening mode, enabled by default except when 'connect' is being used
 listen=1
 logtimestamps=1
-maxconnections=256
+maxconnections=8
 
 # Remote Procedure Call access configuration...
 # server=1 tells Dash-QT and dashd to accept JSON-RPC commands
