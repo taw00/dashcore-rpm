@@ -1,10 +1,22 @@
 # Configure FirewallD and Fail2Ban on a Masternode Server
 
+Whenever you expose a server to the wilds of the internet, it becomes vulnerable to attack.
+
+This document will get you started on configuring some basic firewall rules to help mitigate
+against some of the more obvious problems, like brute-force DOS and trimming down the attack
+surface by only having the minimal ports open.
+
+We'll examine FirewallD and Fails2ban. FirewallD manages communication coming and going from
+server. Fails2ban looks for oddities in how folks are attempting to access and adjusts firewall
+rules on the fly to squelch misbehavior.
+
+---
+
 ## FirewallD
 
-*Note: Firewall rules can be a complicated topic. These are bare bones
-git-er-done instructions. You may want to investigate further refinement. It
-will get you started though.*
+_Note: Firewall rules can be a complicated topic. These are bare bones
+git-er-done instructions. You may want to investigate further refinement,
+though this will get you well on your way to a better protected system._
 
 #### Install `firewalld`
 
@@ -17,60 +29,123 @@ sudo yum install -y firewalld # Probably already installed
 sudo apt install -y firewalld
 ```
 
+#### Mask `iptables`
+
+`iptables` and `firewalld` don't mix. Make sure they don't &mdash; "mask" `iptables`
+(assuming it is installed)...
+
+```
+sudo systemctl disable iptables.service
+sudo systemctl mask iptables.service
+```
+
+Note. If you end up ditching using `firewalld` and want to go back to
+`iptables`...
+
+```
+sudo systemctl disable firewalld.service
+sudo systemctl unmask iptables.service
+sudo systemctl mask firewalld.service
+```
+
+I leave it as an exercise to the reader as to how to enable and work with
+`iptables`.
+
 #### Configure `firewalld`
 
 ```
-# Is firewalld running? If not, turn it on
+# Is firewalld running? If not, turn it on.
 sudo firewall-cmd --state
 sudo systemctl start firewalld.service
 ```
 
 ```
-# Enable firewalld to start upon boot
+# Enable firewalld to start upon boot.
 sudo systemctl enable firewalld.service
 ```
 
 ```
 # Determine what the default zone is.
-# On vultr, for example, default zone is "FedoraServer"
-# On Ubuntu, it will often be "public", just replace "FedoraServer" with what you are using below.
 sudo firewall-cmd --get-default-zone
 sudo firewall-cmd --get-active-zone
 ```
 
-Whatever zone, came up, that is the starting conditions for your configuration.
-For this example, I am going to demonstrate how to edit my default configuration
-on my Fedora Linux system: FedoraServer. You _could_ create your own zone
-definition, but for now, we will be editing the configuration that is in place.
+```
+# Take a look at the configuration as it stands now.
+sudo firewall-cmd --list-all
+```
+
+Whatever that default zone is, that is the starting conditions for your
+configuration. For this example, I am going to demonstrate how to edit my
+default configuration on my Fedora Linux system: FedoraServer. You _could_
+create your own zone definition, but for now, we will be editing the
+configuration that is in place.
+
+FedoraServer usually starts with ssh, dhcp6-client, and cockpit opened up by
+default.  I want ssh. But dhcpv6 should probably be unneccessary, and cockpit
+is something only used intermittently. To be explicit, I am going to add ssh
+(though probably already an added service) and removing dhcpv6 and cockpit. 
 
 ```
-# FedoraServer usually starts with ssh, dhcp6-client, and cockpit opened up
-# I want ssh. dhcpv6 should be unneccessary for a static IP host, and cockpit
-# is something used intermittently. And of course, we want the dash full
-# node/masternode ports available.
+# Add and remove base services.
 sudo firewall-cmd --permanent --add-service ssh
 sudo firewall-cmd --permanent --remove-service dhcpv6-client
 #sudo firewall-cmd --permanent --add-service cockpit
 sudo firewall-cmd --permanent --remove-service cockpit
+```
 
-# Open up the Mastnernode port (service files provided by our RPM packages)
+Of course, Dash services are not enabled by default. If you installed Dash via
+our RPM packages (specifically `dashcore-server`), we included the service
+definitions for FirewallD. Let's allow that traffic.
+
+```
+# Open up the Mastnernode port.
 sudo firewall-cmd --permanent --add-service dashcore-node
 #sudo firewall-cmd --permanent --add-service dashcore-node-testnet
+```
 
-# If you are running a masternode that was not installed via our RPM packages,
-# you must be explicit in your port configuration - if dashcore-node can be
-# done above, just delete these lines.
+But if you are running a masternode that was not installed via our RPM (DNF)
+packages, you must be explicit in your port configuration. I.e., you configure
+either as done above or with this method.
+
+```
+# Open up the Mastnernode port for nodes not installed via our packaging
+sudo firewall-cmd --permanent --add-port=9999/tcp
 #sudo firewall-cmd --permanent --add-port=19999/tcp
-#sudo firewall-cmd --permanent --add-port=9999/tcp
+```
 
-# Rate limit incoming ssh and cockpit (if configured) traffic to 10 requests per minute
+You can see what other services are available with: `firewall-cmd get-services`
+
+You can look through one of the built in service files to determine exactly what
+that service is all about: Browse directory `/usr/lib/firewalld/services`
+
+...
+
+Let's rate limit traffic to those ports to reduce abuse. SSH and cockpit, if
+those services were added really need to be rate limited. You would probably
+want to rate limit 80 and 443, for example, if this were a webserver (but using
+more liberal values). Masternodes _probably_ don't need to be rate limited
+since they are filtered at the protocol level, but that is something to
+consider in the future.
+
+_Note: It does not hurt to leave in the cockpit rate limiting. If you turn on
+cockpit in the future, the rule will be already enabled._
+
+```
+# Rate limit incoming ssh and cockpit traffic to 10 requests per minute
 sudo firewall-cmd --permanent --add-rich-rule='rule service name=ssh limit value=10/m accept'
 sudo firewall-cmd --permanent --add-rich-rule='rule service name=cockpit limit value=10/m accept'
-# Rate limit incoming dash node (and masternode) traffic to 10 requests per second
+# Rate limit incoming dash node (and masternode) traffic to 60 requests per minute
 # TODO: Need to find a good setting for this yet. For now... keep it unset.
-#sudo firewall-cmd --permanent --add-rich-rule='rule service name=dashcore-node limit value=10/s accept'
-#sudo firewall-cmd --permanent --add-rich-rule='rule service name=dashcore-node-testnet limit value=10/s accept'
+#sudo firewall-cmd --permanent --add-rich-rule='rule service name=dashcore-node limit value=60/m accept'
+#sudo firewall-cmd --permanent --add-rich-rule='rule service name=dashcore-node-testnet limit value=60/m accept'
+```
 
+We're done with the configuration! That --permanent switch in those commands
+saved the changed configuration, but it didn't enable them yet. We need to do a
+reload for that to happen.
+
+```
 # did it take?
 sudo firewall-cmd --reload
 sudo firewall-cmd --state
@@ -86,7 +161,7 @@ sudo firewall-cmd --list-all
 * Interesting discussion on fighting DOS attacks on http: <https://www.certdepot.net/rhel7-mitigate-http-attacks/>
 * Do some web searching for more about firewalld
 
-----
+---
 
 ## Fail2Ban
 
@@ -119,7 +194,8 @@ COPY-AND-PASTE this and save...
 bantime = 3600
 
 # Override /etc/fail2ban/jail.d/00-firewalld.conf:
-banaction = iptables-multiport
+# Only uncomment this if you use iptables instead of firewalld
+#banaction = iptables-multiport
 
 [sshd]
 enabled = true
@@ -127,7 +203,9 @@ enabled = true
 
 #### Enable `fail2ban` and reboot...
 
-_Note: If you don't reboot, a socket doesn't get created correctly. I am not sure why._
+_Note: The first time I enabled fail2ban, a socket did not get created
+correctly until I rebooted. I am not sure why._
+
 
 ```
 sudo systemctl enable fail2ban
@@ -151,7 +229,7 @@ sudo tail -F /var/log/fail2ban.log
 * https://en.wikipedia.org/wiki/Fail2ban
 * http://www.fail2ban.org/
 
-----
+---
 
 ## Done!
 
