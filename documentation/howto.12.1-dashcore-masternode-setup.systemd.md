@@ -39,7 +39,8 @@ The objectives are straight-forward:
 
 1. Install a minimal OS
 2. Ensure there is enough swap-space configured
-3. Configure SSH so you can log in without a password into root and a normal user who has sudo'ers rights
+3. Configure SSH so you can log in without a password into root and a normal
+   user who has sudo'ers rights
 4. Fully update and reboot
 
 > A note about minimum requirements. Masternodes are no longer "glorified full
@@ -61,6 +62,7 @@ The objectives are straight-forward:
   - Deploy!
 
 #### Post install on Vultr
+
   - **Test and troubleshoot your SSH settings** &mdash; ssh into your Vultr
     instance: `ssh root@<IP ADDRESS OF YOUR INSTANCE>` If you set up ssh keys
     right, it should just log you right in. If not, log in using your root
@@ -87,14 +89,18 @@ date
 
   - **Add swap space** to give your system memory some elbow room...
 
-Vulr mysteriously starts you with no swap. A good [rule of thumb](https://gist.github.com/taw00/f6dc6040a86e3bbe434dab4c1ab23b2b) is to configure swap to be that is twice the size of your RAM.
+Vulr mysteriously starts you with no swap. A reasonable
+[rule of thumb](https://github.com/taw00/howto/blob/master/howto-configure-swap-file-on-linux.md)
+is to configure swap to be twice the size of your RAM. This is not an absolute
+though.
 
 ```
 # As root...
 sudo su -
 
-bs=2048 # Twice the size of RAM -- recommended
+#bs=512  # 1/2 times the size of RAM
 #bs=1024 # One times the size of RAM
+bs=2048 # Twice the size of RAM -- recommended if you are in doubt
 #bs=1536 # 1.5 times the size of RAM
 
 # Create a swap file 2x size as your existing RAM (TOTAL_MEM * 1024 * 2)
@@ -665,7 +671,7 @@ Because of the way SSDs (Solid State Drives) work, saving new data can impact pe
 
 If, on the other hand, you can alert the operating system that it needs to wipe deleted data in the background, writes (and deletes) can improve in performance.
 
-To learn more, follow this link: <https://gist.github.com/taw00/4073886314d55a1d635918b9ee424bb4>
+To learn more, follow this link: <https://github.com/taw00/howto/blob/master/howto-enable-ssd-trim-on-linux.md>
 
 
 ----
