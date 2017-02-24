@@ -1,0 +1,10 @@
+/var/log/dashcore/sentinel.log {
+    su dashcore dashcore
+    rotate 5
+    missingok
+    notifempty
+    compress
+    maxsize 50k
+    copytruncate
+}
+
