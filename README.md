@@ -14,28 +14,34 @@ the ["documentation"
 folder](https://github.com/taw00/dashcore-rpm/tree/master/documentation) of
 this git repository.
 
-**Stable source packages: 0.12.1**    
-dashcore - latest version is: `0.12.1.1-*.taw`, aka `v0.12.1.1-ge9e5a24`<br />
-dashcore-sentinel - latest version: `1.0-*.taw`
+**Stable source packages: 0.12.1**
 
 * Fedora Linux 26 (f26 is still considered unstable):
-  - `dashcore-0.12.1.1-*.taw.fc26.src.rpm`
-  - `dashcore-sentinel-1.0-*.taw.fc26.src.rpm`
+  - `dashcore-0.12.1.*.taw.fc26.src.rpm`
+  - `dashcore-sentinel-1.0.*.taw.fc26.src.rpm`
 * Fedora Linux 25:
-  - `dashcore-0.12.1.1-*.taw.fc25.src.rpm`
-  - `dashcore-sentinel-1.0-*.taw.fc25.src.rpm`
+  - `dashcore-0.12.1.*.taw.fc25.src.rpm`
+  - `dashcore-sentinel-1.0.*.taw.fc25.src.rpm`
 * Fedora Linux 24:
-  - `dashcore-0.12.1.1-*.taw.fc24.src.rpm`
-  - `dashcore-sentinel-1.0-*.taw.fc24.src.rpm`
+  - `dashcore-0.12.1.*.taw.fc24.src.rpm`
+  - `dashcore-sentinel-1.0.*.taw.fc24.src.rpm`
 * CentOS and RHEL 7:
-  - `dashcore-0.12.1.1-*.taw.el7.centos.src.rpm`
-  - `dashcore-sentinel-1.0-*.taw.el7.centos.src.rpm`
+  - `dashcore-0.12.1.*.taw.el7.centos.src.rpm`
+  - `dashcore-sentinel-1.0.*.taw.el7.centos.src.rpm`
 
 Sourced from:
 
 * Tagged release builds: <https://github.com/dashpay/dash/tags>
 * Test builds: <https://bamboo.dash.org/browse/DASHL-DEV/latestSuccessful>
-* Documentation: <https://github.com/taw00/dashcore-rpm/tree/master/documentation>
+
+Want the binaries?
+
+* First read this document:
+  <https://github.com/taw00/dashcore-rpm/blob/master/README.dashcore-binaries.md>
+* Then read the more expansive, but pretty straight-forward documentation on
+  setting up a wallet, node, or masternode:
+  <https://github.com/taw00/dashcore-rpm/tree/master/documentation>    
+  _Note: We'll further merge and reduce these documents soon._
 
 
 
