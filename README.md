@@ -80,16 +80,17 @@ Important notes:
 
 * In this github repo, we bucket the various versions into **stable**,
   **release-candate**, **test**, **deprecated**.
-  - "Stable" packages are in the root of the github repo and "archive"
+  - "Stable" packages are in the "source-packages" directory and "archive"
   - "Release candidates", "test", and "eprecated" packages have their own folders in the "archive" folder.
     ...the tree looks like this...
 
 ```
-dashcore-rpm (and the stable packages)
-└── archive
-    ├── deprecated
-    ├── release-candidate
-    └── test
+dashcore-rpm
+└──source-packages <--- current stable packages
+   └── archive
+       ├── deprecated
+       ├── release-candidate
+       └── test
 ```
 
 * Only use **stable** versions on the mainnet (`testnet=0`).

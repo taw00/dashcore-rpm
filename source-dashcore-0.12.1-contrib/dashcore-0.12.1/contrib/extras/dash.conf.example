@@ -1,6 +1,6 @@
 ##
 ## dash.conf configuration file. Lines beginning with # are comments.
-## TODO: This still needs to be updated for 12.1 -t0dd
+## TODO: This still needs to be fully vetted for 12.1 -t0dd
 ##
  
 # Network-related settings:
@@ -55,7 +55,7 @@
 #listen=1
 
 # Maximum number of inbound+outbound connections.
-#maxconnections=
+#maxconnections=8
 
 #
 # JSON-RPC options (for controlling a running Dash/dashd process)
@@ -65,8 +65,8 @@
 #server=0
 
 # You must set rpcuser and rpcpassword to secure the JSON-RPC api
-#rpcuser=Ulysseys
-#rpcpassword=YourSuperGreatPasswordNumber_DO_NOT_USE_THIS_OR_YOU_WILL_GET_ROBBED_385593
+#rpcuser=rpcuser_CHANGE_THIS
+#rpcpassword=YourSuperGreatPassword_CHANGE_THIS_PLEASE
 
 # How many seconds dash will wait for a complete RPC HTTP request.
 # after the HTTP connection is established. 
@@ -108,10 +108,7 @@
 #masternode=1
 # Mirrored in configuration row for this masternode in the colateralized wallet's masternode.conf file.
 #masternodeprivkey=<results of "dash-cli masternode genkey" in wallet>
-# Mainnet
-#externalip=<results of "curl https://icanhazip.com">:9999
-# Testnet
-#externalip=<results of "curl https://icanhazip.com">:19999
+#externalip=<results of "curl https://icanhazip.com">
 
 
 # Miscellaneous options

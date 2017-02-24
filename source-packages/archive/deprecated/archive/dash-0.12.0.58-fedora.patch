@@ -1,0 +1,23 @@
+diff -ur dash-0.12.0.58.orig/configure.ac dash-0.12.0.58/configure.ac
+--- dash-0.12.0.58.orig/configure.ac	2016-06-13 05:00:30.000000000 -0500
++++ dash-0.12.0.58/configure.ac	2016-06-13 23:40:13.461787156 -0400
+@@ -423,9 +423,13 @@
+   AX_CHECK_LINK_FLAG([[-Wl,-z,now]], [HARDENED_LDFLAGS="$HARDENED_LDFLAGS -Wl,-z,now"])
+
+   if test x$TARGET_OS != xwindows; then
+-    # All windows code is PIC, forcing it on just adds useless compile warnings
+-    AX_CHECK_COMPILE_FLAG([-fPIE],[HARDENED_CXXFLAGS="$HARDENED_CXXFLAGS -fPIE"])
+-    AX_CHECK_LINK_FLAG([[-pie]], [HARDENED_LDFLAGS="$HARDENED_LDFLAGS -pie"])
++    #tawAX_CHECK_COMPILE_FLAG([-fPIE],[HARDENED_CXXFLAGS="$HARDENED_CXXFLAGS -fPIE"])
++    #tawAX_CHECK_LINK_FLAG([[-pie]], [HARDENED_LDFLAGS="$HARDENED_LDFLAGS -pie"])
++
++    #taw QT on Fedora is built with -fPIC -- gotta set it
++    #taw this what arch linux does, and it works for fedora as well. But I don't think it is "correct"
++    AX_CHECK_COMPILE_FLAG([-fPIC],[HARDENED_CXXFLAGS="$HARDENED_CXXFLAGS -fPIC"])
++    AX_CHECK_LINK_FLAG([[-pic]], [HARDENED_LDFLAGS="$HARDENED_LDFLAGS -pic"])
+   fi
+
+   case $host in
+Only in dash-0.12.0.58/contrib: fedora
+Only in dash-0.12.0.58: INSTALL.orig
+Only in dash-0.12.0.58: README.md.orig
