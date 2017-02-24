@@ -1,5 +1,5 @@
 # Dash Core (https://dash.org) for Fedora
-# Stable, Deprecated, Unstable - binaries and sources
+# Stable, Release Candidate, Test, Deprecated - binaries and sources
 #
 # DNF repository configuration
 # Drop this file, as root, into your /etc/yum.repos.d/ directory...
@@ -13,8 +13,8 @@
 # To update already existing software (check dash.org to seee if there special are upgrade steps that need to be taken)
 #   sudo dnf upgrade
 #
-# To switch from one repository version to the next (example, unstable to stable)...
-#   sudo dnf config-manager --set-disabled dashcore-unstable
+# To switch from one repository version to the next (example, release-candidate to stable)...
+#   sudo dnf config-manager --set-disabled dashcore-release-candidate
 #   sudo dnf config-manager --set-enabled dashcore-stable
 #
 # Note: This file is a convenience file that categorizes the releases nicely.
@@ -38,8 +38,22 @@ metadata_expire=1d
 enabled=1
 enabled_metadata=1
 
-[dashcore-unstable]
-name=Dash Core - unstable - fedora-$releasever-$basearch
+[dashcore-release-candidate]
+name=Dash Core 12.1-rc - release-candidate - fedora-$releasever-$basearch
+# Note: SRPMs (*.src.rpm files) are mingled with the binaries. It's just how Copr does it.
+baseurl=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.1-rc/fedora-$releasever-$basearch/
+type=rpm-md
+skip_if_unavailable=True
+gpgcheck=1
+gpgkey=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.1-rc/pubkey.gpg
+repo_gpgcheck=0
+# Default metadata_expire is typically 2d (2 days)
+metadata_expire=1d
+enabled=0
+enabled_metadata=1
+
+[dashcore-test]
+name=Dash Core - TEST - fedora-$releasever-$basearch
 baseurl=https://toddwarner.keybase.pub/repo/dashcore/unstable/fedora/$releasever/$basearch/
 type=rpm-md
 # Checks for new test packages more often than the default 2d (2 days)a
@@ -49,8 +63,8 @@ gpgkey=https://keybase.io/toddwarner/key.asc
 skip_if_unavailable=True
 enabled=0
 
-[dashcore-unstable-source]
-name=Dash Core - unstable source - fedora-$releasever-$basearch
+[dashcore-test-source]
+name=Dash Core - TEST source - fedora-$releasever-$basearch
 baseurl=https://toddwarner.keybase.pub/repo/dashcore/unstable/fedora/$releasever/source/
 type=rpm-md
 # Checks for new test packages more often than the default 2d (2 days)a
@@ -61,18 +75,19 @@ skip_if_unavailable=True
 enabled=0
 
 
-[dashcore-deprecated]
-name=Dash Core 12.0 - deprecated - fedora-$releasever-$basearch
-# Note: SRPMs (*.src.rpm files) are mingled with the binaries. It's just how Copr does it.
-baseurl=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.0/fedora-$releasever-$basearch/
-type=rpm-md
-skip_if_unavailable=True
-gpgcheck=1
-gpgkey=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.0/pubkey.gpg
-repo_gpgcheck=0
-# Default metadata_expire is typically 2d (2 days)
-metadata_expire=1d
-enabled=0
-enabled_metadata=1
+## DON'T USE THESE ANYMORE
+#[dashcore-deprecated]
+#name=Dash Core 12.0 - deprecated - fedora-$releasever-$basearch
+## Note: SRPMs (*.src.rpm files) are mingled with the binaries. It's just how Copr does it.
+#baseurl=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.0/fedora-$releasever-$basearch/
+#type=rpm-md
+#skip_if_unavailable=True
+#gpgcheck=1
+#gpgkey=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.0/pubkey.gpg
+#repo_gpgcheck=0
+## Default metadata_expire is typically 2d (2 days)
+#metadata_expire=1d
+#enabled=0
+#enabled_metadata=1
 
 

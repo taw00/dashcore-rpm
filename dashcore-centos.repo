@@ -1,5 +1,5 @@
 # Dash Core (https://dash.org) for CentOS (and Red Hat Enterprise Linux)
-# Stable, Unstable, Deprecated - binaries and sources
+# Stable, Release Candidate, Test, and Deprecated - binaries and sources
 #
 # YUM repository configuration
 # Drop this, as root, into your /etc/yum.repos.d/ directory
@@ -33,8 +33,22 @@ metadata_expire=1d
 enabled=1
 enabled_metadata=1
 
-[dashcore-unstable]
-name=Dash Core - unstable - epel-$releasever-$basearch
+[dashcore-release-candidate]
+name=Dash Core 12.1-rc - release-candidate - epel-$releasever-$basearch
+# Note: SRPMs (*.src.rpm files) are mingled with the binaries. It's just how Copr does it.
+baseurl=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.1-rc/epel-$releasever-$basearch/
+type=rpm-md
+skip_if_unavailable=True
+gpgcheck=1
+gpgkey=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.1-rc/pubkey.gpg
+repo_gpgcheck=0
+# Check for new packages is typically 2d (2 days)
+metadata_expire=1d
+enabled=0
+enabled_metadata=1
+
+[dashcore-test]
+name=Dash Core - TEST - epel-$releasever-$basearch
 baseurl=https://toddwarner.keybase.pub/repo/dashcore/unstable/centos/$releasever/$basearch/
 type=rpm-md
 # Checks for new test packages more often than the default 2d (2 days)a
@@ -44,8 +58,8 @@ gpgkey=https://keybase.io/toddwarner/key.asc
 skip_if_unavailable=True
 enabled=0
 
-[dashcore-unstable-source]
-name=Dash Core - unstable source - epel-$releasever-$basearch
+[dashcore-test-source]
+name=Dash Core - TEST source - epel-$releasever-$basearch
 baseurl=https://toddwarner.keybase.pub/repo/dashcore/unstable/centos/$releasever/source/
 type=rpm-md
 # Checks for new test packages more often than the default 2d (2 days)a
@@ -56,18 +70,19 @@ skip_if_unavailable=True
 enabled=0
 
 
-[dashcore-deprecated]
-name=Dash Core 12.0 - deprecated - epel-$releasever-$basearch
-# Note: SRPMs (*.src.rpm files) are mingled with the binaries. It's just how Copr does it.
-baseurl=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.0/epel-$releasever-$basearch/
-type=rpm-md
-skip_if_unavailable=True
-gpgcheck=1
-gpgkey=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.0/pubkey.gpg
-repo_gpgcheck=0
-# Check for new packages is typically 2d (2 days)
-metadata_expire=1d
-enabled=0
-enabled_metadata=1
+## DON'T USE THESE ANY MORE!
+#[dashcore-deprecated]
+#name=Dash Core 12.0 - deprecated - epel-$releasever-$basearch
+## Note: SRPMs (*.src.rpm files) are mingled with the binaries. It's just how Copr does it.
+#baseurl=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.0/epel-$releasever-$basearch/
+#type=rpm-md
+#skip_if_unavailable=True
+#gpgcheck=1
+#gpgkey=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.0/pubkey.gpg
+#repo_gpgcheck=0
+## Check for new packages is typically 2d (2 days)
+#metadata_expire=1d
+#enabled=0
+#enabled_metadata=1
 
 

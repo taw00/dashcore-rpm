@@ -11,6 +11,8 @@ their system.
 > What is a Masternode? <https://dashpay.atlassian.net/wiki/display/DOC/Masternode><br />
 > What are these Linuxes? [Fedora](https://getfedora.org/), [CentOS](https://www.centos.org/), [RHEL](https://www.redhat.com/en/technologies/linux-platforms/enterprise-linux)<br />
 > ...<br />
+> Documentation specific to these RPM packages: <https://github.com/taw00/dashcore-rpm/tree/master/documentation><br />
+> ...<br />
 > If you know your way around yum, dnf, and Dash Core, I could reduce this document to two lines...<br />
 > **dashcore-fedora.repo:** <https://github.com/taw00/dashcore-rpm/blob/master/dashcore-fedora.repo><br />
 > **dashcore-centos.repo:** <https://github.com/taw00/dashcore-rpm/blob/master/dashcore-centos.repo><br />
@@ -46,8 +48,10 @@ linux can be found here...<br />
 For Fedora: <https://github.com/taw00/dashcore-rpm/blob/master/dashcore-fedora.repo><br />
 For CentOS and RHEL: <https://github.com/taw00/dashcore-rpm/blob/master/dashcore-centos.repo>
 
-If you want to browse the actual repository, or manually download packages, they
-can be found here in the various `dashcore-*` repositories - <https://copr.fedorainfracloud.org/coprs/taw> - ...and some of the unstable builds can be found here: <https://toddwarner.keybase.pub/repo/dashcore/>
+If you want to browse the actual repository, or manually download packages,
+they can be found here in the various `dashcore-*` repositories -
+<https://copr.fedorainfracloud.org/coprs/taw> - ...and some of the unstable
+builds can be found here: <https://toddwarner.keybase.pub/repo/dashcore/>
 
 All you have do to configure your Linux system is to download and copy the appropriate
 `dashcore-*.repo` file into your package manager configuration directory and you
@@ -96,18 +100,21 @@ Want to see what packages are available? Do this (Fedora) `sudo dnf list|grep
 dashcore`, or again for CentOS or RHEL, `sudo yum list|grep dashcore`. You
 should get a nice listing of all the packages available to your linux system.
 
-## Stable versus Unstable
+## Stable versus the less stable release-candidate and test repos
 
 By default, those `*.repo` files configure your system to only pull from the
 "stable" repository.
 
-NOT RECOMMENDED: If you want install the "unstable" software instead, do this:<br />
+NOT RECOMMENDED: If you want install the "release-candidate" or "test" software
+instead, do this:<br />
 
 *...fedora:*
 
 ```
 sudo dnf config-manager --set-disabled dashcore-stable
-sudo dnf config-manager --set-enabled dashcore-unstable
+sudo dnf config-manager --set-enabled dashcore-release-candidate
+#...or even...
+#sudo dnf config-manager --set-enabled dashcore-test
 sudo dnf list --refresh|grep dashcore
 ```
 
@@ -115,7 +122,9 @@ sudo dnf list --refresh|grep dashcore
 
 ```
 sudo yum-config-manager --disable dashcore-stable
-sudo yum-config-manager --enable dashcore-unstable
+sudo yum-config-manager --enable dashcore-release-candidate
+#...or even...
+#sudo yum-config-manager --enable dashcore-test
 sudo yum list|grep dashcore
 ```
 
@@ -190,7 +199,34 @@ mother.
 
 # Currently available
 
-## Stable: **0.12.0.58**
+## Stable: **0.12.1**
+
+**Dash Core 12.1 is supported on these linux versions: Fedora 24, 25, 26, and  CentOS7 / RHEL7**
+
+Q: I see CentOS packages but nothing *specific* to RHEL, why is that?
+A: Because CentOS packages will run just fine on RHEL.
+
+**Default Dash data directory for v12.1:** `/home/<username>/.dashcore/`
+
+### An important note about `Sentinel`
+
+A significant change for version 12.1 is the addition of new tooling called
+**Sentinel**. If you are operating a v12.1 masternode, Sentinel needs to be
+installed as well. Please reference the documentation found in the
+["documentation"](https://github.com/taw00/dashcore-rpm/tree/master/documentation)
+directory here in this repository.
+
+
+## Release Candidate, Test, Unstable, Experimental: **0.12.1\*-rc** or **0.12.1\*-test**
+
+**Currently, the unstable Dash Core builds are supported on these linux
+versions: Fedora 24, 25, 26 & CentOS7 / RHEL7**
+
+**Announcement and getting started instruction:** <https://www.dash.org/forum/threads/12-1-testnet-testing-phase-two-ignition.10818/><br />
+**Testnet documentation:** <https://dashpay.atlassian.net/wiki/display/DOC/Testnet><br />
+**Testnet Masternode setup:** <https://github.com/taw00/dashcore-rpm/blob/master/documentation>
+
+## Deprecated: **0.12.0.58 - DON'T USE THESE!!!**
 
 **Dash Core 12.0 is supported on these linux versions: Fedora 23, CentOS7 / RHEL7**
 
@@ -202,29 +238,6 @@ A: Because CentOS packages will run just fine on RHEL.
 
 **Default Dash data directory for v12.0:** `/home/<username>/.dash/`
 
-
-## Unstable / Experimental: **0.12.1**
-
-**Currently, the unstable Dash Core 12.1 builds are supported on these linux
-versions: Fedora 24, 25 & CentOS7 / RHEL7**
-
-This experimental version represents efforts surrounding current **Testnet
-Testing** for the next major version of the software which should ship (become
-the new "stable" version) on February 5, 2017.
-
-**Default testnet Dash data directory for v12.1 (normal user):** `/home/<username>/.dashcore/`<br />
-**Default testnet Dash data directory for v12.1 (`systemd` setup):** `/var/lib/dashcore/` _(see masternode setup below)_
-
-**Announcement and getting started instruction:** <https://www.dash.org/forum/threads/12-1-testnet-testing-phase-two-ignition.10818/><br />
-**Testnet documentation:** <https://dashpay.atlassian.net/wiki/display/DOC/Testnet><br />
-**Testnet Masternode setup:** <https://github.com/taw00/dashcore-rpm/blob/master/documentation>
-
-### An important note about `Sentinel`
-
-A significant change for version 12.1 is the addition of new tooling called
-**Sentinel**. If you are operating a v12.1 masternode, Sentinel needs to be
-installed as well. Please reference the v12.1 **"Testnet Masternode setup"**
-documentation linked above for more information.
 
 ----
 
@@ -289,12 +302,11 @@ And of course, donations welcome: [XyxQq4qgp9B53QWQgSqSxJb4xddhzk5Zhh](dash:XyxQ
 
 | Changes |
 | ------- |
+| 2017-02: Lot's of updates for 12.1 |
 | 2017-01: Rewrote Dash Masternode documentation and updated the reference to it here. |
-| 2017-01: Moved this file from [here](https://gist.github.com/taw00/b2382aaabb321b0cf9ce104185e1b3b7) to here. |
 | 2016-09 -through- 2017-01: Updated testnet/experimental packages. |
 | 2016-12-03: Complete overhaul and simplification because we now have packages in a real repository |
-| 2016-12-02: [Moved these instructions to github](https://gist.github.com/taw00/b2382aaabb321b0cf9ce104185e1b3b7) |
-| 2016-11-28: Added [testnet masternode setup instruction](https://gist.github.com/taw00/e978f862ee1ad66722e16bcc8cf18ca5) |
+| 2016-11-28: Added testnet masternode setup instruction
 | 2016-08-22: Built, packaged, signed, and uploaded RHEL7 and CentOS7 versions of 0.12.0.58 |
 | 2016-06-17: 0.12.0.58 is now the most stable (built, signed, and provided) -- 0.12.0.56 deprecated. |
 | 2016-04-13: dash-\*.rpm renamed to dashcore-\*.rpm - updated versions of all packages |
