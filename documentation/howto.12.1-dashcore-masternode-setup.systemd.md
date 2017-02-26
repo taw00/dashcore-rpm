@@ -15,6 +15,31 @@
 > I did most of my testing on Fedora 24. I tested with the masternode running on a
 > local virtual instance as well as a VPS cloud instance.
 
+**Table of Content**
+
+<!-- TOC START min:1 max:3 link:true update:true -->
+- [HowTo: Dash Masternode as SystemD Service<br />_...on Fedora, CentOS or Red Hat Enterprise Linux_](#howto-dash-masternode-as-systemd-servicebr-_on-fedora-centos-or-red-hat-enterprise-linux_)
+  - [FIRST: Set up your collateral-bearing wallet](#first-set-up-your-collateral-bearing-wallet)
+  - [[0] Install the operating system](#0-install-the-operating-system)
+  - [[1] Install Dash (and FirewallD)](#1-install-dash-and-firewalld)
+  - [[2] Configure Dash Server to be a Full Node](#2-configure-dash-server-to-be-a-full-node)
+  - [[3] Edit `/etc/dashcore/dash.conf` and finish](#3-edit-etcdashcoredashconf-and-finish)
+  - [[4] Restart the `dash` systemd service and enable it for restart upon boot](#4-restart-the-dash-systemd-service-and-enable-it-for-restart-upon-boot)
+  - [[5] Configure firewall rules](#5-configure-firewall-rules)
+  - [[6] ON WALLET: Add masternode IP address](#6-on-wallet-add-masternode-ip-address)
+  - [[7] ON WALLET: Trigger a start of your masternode](#7-on-wallet-trigger-a-start-of-your-masternode)
+  - [[8] ON MASTERNODE: Monitor masternode enablement status](#8-on-masternode-monitor-masternode-enablement-status)
+  - [[9] Set up Dash Sentinel](#9-set-up-dash-sentinel)
+  - [ALL DONE!](#all-done)
+- [Appendix - Advanced Topics](#appendix---advanced-topics)
+  - [Email me when `dashd` starts or stops](#email-me-when-dashd-starts-or-stops)
+  - [Email me when my Masternode goes from "ENABLED" state to something else](#email-me-when-my-masternode-goes-from-enabled-state-to-something-else)
+  - [Super fancy crontab settings](#super-fancy-crontab-settings)
+  - [Improve SSD Write & Delete Performance for Linux Systems by Enabling ATA TRIM](#improve-ssd-write--delete-performance-for-linux-systems-by-enabling-ata-trim)
+
+<!-- TOC END -->
+
+
 
 ## FIRST: Set up your collateral-bearing wallet
 
@@ -49,9 +74,9 @@ The objectives are straight-forward:
 > read more, please visit this page:
 > <https://dashpay.atlassian.net/wiki/display/DOC/Masternode+Update>
 
-### A cloud service installation, for example Vultr
+***A cloud service installation, for example Vultr***
 
-#### Install to Vultr
+**Install to Vultr**
   - Browse to https://my.vultr.com/
   - Create an account and login.
   - Click the ( + ) button.
@@ -61,7 +86,7 @@ The objectives are straight-forward:
   - Pick a hostname, `master00`, or whatever.
   - Deploy!
 
-#### Post install on Vultr
+**Post install on Vultr**
 
   - **Test and troubleshoot your SSH settings** &mdash; ssh into your Vultr
     instance: `ssh root@<IP ADDRESS OF YOUR INSTANCE>` If you set up ssh keys
@@ -128,7 +153,7 @@ password, the ssh key setup isn't right. Troubleshoot and fix it. If you can't
 log in at all... destroy the instance and start over.
 
 
-### A traditional bare-metal server installation
+***A traditional bare-metal server installation***
 
 I leave it as an exercise for the reader to perform a bare-metal installation
 of  Fedora, CentOS, or even RHEL. For Fedora, go here - https://getfedora.org/
@@ -149,7 +174,7 @@ to be at least equal to the size of RAM, 2GB and ideally twice that, 4GB.
 Once installed, follow similar process as the Vultr VPS example for SSH configuration.
 
 
-### Post OS installation: create user...
+***Post OS installation: create user...***
 
 During the installation process using the wizard you will likely be asked to
 create a user. Do that if you like. Additionally, you can choose to give this
@@ -183,7 +208,7 @@ you can ssh into the system without a password from your desktop system.
 
 
 
-### Post OS installation: fully update the system and reboot
+***Post OS installation: fully update the system and reboot***
 
 Log in as `mnuser` and...
 
@@ -204,12 +229,12 @@ sudo reboot
 
 
 
-## [1] Install Dash and FirewallD
+## [1] Install Dash (and FirewallD)
 
 Because this is a Red Hat -based system, management of installed software is
 trivial. This is how easy it is.
 
-#### Configure the Dash Core repositories (you only do this once)
+***Configure the Dash repositories (you only do this once)***
 
 ...if this is Fedora
 
@@ -241,7 +266,7 @@ cd -
 ```
 -->
 
-#### Install Dash Core server and FirewallD
+***Install Dash server (and FirewallD)***
 
 ...if this is Fedora
 
@@ -256,7 +281,7 @@ sudo yum install -y dashcore-server firewalld
 ```
 
 
-## [2] Configure Dash Core Server to be a Full Node
+## [2] Configure Dash Server to be a Full Node
 
 We are configuring this as a `systemd` service. Some of the process has been
 done for you. Please note these differences from other instruction you may read
@@ -275,10 +300,10 @@ become self evident shortly.
 
 A final note, since the default data directory and configuration file locations
 are not traditional to the Dash Core upstream codebase, we will often have to
-explicitely include them on the commandline when we perform actions.
+explicitly include them on the commandline when we perform actions.
 
 
-### Edit `/etc/dashcore/dash.conf`
+***Edit `/etc/dashcore/dash.conf`***
 
 Log in as the normal user, `mnuser` in this example.
 
@@ -325,7 +350,7 @@ rpcallowip=127.0.0.1
 
 Please take special note of `"testnet=1"` and `"testnet=0"`.
 
-### Change your RPC (remote procedure call username and password)
+***Change your RPC (remote procedure call username and password)***
 
 Edit `/etc/dashcore/dash.conf` and change...
 
@@ -342,7 +367,7 @@ rpcpassword=this_is_a_random_password_984nf983n3o4n349nf9042nnfq3kgsdf898s
 These are used by your on-system, internal commandline tools for the most part,
 so you don't have to memorize them or use them outside of this masternode.
 
-### Start up your Dash Core full node (it isn't a masternode yet)
+***Start up your Dash full node (it isn't a masternode yet)***
 
 Log in as the normal user, `mnuser` in this example.
 
@@ -351,7 +376,9 @@ Log in as the normal user, `mnuser` in this example.
 sudo systemctl start dashd
 ```
 
-#### SSH into two terminals and watch the logs in one...
+***SSH into two terminals and monitor the situation...***
+
+...watch the logs in one...
 
 ```
 # ^C out of this tail feed when you are done...
@@ -359,7 +386,7 @@ sudo -u dashcore tail -f /var/lib/dashcore/debug.log # if mainnet
 #sudo -u dashcore tail -f /var/lib/dashcore/testnet3/debug.log
 ```
 
-#### ...and watch the blockcount rise (hopefully) in the other...
+...and watch the blockcount rise (hopefully) in the other...
 
 ```
 # ^C out of this loop when you are done
@@ -383,10 +410,10 @@ sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf getchaintips |grep -m1 h
 ```
 
 
-#### Once fully sync'ed your configuration as a full node is complete.
+***Once fully sync'ed your configuration as a full node is complete.***
 
 
-## [3] Edit `/etc/dashcore/dash.conf` and finish those masternode settings
+## [3] Edit `/etc/dashcore/dash.conf` and finish
 
 First, write down the value of `curl https://icanhazip.com` that you get at the
 commandline of this masternode server. For this example, we are going to use
@@ -419,7 +446,8 @@ externalip=93.184.216.34
 
 ```
 sudo systemctl restart dashd
-# there will be a 15 to 30 second pause as systemd allows dashd to shut down properly
+# there will be a 30 second+ second pause while systemd allows dashd to shut
+# down properly
 sudo systemctl enable dashd
 ```
 
@@ -571,7 +599,8 @@ may wronging override your `dash.conf` file. At least it does in the earlier
 versions of Sentinel.
 -->
 
-### Run it for the first time...
+***Run it for the first time...***
+
 ```
 sudo -u dashcore -- bash -c "cd /var/lib/dashcore/sentinel && venv/bin/python bin/sentinel.py"
 ```
@@ -593,7 +622,7 @@ There should be no output.
 > less /var/log/dashcore/sentinel.log
 > ```
 
-### Edit cron and add a "run it every minute" entry
+***Edit cron and add a "run it every minute" entry***
 
 On the commandline, edit `crontab` &mdash; notice, that we, like in most
 commands, are doing it as the `dashcore` system user...
@@ -606,11 +635,12 @@ sudo -u dashcore EDITOR="nano" crontab -e
 
 ```
 #SENTINEL_DEBUG=1
-#* * * * * cd /var/lib/dashcore/sentinel && venv/bin/python bin/sentinel.py > /dev/null 2>&1
 * * * * * { cd /var/lib/dashcore/sentinel && venv/bin/python bin/sentinel.py ; } >> /var/log/dashcore/sentinel.log 2>&1
 ```
 
-## YOU ARE DONE!
+&nbsp;
+
+## ALL DONE!
 
 Continue to monitor the enablement status as illustrated in step 8. The status
 should start as `PRE_ENABLED`, maybe move to `WATCHDOG_EXPIRED`, but finally is
@@ -623,14 +653,47 @@ this was helpful.
 Got a dash of feedback? *...har har...* Send it my way <t0dd@protonmail.com>    
 And of course, donations are welcome: [XyxQq4qgp9B53QWQgSqSxJb4xddhzk5Zhh](dash:XyxQq4qgp9B53QWQgSqSxJb4xddhzk5Zhh)
 
----
+&nbsp;
+
+&nbsp;
 
 ---
 
-## Addendum - Advanced...
+# Appendix - Advanced Topics
 
 
-#### Super fancy crontab settings
+## Email me when `dashd` starts or stops
+
+SystemD makes it easy for your system to be configured to send you emails if
+your masternode is rebooted, or systemd restarts dashd because it crashed, etc.
+
+What takes a bit of doing is setting up your server to send emails in the first
+place. That can be a bit tricky, but it is not rocket science. I wrote a whole
+separate document on that here:
+[Configure "send-only" Email via a 3rd Party SMTP Relay](https://github.com/taw00/howto/blob/master/howto-configure-send-only-email-via-smtp-relay.md)
+
+Once sending email is set up on your server, configuring systemd to send notice
+if dashd stops or starts is trivial.
+
+* Edit `/etc/sysconfig/dashd`
+* Configure these three settings: `EMAIL_FROM`, `EMAIL_TO`, `MASTERNODE_ALIAS`
+  according to how your system is configured (see link above)
+
+You can ultimately test the system by issuing a Masternode restart &mdash
+`sudo systemctl restart dashd`. Folks are generally nervous about shutting down their
+Masternodes unnecessarily and rightly so, but you will not be positive if your system truly
+works without doing so. Just be aware that if you restart services, it may take
+those emails a couple minutes to get to you (email is slow).
+
+That's it. Not so hard, right?
+
+
+## Email me when my Masternode goes from "ENABLED" state to something else
+
+Not written yet. Stay tuned.
+
+
+## Super fancy crontab settings
 
 Remember to edit with `sudo -u dashcore crontab -e` if dashcore-sentinel is
 installed with our RPM packages.
@@ -658,7 +721,7 @@ logfile=/var/log/dashcore/sentinel.log
 ```
 
 
-#### HowTo: Improve SSD Write & Delete Performance for Linux Systems by Enabling ATA TRIM
+## Improve SSD Write & Delete Performance for Linux Systems by Enabling ATA TRIM
 
 Because of the way SSDs (Solid State Drives) work, saving new data can impact performance. Namely, data marked as "deleted" have to be completely erased before write. With traditional magnetic drives, data marked for deletion is simply overwritten. Because SSDs have to take this extra step, performance can be impacted and slowly worsens over time.
 
