@@ -9,10 +9,10 @@ their system.
 
 > What is Dash? [dash.org](https://dash.org/), [official documentation](https://dashpay.atlassian.net/wiki/display/DOC/Official+Documentation)<br />
 > What is a Masternode? <https://dashpay.atlassian.net/wiki/display/DOC/Masternode><br />
-> What are these Linuxes? [Fedora](https://getfedora.org/), [CentOS](https://www.centos.org/), [RHEL](https://www.redhat.com/en/technologies/linux-platforms/enterprise-linux)<br />
-> ...<br />
-> Documentation specific to these RPM packages: <https://github.com/taw00/dashcore-rpm/tree/master/documentation><br />
-> ...<br />
+> What are these Linuxes? [Fedora](https://getfedora.org/), [CentOS](https://www.centos.org/), [RHEL](https://www.redhat.com/en/technologies/linux-platforms/enterprise-linux)
+> 
+> Masternode Documentation specific to these RPM packages: <https://github.com/taw00/dashcore-rpm/tree/master/documentation><br />
+> 
 > If you know your way around yum, dnf, and Dash Core, I could reduce this document to two lines...<br />
 > **dashcore-fedora.repo:** <https://github.com/taw00/dashcore-rpm/blob/master/dashcore-fedora.repo><br />
 > **dashcore-centos.repo:** <https://github.com/taw00/dashcore-rpm/blob/master/dashcore-centos.repo><br />
@@ -30,44 +30,53 @@ Assuming you are logging in as a normal user who has sudo priviledges.<br />
 At the terminal command line...
 
 ```
+# My system is Fedora...
 cd /etc/yum.repos.d/
 sudo curl -O https://raw.githubusercontent.com/taw00/dashcore-rpm/master/dashcore-fedora.repo
-#sudo curl -O https://raw.githubusercontent.com/taw00/dashcore-rpm/master/dashcore-centos.repo
 cd -
-sudo dnf install -y dash-qt
-#sudo yum install -y dash-qt
+sudo dnf install --refesh -y dash-qt
 dash-qt
 ```
 
-Boom! Done! You should now see a Dash Core GUI Wallet open up on your screen.
+...or if you are running CentOS or RHEL...
 
-## *"Okay, I was overconfident, let's walk through it a bit."*
+```
+# My system is CentOS or RHEL
+cd /etc/yum.repos.d/
+sudo curl -O https://raw.githubusercontent.com/taw00/dashcore-rpm/master/dashcore-centos.repo
+cd -
+sudo yum install -y dash-qt
+dash-qt
+```
 
-Configuration to automate install and update of Dash Core for your version of
-linux can be found here...<br />
-For Fedora: <https://github.com/taw00/dashcore-rpm/blob/master/dashcore-fedora.repo><br />
-For CentOS and RHEL: <https://github.com/taw00/dashcore-rpm/blob/master/dashcore-centos.repo>
+**Boom! Done!** You should now see a Dash GUI Wallet open up on your screen and
+reference to it in your desktop menus.
 
-If you want to browse the actual repository, or manually download packages,
-they can be found here in the various `dashcore-*` repositories -
-<https://copr.fedorainfracloud.org/coprs/taw> - ...and some of the unstable
-builds can be found here: <https://toddwarner.keybase.pub/repo/dashcore/>
+## *"TL;DR -- I want to install a Dash Masternode!"*
 
-All you have do to configure your Linux system is to download and copy the appropriate
-`dashcore-*.repo` file into your package manager configuration directory and you
-will be ready to rock-and-roll with the Dash Core software.
+That takes some explanation. Start here: <https://github.com/taw00/dashcore-rpm/tree/master/documentation>
 
-> #### Additional reference information
->
-> If you are interested in building your own RPM packages from source, those can
-be found here: <https://github.com/taw00/dashcore-rpm>
->
-> If you are looking for Dash wallets for other platforms, those can be found here:
+&nbsp;
+
+---
+
+## Detail...
+
+To more automate installation, update, all you have do to do is download and
+copy the appropriate `dashcore-*.repo` file into your package manager
+configuration directory `/etc/yum.repos.d` and you will be ready to rock-and-roll with the Dash
+Core software as demonstrated with the instruction above.
+
+
+If you are interested in building your own RPM packages from source, those can
+be found here: <https://github.com/taw00/dashcore-rpm/blob/master/README.md>
+
+If you are looking for Dash wallets for other platforms, those can be found here:
 <https://www.dash.org/downloads/>
->
-> **Masternode Documentation:** <https://github.com/taw00/dashcore-rpm/tree/master/documentation><br />   
-  **Other Documentation:** <https://dashpay.atlassian.net/wiki/pages/><br />
-  **Other Masternode Documentation:** <https://dashpay.atlassian.net/wiki/display/DOC/Masternode>
+
+**Masternode Documentation:** <https://github.com/taw00/dashcore-rpm/tree/master/documentation><br />   
+**Other Documentation:** <https://dashpay.atlassian.net/wiki/pages/><br />
+**Other Masternode Documentation:** <https://dashpay.atlassian.net/wiki/display/DOC/Masternode>
 
 
 ## Configuring your system to have access to the Dash RPM package repositories
@@ -193,7 +202,7 @@ mother.
 
 ----
 
-> *"Okay, let's talk about what's available and for what versions..."*
+> *"Let's talk about what's available and for what versions..."*
 
 ----
 
@@ -296,23 +305,3 @@ builds faster.
 Got a dash of feedback? *...har har...* Send it my way <t0dd@protonmail.com>    
 And of course, donations welcome: [XyxQq4qgp9B53QWQgSqSxJb4xddhzk5Zhh](dash:XyxQq4qgp9B53QWQgSqSxJb4xddhzk5Zhh)
 
-
-
-----
-
-| Changes |
-| ------- |
-| 2017-02: Lot's of updates for 12.1 |
-| 2017-01: Rewrote Dash Masternode documentation and updated the reference to it here. |
-| 2016-09 -through- 2017-01: Updated testnet/experimental packages. |
-| 2016-12-03: Complete overhaul and simplification because we now have packages in a real repository |
-| 2016-11-28: Added testnet masternode setup instruction
-| 2016-08-22: Built, packaged, signed, and uploaded RHEL7 and CentOS7 versions of 0.12.0.58 |
-| 2016-06-17: 0.12.0.58 is now the most stable (built, signed, and provided) -- 0.12.0.56 deprecated. |
-| 2016-04-13: dash-\*.rpm renamed to dashcore-\*.rpm - updated versions of all packages |
-| 2016-04-10: updated versions of all packages |
-| 2016-04-06: gpg signed all the packages |
-| 2016-04-05: 0.12.0.56-4.taw and 0.12.0.56-5.taw and 0.12.1.x- and 0.13.0.x- (now removed) |
-| 2016-04-04: 0.12.0.56-3.taw (now removed) |
-| 2016-04-04: 0.12.0.56-0.taw2 (now removed) |
-| 2016-04-02: 0.12.0.56-0.taw0 (now removed) |
