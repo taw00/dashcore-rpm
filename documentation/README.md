@@ -11,13 +11,11 @@
 
 * All documents:<br /><https://github.com/taw00/dashcore-rpm/tree/master/documentation>
 * The overview (this document):<br /><https://github.com/taw00/dashcore-rpm/edit/master/documentation/README.md>
-* Wallet setup:<br /><https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.12.1-dashcore-collateral-bearing-wallet-setup.gui.md>
-* Masternode setup:<br /><https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.12.1-dashcore-masternode-setup.systemd.md>
-* Discussion about securing your dash systems:<br /><https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.secure-your-dash-masternode.md>
-* Upgrading from 12.0 to 12.1:<br /><https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.12.1-dashcore-upgrade.md>
-* Troubleshooting guide:<br /><https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.12.1-dashcore-troubleshooting.md>
 
-COMING: Simple wallet guide -- The "Collateral-bearing Wallet" setup document above is probably good enough for you to get started with the wallet even if you are not using it to collateralize a masternode, but specific guide is really needed. Coming soon.
+* Wallet setup: "[HowTo: Dash Wallet in support of a Dash Masternode](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.12.1-dashcore-collateral-bearing-wallet-setup.gui.md)"
+* Masternode setup: "[HowTo: Dash Masternode as SystemD Service](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.12.1-dashcore-masternode-setup.systemd.md)"
+* Discussion about security: "[Configure FirewallD and Fail2Ban on a Dash Masternode](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.secure-your-dash-masternode.md)"
+* Troubleshooting guide: "[Dash Core Troubleshooting Guide](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.12.1-dashcore-troubleshooting.md)"
 
 ## What is Dash and what is a Dash Masternode?
 
@@ -90,8 +88,7 @@ Data directory: Usually either `/var/lib/dashcore` or `$HOME/.dashcore`
 
 * `network=testnet` or `network=mainnet` &mdash; Leave this commented out and allow `dash.conf` to determine Sentinel's operating posture.
 
-
-
+&nbsp;
 
 # Good luck!
 

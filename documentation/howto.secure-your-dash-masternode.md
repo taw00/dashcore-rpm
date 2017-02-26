@@ -1,4 +1,4 @@
-# Configure FirewallD and Fail2Ban on a Masternode Server
+# Configure FirewallD and Fail2Ban on a Dash Masternode
 
 Whenever you expose a server to the wilds of the internet, it becomes vulnerable to attack.
 

@@ -1,4 +1,4 @@
-# HowTo: v12.1 Dash Wallet as Collateral Holding Agent for a Dash Masternode
+# HowTo: Dash Wallet in support of a Dash Masternode
 # ...on Fedora, CentOS or Red Hat Enterprise Linux
 
 > This edition of the document is for GUI versions of the Dash Core Wallet (`dash-qt`).
