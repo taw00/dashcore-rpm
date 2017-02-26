@@ -635,12 +635,6 @@ And of course, donations are welcome: [XyxQq4qgp9B53QWQgSqSxJb4xddhzk5Zhh](dash:
 Remember to edit with `sudo -u dashcore crontab -e` if dashcore-sentinel is
 installed with our RPM packages.
 
-Change since [Sentinel 1.0.1](https://github.com/dashpay/sentinel/releases/tag/v1.0.1) (released Thu
-Feb 23, 2017):<br />
-Sentinel version 1.0.1 introduced randomization to sentinel's run timing. So,
-the random timing I demonstrate in my examples are not really needed. I provide
-them for instructional purposes only. I will be pulling them out soon enough.
-
 ```
 # Run Sentinel every minute; All messages are logged.
 logfile=/var/log/dashcore/sentinel.log
