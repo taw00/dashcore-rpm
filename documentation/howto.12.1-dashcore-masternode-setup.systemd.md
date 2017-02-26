@@ -642,11 +642,6 @@ the random timing I demonstrate in my examples are not really needed. I provide
 them for instructional purposes only. I will be pulling them out soon enough.
 
 ```
-# Run Sentinel every minute; no extra information sent to the log files.
-* * * * * cd /var/lib/dashcore/sentinel && venv/bin/python bin/sentinel.py > /dev/null 2>&1
-```
-
-```
 # Run Sentinel every minute; All messages are logged.
 logfile=/var/log/dashcore/sentinel.log
 * * * * * cd /var/lib/dashcore/sentinel && venv/bin/python bin/sentinel.py >> $logfile 2>&1
