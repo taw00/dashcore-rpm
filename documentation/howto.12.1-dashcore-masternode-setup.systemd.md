@@ -573,39 +573,41 @@ versions of Sentinel.
 
 ### Run it for the first time...
 ```
-sudo -u dashcore -- bash -c "cd /var/lib/dashcore/sentinel && venv/bin/python bin/sentinel.py
+sudo -u dashcore -- bash -c "cd /var/lib/dashcore/sentinel && venv/bin/python bin/sentinel.py"
 ```
 
 It should create a database and populate it.
 
 Run it again...
 ```
-sudo -u dashcore -- bash -c "cd /var/lib/dashcore/sentinel && venv/bin/python bin/sentinel.py
+sudo -u dashcore -- bash -c "cd /var/lib/dashcore/sentinel && venv/bin/python bin/sentinel.py"
 ```
 
 There should be no output.
 
 > Note, if something seems to be going wrong, set SENTINEL_DEBUG=1 and try to
 > make sense of the output
+>
 > ```
 > sudo -u dashcore -- bash -c "cd /var/lib/dashcore/sentinel && SENTINEL_DEBUG=1 venv/bin/python bin/sentinel.py >> /var/log/dashcore/sentinel.log 2>&1"
 > less /var/log/dashcore/sentinel.log
 > ```
 
-### Edit cron and add a "run it every five minutes" entry
+### Edit cron and add a "run it every minute" entry
 
 On the commandline, edit `crontab` &mdash; notice, that we, like in most
 commands, are doing it as the `dashcore` system user...
+
 ```
 sudo -u dashcore EDITOR="nano" crontab -e
 ```
 
-...and add these lines, save and exit...
+...add these lines, save and exit...
 
 ```
 #SENTINEL_DEBUG=1
-#*/5 * * * * cd /var/lib/dashcore/sentinel && venv/bin/python bin/sentinel.py > /dev/null 2>&1
-*/5 * * * * cd /var/lib/dashcore/sentinel && venv/bin/python bin/sentinel.py >> /var/log/dashcore/sentinel.log 2>&1
+#* * * * * cd /var/lib/dashcore/sentinel && venv/bin/python bin/sentinel.py > /dev/null 2>&1
+* * * * * { cd /var/lib/dashcore/sentinel && venv/bin/python bin/sentinel.py ; } >> /var/log/dashcore/sentinel.log 2>&1
 ```
 
 ## YOU ARE DONE!
@@ -619,7 +621,7 @@ If all went well, you have a working Dash Masternode! Congratulations. I hope
 this was helpful.
 
 Got a dash of feedback? *...har har...* Send it my way <t0dd@protonmail.com>    
-And of course, donations welcome: [XyxQq4qgp9B53QWQgSqSxJb4xddhzk5Zhh](dash:XyxQq4qgp9B53QWQgSqSxJb4xddhzk5Zhh)
+And of course, donations are welcome: [XyxQq4qgp9B53QWQgSqSxJb4xddhzk5Zhh](dash:XyxQq4qgp9B53QWQgSqSxJb4xddhzk5Zhh)
 
 ---
 
@@ -663,29 +665,17 @@ m0="----Sentinel job started --- pid:"
 m1="----Sentinel job completed - pid:" # Not used in this example
 t="%b %d %T UTC"
 logfile=/var/log/dashcore/sentinel.log
-* * * * * cd /var/lib/dashcore/sentinel && date --utc +"$t $m0 $$" >> $logfile && venv/bin/python bin/sentinel.py >> $logfile 2>&1
-```
-
-```
-# DEPRECATED WITH SENTINEL 1.0.1
-# Run Sentinel every 5 to 7 minutes (adding a bit of randomization); each run is time stamped in the logs
-m0="----Sentinel job started --- pid:"
-m1="----Sentinel job completed - pid:"
-t="%b %d %T UTC"
-r2min="RANDOM % 121"
-r3min="RANDOM % 181"
-logfile=/var/log/dashcore/sentinel.log
-*/5 * * * * r=$(($r2min)) ; sleep ${r}s ; cd /var/lib/dashcore/sentinel ; date --utc +"$t $m0 $$" >> $logfile && venv/bin/python bin/sentinel.py >> $logfile 2>&1 && date --utc +"$t $m1 $$"
+* * * * * { cd /var/lib/dashcore/sentinel && date --utc +"$t $m0 $$" && venv/bin/python bin/sentinel.py ; } >> $logfile 2>&1
 ```
 
 
-#### HowTo: Improve SSD Write/Delete Performance on Linux Systems by Enabling ATA TRIM
+#### HowTo: Improve SSD Write & Delete Performance for Linux Systems by Enabling ATA TRIM
 
 Because of the way SSDs (Solid State Drives) work, saving new data can impact performance. Namely, data marked as "deleted" have to be completely erased before write. With traditional magnetic drives, data marked for deletion is simply overwritten. Because SSDs have to take this extra step, performance can be impacted and slowly worsens over time.
 
 If, on the other hand, you can alert the operating system that it needs to wipe deleted data in the background, writes (and deletes) can improve in performance.
 
-To learn more, follow this link: <https://github.com/taw00/howto/blob/master/howto-enable-ssd-trim-on-linux.md>
+To learn more, follow this link: <https://github.com/taw00/howto/blob/master/howto-enable-ssd-trim-for-linux.md>
 
 
 ----

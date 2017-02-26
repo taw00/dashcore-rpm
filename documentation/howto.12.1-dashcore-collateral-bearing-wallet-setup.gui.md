@@ -354,4 +354,4 @@ Next steps to completion are...
 These steps are covered in another set of documents
 
 Got a dash of feedback? *...har har...* Send it my way <t0dd@protonmail.com>    
-And of course, donations welcome: [XyxQq4qgp9B53QWQgSqSxJb4xddhzk5Zhh](dash:XyxQq4qgp9B53QWQgSqSxJb4xddhzk5Zhh)
+And of course, donations are welcome: [XyxQq4qgp9B53QWQgSqSxJb4xddhzk5Zhh](dash:XyxQq4qgp9B53QWQgSqSxJb4xddhzk5Zhh)
