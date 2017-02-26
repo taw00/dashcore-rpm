@@ -630,30 +630,44 @@ And of course, donations welcome: [XyxQq4qgp9B53QWQgSqSxJb4xddhzk5Zhh](dash:XyxQ
 
 #### Super fancy crontab settings
 
-Remember to edit with `sudo -u dashcore crontab -e` if dashcore-sentinel is installed with our RPM packages.
+Remember to edit with `sudo -u dashcore crontab -e` if dashcore-sentinel is
+installed with our RPM packages.
+
+Change since [Sentinel 1.0.1](https://github.com/dashpay/sentinel/releases/tag/v1.0.1) (released Thu
+Feb 23, 2017):<br />
+Sentinel version 1.0.1 introduced randomization to sentinel's run timing. So,
+the random timing I demonstrate in my examples are not really needed. I provide
+them for instructional purposes only. I will be pulling them out soon enough.
 
 ```
-# Run Sentinel every five minutes; no extra information sent to the log files.
-*/5 * * * * cd /var/lib/dashcore/sentinel && venv/bin/python bin/sentinel.py > /dev/null 2>&1
+# Run Sentinel every minute; no extra information sent to the log files.
+* * * * * cd /var/lib/dashcore/sentinel && venv/bin/python bin/sentinel.py > /dev/null 2>&1
 ```
 
 ```
-# Run Sentinel every five minutes; dump copious amounts of debug information to logfile
+# Run Sentinel every minute; All messages are logged.
+logfile=/var/log/dashcore/sentinel.log
+* * * * * cd /var/lib/dashcore/sentinel && venv/bin/python bin/sentinel.py >> $logfile 2>&1
+```
+
+```
+# Run Sentinel every minute; dump COPIUS amounts of debug information to logfile
 SENTINEL_DEBUG=1
-*/5 * * * * cd /var/lib/dashcore/sentinel && venv/bin/python bin/sentinel.py > /dev/null 2>&1
+logfile=/var/log/dashcore/sentinel.log
+* * * * * cd /var/lib/dashcore/sentinel && venv/bin/python bin/sentinel.py >> $logfile 2>&1
 ```
 
 ```
-# Run Sentinel every five minutes; each run is time stamped in the logs
+# Run Sentinel every minute; each run is time stamped in the logs
 m0="----Sentinel job started --- pid:"
 m1="----Sentinel job completed - pid:" # Not used in this example
 t="%b %d %T UTC"
 logfile=/var/log/dashcore/sentinel.log
-
-*/5 * * * * cd /var/lib/dashcore/sentinel && date --utc +"$t $m0 $$" >> $logfile && venv/bin/python bin/sentinel.py >> $logfile 2>&1
+* * * * * cd /var/lib/dashcore/sentinel && date --utc +"$t $m0 $$" >> $logfile && venv/bin/python bin/sentinel.py >> $logfile 2>&1
 ```
 
 ```
+# DEPRECATED WITH SENTINEL 1.0.1
 # Run Sentinel every 5 to 7 minutes (adding a bit of randomization); each run is time stamped in the logs
 m0="----Sentinel job started --- pid:"
 m1="----Sentinel job completed - pid:"
