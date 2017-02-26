@@ -52,9 +52,9 @@ metadata_expire=1d
 enabled=0
 enabled_metadata=1
 
-[dashcore-test]
-name=Dash Core - TEST - fedora-$releasever-$basearch
-baseurl=https://toddwarner.keybase.pub/repo/dashcore/unstable/fedora/$releasever/$basearch/
+[dashcore-testing]
+name=Dash Core - TESTING - fedora-$releasever-$basearch
+baseurl=https://toddwarner.keybase.pub/repo/dashcore/testing/fedora/$releasever/$basearch/
 type=rpm-md
 # Checks for new test packages more often than the default 2d (2 days)a
 metadata_expire=6h
@@ -63,9 +63,9 @@ gpgkey=https://keybase.io/toddwarner/key.asc
 skip_if_unavailable=True
 enabled=0
 
-[dashcore-test-source]
-name=Dash Core - TEST source - fedora-$releasever-$basearch
-baseurl=https://toddwarner.keybase.pub/repo/dashcore/unstable/fedora/$releasever/source/
+[dashcore-testing-source]
+name=Dash Core - TESTING source - fedora-$releasever-$basearch
+baseurl=https://toddwarner.keybase.pub/repo/dashcore/testing/fedora/$releasever/source/
 type=rpm-md
 # Checks for new test packages more often than the default 2d (2 days)a
 metadata_expire=6h

@@ -47,9 +47,9 @@ metadata_expire=1d
 enabled=0
 enabled_metadata=1
 
-[dashcore-test]
-name=Dash Core - TEST - epel-$releasever-$basearch
-baseurl=https://toddwarner.keybase.pub/repo/dashcore/unstable/centos/$releasever/$basearch/
+[dashcore-testing]
+name=Dash Core - TESTING - epel-$releasever-$basearch
+baseurl=https://toddwarner.keybase.pub/repo/dashcore/testing/centos/$releasever/$basearch/
 type=rpm-md
 # Checks for new test packages more often than the default 2d (2 days)a
 metadata_expire=6h
@@ -58,9 +58,9 @@ gpgkey=https://keybase.io/toddwarner/key.asc
 skip_if_unavailable=True
 enabled=0
 
-[dashcore-test-source]
-name=Dash Core - TEST source - epel-$releasever-$basearch
-baseurl=https://toddwarner.keybase.pub/repo/dashcore/unstable/centos/$releasever/source/
+[dashcore-testing-source]
+name=Dash Core - TESTING source - epel-$releasever-$basearch
+baseurl=https://toddwarner.keybase.pub/repo/dashcore/testing/centos/$releasever/source/
 type=rpm-md
 # Checks for new test packages more often than the default 2d (2 days)a
 metadata_expire=6h
