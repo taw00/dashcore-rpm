@@ -1,5 +1,5 @@
 # Dash Core (https://dash.org) for Fedora
-# Stable, Release Candidate, Test, Deprecated - binaries and sources
+# Stable, Release Candidate, Test, Discontinued - binaries and sources
 #
 # DNF repository configuration
 # Drop this file, as root, into your /etc/yum.repos.d/ directory...
@@ -76,8 +76,8 @@ enabled=0
 
 
 ## DON'T USE THESE ANYMORE
-#[dashcore-deprecated]
-#name=Dash Core 12.0 - deprecated - fedora-$releasever-$basearch
+#[dashcore-discontinued]
+#name=Dash Core 12.0 - discontinued - fedora-$releasever-$basearch
 ## Note: SRPMs (*.src.rpm files) are mingled with the binaries. It's just how Copr does it.
 #baseurl=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.0/fedora-$releasever-$basearch/
 #type=rpm-md

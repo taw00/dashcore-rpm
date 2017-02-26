@@ -1,5 +1,5 @@
 # Dash Core (https://dash.org) for CentOS (and Red Hat Enterprise Linux)
-# Stable, Release Candidate, Test, and Deprecated - binaries and sources
+# Stable, Release Candidate, Test, and Discontinued - binaries and sources
 #
 # YUM repository configuration
 # Drop this, as root, into your /etc/yum.repos.d/ directory
@@ -71,8 +71,8 @@ enabled=0
 
 
 ## DON'T USE THESE ANY MORE!
-#[dashcore-deprecated]
-#name=Dash Core 12.0 - deprecated - epel-$releasever-$basearch
+#[dashcore-discontinued]
+#name=Dash Core 12.0 - discontinued - epel-$releasever-$basearch
 ## Note: SRPMs (*.src.rpm files) are mingled with the binaries. It's just how Copr does it.
 #baseurl=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.0/epel-$releasever-$basearch/
 #type=rpm-md
