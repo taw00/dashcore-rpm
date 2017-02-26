@@ -1,7 +1,7 @@
-# Overview: v12.1 Dash Masternode<br />_...on Fedora, CentOS or Red Hat Enterprise Linux_
+# Overview: Dash Masternode<br />_...on Fedora, CentOS or Red Hat Enterprise Linux_
 
 > The objective of this set of documents is to illustrate how you can operate a
-> Dash Masternode which requires setting up a collateral-holding wallet on one
+> Dash Masternode which requires setting up a collateral-bearing wallet on one
 > system and a full node configured to be a masternode on a another.
 >
 > These instructions are specific to the Red Hat-family of linuxes.
@@ -12,10 +12,14 @@
 * All documents:<br /><https://github.com/taw00/dashcore-rpm/tree/master/documentation>
 * The overview (this document):<br /><https://github.com/taw00/dashcore-rpm/edit/master/documentation/README.md>
 
-* Wallet setup: "[HowTo: Dash Wallet in support of a Dash Masternode](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.12.1-dashcore-collateral-bearing-wallet-setup.gui.md)"
-* Masternode setup: "[HowTo: Dash Masternode as SystemD Service](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.12.1-dashcore-masternode-setup.systemd.md)"
-* Discussion about security: "[Configure FirewallD and Fail2Ban on a Dash Masternode](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.secure-your-dash-masternode.md)"
-* Troubleshooting guide: "[Dash Core Troubleshooting Guide](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.12.1-dashcore-troubleshooting.md)"
+* Wallet setup: [HowTo: Dash Wallet in support of a Dash Masternode](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.12.1-dashcore-collateral-bearing-wallet-setup.gui.md)
+* Masternode setup: [HowTo: Dash Masternode as SystemD Service](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.12.1-dashcore-masternode-setup.systemd.md)
+* Discussion about security: [Configure FirewallD and Fail2Ban on a Dash Masternode](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.secure-your-dash-masternode.md)
+* Troubleshooting: [Dash Core Troubleshooting Guide](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.12.1-dashcore-troubleshooting.md)
+
+&nbsp;
+
+---
 
 ## What is Dash and what is a Dash Masternode?
 
