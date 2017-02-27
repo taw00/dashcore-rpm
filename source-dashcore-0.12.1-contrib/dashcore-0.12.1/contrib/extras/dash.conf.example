@@ -108,7 +108,7 @@
 #masternode=1
 # Mirrored in configuration row for this masternode in the colateralized wallet's masternode.conf file.
 #masternodeprivkey=<results of "dash-cli masternode genkey" in wallet>
-#externalip=<results of "curl https://icanhazip.com">
+#externalip=<results of "dig +short myip.opendns.com @resolver1.opendns.com">
 
 
 # Miscellaneous options

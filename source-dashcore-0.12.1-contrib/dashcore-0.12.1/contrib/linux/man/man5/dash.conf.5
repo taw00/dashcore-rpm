@@ -65,8 +65,8 @@ Is this a masternode?
 \fBmasternodeprivkey=\fR<results of "dash-cli masternode genkey" in wallet>\fR
 Mirrored in configuration row for this masternode in the colateralized wallet's masternode.conf file.
 .TP
-\fBexternalip=\fR<results of "curl https://icanhazip.com">:9999\fR
-This masternode's external IP address. Remember to use 19999 for testnet.
+\fBexternalip=\fR<results of 'dig +short myip.opendns.com @resolver1.opendns.com'>\fR
+This masternode's external IP address.
 .SH MISCELLANEOUS OPTIONS
 .TP
 \fBgen=\fR[\fI'0'\fR|\fI'1'\fR]

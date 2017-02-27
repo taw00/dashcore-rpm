@@ -291,7 +291,7 @@ rpcallowip=127.0.0.1
 
 #masternode=1
 #masternodeprivkey=<results of "dash-cli masternode genkey" in wallet>
-#externalip=<results of "curl https://icanhazip.com">
+#externalip=<results of "dig +short myip.opendns.com @resolver1.opendns.com">
 ' >> ~/.dashcore/dash.conf
 ```
 
@@ -501,7 +501,9 @@ Set IP and Key configuration...
 
 ### [Mn] Get public IP address
 
-    curl https://icanhazip.com
+```
+dig +short myip.opendns.com @resolver1.opendns.com
+```
 
 ### [Mn] Update `~/.dashcore/dash.conf`
 

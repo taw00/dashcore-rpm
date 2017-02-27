@@ -345,7 +345,7 @@ rpcallowip=127.0.0.1
 
 #masternode=1
 #masternodeprivkey=<results of "dash-cli masternode genkey" in wallet>
-#externalip=<results of "curl https://icanhazip.com">
+#externalip=<results of "dig +short myip.opendns.com @resolver1.opendns.com">
 ```
 
 Please take special note of `"testnet=1"` and `"testnet=0"`.
@@ -415,7 +415,7 @@ sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf getchaintips |grep -m1 h
 
 ## [3] Edit `/etc/dashcore/dash.conf` and finish
 
-First, write down the value of `curl https://icanhazip.com` that you get at the
+First, write down the value of `dig +short myip.opendns.com @resolver1.opendns.com` that you get at the
 commandline of this masternode server. For this example, we are going to use
 `93.184.216.34` (yours will be different, of course).
 
@@ -432,7 +432,7 @@ Convert these lines from...
 ```
 #masternode=1
 #masternodeprivkey=<results of "dash-cli masternode genkey" in wallet>
-#externalip=<results of "curl https://icanhazip.com">
+#externalip=<results of "dig +short myip.opendns.com @resolver1.opendns.com">
 ```
 
 ...to (and this is example data from the prior wallet exercise)...
