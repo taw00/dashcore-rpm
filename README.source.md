@@ -5,7 +5,7 @@
 The most current source packages can be found in this directory:
 <https://github.com/taw00/dashcore-rpm/tree/master/source-packages>
 
-Currently, we have successfully build for Fedora versions 23, 24, 25, 26 and
+Currently, we have successful builds for Fedora versions 23, 24, 25, 26 and
 CentOS 7 (and therefore RHEL7).
 
 For source files are from:

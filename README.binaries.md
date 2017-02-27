@@ -10,23 +10,17 @@ their system.
 > What is Dash? [dash.org](https://dash.org/), [official documentation](https://dashpay.atlassian.net/wiki/display/DOC/Official+Documentation)<br />
 > What is a Masternode? <https://dashpay.atlassian.net/wiki/display/DOC/Masternode><br />
 > What are these Linuxes? [Fedora](https://getfedora.org/), [CentOS](https://www.centos.org/), [RHEL](https://www.redhat.com/en/technologies/linux-platforms/enterprise-linux)
-> 
-> Masternode Documentation specific to these RPM packages: <https://github.com/taw00/dashcore-rpm/tree/master/documentation><br />
-> 
-> If you know your way around yum, dnf, and Dash Core, I could reduce this document to two lines...<br />
-> **dashcore-fedora.repo:** <https://github.com/taw00/dashcore-rpm/blob/master/dashcore-fedora.repo><br />
-> **dashcore-centos.repo:** <https://github.com/taw00/dashcore-rpm/blob/master/dashcore-centos.repo><br />
-> Otherwise, keep reading.
-
+ 
+If you know your way around yum, dnf, and Dash Core, I could reduce this document to two lines...<br />
+**dashcore-fedora.repo:** <https://github.com/taw00/dashcore-rpm/blob/master/dashcore-fedora.repo><br />
+**dashcore-centos.repo:** <https://github.com/taw00/dashcore-rpm/blob/master/dashcore-centos.repo><br />
+Otherwise, keep reading.
 
 ## *"TL;DR -- I just want to install the Dash Core GUI Wallet!"*
 
-Proper packaging and repositories make installation trivial. For this example,
-and to keep things simple, let's assume are installing your wallet on a Fedora
-23 linux desktop (the only Fedora version supported by the stable Dash Core
-Wallet at the moment).
+Proper packaging and repositories make installation trivial.
 
-Assuming you are logging in as a normal user who has sudo priviledges.<br />
+Assuming you are logging in as a normal user who has `sudo` priviledges.<br />
 At the terminal command line...
 
 ```
@@ -54,22 +48,22 @@ reference to it in your desktop menus.
 
 ## *"TL;DR -- I want to install a Dash Masternode!"*
 
-That takes some explanation. Start here: <https://github.com/taw00/dashcore-rpm/tree/master/documentation>
+That takes some explanation. Start here:
+<https://github.com/taw00/dashcore-rpm/tree/master/documentation>
 
 &nbsp;
 
 ---
 
-## Detail...
+## Additional detail...
 
-To more automate installation, update, all you have do to do is download and
-copy the appropriate `dashcore-*.repo` file into your package manager
-configuration directory `/etc/yum.repos.d` and you will be ready to rock-and-roll with the Dash
-Core software as demonstrated with the instruction above.
-
+To automate installation, update, all you have do to do is download and copy
+the appropriate `dashcore-*.repo` file into your package manager configuration
+directory `/etc/yum.repos.d` and you will be ready to rock-and-roll with the
+Dash software as demonstrated with the instruction above.
 
 If you are interested in building your own RPM packages from source, those can
-be found here: <https://github.com/taw00/dashcore-rpm/blob/master/README.md>
+be found here: <https://github.com/taw00/dashcore-rpm/blob/master/README.source.md>
 
 If you are looking for Dash wallets for other platforms, those can be found here:
 <https://www.dash.org/downloads/>
@@ -105,25 +99,37 @@ manager.
 
 ## List what's available
 
-Want to see what packages are available? Do this (Fedora) `sudo dnf list|grep
-dashcore`, or again for CentOS or RHEL, `sudo yum list|grep dashcore`. You
-should get a nice listing of all the packages available to your linux system.
+Want to see what packages are available? Do this...<br />
 
-## Stable versus the less stable release-candidate and test repos
+```
+# Fedora
+sudo dnf list|grep dashcore
+```
+
+...or...
+
+```
+# CentOS or RHEL
+sudo yum list|grep dashcore
+```
+
+You should get a nice listing of all the packages available to your linux
+system.
+
+## Stable versus the less stable release-candidate and testing repos
 
 By default, those `*.repo` files configure your system to only pull from the
 "stable" repository.
 
-NOT RECOMMENDED: If you want install the "release-candidate" or "test" software
-instead, do this:<br />
+NOT RECOMMENDED: If you want to install the "release-candidate" or "testing"
+software instead, do this:<br />
 
 *...fedora:*
 
 ```
 sudo dnf config-manager --set-disabled dashcore-stable
 sudo dnf config-manager --set-enabled dashcore-release-candidate
-#...or even...
-#sudo dnf config-manager --set-enabled dashcore-test
+#sudo dnf config-manager --set-enabled dashcore-testing
 sudo dnf list --refresh|grep dashcore
 ```
 
@@ -132,8 +138,7 @@ sudo dnf list --refresh|grep dashcore
 ```
 sudo yum-config-manager --disable dashcore-stable
 sudo yum-config-manager --enable dashcore-release-candidate
-#...or even...
-#sudo yum-config-manager --enable dashcore-test
+#sudo yum-config-manager --enable dashcore-testing
 sudo yum list|grep dashcore
 ```
 
@@ -150,7 +155,8 @@ command line switches above and re-run those commands.
 
 If you have configured things appropriately. Installation is truly this easy...
 
-***To install the non-graphical version of the software: `dashd`***
+***To install the non-graphical, command-line-only, version of the software:
+`dashd`***
 
 *...fedora:*
 
@@ -172,13 +178,14 @@ dependency because it contains the `dash-cli` command line utility.
 You want the GUI wallet instead? Say "N"o to that installation request, run the
 same command as above, but choose `dashcore-client` instead. YUM and DNF also
 automatically check to see if they packages are digitally signed appropriately
-and if the files are corrupt. Fancy. If you are familiar with `apt-get`, it's
-more or less the same thing.
+and if the files are corrupt. Fancy! If you are familiar with `apt-get`, it's
+more or less the same thing if someone built similar packages for Ubuntu.
 
 **Future upgrades...**
 
-Let's say you see on the <https://dash.org/forum> that a new version of Dash
-Core was released. You want your system updated as soon as possible. Just do this...
+Let's say you see in the [Dash Forums](https://dash.org/forum) that a new version of Dash
+Core was released. You want your system updated as soon as possible. It's now
+trivial. Just do this...
 
 *...fedora:*
 
@@ -192,79 +199,52 @@ sudo dnf upgrade
 sudo yum update -y
 ```
 
-Notice that `-y`? That means... "I choose YES! Update everything!"
+And then after the refreshed packages were updated, restart the wallet or `dashd`.
 
-Nothing listed? Try again in a couple days... Todd may have been visiting his
-mother.
+Nothing needed to be updated? Try again in a couple days... Todd may have been
+visiting his mother.
 
-#### Good luck! Send me feedback.<br />
-\-*t0dd@protonmail.com*
+#### Good luck!
 
-----
+Send commentes or feedback to <t0dd@protonmail.com>
 
-> *"Let's talk about what's available and for what versions..."*
+&nbsp;
 
-----
+&nbsp;
 
-# Currently available
+&nbsp;
 
-## Stable: **0.12.1**
+---
 
-**Dash Core 12.1 is supported on these linux versions: Fedora 24, 25, 26, and  CentOS7 / RHEL7**
+## Appendix: QnA and other information
 
-Q: I see CentOS packages but nothing *specific* to RHEL, why is that?
+#### Q: I see CentOS packages but nothing *specific* to RHEL, why is that?
+
 A: Because CentOS packages will run just fine on RHEL.
 
-**Default Dash data directory for v12.1:** `/home/<username>/.dashcore/`
+#### Q: Sentinel? What's this Sentinel thing?
 
-### An important note about `Sentinel`
+A: Operating a Masternode requires 3 things now...
 
-A significant change for version 12.1 is the addition of new tooling called
-**Sentinel**. If you are operating a v12.1 masternode, Sentinel needs to be
-installed as well. Please reference the documentation found in the
-["documentation"](https://github.com/taw00/dashcore-rpm/tree/master/documentation)
-directory here in this repository.
+1. A collateral-bearing wallet
+2. A `dashd` server node
+3. Sentinel
 
+Sentinel is going to increasingly take over the duties of a Masternode, whereas
+`dashd` will perform the normal node operations. Both are required.
 
-## Release Candidate, Test, Unstable, Experimental: **0.12.1\*-rc** or **0.12.1\*-test**
-
-**Currently, the unstable Dash Core builds are supported on these linux
-versions: Fedora 24, 25, 26 & CentOS7 / RHEL7**
-
-**Announcement and getting started instruction:** <https://www.dash.org/forum/threads/12-1-testnet-testing-phase-two-ignition.10818/><br />
-**Testnet documentation:** <https://dashpay.atlassian.net/wiki/display/DOC/Testnet><br />
-**Testnet Masternode setup:** <https://github.com/taw00/dashcore-rpm/blob/master/documentation>
-
-## Deprecated: **0.12.0.58 - DON'T USE THESE!!!**
-
-**Dash Core 12.0 is supported on these linux versions: Fedora 23, CentOS7 / RHEL7**
-
-Q: Fedora 23? Why not newer Fedora?<br />
-A: There are library issues with the lastest (24+) versions of Fedora Linux for v0.12.0
-
-Q: I see CentOS packages but nothing *specific* to RHEL, why is that?
-A: Because CentOS packages will run just fine on RHEL.
-
-**Default Dash data directory for v12.0:** `/home/<username>/.dash/`
+This is all explained in the [Masternode
+documentation](https://github.com/taw00/dashcore-rpm/tree/master/documentation).
 
 
-----
+#### Q: Release Candidate, Testing, Discontinued?
 
-> *"Holy cow! All that and... What the heck is Dash!?! And what are these packages in these Dash Core repositories!?!"*
+A. In that repository configaration file that you downloaded and installed in
+directory `/etc/yum.repos.d`, you have access to test versions of Dash. Unless
+you know what you are doing, I do not recommend you enable those repositories.
 
-----
 
-## Dash is Digital Cash
-
-**Dash (Digital Cash)** is an open source peer-to-peer cryptocurrency that
-offers instant transactions ***(InstantSend)***, private transactions
-***(PrivateSend)*** and token fungibility. Dash operates a decentralized
-governance and budgeting system, making it ***the first Decentralized Autonomous
-Organization (DAO)***. Dash is also a platform for innovative decentralized
-crypto-tech. Dash is open source and the name of the overarching project. Learn
-more at <http://www.dash.org>
-
-The RPMs
+#### Q: What are all these packages?
 
 * **dashcore-client** -- The dash-qt wallet and full node.
 
