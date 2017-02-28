@@ -64,21 +64,25 @@ if [[ $noise -gt 0 ]] ; then
   if [[ $logfile ]] ; then echo $m >> $logfile ; fi
 fi
 
+loopflag=0
 true_height=$(curl --silent -o - $_height_url)
 while [[ $true_height -lt 1 ]] ; do
+  if [[ $(( ++loopflag )) -gt 5 ]] ; then exit -1 ; fi
   m="$_d --- No results from $_height_url Trying again."
   echo $m
   if [[ $logfile ]] ; then echo $m >> $logfile ; fi
-  sleep 3
+  sleep 5
   true_height=$(curl --silent -o - $_height_url)
 done
 
+loopflag=0
 my_height=$(dash-cli -conf=$config getblockcount)
 while [[ $my_height -lt 1 ]] ; do
+  if [[ $(( ++loopflag )) -gt 5 ]] ; then exit -1 ; fi
   m="$_d --- No results from 'dash-cli getblockcount' Trying again."
   echo $m
   if [[ $logfile ]] ; then echo $m >> $logfile ; fi
-  sleep 3
+  sleep 5
   my_height=$(dash-cli -conf=$config getblockcount)
 done
 
