@@ -40,6 +40,7 @@ logfile=
 #logfile="/var/log/dashcore/masternode-state.log"
 
 config=/etc/dashcore/dash.conf
+datadir=/var/lib/dashcore
 
 # ---- don't edit anything after this ----
 
@@ -76,14 +77,14 @@ while [[ $true_height -lt 1 ]] ; do
 done
 
 loopflag=0
-my_height=$(dash-cli -conf=$config getblockcount)
+my_height=$(dash-cli -conf=$config -datadir=$datadir getblockcount)
 while [[ $my_height -lt 1 ]] ; do
   if [[ $(( ++loopflag )) -gt 5 ]] ; then exit -1 ; fi
   m="$_d --- No results from 'dash-cli getblockcount' Trying again."
   echo $m
   if [[ $logfile ]] ; then echo $m >> $logfile ; fi
   sleep 5
-  my_height=$(dash-cli -conf=$config getblockcount)
+  my_height=$(dash-cli -conf=$config -datadir=$datadir getblockcount)
 done
 
 msg1="$_d Current block height is $true_height"
@@ -93,7 +94,7 @@ if [[ $true_height -ne $my_height ]] ; then
 fi
 
 # Get masternode status string
-mn_enablement=$(dash-cli -conf=/etc/dashcore/dash.conf masternode list full | grep $ip)
+mn_enablement=$(dash-cli -conf=$config -datadir=$datadir masternode list full | grep $ip)
 # Convert all double-quotes to spaces -- and then squash all the spaces into 1 each
 mn_enablement=$(echo -e "${mn_enablement}" | tr -d [\"]|tr -s [:space:])
 # Trim off beginning and ending whitespace
