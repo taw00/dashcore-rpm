@@ -21,7 +21,7 @@ The source packages are housed directly within this repository.
 
 
 For more about the source packages and build instructions, please visit this
-link: <https://github.com/taw00/dashcore-rpm/blob/master/README-source.md>
+link: <https://github.com/taw00/dashcore-rpm/blob/master/README.source.md>
 
 Binary (runnable) RPMs are pre-built for you and are available through external
 repositories that your packaging system can understand.  This makes deploying
@@ -30,7 +30,7 @@ secure, and oh so very simple. This is arguably the simplest way to deploy and
 manage a Dash Wallet, Node, or Masternode.
 
 For more about the available binary RPMs, please visit this link:
-<https://github.com/taw00/dashcore-rpm/blob/master/README-binaries.md>
+<https://github.com/taw00/dashcore-rpm/blob/master/README.binaries.md>
 
 ## Send comment and feedback -[Todd](https://keybase.io/toddwarner)
 
