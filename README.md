@@ -15,19 +15,19 @@ Dash on github can be found here: https://github.com/dashpay
 ---
 
 This repository is used to develop and maintain support for Dash natively built
-and packaged for Fedora, CentOS, and Red Hat Enterprise Linux. Directly within
-this repository you will the find latest source RPM packages archived. 
+and packaged for Fedora, CentOS, and Red Hat Enterprise Linux.
+
+The source packages are housed directly within this repository.
+
 
 For more about the source packages and build instructions, please visit this
 link: <https://github.com/taw00/dashcore-rpm/blob/master/README-source.md>
 
-The source RPMs are used to build binary (runnable) packages that are then used
-to deploy Dash Wallet, Node, or Masternode to Fedora, CentOS or Red Hat
-Enterprise Linux systems. The binary RPMs are storied in YUM repositories that
-are used by the automated package management systems of these operating
-systems.  It makes deploying and maintaining Dash on a Fedora, CentOS, or RHEL
-system dependable, more secure, and oh so very simple. This is arguably the
-simplest way to deploy and manage a Dash Wallet, Node, or Masternode.
+Binary (runnable) RPMs are pre-built for you and are available through external
+repositories that your packaging system can understand.  This makes deploying
+and maintaining Dash on a Fedora, CentOS, or RHEL system dependable, more
+secure, and oh so very simple. This is arguably the simplest way to deploy and
+manage a Dash Wallet, Node, or Masternode.
 
 For more about the available binary RPMs, please visit this link:
 <https://github.com/taw00/dashcore-rpm/blob/master/README-binaries.md>
