@@ -35,11 +35,13 @@ START_SLEEP_TIME=0
 STOP_SLEEP_TIME=30
 
 
-# ---- Variables no longer used or deprecated ---------------------------------
+# ---- Variables rarely used
 # OPTIONS will override dash.conf settings
-# not used anymore -- edit your dash.conf file instead
-#OPTIONS=""
+# 9 times out of 10, edit your dash.conf instead of this.
+OPTIONS=""
+#OPTIONS="-reindex"
 
+# ---- Variables no longer used or deprecated ---------------------------------
 # PID_FILE configuration not used anymore because you can't set PIDFile in the
 # dashd.service with an environment variable. So, if you configured multiple
 # systemd managed services, you need to copy dashd.service and edit the pid
