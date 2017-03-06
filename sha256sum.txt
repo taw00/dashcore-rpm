@@ -1,2 +1,0 @@
-902dc71e65cea1cf4fdee3a507e0f2a14ef03c131781987ab9c248225d69dd47  dashcore-centos.repo
-c521e4401625bbaabfd5a27ac8c38db97cf76ec9246892ca0a6b4169be9f1d24  dashcore-fedora.repo
