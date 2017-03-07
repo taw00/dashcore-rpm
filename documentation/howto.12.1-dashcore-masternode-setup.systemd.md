@@ -483,22 +483,28 @@ sudo systemctl enable firewalld.service
 # for this example)
 sudo firewall-cmd --get-active-zone
 
+# Whatever that default zone is, that is the starting conditions for your
+# configuration. For this example, I am going to demonstrate how to edit my
+# default configuration on my Fedora Linux system: FedoraServer. You _could_
+# create your own zone definition, but for now, we will be editing the
+# configuration that is in place.
+
 # FedoraServer usually starts with ssh, dhcp6-client, and cockpit opened up
 # I want to allow SSH and masternode traffic, but I don't want cockpit running
 # all the time and by having a static IP, dhcpv6 service is unneccessary.
-sudo firewall-cmd --permanent --zone=FedoraServer --add-service ssh
-sudo firewall-cmd --permanent --zone=FedoraServer --add-service dashcore-node # mainnet
-sudo firewall-cmd --permanent --zone=FedoraServer --add-service dashcore-node-testnet
-sudo firewall-cmd --permanent --zone=FedoraServer --remove-service dhcpv6-client
-sudo firewall-cmd --permanent --zone=FedoraServer --remove-service cockpit
+sudo firewall-cmd --permanent --add-service ssh
+sudo firewall-cmd --permanent --add-service dashcore-node # mainnet
+sudo firewall-cmd --permanent --add-service dashcore-node-testnet
+sudo firewall-cmd --permanent --remove-service dhcpv6-client
+sudo firewall-cmd --permanent --remove-service cockpit
 
 # Rate limit incoming ssh and cockpit (if configured on) traffic to 10 per minute
 sudo firewall-cmd --permanent --add-rich-rule='rule service name=ssh limit value=10/m accept'
 sudo firewall-cmd --permanent --add-rich-rule='rule service name=cockpit limit value=10/m accept'
-# Rate limit incoming dash node/masternode traffic to ??? per second?
-#TODO: Figure this out.
-#sudo firewall-cmd --permanent --add-rich-rule='rule service name=dashcore-node limit value=100/s accept'
-#sudo firewall-cmd --permanent --add-rich-rule='rule service name=dashcore-node-testnet limit value=100/s accept'
+# Rate limit incoming dash node/masternode traffic to 100 requests/minute.
+# ...note: Still experimenting with these two rules
+sudo firewall-cmd --permanent --add-rich-rule='rule service name=dashcore-node limit value=100/s accept'
+sudo firewall-cmd --permanent --add-rich-rule='rule service name=dashcore-node-testnet limit value=100/s accept'
 
 # did it take?
 sudo firewall-cmd --reload
@@ -506,22 +512,17 @@ sudo firewall-cmd --state
 sudo firewall-cmd --list-all
 ```
 
-_NOTE1: you may want to comment out the `--add-service` line for testnet or
+_NOTE: you may want to comment out the `--add-service` line for testnet or
 mainnet depending on your setup._
 
-_NOTE2: at this time, I do not have rich rules for rate managing the 9999 or
-19999 ports (dashcore-node and dashcore-node-testnet)_
 
 **Some references:**
 
-* Rate limiting as we do above:
-  <https://www.rootusers.com/how-to-use-firewalld-rich-rules-and-zones-for-filtering-and-nat/>
-* More on rate limiting:
-  <https://serverfault.com/questions/683671/is-there-a-way-to-rate-limit-connection-attempts-with-firewalld>
-* And more:
-  <https://itnotesandscribblings.blogspot.com/2014/08/firewalld-adding-services-and-direct.html>
-* Interesting discussion on fighting DOS attacks on http:
-  <https://www.certdepot.net/rhel7-mitigate-http-attacks/>
+* FirewallD documentation: <https://fedoraproject.org/wiki/Firewalld>
+* Rate limiting as we do above: <https://www.rootusers.com/how-to-use-firewalld-rich-rules-and-zones-for-filtering-and-nat/>
+* More on rate limiting: <https://serverfault.com/questions/683671/is-there-a-way-to-rate-limit-connection-attempts-with-firewalld>
+* And more: <https://itnotesandscribblings.blogspot.com/2014/08/firewalld-adding-services-and-direct.html>
+* Interesting discussion on fighting DOS attacks on http: <https://www.certdepot.net/rhel7-mitigate-http-attacks/>
 * Do some web searching for more about firewalld
 
 

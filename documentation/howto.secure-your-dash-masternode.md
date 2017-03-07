@@ -135,10 +135,10 @@ cockpit in the future, the rule will be already enabled._
 # Rate limit incoming ssh and cockpit traffic to 10 requests per minute
 sudo firewall-cmd --permanent --add-rich-rule='rule service name=ssh limit value=10/m accept'
 sudo firewall-cmd --permanent --add-rich-rule='rule service name=cockpit limit value=10/m accept'
-# Rate limit incoming dash node (and masternode) traffic to 60 requests per minute
-# TODO: Need to find a good setting for this yet. For now... keep it unset.
-#sudo firewall-cmd --permanent --add-rich-rule='rule service name=dashcore-node limit value=60/m accept'
-#sudo firewall-cmd --permanent --add-rich-rule='rule service name=dashcore-node-testnet limit value=60/m accept'
+# Rate limit incoming dash node (and masternode) traffic to 100 requests per minute
+# ...note: I am currently experimenting with these.
+sudo firewall-cmd --permanent --add-rich-rule='rule service name=dashcore-node limit value=100/m accept'
+sudo firewall-cmd --permanent --add-rich-rule='rule service name=dashcore-node-testnet limit value=100/m accept'
 ```
 
 We're done with the configuration! That --permanent switch in those commands
