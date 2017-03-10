@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- dashcore-node.xml
+<!-- dashcore-rpc-testnet.xml
      Location if installed by an rpm: /usr/lib/firewalld/
      Location if installed by a human: /etc/firewalld/services/ -->
 <service>
-  <short>Dash Core Full Node or Masternode</short>
+  <short>Dash Core Full Node or Masternode - RPC Port - Testnet</short>
   <description>Dash (Digital Cash) is an open source peer-to-peer
   cryptocurrency that offers instant transactions (InstantSend), private
   transactions (PrivateSend) and token fungibility.
@@ -11,6 +11,10 @@
   A Dash Full Node is a un-collatoralized member of a decentralized network of
   servers that validate transactions and blocks. A Dash Masternode is a member
   of a network of incentivized servers that perform expanded critical services
-  for the Dash cryptocurrency protocol.</description>
-  <port protocol="tcp" port="9999"/>
+  for the Dash cryptocurrency protocol.
+
+  "Testnet" refers to a node that operates within the testnet (versus mainnet)
+  network and is used to test experimental features and functionality with test
+  currency (tDash).</description>
+  <port protocol="tcp" port="19998"/>
 </service>
