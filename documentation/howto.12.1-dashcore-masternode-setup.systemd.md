@@ -81,8 +81,11 @@ The objectives are straight-forward:
   - Create an account and login.
   - Click the ( + ) button.
   - Choose: 64 bit OS and Fedora
-  - Choose: 2048MB RAM, 2CPU 45GB SSD (you may be able to have a cheaper offering limp along, but I don't recommend it.
-  - Set up SSH keys. It will make your life more pleasant. Vult.com provides pretty solid instruction on this process.
+  - Choose: 2048MB RAM, 2CPU 45GB SSD (you may be able to have a cheaper
+    offering limp along, but I don't recommend it.
+  - Set up SSH keys. It will make your life more pleasant.
+    [Vultr.com provides pretty solid instruction](https://www.vultr.com/docs/how-do-i-generate-ssh-keys)
+    on this process.
   - Pick a hostname, `master00`, or whatever.
   - Deploy!
 
