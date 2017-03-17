@@ -122,8 +122,8 @@ sudo firewall-cmd --get-active-zone
 # FedoraWorkstation usually starts with ssh, dhcp6-client, and samba-client opened up
 # Review your needs, but I don't want samba-client enabled and I want to
 # rate limit ssh traffic
-sudo firewall-cmd --permanent --zone=FedoraServer --add-service ssh
-sudo firewall-cmd --permanent --zone=FedoraServer --remove-service samba-client
+sudo firewall-cmd --permanent --add-service ssh
+sudo firewall-cmd --permanent --remove-service samba-client
 
 # Rate limit incoming ssh traffic to 10 per minute
 sudo firewall-cmd --permanent --add-rich-rule='rule service name=ssh limit value=10/m accept'
@@ -134,6 +134,8 @@ sudo firewall-cmd --state
 sudo firewall-cmd --list-all
 ```
 
+_After you `--list-all`, if you see a service you do not wish to be available,
+feel free to remove it following the pattern we demonstrated above._
 
 
 ## [2] Create and edit your `dash.conf` configuration file

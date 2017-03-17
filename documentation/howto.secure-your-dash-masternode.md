@@ -39,8 +39,7 @@ sudo systemctl disable iptables.service
 sudo systemctl mask iptables.service
 ```
 
-Note. If you end up ditching using `firewalld` and want to go back to
-`iptables`...
+Note. If you end up ditching `firewalld` and want to go back to `iptables`...
 
 ```
 sudo systemctl disable firewalld.service
@@ -104,7 +103,7 @@ sudo firewall-cmd --permanent --add-service dashcore-node
 #sudo firewall-cmd --permanent --add-service dashcore-node-testnet
 ```
 
-But if you are running a masternode that was not installed via our RPM (DNF)
+But if you are running a masternode that was _not_ installed via our RPM (DNF)
 packages, you must be explicit in your port configuration. I.e., you configure
 either as done above or with this method.
 
@@ -122,23 +121,27 @@ that service is all about: Browse directory `/usr/lib/firewalld/services`
 ...
 
 Let's rate limit traffic to those ports to reduce abuse. SSH and cockpit, if
-those services were added really need to be rate limited. You would probably
-want to rate limit 80 and 443, for example, if this were a webserver (but using
-more liberal values). Masternodes _probably_ don't need to be rate limited
-since they are filtered at the protocol level, but that is something to
+those services were added they really need to be rate limited. You would
+probably want to rate limit 80 and 443, for example, if this were a webserver
+(but using more liberal values). Masternodes _probably_ don't need to be rate
+limited since they are filtered at the protocol level, but that is something to
 consider in the future.
 
-_Note: It does not hurt to leave in the cockpit rate limiting. If you turn on
-cockpit in the future, the rule will be already enabled._
+
+> **Note:** `--add-service`, `--add-rich-rule`, `--add-port` &mdash; all of
+> these open up ports to the world (unless explicitely IP limiting). I
+> emphasize this point because I don't want people to think that
+> `--add-rich-rule` alone will not open up a port. It will.
+
 
 ```
 # Rate limit incoming ssh and cockpit traffic to 10 requests per minute
 sudo firewall-cmd --permanent --add-rich-rule='rule service name=ssh limit value=10/m accept'
-sudo firewall-cmd --permanent --add-rich-rule='rule service name=cockpit limit value=10/m accept'
+#sudo firewall-cmd --permanent --add-rich-rule='rule service name=cockpit limit value=10/m accept'
 # Rate limit incoming dash node (and masternode) traffic to 100 requests per minute
 # ...note: I am currently experimenting with these.
 sudo firewall-cmd --permanent --add-rich-rule='rule service name=dashcore-node limit value=100/m accept'
-sudo firewall-cmd --permanent --add-rich-rule='rule service name=dashcore-node-testnet limit value=100/m accept'
+#sudo firewall-cmd --permanent --add-rich-rule='rule service name=dashcore-node-testnet limit value=100/m accept'
 ```
 
 We're done with the configuration! That --permanent switch in those commands
@@ -151,6 +154,10 @@ sudo firewall-cmd --reload
 sudo firewall-cmd --state
 sudo firewall-cmd --list-all
 ```
+
+_After you `--list-all`, if you see a service you do not wish to be available,
+feel free to remove it following the pattern we demonstrated above._
+
 
 #### Some references:
 

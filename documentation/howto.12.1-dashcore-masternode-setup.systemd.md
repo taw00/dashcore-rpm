@@ -464,7 +464,7 @@ to be verified).
 ## [5] Configure firewall rules
 
 You can follow the instruction in
-[howto.12.1-dashcore-collateral-bearing-wallet-setup.gui.md](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.12.1-dashcore-collateral-bearing-wallet-setup.gui.md),
+[howto.secure-your-dash-masternode.md](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.secure-your-dash-masternode.md),
 or just take these steps here. It's recommended that you review that document
 though and perhaps implement some of the additional suggestions it may provide.
 
@@ -497,17 +497,17 @@ sudo firewall-cmd --get-active-zone
 # all the time and by having a static IP, dhcpv6 service is unneccessary.
 sudo firewall-cmd --permanent --add-service ssh
 sudo firewall-cmd --permanent --add-service dashcore-node # mainnet
-sudo firewall-cmd --permanent --add-service dashcore-node-testnet
+#sudo firewall-cmd --permanent --add-service dashcore-node-testnet
 sudo firewall-cmd --permanent --remove-service dhcpv6-client
 sudo firewall-cmd --permanent --remove-service cockpit
 
 # Rate limit incoming ssh and cockpit (if configured on) traffic to 10 per minute
 sudo firewall-cmd --permanent --add-rich-rule='rule service name=ssh limit value=10/m accept'
-sudo firewall-cmd --permanent --add-rich-rule='rule service name=cockpit limit value=10/m accept'
+#sudo firewall-cmd --permanent --add-rich-rule='rule service name=cockpit limit value=10/m accept'
 # Rate limit incoming dash node/masternode traffic to 100 requests/minute.
 # ...note: Still experimenting with these two rules
 sudo firewall-cmd --permanent --add-rich-rule='rule service name=dashcore-node limit value=100/s accept'
-sudo firewall-cmd --permanent --add-rich-rule='rule service name=dashcore-node-testnet limit value=100/s accept'
+#sudo firewall-cmd --permanent --add-rich-rule='rule service name=dashcore-node-testnet limit value=100/s accept'
 
 # did it take?
 sudo firewall-cmd --reload
@@ -515,8 +515,8 @@ sudo firewall-cmd --state
 sudo firewall-cmd --list-all
 ```
 
-_NOTE: you may want to comment out the `--add-service` line for testnet or
-mainnet depending on your setup._
+_After you `--list-all`, if you see a service you do not wish to be available,
+feel free to remove it following the pattern we demonstrated above._
 
 
 **Some references:**
