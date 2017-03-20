@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- dashcore-rpc-testnet.xml
+<!-- dashcore-testnet-rpc.xml
      Location if installed by an rpm: /usr/lib/firewalld/
      Location if installed by a human: /etc/firewalld/services/ -->
 <service>
