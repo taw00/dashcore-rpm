@@ -496,18 +496,18 @@ sudo firewall-cmd --get-active-zone
 # I want to allow SSH and masternode traffic, but I don't want cockpit running
 # all the time and by having a static IP, dhcpv6 service is unneccessary.
 sudo firewall-cmd --permanent --add-service ssh
-sudo firewall-cmd --permanent --add-service dashcore-node # mainnet
-#sudo firewall-cmd --permanent --add-service dashcore-node-testnet
+sudo firewall-cmd --permanent --add-service dashcore # mainnet
+#sudo firewall-cmd --permanent --add-service dashcore-testnet
 sudo firewall-cmd --permanent --remove-service dhcpv6-client
 sudo firewall-cmd --permanent --remove-service cockpit
 
 # Rate limit incoming ssh and cockpit (if configured on) traffic to 10 per minute
 sudo firewall-cmd --permanent --add-rich-rule='rule service name=ssh limit value=10/m accept'
 #sudo firewall-cmd --permanent --add-rich-rule='rule service name=cockpit limit value=10/m accept'
+
 # Rate limit incoming dash node/masternode traffic to 100 requests/minute.
-# ...note: Still experimenting with these two rules
-sudo firewall-cmd --permanent --add-rich-rule='rule service name=dashcore-node limit value=100/s accept'
-#sudo firewall-cmd --permanent --add-rich-rule='rule service name=dashcore-node-testnet limit value=100/s accept'
+sudo firewall-cmd --permanent --add-rich-rule='rule service name=dashcore limit value=100/s accept'
+#sudo firewall-cmd --permanent --add-rich-rule='rule service name=dashcore-testnet limit value=100/s accept'
 
 # did it take?
 sudo firewall-cmd --reload

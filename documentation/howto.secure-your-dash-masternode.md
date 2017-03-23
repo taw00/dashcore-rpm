@@ -98,9 +98,13 @@ our RPM packages (specifically `dashcore-server`), we included the service
 definitions for FirewallD. Let's allow that traffic.
 
 ```
-# Open up the Mastnernode port.
-sudo firewall-cmd --permanent --add-service dashcore-node
-#sudo firewall-cmd --permanent --add-service dashcore-node-testnet
+# Open up the Mastnernode port (9999 or 19999)
+sudo firewall-cmd --permanent --add-service dashcore
+#sudo firewall-cmd --permanent --add-service dashcore-testnet
+
+# Optionally open up the RPC port (9998 or 19998) - NOT recommended
+#sudo firewall-cmd --permanent --add-service dashcore-rpc
+#sudo firewall-cmd --permanent --add-service dashcore-testnet-rpc
 ```
 
 But if you are running a masternode that was _not_ installed via our RPM (DNF)
@@ -138,10 +142,10 @@ consider in the future.
 # Rate limit incoming ssh and cockpit traffic to 10 requests per minute
 sudo firewall-cmd --permanent --add-rich-rule='rule service name=ssh limit value=10/m accept'
 #sudo firewall-cmd --permanent --add-rich-rule='rule service name=cockpit limit value=10/m accept'
+
 # Rate limit incoming dash node (and masternode) traffic to 100 requests per minute
-# ...note: I am currently experimenting with these.
-sudo firewall-cmd --permanent --add-rich-rule='rule service name=dashcore-node limit value=100/m accept'
-#sudo firewall-cmd --permanent --add-rich-rule='rule service name=dashcore-node-testnet limit value=100/m accept'
+sudo firewall-cmd --permanent --add-rich-rule='rule service name=dashcore limit value=100/m accept'
+#sudo firewall-cmd --permanent --add-rich-rule='rule service name=dashcore-testnet limit value=100/m accept'
 ```
 
 We're done with the configuration! That --permanent switch in those commands

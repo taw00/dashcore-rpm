@@ -1,4 +1,4 @@
-# Dash binary (pre-built) RPM packages<br />for Fedora, CentOS, and Red Hat Enterprise Linux<br />_...wallet, node, and masternode_
+# Dash for Fedora, CentOS, and Red Hat Enterprise Linux<br />_...wallet, node, and masternode_
 
 This document describes what is available for Fedora, CentOS, and Red Hat
 Enterprise Linux (RHEL) users seeking natively compiled Dash Core software. This

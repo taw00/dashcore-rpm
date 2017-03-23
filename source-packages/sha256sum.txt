@@ -1,11 +1,9 @@
-76bb3a3ec9d0adca063a554a3a4249753db3ac532d1aff9546f2168a90b01dad  dashcore-0.12.1.2-0.taw.el7.centos.src.rpm
-fa31fc160149ed9a1a1edd50db1b1948d7610f2ce8b6fa2e33e999a38d49f1fd  dashcore-0.12.1.2-0.taw.fc23.src.rpm
-3fd00947a18fb77a2d9c5d70477531484dc4f922a8c51c24169301f3f6ee0846  dashcore-0.12.1.2-0.taw.fc24.src.rpm
-c0b5dc115a80d9c149b82e3178ec29fbe3e03d26b38443a827a06c58c0560bf8  dashcore-0.12.1.2-0.taw.fc25.src.rpm
-81fb412d8edacd8081c9e6e6eea9063a7e31fda546aea67f86d77456d1f6dadb  dashcore-0.12.1.2-0.taw.fc26.src.rpm
-656ce1e7d84684253e45ddc9fde9186db070fbef6b3c6401acb7d3fb9dd582ef  dashcore-0.12.1-stable.spec
+24b664166dc6224aa524b4a378a44502cc065e277d0e37317163105de5400036  dashcore-0.12.1.4-0.taw.el7.centos.src.rpm
+bca9a006958b9ca1c54ed2cb9e1857e858b4196c7dcfd8ec1bbebcdbf42a24ce  dashcore-0.12.1.4-0.taw.fc24.src.rpm
+65299bf7d1a6050c896398d11bf00e9801f37792f135331ae58a1adcca08a6cb  dashcore-0.12.1.4-0.taw.fc25.src.rpm
+b2603f912e198ecfb9c3aaec2aa35c976c85f185b9332c5f1972393437bb2602  dashcore-0.12.1.4-0.taw.fc26.src.rpm
+a08e132b5e9e604de2955e8d42bb4b5484df4eaf5e1c88f83b64151b25b10d64  dashcore-0.12.1-stable.spec
 77e53f33975a174334c8b3bc447c817ccae974158b6d14e75e0f654e7551d196  dashcore-sentinel-1.0.1-0.taw.el7.centos.src.rpm
-9ceb306a6235cc2edbfe9fb8b31d4cd75ee20f38446795a2bc4dbf301388a408  dashcore-sentinel-1.0.1-0.taw.fc23.src.rpm
 1e13e57c9ff74596832a40154a95dd7db236e5c5f44e3b1330c40aebf83ecd34  dashcore-sentinel-1.0.1-0.taw.fc24.src.rpm
 e318fef4a559d2c76c64f91ecd12b242a92ce948cb4f76b4daa5d767e3b6aab2  dashcore-sentinel-1.0.1-0.taw.fc25.src.rpm
 5b8e48d61e57653698541a178a70f25404a3f972a8038c95b9d725ab564d2321  dashcore-sentinel-1.0.1-0.taw.fc26.src.rpm

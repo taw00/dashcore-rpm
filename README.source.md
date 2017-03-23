@@ -1,19 +1,20 @@
-# Dash Source RPM Packages<br />for Fedora, CentOS, and Red Hat Enterprise Linux
+# Dash for Fedora, CentOS, and Red Hat Enterprise Linux
 
 **Stable source packages: 0.12.1**
 
 The most current source packages can be found in this directory:
 <https://github.com/taw00/dashcore-rpm/tree/master/source-packages>
 
-Currently, we have successful builds for Fedora versions 23, 24, 25, 26 and
-CentOS 7 (and therefore RHEL7).
+Currently, we have successful builds for Fedora versions 24, 25, 26 and CentOS
+7 (and therefore RHEL7).
 
-For source files are from:
+The components used to build these packages come from:
 
-* Tagged release builds:
+* Tagged release builds / source archives:
   - Dash <https://github.com/dashpay/dash/releases>
   - Sentinel <https://github.com/dashpay/sentinel/releases>
-* Test builds often came from:
+
+* Directly from the build system and non-tagged repositories:
   - Dash <https://bamboo.dash.org/browse/DASHL-DEV/latestSuccessful>
   - Sentinel <https://github.com/dashpay/sentinel>
 

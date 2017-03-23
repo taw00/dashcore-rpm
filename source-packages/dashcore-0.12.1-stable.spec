@@ -17,32 +17,45 @@
 # associated to future work or experimental elements of this spec file and
 # build.
 #
+# Note about RPM and commented out defined variables/macros in this (or any)
+# spec file. You MUST break up the define declaration. Commenting it out is
+# not good enough because... it is a macro, more than a variable. So, if you
+# want to have a macro linger around, but want to disable it, either nil it
+# out, undefine it, or break up the define like this "% define your_macro..."
+# RPM is weird.
+#
 # Enjoy. Todd Warner <t0dd@protonmail.com>
 
 %global selinux_variants mls strict targeted
+%define testing_extras 0
 
-#   1. Comment out the debug package define
-#   2. Even commented, it causes problems, so turn it into something like
-#      this:  % define debug _ package % { n i l }
-# To squelch debuginfo package creation, uncomment the line, and then
-# reconstruct the debug package define as it should be
+# Usually want a debug package available and built. If you do not want them
+# built, reconstruct this nil'ifying define below. It is deconstructed because
+# RPM recognizes certain things, like defines, even if they are in commments.
 #% define debug _package % { n i l }
+
 # https://fedoraproject.org/wiki/Changes/Harden_All_Packages
-#%define _hardened_build 0
-
-# "bump" refers to "release bump" and is a build identifier.
-%define bump 0
-
-# "bumptag" is used to indicate additional information, usually an identifier,
-# like the builder's initials, or a date, or both, or nil.
-%define bumptag taw
-#% define bumptag %{nil}
+%define _hardened_build 0
 
 %define _name1 dash
 %define _name2 dashcore
 %define _version_major 0.12.1
-%define _version_minor 2
+%define _version_minor 4
+
+# Note: "bump" and "bumptag" are release-build identifiers.
+# Often the bumptag is undefined, or the builder's initials, a date, or whatever.
+# To undefine, flip-flop the define/undefine ordering
+
+%define bump 0
+%undefine bumptag
+%define bumptag taw
+
+%if %{?bumptag}
 %define _release %{bump}.%{bumptag}
+%else
+%define _release %{bump}
+%endif
+
 
 Name: %{_name2}
 Version: %{_version_major}.%{_version_minor}
@@ -73,7 +86,6 @@ Group: Applications/System
 License: MIT
 URL: http://dash.org/
 # upstream
-#Source0: %{archivebasename}.tar.gz
 Source0: %{archivebasename}.tar.gz
 
 # Source archive of contributions not yet in main upstream package.
@@ -91,19 +103,22 @@ BuildRequires: desktop-file-utils autoconf automake
 BuildRequires: boost-devel libdb4-cxx-devel libevent-devel
 BuildRequires: libtool java
 
-# ZeroMQ not testable yet on RHEL due to lack of python3-zmq so
-# enable only for Fedora
-%if 0%{?fedora}
-BuildRequires: python3-zmq zeromq-devel
-%endif
+# I don't think this check is needed anymore -comment out for now. -t0dd
+## ZeroMQ not testable yet on RHEL due to lack of python3-zmq so
+## enable only for Fedora
+#%if 0%{?fedora}
+#BuildRequires: python3-zmq zeromq-devel
+#%endif
 
 # Python tests still use OpenSSL for secp256k1, so we still need this to run
 # the testsuite on RHEL7, until Red Hat fixes OpenSSL on RHEL7. It has already
 # been fixed on Fedora. Bitcoin itself no longer needs OpenSSL for secp256k1.
-%if 0%{?rhel}
-# via the bitcoin repos, see https://linux.ringingliberty.com/bitcoin/
-BuildRequires: openssl-compat-bitcoin-libs
-BuildRequires: python34
+# To support this, we are tracking https://linux.ringingliberty.com/bitcoin/el7/SRPMS/
+# ...aka: https://linux.ringingliberty.com/bitcoin/el$releasever/$basearch
+# We bring it in-house, rebuild, and supply at https://copr.fedorainfracloud.org/coprs/taw/dashcore-openssl-compat/
+# ...aka: https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-openssl-compat/epel-$releasever-$basearch/
+%if %{testing_extras} && 0%{?rhel}
+BuildRequires: openssl-compat-dashcore-libs
 %endif
 
 
@@ -127,9 +142,6 @@ Requires(postun): /usr/sbin/semodule, /sbin/restorecon, /sbin/fixfiles
 #t0dd Requires: selinux-policy
 #t0dd Requires: policycoreutils-python
 Requires: openssl-libs
-#Requires: dashcore-utils%{?_isa} = %{version}-%{_release}
-#Requires: dashcore-utils = %{version}-%{_release}
-#Requires: dashcore-utils = %{version}
 Requires: dashcore-utils = %{version}-%{release}
 Requires: dashcore-sentinel
 
@@ -142,8 +154,6 @@ Summary: Dash - Digital Cash - Peer-to-peer, privacy-centric, digital currency (
 # dashcore-devel
 %package devel
 Summary: Dash - Digital Cash - Peer-to-peer, privacy-centric, digital currency (dev libraries and headers)
-#Requires: dashcore-libs%{?_isa} = %{version}-%{_release}
-#Requires: dashcore-libs = %{version}-%{_release}
 Requires: dashcore-libs = %{version}-%{release}
 
 
@@ -318,13 +328,19 @@ cd ..
 
 
 %check
+cd %{dashtree}
+%if %{testing_extras}
 # Run all the tests
-#t0dd make check
-#t0dd # Run all the other tests
+make check
+# Run all the other tests
+#t0dd COMMENTED OUT FOR NOW -- Requires https://github.com/dashpay/dash_hash
+#t0dd incorporated into the builds and that is not done yet.
 #t0dd pushd src
-#t0dd srcdir=. test/dashcore-util-test.py
+#t0dd srcdir=. test/bitcoin-util-test.py
 #t0dd popd
-#t0dd LD_LIBRARY_PATH=/opt/openssl-compat-dash/lib PYTHONUNBUFFERED=1  qa/pull-tester/rpc-tests.py -extended
+#t0dd LD_LIBRARY_PATH=/opt/openssl-compat-dashcore/lib PYTHONUNBUFFERED=1  qa/pull-tester/rpc-tests.py -extended
+%endif
+cd ..
 
 
 %install
@@ -344,10 +360,11 @@ install -d -m755 -p %{buildroot}%{_sbindir}
 install -D -m755 -p %{buildroot}%{_bindir}/dashd %{buildroot}%{_sbindir}/dashd
 rm -f %{buildroot}%{_bindir}/dashd
 
-# Remove the test binaries
-# TESTING ONLY: For test releases, comment the next two lines
+%if ! %{testing_extras}
+# Remove the test binaries if still floating around
 rm -f %{buildroot}%{_bindir}/test_*
 rm -f %{buildroot}%{_bindir}/bench_dash
+%endif
 
 
 # Install / config ancillary files
@@ -450,8 +467,10 @@ cd ..
 
 # Service definition files for firewalld for full nodes and masternodes (from contrib)
 cd %{contribtree}
-install -D -m644 -p ./contrib/linux/firewalld/usr-lib-firewalld-services_dashcore-node.xml %{buildroot}%{_prefix}/lib/firewalld/services/dashcore-node.xml
-install -D -m644 -p ./contrib/linux/firewalld/usr-lib-firewalld-services_dashcore-node-testnet.xml %{buildroot}%{_prefix}/lib/firewalld/services/dashcore-node-testnet.xml
+install -D -m644 -p ./contrib/linux/firewalld/usr-lib-firewalld-services_dashcore.xml %{buildroot}%{_prefix}/lib/firewalld/services/dashcore.xml
+install -D -m644 -p ./contrib/linux/firewalld/usr-lib-firewalld-services_dashcore-testnet.xml %{buildroot}%{_prefix}/lib/firewalld/services/dashcore-testnet.xml
+install -D -m644 -p ./contrib/linux/firewalld/usr-lib-firewalld-services_dashcore-rpc.xml %{buildroot}%{_prefix}/lib/firewalld/services/dashcore-rpc.xml
+install -D -m644 -p ./contrib/linux/firewalld/usr-lib-firewalld-services_dashcore-testnet-rpc.xml %{buildroot}%{_prefix}/lib/firewalld/services/dashcore-testnet-rpc.xml
 cd ..
 
 #t0dd # Install SELinux policy
@@ -547,12 +566,15 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 %{_datadir}/icons/*
 %{_mandir}/man1/dash-qt.1.gz
 %{_mandir}/man5/masternode.conf.5.gz
-%{_prefix}/lib/firewalld/services/dashcore-node.xml
-%{_prefix}/lib/firewalld/services/dashcore-node-testnet.xml
+%{_prefix}/lib/firewalld/services/dashcore.xml
+%{_prefix}/lib/firewalld/services/dashcore-testnet.xml
+%{_prefix}/lib/firewalld/services/dashcore-rpc.xml
+%{_prefix}/lib/firewalld/services/dashcore-testnet-rpc.xml
 %config(noreplace) %attr(640,dashcore,dashcore) %{_sysconfdir}/dashcore/dash.conf
 
-# TESTING ONLY: For test releases, uncomment the test binaries.
-#%{_bindir}/test_dash-qt
+%if %{testing_extras}
+%{_bindir}/test_dash-qt
+%endif
 
 
 # dashcore-server
@@ -572,8 +594,10 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 %ghost %{_sharedstatedir}/dashcore/testnet3/debug.log
 %attr(644,root,root) /etc/logrotate.d/dashcore
 %{_unitdir}/dashd.service
-%{_prefix}/lib/firewalld/services/dashcore-node.xml
-%{_prefix}/lib/firewalld/services/dashcore-node-testnet.xml
+%{_prefix}/lib/firewalld/services/dashcore.xml
+%{_prefix}/lib/firewalld/services/dashcore-testnet.xml
+%{_prefix}/lib/firewalld/services/dashcore-rpc.xml
+%{_prefix}/lib/firewalld/services/dashcore-testnet-rpc.xml
 %doc SELinux/*
 %{_sbindir}/dashd
 %{_tmpfilesdir}/dashd.conf
@@ -582,9 +606,10 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 %{_mandir}/man5/masternode.conf.5.gz
 #t0dd %{_datadir}/selinux/*/dash.pp
 
-# TESTING ONLY: For test releases, uncomment the test binaries.
-#%{_bindir}/test_dash
-#%{_bindir}/bench_dash
+%if %{testing_extras}
+%{_bindir}/test_dash
+%{_bindir}/bench_dash
+%endif
 
 
 # dashcore-libs
@@ -637,10 +662,30 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Documentation: https://dashpay.atlassian.net/wiki/display/DOC/Testnet
 
 %changelog
+* Wed Mar 22 2017 Todd Warner <t0dd@protonmail.com> 0.12.1.4-0.taw
+- Added RPC port to available firewalld services.
+- Renamed firewalld services to match bitcoin's firewalld service name taxonomies.
+- 7218baaa1aa8052960ffc0c36904b6f5647256f9773c17e8506be37a2d3cc0cb  dash-0.12.1.4.tar.gz
+- e3e4351656afda2ff23cb142d264af4b4d04d0bbe9f3326ce24019423f6adf94  dashcore-0.12.1-contrib.tar.gz
+- 
+* Sat Mar 04 2017 Todd Warner <t0dd@protonmail.com> 0.12.1.3-1.taw
+- Brought back the test scripts (most of them), made them conditional. Added
+- back and adjusted build-requires for openssl-compat that uses our own
+- openssl-compat builds. Test scripts / openssl-compat seem to only work for
+- very old linux--CentOS7/RHEL7 Ie. I have more work to do to make them part of
+- the build.
+-
+- "bumptag" now can be defined or undefined and we do the right thing.
+- 
+* Thu Mar 02 2017 Todd Warner <t0dd@protonmail.com> 0.12.1.3-0.taw
+- Release 0.12.1.3 - 119fe83
+- Announcement: https://github.com/dashpay/dash/releases/tag/v0.12.1.3
+- 1f6e6fb528151c8703019ed1511562b0c8bc91fe8c7ac6838a3811ffd1af288a  dash-0.12.1.3.tar.gz
+- d4c0f01ea5fa017f6362269495d2cd32e724d9e4d2e584bf5e9a0057b493dfbb  dashcore-0.12.1-contrib.tar.gz
+-
 * Fri Feb 24 2017 Todd Warner <t0dd@protonmail.com> 0.12.1.2-0.taw
 - Release 0.12.1.2 - a1ef547
 - Announcement: https://github.com/dashpay/dash/releases/tag/v0.12.1.2
--
 - 8a99d35dd7b87c42efa698d2ac36f2cca98aa501ce2f7dcb5e8d27b749efb72d  dash-0.12.1.2.tar.gz
 - 04335cbef729480e6b7c11243a0613a34c128f3388f97e80b255bd05fd27cae3  dashcore-0.12.1-contrib.tar.gz
 -
