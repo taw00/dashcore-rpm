@@ -12,10 +12,11 @@
 * All documents:<br /><https://github.com/taw00/dashcore-rpm/tree/master/documentation>
 * The overview (this document):<br /><https://github.com/taw00/dashcore-rpm/edit/master/documentation/README.md>
 
-* Wallet setup: [HowTo: Dash Wallet in support of a Dash Masternode](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.12.1-dashcore-collateral-bearing-wallet-setup.gui.md)
-* Masternode setup: [HowTo: Dash Masternode as SystemD Service](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.12.1-dashcore-masternode-setup.systemd.md)
+* Wallet setup: [Set up a Dash Wallet in support of a Dash Masternode](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.12.1-dashcore-collateral-bearing-wallet-setup.gui.md)
+* Masternode setup: [Configure and Run a Dash Masternode as SystemD Service](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.12.1-dashcore-masternode-setup.systemd.md)
 * Discussion about security: [Configure FirewallD and Fail2Ban on a Dash Masternode](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.secure-your-dash-masternode.md)
 * Troubleshooting: [Dash Core Troubleshooting Guide](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.12.1-dashcore-troubleshooting.md)
+* Updating: [HowTo Update your Wallet, Node, or Masternode](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.update-a-wallet-node-or-masternode.md)
 
 &nbsp;
 
