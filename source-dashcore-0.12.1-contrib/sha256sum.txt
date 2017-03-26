@@ -1,1 +1,1 @@
-e3e4351656afda2ff23cb142d264af4b4d04d0bbe9f3326ce24019423f6adf94  dashcore-0.12.1-contrib.tar.gz
+490466d6d7f72fa64641a51c74aadd84bcfb57196aacb3d1615666004e1d3f52  dashcore-0.12.1-contrib.tar.gz

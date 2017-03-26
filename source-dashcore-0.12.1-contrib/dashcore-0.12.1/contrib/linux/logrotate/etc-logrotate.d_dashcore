@@ -4,7 +4,8 @@
     missingok
     notifempty
     compress
-    maxsize 500k
+    maxsize 50M
     copytruncate
+    nodateext
 }
 
