@@ -195,6 +195,8 @@ passwd mnuser
 
 # If the user already exists, do this...
 usermod -a -G wheel mnuser
+
+# If you are using ubuntu instead of a Red Hat derivative, replace 'wheel' with 'sudoers'
 ```
 
 Again, work through the SSH instructions (see Vultr example) and set it up so
@@ -205,7 +207,7 @@ you can ssh into the system without a password from your desktop system.
 > Choose a difficult scrambled password for both `root` and your `mnuser` user.
 > Then ensure ssh keys are set up so you can ssh to the instance without having
 > to type passwords. And finally, edit the `/etc/sudoers` configuration file
-> and uncomment the `%wheel` line that includes the `NOPASSWD` qualifier. This
+> and uncomment the `%/` line that includes the `NOPASSWD` qualifier. This
 > will allow you to `sudo` as the `mnuser` user without having to cut-n-paste a
 > password all the time.
 
@@ -654,7 +656,7 @@ something like `NEW_START_REQUIRED`
 If all went well, you have a working Dash Masternode! Congratulations. I hope
 this was helpful.
 
-Got a dash of feedback? *...har har...* Send it my way <t0dd@protonmail.com>    
+Got a dash of feedback? *...har har...* Send it my way <https://keybase.io/toddwarner>    
 And of course, donations are welcome: [XyxQq4qgp9B53QWQgSqSxJb4xddhzk5Zhh](dash:XyxQq4qgp9B53QWQgSqSxJb4xddhzk5Zhh)
 
 &nbsp;
@@ -736,4 +738,4 @@ To learn more, follow this link: <https://github.com/taw00/howto/blob/master/how
 
 ----
 
-***Good luck. Comments and feedback to <t0dd@protonmail.com>***
+***Good luck. Comments and feedback to <https://keybase.io/toddwarner>***

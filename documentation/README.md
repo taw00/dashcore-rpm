@@ -97,7 +97,7 @@ Data directory: Usually either `/var/lib/dashcore` or `$HOME/.dashcore`
 
 # Good luck!
 
-Got a dash of feedback? *...har har...* Send it my way <t0dd@protonmail.com>    
+Got a dash of feedback? *...har har...* Send it my way <https://keybase.io/toddwarner>    
 And of course, donations welcome: <a href="dash:XyxQq4qgp9B53QWQgSqSxJb4xddhzk5Zhh">XyxQq4qgp9B53QWQgSqSxJb4xddhzk5Zhh</a>
 
 All documents in this directory tree are

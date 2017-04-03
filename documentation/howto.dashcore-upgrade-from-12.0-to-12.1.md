@@ -251,4 +251,4 @@ rules are rechecked (see `howto.secure-your-dash-masternode.md`).
 
 ## Good luck
 
-Got a dash of feedback? *...har har...* Send it my way <t0dd@protonmail.com>    
+Got a dash of feedback? *...har har...* Send it my way <https://keybase.io/toddwarner>    

@@ -29,7 +29,7 @@ the simplest way to deploy and manage a Dash Wallet, Node, or Masternode. For
 more about the available binary RPMs, please visit this link:
 <https://github.com/taw00/dashcore-rpm/blob/master/README.binaries.md>**
 
-## Send comment and feedback -[Todd](https://keybase.io/toddwarner)
+## Send comment and feedback - <https://keybase.io/toddwarner>
 
 _And come say hello to me. I am **t0dd**, **taw**, **taw00**, or **agrarian**,
 in various forums: [dash.org's forums](https://www.dash.org/forum/),

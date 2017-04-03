@@ -65,4 +65,4 @@ dashd
 Yup. That's it. That's the power of of good packaging, permissions, and
 integration with the operating system.
 
-Send feedback or comments or Dash! to <t0dd@protonmail.com>
+Send feedback or comments or Dash! to <https://keybase.io/toddwarner>

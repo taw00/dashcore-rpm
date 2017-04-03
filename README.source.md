@@ -349,7 +349,7 @@ And if you are feeling really ambitious, you can set up a publicly facing dnf
 super-automated means to the world (keep reading the Fedora documentation for
 more information about yum and dnf).
 
-## That should get you started! Good luck! -[Todd](https://keybase.io/toddwarner)
+## That should get you started! Good luck! - <https://keybase.io/toddwarner>
 
 _And come say hello to me. I am **t0dd**, **taw**, **taw00**, or **agrarian**,
 in various forums: [dash.org's forums](https://www.dash.org/forum/),
