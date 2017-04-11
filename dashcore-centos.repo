@@ -42,8 +42,9 @@ skip_if_unavailable=True
 gpgcheck=1
 gpgkey=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.1-rc/pubkey.gpg
 repo_gpgcheck=0
-# Check for new packages is typically 2d (2 days)
-metadata_expire=1d
+# Checks for new RC packages more often than the default 2d (2 days)
+#metadata_expire=6h
+metadata_expire=0
 enabled=0
 enabled_metadata=1
 
@@ -51,8 +52,9 @@ enabled_metadata=1
 name=Dash Core - TESTING - epel-$releasever-$basearch
 baseurl=https://toddwarner.keybase.pub/repo/dashcore/testing/centos/$releasever/$basearch/
 type=rpm-md
-# Checks for new test packages more often than the default 2d (2 days)a
-metadata_expire=6h
+# Checks for new test packages more often than the default 2d (2 days)
+#metadata_expire=6h
+metadata_expire=0
 gpgcheck=1
 gpgkey=https://keybase.io/toddwarner/key.asc
 skip_if_unavailable=True
@@ -63,7 +65,8 @@ name=Dash Core - TESTING source - epel-$releasever-$basearch
 baseurl=https://toddwarner.keybase.pub/repo/dashcore/testing/centos/$releasever/source/
 type=rpm-md
 # Checks for new test packages more often than the default 2d (2 days)a
-metadata_expire=6h
+#metadata_expire=6h
+metadata_expire=0
 gpgcheck=1
 gpgkey=https://keybase.io/toddwarner/key.asc
 skip_if_unavailable=True

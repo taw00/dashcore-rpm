@@ -40,7 +40,7 @@
 %define _name1 dash
 %define _name2 dashcore
 %define _version_major 0.12.1
-%define _version_minor 4
+%define _version_minor 5
 
 # Note: "bump" and "bumptag" are release-build identifiers.
 # Often the bumptag is undefined, or the builder's initials, a date, or whatever.
@@ -662,6 +662,11 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Documentation: https://dashpay.atlassian.net/wiki/display/DOC/Testnet
 
 %changelog
+* Tue Apr 11 2017 Todd Warner <t0dd@protonmail.com> 0.12.1.5-0.taw
+- Fixes a watchdog propagation issue.
+- 4e52b2427f1ea46f0ff5b31b0dd044478fba6a076611a97a9c2d3d345374459f  dash-0.12.1.5.tar.gz
+- e3e4351656afda2ff23cb142d264af4b4d04d0bbe9f3326ce24019423f6adf94  dashcore-0.12.1-contrib.tar.gz
+-
 * Wed Mar 22 2017 Todd Warner <t0dd@protonmail.com> 0.12.1.4-0.taw
 - Added RPC port to available firewalld services.
 - Renamed firewalld services to match bitcoin's firewalld service name taxonomies.
