@@ -273,15 +273,10 @@ you know what you are doing, I do not recommend you enable those repositories.
   when debugging this package. (*99.999% of you do not need to install this*)
 
 
-#### Acknowledgment
-
-It is important to note and acknowledge that I referenced the good work that
-Michael Hampton did with his Bitcoin packages. His work can be found here:
-<https://www.ringingliberty.com/bitcoin/> His hard work helped me get to working
-builds faster.
+---
 
 #### Good luck!
 
-Got a dash of feedback? *...har har...* Send it my way <https://keybase.io/toddwarner>
+Got a dash of feedback? Send it my way: <https://keybase.io/toddwarner>
 And of course, donations welcome: [XyxQq4qgp9B53QWQgSqSxJb4xddhzk5Zhh](dash:XyxQq4qgp9B53QWQgSqSxJb4xddhzk5Zhh)
 

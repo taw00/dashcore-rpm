@@ -277,6 +277,7 @@ sudo tail -F /var/log/fail2ban.log
 
 ---
 
-## Done!
+### Done!
 
-Good luck! Comments and feedback to <https://keybase.io/toddwarner>
+Comments, questions, donations - <https://keybase.io/toddwarner>
+

@@ -93,9 +93,9 @@ Data directory: Usually either `/var/lib/dashcore` or `$HOME/.dashcore`
 
 * `network=testnet` or `network=mainnet` &mdash; Leave this commented out and allow `dash.conf` to determine Sentinel's operating posture.
 
-&nbsp;
+---
 
-# Good luck!
+### Good luck! Comments and Feedback...
 
 Got a dash of feedback? *...har har...* Send it my way <https://keybase.io/toddwarner>    
 And of course, donations welcome: <a href="dash:XyxQq4qgp9B53QWQgSqSxJb4xddhzk5Zhh">XyxQq4qgp9B53QWQgSqSxJb4xddhzk5Zhh</a>

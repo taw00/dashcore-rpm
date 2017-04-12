@@ -103,7 +103,8 @@ How many masternodes are enabled at the moment?
 sudo -u dashcore watch -n15 "dash-cli -conf=/etc/dashcore/dash.conf masternode list full| grep ENABLED|grep -v PRE_ENABLED|wc -l"
 ```
 
+---
 
-## That's all for the moment. Stay tuned. -t0dd
+### That's all for the moment. Stay tuned. -t0dd
 
 Comments, questions, donations - <https://keybase.io/toddwarner>

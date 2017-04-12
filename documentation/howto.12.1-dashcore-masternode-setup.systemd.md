@@ -736,6 +736,9 @@ If, on the other hand, you can alert the operating system that it needs to wipe 
 To learn more, follow this link: <https://github.com/taw00/howto/blob/master/howto-enable-ssd-trim-for-linux.md>
 
 
-----
+---
 
-***Good luck. Comments and feedback to <https://keybase.io/toddwarner>***
+### Good luck! Comments and Feedback...
+
+Got a dash of feedback? Send it my way: <https://keybase.io/toddwarner>
+And of course, donations are welcome: [XyxQq4qgp9B53QWQgSqSxJb4xddhzk5Zhh](dash:XyxQq4qgp9B53QWQgSqSxJb4xddhzk5Zhh)

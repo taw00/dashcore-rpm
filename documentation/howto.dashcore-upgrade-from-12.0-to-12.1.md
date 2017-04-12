@@ -249,6 +249,9 @@ everything up. Just try again.
 More configuration. At your convenient, you really should ensure your firewall
 rules are rechecked (see `howto.secure-your-dash-masternode.md`).
 
-## Good luck
+---
 
-Got a dash of feedback? *...har har...* Send it my way <https://keybase.io/toddwarner>    
+### Good luck! Comments and Feedback...
+
+Got a dash of feedback? Send it my way: <https://keybase.io/toddwarner>
+And of course, donations are welcome: [XyxQq4qgp9B53QWQgSqSxJb4xddhzk5Zhh](dash:XyxQq4qgp9B53QWQgSqSxJb4xddhzk5Zhh)

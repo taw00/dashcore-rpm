@@ -60,9 +60,11 @@ sudo dnf upgrade -y --refresh && sudo reboot
 dashd
 ```
 
+---
+
 ### Yes, it is that simple.
 
 Yup. That's it. That's the power of of good packaging, permissions, and
 integration with the operating system.
 
-Send feedback or comments or Dash! to <https://keybase.io/toddwarner>
+Comments, questions, donations - <https://keybase.io/toddwarner>

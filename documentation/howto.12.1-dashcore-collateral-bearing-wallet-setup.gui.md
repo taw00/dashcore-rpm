@@ -339,10 +339,10 @@ mn1 110.111.112.113:9999 92yZY5b8bYD5G2Qh1C7Un6Tf3TG3mH4LUZha2rdj3QUDGHNg4W9 b34
 ```
 
 
-## All (mostly) done!
+## All done! _...mostly_
 
-You have a functioning wallet set up with 1000 DASH or tDASH ready to serve as
-the collateralizing agent for a masternode.
+You now have a functioning wallet set up with 1000 DASH or tDASH ready to serve
+as the collateralizing agent for a masternode.
 
 Next steps to completion are...
 
@@ -353,7 +353,11 @@ Next steps to completion are...
 5. Use your wallet to tell the full node it is really a masternode
 6. Configure Sentinel
 
-These steps are covered in another set of documents
+Those steps are covered in another set of documents
 
-Got a dash of feedback? *...har har...* Send it my way <https://keybase.io/toddwarner>
+---
+
+### Good luck! Comments and Feedback...
+
+Got a dash of feedback? Send it my way: <https://keybase.io/toddwarner>
 And of course, donations are welcome: [XyxQq4qgp9B53QWQgSqSxJb4xddhzk5Zhh](dash:XyxQq4qgp9B53QWQgSqSxJb4xddhzk5Zhh)

@@ -349,18 +349,14 @@ And if you are feeling really ambitious, you can set up a publicly facing dnf
 super-automated means to the world (keep reading the Fedora documentation for
 more information about yum and dnf).
 
-## That should get you started! Good luck! - <https://keybase.io/toddwarner>
+---
 
-_And come say hello to me. I am **t0dd**, **taw**, **taw00**, or **agrarian**,
+### That should get you started! Good luck! - <https://keybase.io/toddwarner>
+
+_Come say hello to me. I am **t0dd**, **taw**, **taw00**, or **agrarian**,
 in various forums: [dash.org's forums](https://www.dash.org/forum/),
 [#dash:chat.cryptochat.io (matrix
 network)](https://riot.im/app/#/room/#dash:chat.cryptochat.io), [#dashpay on
 freenode IRC](http://freenode.net/), [Dash Knights 2.0 on
 Telegram](https://web.telegram.org/#/im?p=@DashDigitalCash), and
 [/r/dashpay/](https://www.reddit.com/r/dashpay) on Reddit._
-
-...
-
-_Special thanks go out to [Michael
-Hampton](https://www.ringingliberty.com/bitcoin/) for his mature bitcoin spec
-file from which I originally templated these dashcore spec files._
