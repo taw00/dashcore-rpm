@@ -1,7 +1,7 @@
 # Dash for Fedora, CentOS, and Red Hat Enterprise Linux<br />_...wallet, node, and masternode_
 
 **Dash (Digital Cash)** is an open source peer-to-peer cryptocurrency that
-offers instant transactions ***(InstantSend)***, private transactions
+offers instant transactions _**(InstantSend)**_, private transactions
 ***(PrivateSend)*** and token fungibility. Dash operates a decentralized
 governance and budgeting system, making it the first decentralized autonomous
 organization (DAO). Dash is also a platform for innovative decentralized
