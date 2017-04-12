@@ -27,11 +27,13 @@ understand.** This makes deploying and maintaining Dash on a Fedora, CentOS, or
 RHEL system dependable, more secure, and oh so very simple. This is arguably
 the simplest way to deploy and manage a Dash Wallet, Node, or Masternode. For
 more about the available binary RPMs, please visit this link:
-<https://github.com/taw00/dashcore-rpm/blob/master/README.binaries.md>**
+<https://github.com/taw00/dashcore-rpm/blob/master/README.binaries.md>
 
-## Send comment and feedback - <https://keybase.io/toddwarner>
+---
 
-_And come say hello to me. I am **t0dd**, **taw**, **taw00**, or **agrarian**,
+### Send comment and feedback - <https://keybase.io/toddwarner>
+
+_Come say hello to me. I am **t0dd**, **taw**, **taw00**, or **agrarian**,
 in various forums: [dash.org's forums](https://www.dash.org/forum/),
 [#dash:chat.cryptochat.io (matrix
 network)](https://riot.im/app/#/room/#dash:chat.cryptochat.io), [#dashpay on
