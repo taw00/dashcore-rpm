@@ -28,7 +28,7 @@ At the terminal command line...
 cd /etc/yum.repos.d/
 sudo curl -O https://raw.githubusercontent.com/taw00/dashcore-rpm/master/dashcore-fedora.repo
 cd -
-sudo dnf install --refesh -y dash-qt
+sudo dnf install -y dashcore-client --refresh
 dash-qt
 ```
 
@@ -39,7 +39,7 @@ dash-qt
 cd /etc/yum.repos.d/
 sudo curl -O https://raw.githubusercontent.com/taw00/dashcore-rpm/master/dashcore-centos.repo
 cd -
-sudo yum install -y dash-qt
+sudo yum install -y dashcore-client
 dash-qt
 ```
 
