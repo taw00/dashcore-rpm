@@ -1,17 +1,17 @@
 # Dash Core (https://dash.org) for CentOS (and Red Hat Enterprise Linux)
-# Stable, Release Candidate, Test, and Discontinued - binaries and sources
+# Stable, Release Candidate, Test, Discontinued - binaries and sources
 #
 # YUM repository configuration
-# Drop this, as root, into your /etc/yum.repos.d/ directory
+# Drop this file, as root, into your /etc/yum.repos.d/ directory...
 #   cd /etc/yum.repos.d/
 #   sudo curl -O https://raw.githubusercontent.com/taw00/dashcore-rpm/master/dashcore-centos.repo
 #   sudo yum list | grep dashcore
 #
 # To install, for example the GUI client, you would do this at the commandline...
-#   sudo dnf install dashcore-client
+#   sudo yum install dashcore-client
 # To update already existing software (check dash.org to seee if there special are upgrade steps that need to be taken)
-#   sudo dnf upgrade
-#   
+#   sudo yum update
+#
 # Note: This file is a convenience file that categorizes the releases nicely.
 # If you are familiar with Fedora COPR, you can follow the direct enablement
 # procedures here instead if you like:
@@ -20,6 +20,59 @@
 # Feedback: t0dd@protonmail.com
 
 [dashcore-stable]
+name=Dash Core 12.2 - stable - epel-$releasever-$basearch
+# Note: SRPMs (*.src.rpm files) are mingled with the binaries. It's just how Copr does it.
+baseurl=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.2/epel-$releasever-$basearch/
+type=rpm-md
+skip_if_unavailable=True
+gpgcheck=1
+gpgkey=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.2/pubkey.gpg
+repo_gpgcheck=0
+# Default metadata_expire is typically 2d (2 days)
+metadata_expire=1d
+enabled=0
+enabled_metadata=1
+
+[dashcore-release-candidate]
+name=Dash Core 12.2-rc - release-candidate - epel-$releasever-$basearch
+# Note: SRPMs (*.src.rpm files) are mingled with the binaries. It's just how Copr does it.
+baseurl=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.2-rc/epel-$releasever-$basearch/
+type=rpm-md
+skip_if_unavailable=True
+gpgcheck=1
+gpgkey=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.2-rc/pubkey.gpg
+repo_gpgcheck=0
+# Checks for new RC packages more often than the default 2d (2 days)
+#metadata_expire=6h
+metadata_expire=0
+enabled=0
+enabled_metadata=1
+
+[dashcore-testing]
+name=Dash Core Testing - epel-$releasever-$basearch
+# Notes:
+# 1. The testing repository always provides the latest packages regardless of
+#    how major the upgrade. In contrast, release quality packages are divided in to their
+#    own per-major version repositories.
+# 2. SRPMs (*.src.rpm files) are mingled with the binaries. It's just how Copr does it.
+baseurl=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-testng/epel-$releasever-$basearch/
+type=rpm-md
+skip_if_unavailable=True
+gpgcheck=1
+gpgkey=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-testing/pubkey.gpg
+repo_gpgcheck=0
+# Checks for new RC packages more often than the default 2d (2 days)
+#metadata_expire=6h
+metadata_expire=0
+enabled=0
+enabled_metadata=1
+
+
+##
+## VERSION 12.1 Repositories
+##
+
+[dashcore-stable-12.1]
 name=Dash Core 12.1 - stable - epel-$releasever-$basearch
 # Note: SRPMs (*.src.rpm files) are mingled with the binaries. It's just how Copr does it.
 baseurl=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.1/epel-$releasever-$basearch/
@@ -28,12 +81,12 @@ skip_if_unavailable=True
 gpgcheck=1
 gpgkey=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.1/pubkey.gpg
 repo_gpgcheck=0
-# Check for new packages is typically 2d (2 days)
+# Default metadata_expire is typically 2d (2 days)
 metadata_expire=1d
 enabled=1
 enabled_metadata=1
 
-[dashcore-release-candidate]
+[dashcore-release-candidate-12.1]
 name=Dash Core 12.1-rc - release-candidate - epel-$releasever-$basearch
 # Note: SRPMs (*.src.rpm files) are mingled with the binaries. It's just how Copr does it.
 baseurl=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.1-rc/epel-$releasever-$basearch/
@@ -48,44 +101,34 @@ metadata_expire=0
 enabled=0
 enabled_metadata=1
 
-[dashcore-testing]
-name=Dash Core - TESTING - epel-$releasever-$basearch
-baseurl=https://toddwarner.keybase.pub/repo/dashcore/testing/centos/$releasever/$basearch/
-type=rpm-md
-# Checks for new test packages more often than the default 2d (2 days)
-#metadata_expire=6h
-metadata_expire=0
-gpgcheck=1
-gpgkey=https://keybase.io/toddwarner/key.asc
-skip_if_unavailable=True
-enabled=0
-
-[dashcore-testing-source]
-name=Dash Core - TESTING source - epel-$releasever-$basearch
-baseurl=https://toddwarner.keybase.pub/repo/dashcore/testing/centos/$releasever/source/
-type=rpm-md
-# Checks for new test packages more often than the default 2d (2 days)a
-#metadata_expire=6h
-metadata_expire=0
-gpgcheck=1
-gpgkey=https://keybase.io/toddwarner/key.asc
-skip_if_unavailable=True
-enabled=0
 
 
-## DON'T USE THESE ANY MORE!
-#[dashcore-discontinued]
-#name=Dash Core 12.0 - discontinued - epel-$releasever-$basearch
-## Note: SRPMs (*.src.rpm files) are mingled with the binaries. It's just how Copr does it.
-#baseurl=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.0/epel-$releasever-$basearch/
+##
+## DON'T USE THESE ANYMORE
+##
+
+#[dashcore-testing]
+#name=Dash Core - TESTING - epel-$releasever-$basearch
+#baseurl=https://toddwarner.keybase.pub/repo/dashcore/testing/epel/$releasever/$basearch/
 #type=rpm-md
-#skip_if_unavailable=True
+## Checks for new test packages more often than the default 2d (2 days)
+##metadata_expire=6h
+#metadata_expire=0
 #gpgcheck=1
-#gpgkey=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.0/pubkey.gpg
-#repo_gpgcheck=0
-## Check for new packages is typically 2d (2 days)
-#metadata_expire=1d
+#gpgkey=https://keybase.io/toddwarner/key.asc
+#skip_if_unavailable=True
 #enabled=0
-#enabled_metadata=1
+
+#[dashcore-testing-source]
+#name=Dash Core - TESTING source - epel-$releasever-$basearch
+#baseurl=https://toddwarner.keybase.pub/repo/dashcore/testing/epel/$releasever/source/
+#type=rpm-md
+## Checks for new test packages more often than the default 2d (2 days)
+##metadata_expire=6h
+#metadata_expire=0
+#gpgcheck=1
+#gpgkey=https://keybase.io/toddwarner/key.asc
+#skip_if_unavailable=True
+#enabled=0
 
 
