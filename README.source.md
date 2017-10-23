@@ -3,12 +3,12 @@
 **Stable source packages: 0.12.1**
 
 The most current source packages can be found in this directory:
-<https://github.com/taw00/dashcore-rpm/tree/master/source-packages>
+<https://github.com/taw00/dashcore-rpm/tree/master/source/packages>
 
-Currently, we have successful builds for Fedora versions 24, 25, 26 and CentOS
-7 (and therefore RHEL7).
+From these source packages, we have successfully built Dash Core for
+Fedora versions 24, 25, 26 and CentOS 7 (and therefore RHEL7).
 
-The components used to build these packages come from:
+The original components used to build these packages come from:
 
 * Tagged release builds / source archives:
   - Dash <https://github.com/dashpay/dash/releases>
@@ -18,23 +18,12 @@ The components used to build these packages come from:
   - Dash <https://bamboo.dash.org/browse/DASHL-DEV/latestSuccessful>
   - Sentinel <https://github.com/dashpay/sentinel>
 
-Each RPM contains contributed imagery and configuration. The latest versions
-can be found here:
+Each RPM contains my own contributed imagery and configuration. The latest
+versions can be found here:
 
-* Dash Contrib: <https://github.com/taw00/dashcore-rpm/tree/master/source-dashcore-0.12.1-contrib>
-* Sentinel Contrib: <https://github.com/taw00/dashcore-rpm/tree/master/source-dashcore-sentinel-1.0-contrib>
+* Dash Contrib: <https://github.com/taw00/dashcore-rpm/tree/master/source/contribs/source-dashcore-0.12.1-contrib>
+* Sentinel Contrib: <https://github.com/taw00/dashcore-rpm/tree/master/source/contribs/source-dashcore-sentinel-1.0-contrib>
 
-
-**Discontinued source packages: 0.12.0.58**<br />   
-*Don't use these packages.*<br />
-Last version and git commit id: v0.12.0.58-g88f3370
-
-Dashcore-0.12.0.58 is no longer usable by the mainnet. They are provided here
-for archival purposes: 
-<https://github.com/taw00/dashcore-rpm/tree/master/source-packages/archive/discontinued>
-
-* Fedora Linux 23: `dashcore-0.12.0.58-2.taw.fc23.src.rpm`
-* CentOS and RHEL 7: `dashcore-0.12.0.58-2.taw.el7.centos.src.rpm`
 
 ----
 
@@ -58,21 +47,18 @@ Important notes:
 
 ```
 dashcore-rpm
-└──source-packages <--- current stable packages
-   ├── discontinued
-   │   └── archive
-   ├── release-candidate
-   ├───testing
-   └── archive
+└─── source
+    ├── contribs <--- contributions (icons, configuration, etc)
+    └── packages <--- current stable packages
+        ├── archive
+        ├── release-candidate
+        └── testing
 ```
 
-* Only use **stable** versions on the mainnet (`testnet=0`).
-  - **Release Candidate** and **Testing** versions are test versions and great to
-    play with on the testnet (`testnet=1`). Please don't use them on the
-    mainnet.
-  - **Discontinued** versions will simply not function anymore on the mainnet or
-    testnet. They are provided for archival purposes.
-
+* Only use **stable** versions on the mainnet (`testnet=0`).<br />
+  **Release Candidate** and **Testing** versions are test versions and great to
+  play with on the testnet (`testnet=1`). Please don't use them on the
+  mainnet.
 
 
 ----
@@ -217,11 +203,11 @@ That should explode source code and patch instruction into
 Something like this...
 
 ```
-~/rpmbuild/SPECS/dashcore-0.12.1.2.spec
-~/rpmbuild/SOURCES/dash-0.12.1.2.tar.gz
-~/rpmbuild/SOURCES/dashcore-0.12.1.2-contrib-fedora.tar.gz
-~/rpmbuild/SOURCES/dashcore-0.12.1.2-dashify.tar.gz
-~/rpmbuild/SOURCES/dashcore-0.12.1.2-fedora.patch
+~/rpmbuild/SPECS/dashcore-0.12.1.5.spec
+~/rpmbuild/SOURCES/dash-0.12.1.5.tar.gz
+~/rpmbuild/SOURCES/dashcore-0.12.1.5-contrib-fedora.tar.gz
+~/rpmbuild/SOURCES/dashcore-0.12.1.5-dashify.tar.gz
+~/rpmbuild/SOURCES/dashcore-0.12.1.5-fedora.patch
 ```
 
 #### [5] Build the binaries
@@ -351,12 +337,8 @@ more information about yum and dnf).
 
 ---
 
-### That should get you started! Good luck! - <https://keybase.io/toddwarner>
+### That should get you started! Good luck!
 
-_Come say hello to me. I am **t0dd**, **taw**, **taw00**, or **agrarian**,
-in various forums: [dash.org's forums](https://www.dash.org/forum/),
-[#dash:chat.cryptochat.io (matrix
-network)](https://riot.im/app/#/room/#dash:chat.cryptochat.io), [#dashpay on
-freenode IRC](http://freenode.net/), [Dash Knights 2.0 on
-Telegram](https://web.telegram.org/#/im?p=@DashDigitalCash), and
-[/r/dashpay/](https://www.reddit.com/r/dashpay) on Reddit._
+Got a dash of feedback? Send it my way: <https://keybase.io/toddwarner>
+And of course, donations welcome: [XyxQq4qgp9B53QWQgSqSxJb4xddhzk5Zhh](dash:XyxQq4qgp9B53QWQgSqSxJb4xddhzk5Zhh)
+
