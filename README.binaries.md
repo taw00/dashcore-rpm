@@ -16,7 +16,7 @@ If you know your way around yum, dnf, and Dash Core, I could reduce this documen
 **dashcore-centos.repo:** <https://github.com/taw00/dashcore-rpm/blob/master/dashcore-centos.repo><br />
 Otherwise, keep reading.
 
-## *"TL;DR -- I just want to install the Dash Core GUI Wallet!"*
+## *"TL;DR ...I just want to install the Dash Core GUI Wallet!"*
 
 Proper packaging and repositories make installation trivial.
 
@@ -46,7 +46,7 @@ dash-qt
 **Boom! Done!** You should now see a Dash GUI Wallet open up on your screen and
 reference to it in your desktop menus.
 
-## *"TL;DR -- I want to install a Dash Masternode!"*
+## *"TL;DR ...I want to install a Dash Masternode!"*
 
 That takes some explanation. Start here:
 <https://github.com/taw00/dashcore-rpm/tree/master/documentation>
