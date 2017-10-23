@@ -307,18 +307,18 @@ If all goes to plan, in 30 or 40 minutes you should have a set of binary
 packages, specifically built to your system with a release of '7.bm'.
 
 If there is a significant problem where you have to, for example, fix the
-`configure.ac` file in the `dash-0.12.1.2.tar.gz` archive (common issue)... you
+`configure.ac` file in the `dash-0.12.1.5.tar.gz` archive (common issue)... you
 will have to do something like this:
 
 * Copy the archive to some working director and then extract it...
 
-      tar xvzf dash-0.12.1.2.tar.gz
+      tar xvzf dash-0.12.1.5.tar.gz
 
 * Copy the resultant (the original pristine) folder…
 
-      cp -a dash-0.12.1.2 dash-0.12.1.2.orig --
+      cp -a dash-0.12.1.5 dash-0.12.1..orig --
 
-* Work on the `dash-0.12.1.2/configure.ac` file, build a new patch, and try to
+* Work on the `dash-0.12.1.5/configure.ac` file, build a new patch, and try to
   rebuild things (iterate iterate iterate). All that is a bit beyond this
   document, but this is a good place to start to understand RPMs:
   https://fedoraproject.org/wiki/How_to_create_an_RPM_package

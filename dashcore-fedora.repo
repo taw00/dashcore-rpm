@@ -25,17 +25,17 @@
 # Feedback: t0dd@protonmail.com
 
 [dashcore-stable]
-name=Dash Core 12.2 - stable - fedora-$releasever-$basearch
+name=Dash Core 12.1 - stable - fedora-$releasever-$basearch
 # Note: SRPMs (*.src.rpm files) are mingled with the binaries. It's just how Copr does it.
-baseurl=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.2/fedora-$releasever-$basearch/
+baseurl=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.1/fedora-$releasever-$basearch/
 type=rpm-md
 skip_if_unavailable=True
 gpgcheck=1
-gpgkey=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.2/pubkey.gpg
+gpgkey=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.1/pubkey.gpg
 repo_gpgcheck=0
 # Default metadata_expire is typically 2d (2 days)
 metadata_expire=1d
-enabled=0
+enabled=1
 enabled_metadata=1
 
 [dashcore-release-candidate]
@@ -91,29 +91,28 @@ metadata_expire=1d
 enabled=1
 enabled_metadata=1
 
-[dashcore-release-candidate-12.1]
-name=Dash Core 12.1-rc - release-candidate - fedora-$releasever-$basearch
-# Note: SRPMs (*.src.rpm files) are mingled with the binaries. It's just how Copr does it.
-baseurl=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.1-rc/fedora-$releasever-$basearch/
-type=rpm-md
-skip_if_unavailable=True
-gpgcheck=1
-gpgkey=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.1-rc/pubkey.gpg
-repo_gpgcheck=0
-# Checks for new RC packages more often than the default 2d (2 days)
-#metadata_expire=6h
-metadata_expire=0
-enabled=0
-enabled_metadata=1
-
-
 
 ##
 ## DON'T USE THESE ANYMORE
 ##
 
+#[dashcore-release-candidate-12.1]
+#name=Dash Core 12.1-rc - release-candidate - fedora-$releasever-$basearch
+## Note: SRPMs (*.src.rpm files) are mingled with the binaries. It's just how Copr does it.
+#baseurl=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.1-rc/fedora-$releasever-$basearch/
+#type=rpm-md
+#skip_if_unavailable=True
+#gpgcheck=1
+#gpgkey=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.1-rc/pubkey.gpg
+#repo_gpgcheck=0
+## Checks for new RC packages more often than the default 2d (2 days)
+##metadata_expire=6h
+#metadata_expire=0
+#enabled=0
+#enabled_metadata=1
+
 #[dashcore-testing]
-#name=Dash Core - TESTING - fedora-$releasever-$basearch
+#name=Dash Core - TESTING from Keybase Repos - fedora-$releasever-$basearch
 #baseurl=https://toddwarner.keybase.pub/repo/dashcore/testing/fedora/$releasever/$basearch/
 #type=rpm-md
 ## Checks for new test packages more often than the default 2d (2 days)
@@ -125,7 +124,7 @@ enabled_metadata=1
 #enabled=0
 
 #[dashcore-testing-source]
-#name=Dash Core - TESTING source - fedora-$releasever-$basearch
+#name=Dash Core - TESTING source from Keybase Repos - fedora-$releasever-$basearch
 #baseurl=https://toddwarner.keybase.pub/repo/dashcore/testing/fedora/$releasever/source/
 #type=rpm-md
 ## Checks for new test packages more often than the default 2d (2 days)
