@@ -35,7 +35,7 @@ more about the available binary RPMs, please visit this link:
 
 _Come say hello to me. I am **t0dd**, **taw**, **taw00**, or **agrarian**, in various forums:
 [Dash Nation on Discord](https://dashchat.org/),
-[dash.org's forums](https://www.dash.org/forum/),
+[dash.org's forum](https://www.dash.org/forum/),
 [#dash:chat.cryptochat.io (matrix network)](https://riot.im/app/#/room/#dash:chat.cryptochat.io),
 [#dashpay on freenode IRC](http://freenode.net/),
 [Dash Knights 2.0 on Telegram](https://web.telegram.org/#/im?p=@DashDigitalCash), and
