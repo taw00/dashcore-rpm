@@ -21,8 +21,11 @@ The original components used to build these packages come from:
 Each RPM contains my own contributed imagery and configuration. The latest
 versions can be found here:
 
-* Dash Contrib: <https://github.com/taw00/dashcore-rpm/tree/master/source/contribs/source-dashcore-0.12.1-contrib>
-* Sentinel Contrib: <https://github.com/taw00/dashcore-rpm/tree/master/source/contribs/source-dashcore-sentinel-1.0-contrib>
+<https://github.com/taw00/dashcore-rpm/tree/master/source/contribs/>
+
+* Dash 12.1 Contrib: <https://github.com/taw00/dashcore-rpm/tree/master/source/contribs/source-dashcore-0.12.1-contrib>
+* Dash 12.2 Contrib: <https://github.com/taw00/dashcore-rpm/tree/master/source/contribs/source-dashcore-0.12.2-contrib>
+* Sentinel 1.0 Contrib: <https://github.com/taw00/dashcore-rpm/tree/master/source/contribs/source-dashcore-sentinel-1.0-contrib>
 
 
 ----
