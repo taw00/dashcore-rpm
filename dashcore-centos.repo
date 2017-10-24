@@ -55,7 +55,7 @@ name=Dash Core Testing - epel-$releasever-$basearch
 #    how major the upgrade. In contrast, release quality packages are divided in to their
 #    own per-major version repositories.
 # 2. SRPMs (*.src.rpm files) are mingled with the binaries. It's just how Copr does it.
-baseurl=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-testng/epel-$releasever-$basearch/
+baseurl=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-testing/epel-$releasever-$basearch/
 type=rpm-md
 skip_if_unavailable=True
 gpgcheck=1
