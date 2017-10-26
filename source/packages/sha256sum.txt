@@ -1,10 +1,7 @@
-24b664166dc6224aa524b4a378a44502cc065e277d0e37317163105de5400036  dashcore-0.12.1.4-0.taw.el7.centos.src.rpm
-bca9a006958b9ca1c54ed2cb9e1857e858b4196c7dcfd8ec1bbebcdbf42a24ce  dashcore-0.12.1.4-0.taw.fc24.src.rpm
-65299bf7d1a6050c896398d11bf00e9801f37792f135331ae58a1adcca08a6cb  dashcore-0.12.1.4-0.taw.fc25.src.rpm
-b2603f912e198ecfb9c3aaec2aa35c976c85f185b9332c5f1972393437bb2602  dashcore-0.12.1.4-0.taw.fc26.src.rpm
 d4d8403c0f6e745d8437b997a6b607e7ab7b81d271d43ad666713a407f021514  dashcore-0.12.1.5-0.taw.fc25.src.rpm
-77e53f33975a174334c8b3bc447c817ccae974158b6d14e75e0f654e7551d196  dashcore-sentinel-1.0.1-0.taw.el7.centos.src.rpm
-1e13e57c9ff74596832a40154a95dd7db236e5c5f44e3b1330c40aebf83ecd34  dashcore-sentinel-1.0.1-0.taw.fc24.src.rpm
-e318fef4a559d2c76c64f91ecd12b242a92ce948cb4f76b4daa5d767e3b6aab2  dashcore-sentinel-1.0.1-0.taw.fc25.src.rpm
-5b8e48d61e57653698541a178a70f25404a3f972a8038c95b9d725ab564d2321  dashcore-sentinel-1.0.1-0.taw.fc26.src.rpm
+e494d36fe7fb53540685a0c163decee7b8997cd1b7501d0a5c5f52a9c0b0b6b1  dashcore-0.12.1.spec
+14b791ae50400114b767d6dc4a7624918801c5f8d0fa5bcc44bf27ff09133883  dashcore-sentinel-1.0.2-0.taw.fc26.src.rpm
+5b620cc711b8be55423512df4b492c3770c9afe52bf2608bbd1c5863907165da  dashcore-sentinel-1.0.spec
 84c2da03c9c6e14caac70cca8cfe6ec2eb7e9c07d3e79be1b23895d5bc64e624  openssl-compat-dashcore-1.0.2f-1.taw.fc24.src.rpm
+65a4fab5f19f417e76a4b27cb9d9de1b8cbe2965348b9590cfa3962dad3baea3  openssl-compat-dashcore.spec
+6eef670773567b4fce04a6fda388f33cc6e941b22063c5fc9bbc046e75aeee03  sha256sum.txt
