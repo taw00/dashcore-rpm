@@ -38,23 +38,8 @@ metadata_expire=1d
 enabled=1
 enabled_metadata=1
 
-[dashcore-release-candidate]
-name=Dash Core 12.2-rc - release-candidate - fedora-$releasever-$basearch
-# Note: SRPMs (*.src.rpm files) are mingled with the binaries. It's just how Copr does it.
-baseurl=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.2-rc/fedora-$releasever-$basearch/
-type=rpm-md
-skip_if_unavailable=True
-gpgcheck=1
-gpgkey=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.2-rc/pubkey.gpg
-repo_gpgcheck=0
-# Checks for new RC packages more often than the default 2d (2 days)
-#metadata_expire=6h
-metadata_expire=0
-enabled=0
-enabled_metadata=1
-
 [dashcore-testing]
-name=Dash Core Testing - fedora-$releasever-$basearch
+name=Dash Core Testing and Release Candidate packages - fedora-$releasever-$basearch
 # Notes:
 # 1. The testing repository always provides the latest packages regardless of
 #    how major the upgrade. In contrast, release quality packages are divided in to their
@@ -95,6 +80,22 @@ enabled_metadata=1
 ##
 ## DON'T USE THESE ANYMORE
 ##
+
+#[dashcore-release-candidate]
+#name=Dash Core 12.2-rc - release-candidate - fedora-$releasever-$basearch
+## Note: SRPMs (*.src.rpm files) are mingled with the binaries. It's just how Copr does it.
+#baseurl=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.2-rc/fedora-$releasever-$basearch/
+#type=rpm-md
+#skip_if_unavailable=True
+#gpgcheck=1
+#gpgkey=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.2-rc/pubkey.gpg
+#repo_gpgcheck=0
+## Checks for new RC packages more often than the default 2d (2 days)
+##metadata_expire=6h
+#metadata_expire=0
+#enabled=0
+#enabled_metadata=1
+
 
 #[dashcore-release-candidate-12.1]
 #name=Dash Core 12.1-rc - release-candidate - fedora-$releasever-$basearch

@@ -43,9 +43,9 @@ binary runnable RPM packages associated to the Dash project.
 Important notes:
 
 * In this github repo, we bucket the various versions into **stable**,
-  **release-candate**, **testing**, **discontinued**.
+  **testing**, and **discontinued**.
   - "Stable" packages are found directly in the "source-packages" directory
-  - "Release candidates", "testing", and "discontinued" packages have their own folders in the "source-packages" folder.
+  - "Testing" (and release candidate), and "archived" packages have their own folders in the "source-packages" folder.
     ...the tree looks like this...
 
 ```
@@ -54,7 +54,6 @@ dashcore-rpm
     ├── contribs <--- contributions (icons, configuration, etc)
     └── packages <--- current stable packages
         ├── archive
-        ├── release-candidate
         └── testing
 ```
 

@@ -116,7 +116,7 @@ sudo yum list|grep dashcore
 You should get a nice listing of all the packages available to your linux
 system.
 
-## Stable versus the less stable release-candidate and testing repos
+## Stable versus the not-so-stable testing repos
 
 By default, those `*.repo` files configure your system to only pull from the
 "stable" repository.
@@ -128,8 +128,7 @@ software instead, do this:<br />
 
 ```
 sudo dnf config-manager --set-disabled dashcore-stable
-sudo dnf config-manager --set-enabled dashcore-release-candidate
-#sudo dnf config-manager --set-enabled dashcore-testing
+sudo dnf config-manager --set-enabled dashcore-testing
 sudo dnf list --refresh|grep dashcore
 ```
 
@@ -137,8 +136,7 @@ sudo dnf list --refresh|grep dashcore
 
 ```
 sudo yum-config-manager --disable dashcore-stable
-sudo yum-config-manager --enable dashcore-release-candidate
-#sudo yum-config-manager --enable dashcore-testing
+sudo yum-config-manager --enable dashcore-testing
 sudo yum list|grep dashcore
 ```
 
