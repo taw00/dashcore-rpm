@@ -93,13 +93,13 @@ repository configuration file.
 If you are running Fedora Linux...
 ```
 cd /etc/yum.repos.d/
-sudo curl -O https://raw.githubusercontent.com/taw00/dashcore-12.1/master/dashcore-fedora.repo
+sudo curl -O https://raw.githubusercontent.com/taw00/dashcore-rpm/master/dashcore-fedora.repo
 ```
 
 If you are running CentOS or Red Hat Enterprise Linux
 ```
 cd /etc/yum.repos.d/
-sudo curl -O https://raw.githubusercontent.com/taw00/dashcore-12.1/master/dashcore-centos.repo
+sudo curl -O https://raw.githubusercontent.com/taw00/dashcore-rpm/master/dashcore-centos.repo
 ```
 
 
@@ -178,7 +178,7 @@ dashd -reindex # It will start and daemonize (give you the commandline prompt ba
 # Watch the blockcount (CRTL-C to exit this loop)...
 watch dash-cli getblockcount # CTRL-C to exit
 # Watch the debug.log
-tail -f ~/.dash/debug.log
+tail -f ~/.dashcore/debug.log
 ```
 
 If running node as a `systemd` service...
