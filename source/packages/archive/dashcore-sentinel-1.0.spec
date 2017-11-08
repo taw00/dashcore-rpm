@@ -17,20 +17,20 @@
 # https://fedoraproject.org/wiki/Changes/Harden_All_Packages
 #%define _hardened_build 0
 
-# "bump" refers to "release bump" and is a build identifier.
-%define bump 0
+# Note: "bump" and "bumptag" are release-build identifiers.
+# For sentinel, bumptag will be either testing.taw, rc.taw, or just taw
+# depending on whether this is a test, release candidate, or release build. taw
+# are the builder's initials.
 
-# "bumptag" is used to indicate additional information, usually an identifier,
-# like the builder's initials, or a date, or both, or nil.
-# Note: If the value is not %{nil} there needs to be a . preceding this value.
+%define bump 0
 %define bumptag taw
-#% define bumptag %{nil}
+%define _release %{bump}.%{bumptag}
 
 %define _name1 sentinel 
 %define _name2 dashcore-sentinel 
 %define _version_major 1.0
-%define _version_minor 1
-%define _release %{bump}.%{bumptag}
+%define _version_minor 2
+
 
 Name: %{_name2}
 Version: %{_version_major}.%{_version_minor}
@@ -39,21 +39,25 @@ Vendor: Dash.org
 Packager: Todd Warner <t0dd@protonmail.com>
 Summary: Dash Masternode Sentinel - required toolset for Dash Masternodes
 
-# upstream dash team convention, github - sentinel-1.0.1.tar.gz
-%define _archivebasename1 %{_name1}-%{version}
-# my convention (here in case I use it) - dashcore-sentinel-1.0.1.tar.tz
-%define _archivebasename2 %{_name2}-%{_version_major}
+# Various archive and tree naming conventions (for example)
+# 1. sentinel-1.0.1 (upstream dash team convention, github, etc - eg. sentinel-1.0.1.tar.gz)
+# 2. sentinel-1.0.1-1
+# 3. dashcore-sentinel-1.0
+%define _basename1 %{_name1}-%{version}
+%define _basename2 %{_name1}-%{version}-%{bump}
+%define _basename3 %{_name2}-%{_version_major}
+%define _basename4 %{_name2}
 
-# archivebasename is a "symlink" to whichever source tarball we are using
-%define archivebasename %{_archivebasename1}
-%define archivebasename_contrib %{_archivebasename2}-contrib
+# basename for the source tarballs
+%define archivebasename %{_basename1}
+%define archivebasename_contrib %{_basename3}-contrib
 
 # the exploded tree of code in BUILD
 # sourcetree is top dir: dashcore-sentinel-1.0
 # sentineltree and contribtree hang off of it
-%define sourcetree %{_name2}-%{_version_major}
-%define sentineltree %{archivebasename}
-%define contribtree %{_archivebasename2}
+%define sourcetree %{_basename3}
+%define sentineltree %{_basename1}
+%define contribtree %{_basename3}
 
 
 Group: Applications/System
@@ -76,11 +80,11 @@ Requires: dashcore-server >= 0.12.1
 
 %description
 Dash Core Sentinel is an autonomous agent for persisting, processing and
-automating Dash v12.1 governance objects and tasks, and for expanded functions
-in the upcoming Dash v13 release (Evolution).
+automating Dash governance objects and tasks, and for expanded functions in the
+upcoming Dash release (codename Evolution).
 
 Sentinel is implemented as a Python application that binds to a local version
-12.1 dashd instance on each Dash v12.1 Masternode.
+dashd instance on each Dash Masternode.
 
 Dash (Digital Cash) is an open source peer-to-peer cryptocurrency that offers
 instant transactions (InstantSend), private transactions (PrivateSend) and token
@@ -221,6 +225,11 @@ exit 0
 
 %changelog
 
+* Thu Oct 26 2017 Todd Warner <t0dd@protonmail.com> 1.0.2-0.taw
+- Release 1.0.2 - 4f653ec
+- f7270c4ca4cc4f73affd3c03865d28e48445ba2b11f687934dc1037a43bd3531  sentinel-1.0.2.tar.gz
+- Fixes "catch decimal format error"
+-
 * Fri Feb 24 2017 Todd Warner <t0dd@protonmail.com> 1.0.1-0.taw
 - Release 1.0.1 - 4ac8523
 - 407c509cc00706645e899dc6fa5bdc1f6ea156381ab8b84d669ed59c1a070fad  sentinel-1.0.1.tar.gz

@@ -46,7 +46,7 @@
 # Often the bumptag is undefined, or the builder's initials, a date, or whatever.
 # To undefine, flip-flop the define/undefine ordering
 
-%define bump 0.testing
+%define bump 2.testing
 %undefine bumptag
 %define bumptag taw
 
@@ -71,15 +71,26 @@ Summary: Dash - Digital Cash - Peer-to-peer, privacy-centric, digital currency
 # upstream dash team convention, bamboo - dashcore-0.12.2 ...for example dashcore-0.12.2.tar.gz
 %define _archivebasename2 %{_name2}-%{_version_major}
 
+# ...flipflop these rules for the build type...
+# stable builds...
+%define archivebasename %{_archivebasename1}
+# testing and rc builds...
 %define archivebasename %{_archivebasename2}
+
 %define archivebasename_contrib %{_archivebasename2}-contrib
 
 # the exploded tree of code in BUILD
 # sourcetree is top dir
 # dashtree and contribtree hang off of it
 %define sourcetree %{_name2}-%{_version_major}
-%define dashtree %{_archivebasename2}
 %define contribtree %{_archivebasename2}
+
+# ...flipflop these rules for the build type...
+# stable builds...
+%define dashtree %{_archivebasename1}
+# testing and rc builds...
+%define dashtree %{_archivebasename2}
+
 
 Group: Applications/System
 License: MIT
@@ -557,7 +568,7 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 %files client
 %defattr(-,root,root,-)
 %license %{dashtree}/COPYING
-%doc %{dashtree}/doc/*.md %{dashtree}/doc/release-notes %{contribtree}/contrib/extras/dash.conf.example
+%doc %{dashtree}/doc/*.md %{contribtree}/contrib/extras/dash.conf.example
 %{_bindir}/dash-qt
 %{_datadir}/applications/dash-qt.desktop
 %{_datadir}/kde4/services/dash-qt.protocol
@@ -580,7 +591,7 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 %files server
 %defattr(-,root,root,-)
 %license %{dashtree}/COPYING
-%doc %{dashtree}/doc/*.md %{dashtree}/doc/release-notes %{contribtree}/contrib/extras/dash.conf.example
+%doc %{dashtree}/doc/*.md %{contribtree}/contrib/extras/dash.conf.example
 %dir %attr(750,dashcore,dashcore) %{_sharedstatedir}/dashcore
 %dir %attr(750,dashcore,dashcore) %{_sharedstatedir}/dashcore/testnet3
 %dir %attr(750,dashcore,dashcore) %{_sysconfdir}/dashcore
@@ -647,7 +658,9 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #
 # Source snapshots...
 #   * Tagged release builds: https://github.com/dashpay/dash/tags
+#     dash-0.12.2.0.tar.gz
 #   * Test builds...
+#     dashcore-0.12.2.tar.gz
 #     https://bamboo.dash.org/browse/DASHL-DEV/latestSuccessful
 #     https://bamboo.dash.org/browse/DASHL-DEV-<BUILD_NUMBER>/artifact/JOB1/gitian-linux-dash-src/src
 #     https://bamboo.dash.org/artifact/DASHL-DEV/JOB1/build-<BUILD_NUMBER>/gitian-linux-dash-src/src/dashcore-0.12.2.tar.gz
@@ -662,6 +675,11 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Documentation: https://dashpay.atlassian.net/wiki/display/DOC/Testnet
 
 %changelog
+* Wed Nov 8 2017 Todd Warner <t0dd@protonmail.com> 0.12.2.0-1.testing.taw
+- Release Candidate - ec8178c
+- 8faccdeb2d56e398f336705730039aea26f86eaa6a34bbd7a11bb2896f68cb84 dashcore-0.12.2.tar.gz
+- b09f09d847e02e1509dd157aca1655bbe5ca79106fe4cf2e4370228e0eab79e3 dashcore-0.12.2-contrib.tar.gz
+-
 * Fri Oct 20 2017 Todd Warner <t0dd@protonmail.com> 0.12.2.0-0.testing.taw
 - 824fb78820094053a0db7cdf9f883e66bd69114c1bf3517f1638bbd1971233b9 dashcore-0.12.2.tar.gz
 - b09f09d847e02e1509dd157aca1655bbe5ca79106fe4cf2e4370228e0eab79e3 dashcore-0.12.2-contrib.tar.gz

@@ -17,44 +17,70 @@
 # associated to future work or experimental elements of this spec file and
 # build.
 #
+# Note about RPM and commented out defined variables/macros in this (or any)
+# spec file. You MUST break up the define declaration. Commenting it out is
+# not good enough because... it is a macro, more than a variable. So, if you
+# want to have a macro linger around, but want to disable it, either nil it
+# out, undefine it, or break up the define like this "% define your_macro..."
+# RPM is weird.
+#
 # Enjoy. Todd Warner <t0dd@protonmail.com>
 
 %global selinux_variants mls strict targeted
+%define testing_extras 0
 
-#   1. Comment out the debug package define
-#   2. Even commented, it causes problems, so turn it into something like
-#      this:  % define debug _ package % { n i l }
-# To squelch debuginfo package creation, uncomment the line, and then
-# reconstruct the debug package define as it should be
+# Usually want a debug package available and built. If you do not want them
+# built, reconstruct this nil'ifying define below. It is deconstructed because
+# RPM recognizes certain things, like defines, even if they are in commments.
 #% define debug _package % { n i l }
+
 # https://fedoraproject.org/wiki/Changes/Harden_All_Packages
-#%define _hardened_build 0
+%define _hardened_build 0
 
-# "bump" refers to "release bump" and is a build identifier.
-%define bump 1
-
-# "bumptag" is used to indicate additional information, usually an identifier,
-# like the builder's initials, or a date, or both, or nil.
-%define bumptag taw
-#% define bumptag %{nil}
-
-%define _name dashcore
+%define _name1 dash
+%define _name2 dashcore
 %define _version_major 0.12.1
-%define _version_minor 1
-%define _release %{bump}.%{bumptag}
+%define _version_minor 5
 
-Name: %{_name}
+# Note: "bump" and "bumptag" are release-build identifiers.
+# Often the bumptag is undefined, or the builder's initials, a date, or whatever.
+# To undefine, flip-flop the define/undefine ordering
+
+%define bump 0
+%undefine bumptag
+%define bumptag taw
+
+%if %{?bumptag}
+%define _release %{bump}.%{bumptag}
+%else
+%define _release %{bump}
+%endif
+
+
+Name: %{_name2}
 Version: %{_version_major}.%{_version_minor}
 Release: %{_release}%{?dist}
 Vendor: Dash.org
 Packager: Todd Warner <t0dd@protonmail.com>
 Summary: Dash - Digital Cash - Peer-to-peer, privacy-centric, digital currency
 
-# upstream bitcoin team convention - v0.12.1
-# upstream dash team convention - dashcore-0.12.1
-#%define archivebasename v%{version}
-%define archivebasename %{_name}-%{_version_major}
-%define sourcetree %{_name}-%{_version_major}
+# upstream bitcoin team convention - v0.12.1.tar.gz
+%define _archivebasename0 v%{version}
+# upstream dash team convention, github - dash-0.12.1.2.tar.gz
+%define _archivebasename1 %{_name1}-%{version}
+# upstream dash team convention, bamboo - dashcore-0.12.1.tar.gz
+%define _archivebasename2 %{_name2}-%{_version_major}
+
+# archivebasename is a "symlink" to whichever source tarball we are using
+%define archivebasename %{_archivebasename1}
+%define archivebasename_contrib %{_archivebasename2}-contrib
+
+# the exploded tree of code in BUILD
+# sourcetree is top dir
+# dashtree and contribtree hang off of it
+%define sourcetree %{_name2}-%{_version_major}
+%define dashtree %{archivebasename}
+%define contribtree %{_archivebasename2}
 
 Group: Applications/System
 License: MIT
@@ -65,7 +91,7 @@ Source0: %{archivebasename}.tar.gz
 # Source archive of contributions not yet in main upstream package.
 # Icons, manpages, desktop stuff, systemd stuff, etc.
 # includes some future SELinux policy stuff as well (.te, .if, .fc)
-Source1: %{archivebasename}-contrib.tar.gz
+Source1: %{archivebasename_contrib}.tar.gz
 
 BuildRoot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
@@ -77,19 +103,22 @@ BuildRequires: desktop-file-utils autoconf automake
 BuildRequires: boost-devel libdb4-cxx-devel libevent-devel
 BuildRequires: libtool java
 
-# ZeroMQ not testable yet on RHEL due to lack of python3-zmq so
-# enable only for Fedora
-%if 0%{?fedora}
-BuildRequires: python3-zmq zeromq-devel
-%endif
+# I don't think this check is needed anymore -comment out for now. -t0dd
+## ZeroMQ not testable yet on RHEL due to lack of python3-zmq so
+## enable only for Fedora
+#%if 0%{?fedora}
+#BuildRequires: python3-zmq zeromq-devel
+#%endif
 
 # Python tests still use OpenSSL for secp256k1, so we still need this to run
 # the testsuite on RHEL7, until Red Hat fixes OpenSSL on RHEL7. It has already
 # been fixed on Fedora. Bitcoin itself no longer needs OpenSSL for secp256k1.
-%if 0%{?rhel}
-# via the bitcoin repos, see https://linux.ringingliberty.com/bitcoin/
-BuildRequires: openssl-compat-bitcoin-libs
-BuildRequires: python34
+# To support this, we are tracking https://linux.ringingliberty.com/bitcoin/el7/SRPMS/
+# ...aka: https://linux.ringingliberty.com/bitcoin/el$releasever/$basearch
+# We bring it in-house, rebuild, and supply at https://copr.fedorainfracloud.org/coprs/taw/dashcore-openssl-compat/
+# ...aka: https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-openssl-compat/epel-$releasever-$basearch/
+%if %{testing_extras} && 0%{?rhel}
+BuildRequires: openssl-compat-dashcore-libs
 %endif
 
 
@@ -113,9 +142,6 @@ Requires(postun): /usr/sbin/semodule, /sbin/restorecon, /sbin/fixfiles
 #t0dd Requires: selinux-policy
 #t0dd Requires: policycoreutils-python
 Requires: openssl-libs
-#Requires: dashcore-utils%{?_isa} = %{version}-%{_release}
-#Requires: dashcore-utils = %{version}-%{_release}
-#Requires: dashcore-utils = %{version}
 Requires: dashcore-utils = %{version}-%{release}
 Requires: dashcore-sentinel
 
@@ -128,8 +154,6 @@ Summary: Dash - Digital Cash - Peer-to-peer, privacy-centric, digital currency (
 # dashcore-devel
 %package devel
 Summary: Dash - Digital Cash - Peer-to-peer, privacy-centric, digital currency (dev libraries and headers)
-#Requires: dashcore-libs%{?_isa} = %{version}-%{_release}
-#Requires: dashcore-libs = %{version}-%{_release}
 Requires: dashcore-libs = %{version}-%{release}
 
 
@@ -248,9 +272,11 @@ at www.dash.org.
 
 %prep
 # dash upstream stuff
-%setup -q -n %{sourcetree}
+#%setup -q -n %{sourcetree}
+%setup -q -T -a 0 -c %{sourcetree}
 # extra contributions - Source1
-%setup -q -T -D -b 1 -n %{sourcetree}
+#%setup -q -T -D -b 1 -n %{sourcetree}
+%setup -q -T -D -a 1
 # Patch addressed by removing one dir path level (-p1)
 #%patch0 -p1
 
@@ -259,11 +285,28 @@ at www.dash.org.
 
 # Prep SELinux policy -- XXX NOT USED YET
 # Done here because action is taken in the %build step
+#mkdir -p %{sourcetree}/SELinux
+# At this moment, we are in the sourcetree directory
 mkdir -p SELinux
-cp -p ./contrib/linux/selinux/dash.{te,if,fc} SELinux
+cp -p %{contribtree}/contrib/linux/selinux/dash.{te,if,fc} SELinux
+
+# We leave with this structure (for example)...
+# ~/rpmbuild/BUILD/dashcore-0.12.1/dash-0.12.1.2/
+# ~/rpmbuild/BUILD/dashcore-0.12.1/dashcore-0.12.1/contrib/...
+# ...unless we are using the bamboo nomenclature...
+# ~/rpmbuild/BUILD/dashcore-0.12.1/dashcore-0.12.1/
+# ~/rpmbuild/BUILD/dashcore-0.12.1/dashcore-0.12.1/contrib/...
+
 
 %build
-# Build Dash
+# Building in dashcore-X.Y.Z
+# But we need to cd into dashcore-X.Y.Z/dash-X.Y.Z.zz
+# ...unless we are using the bamboo nomenclature...
+# But we need to cd into dashcore-X.Y.Z/dashcore-X.Y.Z
+
+# We start in sourcetree (dashcore-X.Y.Z)
+# cd into dashcore-X.Y.Z/dash-X.Y.Z.zz
+cd %{dashtree}
 ./autogen.sh
 %configure --enable-reduce-exports --enable-glibc-back-compat
 
@@ -280,22 +323,34 @@ make %{?_smp_mflags}
 #t0dd done
 #t0dd popd
 
+# Exit from sourcetree/<the dash tree>
+cd ..
+
 
 %check
+cd %{dashtree}
+%if %{testing_extras}
 # Run all the tests
-#t0dd make check
-#t0dd # Run all the other tests
+make check
+# Run all the other tests
+#t0dd COMMENTED OUT FOR NOW -- Requires https://github.com/dashpay/dash_hash
+#t0dd incorporated into the builds and that is not done yet.
 #t0dd pushd src
-#t0dd srcdir=. test/dashcore-util-test.py
+#t0dd srcdir=. test/bitcoin-util-test.py
 #t0dd popd
-#t0dd LD_LIBRARY_PATH=/opt/openssl-compat-dash/lib PYTHONUNBUFFERED=1  qa/pull-tester/rpc-tests.py -extended
+#t0dd LD_LIBRARY_PATH=/opt/openssl-compat-dashcore/lib PYTHONUNBUFFERED=1  qa/pull-tester/rpc-tests.py -extended
+%endif
+cd ..
 
 
 %install
 rm -rf %{buildroot}
 mkdir %{buildroot}
 
+# We start in sourcetree, i.e. dashcore-0.12.1, we need to cd into the dashtree
+cd %{dashtree}
 make INSTALL="install -p" CP="cp -p" DESTDIR=%{buildroot} install
+cd ..
 
 # TODO: Upstream puts dashd in the wrong directory. Need to fix the
 # upstream Makefiles to relocate it.
@@ -305,10 +360,11 @@ install -d -m755 -p %{buildroot}%{_sbindir}
 install -D -m755 -p %{buildroot}%{_bindir}/dashd %{buildroot}%{_sbindir}/dashd
 rm -f %{buildroot}%{_bindir}/dashd
 
-# Remove the test binaries
-# TESTING ONLY: For test releases, comment the next two lines
+%if ! %{testing_extras}
+# Remove the test binaries if still floating around
 rm -f %{buildroot}%{_bindir}/test_*
 rm -f %{buildroot}%{_bindir}/bench_dash
+%endif
 
 
 # Install / config ancillary files
@@ -335,7 +391,8 @@ install -d %{buildroot}%{_unitdir}
 install -d -m750 -p %{buildroot}%{_sysconfdir}/dashcore
 install -d -m750 -p %{buildroot}%{_sharedstatedir}/dashcore
 
-# Man Pages
+# Man Pages (from contrib)
+cd %{contribtree}
 install -d %{buildroot}%{_mandir}/man1
 install -D -m644 ./contrib/linux/man/man1/* %{buildroot}%{_mandir}/man1/
 gzip %{buildroot}%{_mandir}/man1/dashd.1
@@ -344,8 +401,10 @@ install -d %{buildroot}%{_mandir}/man5
 install -D -m644 ./contrib/linux/man/man5/* %{buildroot}%{_mandir}/man5/
 gzip %{buildroot}%{_mandir}/man5/dash.conf.5
 gzip %{buildroot}%{_mandir}/man5/masternode.conf.5
+cd ..
 
-# Desktop elements - desktop file and kde protocol file
+# Desktop elements - desktop file and kde protocol file (from contrib)
+cd %{contribtree}
 install -D -m644 ./contrib/linux/desktop/dash-qt.desktop %{buildroot}%{_datadir}/applications/dash-qt.desktop
 install -D -m644 ./contrib/linux/desktop/usr-share-kde4-services_dash-qt.protocol %{buildroot}%{_datadir}/kde4/services/dash-qt.protocol
 # Desktop elements - hicolor icons
@@ -366,23 +425,31 @@ install -D -m644 ./contrib/linux/desktop/dash-HighContrast-256.png      %{buildr
 install -D -m644 ./contrib/linux/desktop/dash-HighContrast-32.png       %{buildroot}%{_datadir}/icons/HighContrast/32x32/apps/dash.png
 install -D -m644 ./contrib/linux/desktop/dash-HighContrast-48.png       %{buildroot}%{_datadir}/icons/HighContrast/48x48/apps/dash.png
 install -D -m644 ./contrib/linux/desktop/dash-HighContrast-scalable.svg %{buildroot}%{_datadir}/icons/HighContrast/scalable/apps/dash.svg
+cd ..
 
-# Misc pixmaps - unsure if they are even used...
+# Misc pixmaps - unsure if they are even used... (from contrib)
+cd %{contribtree}
 install -d %{buildroot}%{_datadir}/pixmaps
 install -D -m644 ./contrib/extras/pixmaps/* %{buildroot}%{_datadir}/pixmaps/
+cd ..
 
 # TESTING ONLY: For test releases, uncomment the next line
 #desktop-file-validate %{buildroot}%{_datadir}/applications/dash-qt.desktop
 
-# Install that dated dash.conf.example document
+# Install that dated dash.conf.example document (from contrib)
+cd %{contribtree}
 # TODO: need masternode.conf example also... or just update the man page?
 # Note: doesn't need to be in buildroot I don't think.
 install -D -m644 ./contrib/extras/dash.conf.example doc/dash.conf.example
+cd ..
 
-# Install default configuration file
+# Install default configuration file (from contrib)
+cd %{contribtree}
 install -D -m640 ./contrib/linux/systemd/etc-dashcore_dash.conf %{buildroot}%{_sysconfdir}/dashcore/dash.conf
+cd ..
 
-# Install system services files
+# Install system services files (from contrib)
+cd %{contribtree}
 install -D -m600 -p ./contrib/linux/systemd/etc-sysconfig_dashd %{buildroot}%{_sysconfdir}/sysconfig/dashd
 install -d %{buildroot}%{_sysconfdir}/sysconfig/dashd-scripts
 install -D -m755 -p ./contrib/linux/systemd/etc-sysconfig-dashd-scripts_dashd.send-email.sh %{buildroot}%{_sysconfdir}/sysconfig/dashd-scripts/dashd.send-email.sh
@@ -395,11 +462,16 @@ install -D -m644 -p ./contrib/linux/logrotate/etc-logrotate.d_dashcore %{buildro
 install -d %{buildroot}%{_sharedstatedir}/dashcore/testnet3
 touch %{buildroot}%{_sharedstatedir}/dashcore/debug.log
 touch %{buildroot}%{_sharedstatedir}/dashcore/testnet3/debug.log
+cd ..
 
 
-# Service definition files for firewalld for full nodes and masternodes
-install -D -m644 -p ./contrib/linux/firewalld/usr-lib-firewalld-services_dashcore-node.xml %{buildroot}%{_prefix}/lib/firewalld/services/dashcore-node.xml
-install -D -m644 -p ./contrib/linux/firewalld/usr-lib-firewalld-services_dashcore-node-testnet.xml %{buildroot}%{_prefix}/lib/firewalld/services/dashcore-node-testnet.xml
+# Service definition files for firewalld for full nodes and masternodes (from contrib)
+cd %{contribtree}
+install -D -m644 -p ./contrib/linux/firewalld/usr-lib-firewalld-services_dashcore.xml %{buildroot}%{_prefix}/lib/firewalld/services/dashcore.xml
+install -D -m644 -p ./contrib/linux/firewalld/usr-lib-firewalld-services_dashcore-testnet.xml %{buildroot}%{_prefix}/lib/firewalld/services/dashcore-testnet.xml
+install -D -m644 -p ./contrib/linux/firewalld/usr-lib-firewalld-services_dashcore-rpc.xml %{buildroot}%{_prefix}/lib/firewalld/services/dashcore-rpc.xml
+install -D -m644 -p ./contrib/linux/firewalld/usr-lib-firewalld-services_dashcore-testnet-rpc.xml %{buildroot}%{_prefix}/lib/firewalld/services/dashcore-testnet-rpc.xml
+cd ..
 
 #t0dd # Install SELinux policy
 #t0dd for selinuxvariant in %{selinux_variants}
@@ -485,9 +557,8 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 # dashcore-client
 %files client
 %defattr(-,root,root,-)
-%license COPYING
-#t0dd %doc README.md README.server.redhat
-%doc doc/assets-attribution.md doc/multiwallet-qt.md doc/release-notes.md doc/tor.md doc/keepass.md contrib/extras/dash.conf.example
+%license %{dashtree}/COPYING
+%doc %{dashtree}/doc/*.md %{dashtree}/doc/release-notes %{contribtree}/contrib/extras/dash.conf.example
 %{_bindir}/dash-qt
 %{_datadir}/applications/dash-qt.desktop
 %{_datadir}/kde4/services/dash-qt.protocol
@@ -495,20 +566,22 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 %{_datadir}/icons/*
 %{_mandir}/man1/dash-qt.1.gz
 %{_mandir}/man5/masternode.conf.5.gz
-%{_prefix}/lib/firewalld/services/dashcore-node.xml
-%{_prefix}/lib/firewalld/services/dashcore-node-testnet.xml
+%{_prefix}/lib/firewalld/services/dashcore.xml
+%{_prefix}/lib/firewalld/services/dashcore-testnet.xml
+%{_prefix}/lib/firewalld/services/dashcore-rpc.xml
+%{_prefix}/lib/firewalld/services/dashcore-testnet-rpc.xml
 %config(noreplace) %attr(640,dashcore,dashcore) %{_sysconfdir}/dashcore/dash.conf
 
-# TESTING ONLY: For test releases, uncomment the test binaries.
-#%{_bindir}/test_dash-qt
+%if %{testing_extras}
+%{_bindir}/test_dash-qt
+%endif
 
 
 # dashcore-server
 %files server
 %defattr(-,root,root,-)
-%license COPYING
-#t0dd %doc README.md README.server.redhat
-%doc doc/dnsseed-policy.md doc/release-notes.md doc/tor.md doc/multiwallet-qt.md doc/guide-startmany.md doc/reduce-traffic.md doc/zmq.md doc/dash.conf.example
+%license %{dashtree}/COPYING
+%doc %{dashtree}/doc/*.md %{dashtree}/doc/release-notes %{contribtree}/contrib/extras/dash.conf.example
 %dir %attr(750,dashcore,dashcore) %{_sharedstatedir}/dashcore
 %dir %attr(750,dashcore,dashcore) %{_sharedstatedir}/dashcore/testnet3
 %dir %attr(750,dashcore,dashcore) %{_sysconfdir}/dashcore
@@ -521,8 +594,10 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 %ghost %{_sharedstatedir}/dashcore/testnet3/debug.log
 %attr(644,root,root) /etc/logrotate.d/dashcore
 %{_unitdir}/dashd.service
-%{_prefix}/lib/firewalld/services/dashcore-node.xml
-%{_prefix}/lib/firewalld/services/dashcore-node-testnet.xml
+%{_prefix}/lib/firewalld/services/dashcore.xml
+%{_prefix}/lib/firewalld/services/dashcore-testnet.xml
+%{_prefix}/lib/firewalld/services/dashcore-rpc.xml
+%{_prefix}/lib/firewalld/services/dashcore-testnet-rpc.xml
 %doc SELinux/*
 %{_sbindir}/dashd
 %{_tmpfilesdir}/dashd.conf
@@ -531,24 +606,23 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 %{_mandir}/man5/masternode.conf.5.gz
 #t0dd %{_datadir}/selinux/*/dash.pp
 
-# TESTING ONLY: For test releases, uncomment the test binaries.
-#%{_bindir}/test_dash
-#%{_bindir}/bench_dash
+%if %{testing_extras}
+%{_bindir}/test_dash
+%{_bindir}/bench_dash
+%endif
 
 
 # dashcore-libs
 %files libs
 %defattr(-,root,root,-)
-%license COPYING
-#t0dd %doc README.md
+%license %{dashtree}/COPYING
 %{_libdir}/libbitcoinconsensus.so*
 
 
 # dashcore-devel
 %files devel
 %defattr(-,root,root,-)
-%license COPYING
-#t0dd %doc README.md
+%license %{dashtree}/COPYING
 %{_includedir}/bitcoinconsensus.h
 %{_libdir}/libbitcoinconsensus.a
 %{_libdir}/libbitcoinconsensus.la
@@ -558,7 +632,7 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 # dashcore-utils
 %files utils
 %defattr(-,root,root,-)
-%license COPYING
+%license %{dashtree}/COPYING
 %{_bindir}/dash-cli
 %{_bindir}/dash-tx
 
@@ -572,10 +646,6 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Git Repo: https://github.com/taw00/dashcore-rpm
 #   * Documentation: https://github.com/taw00/dashcore-rpm/tree/master/documentation
 #
-# The last testnet effort...
-#   * Announcement: https://www.dash.org/forum/threads/12-1-testnet-testing-phase-two-ignition.10818/
-#   * Documentation: https://dashpay.atlassian.net/wiki/display/DOC/Testnet
-#
 # Source snapshots...
 #   * Tagged release builds: https://github.com/dashpay/dash/tags
 #   * Test builds...
@@ -586,8 +656,50 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 # Dash Core git repos...
 #   * Dash: https://github.com/dashpay/dash
 #   * Sentinel: https://github.com/dashpay/sentinel
+#
+# The last testnet effort...
+#   * Announcement: https://www.dash.org/forum/threads/12-1-testnet-testing-phase-two-ignition.10818/
+#   * Documentation: https://dashpay.atlassian.net/wiki/display/DOC/Testnet
 
 %changelog
+* Tue Apr 11 2017 Todd Warner <t0dd@protonmail.com> 0.12.1.5-0.taw
+- Fixes a watchdog propagation issue.
+- 4e52b2427f1ea46f0ff5b31b0dd044478fba6a076611a97a9c2d3d345374459f  dash-0.12.1.5.tar.gz
+- e3e4351656afda2ff23cb142d264af4b4d04d0bbe9f3326ce24019423f6adf94  dashcore-0.12.1-contrib.tar.gz
+-
+* Wed Mar 22 2017 Todd Warner <t0dd@protonmail.com> 0.12.1.4-0.taw
+- Added RPC port to available firewalld services.
+- Renamed firewalld services to match bitcoin's firewalld service name taxonomies.
+- 7218baaa1aa8052960ffc0c36904b6f5647256f9773c17e8506be37a2d3cc0cb  dash-0.12.1.4.tar.gz
+- e3e4351656afda2ff23cb142d264af4b4d04d0bbe9f3326ce24019423f6adf94  dashcore-0.12.1-contrib.tar.gz
+- 
+* Sat Mar 04 2017 Todd Warner <t0dd@protonmail.com> 0.12.1.3-1.taw
+- Brought back the test scripts (most of them), made them conditional. Added
+- back and adjusted build-requires for openssl-compat that uses our own
+- openssl-compat builds. Test scripts / openssl-compat seem to only work for
+- very old linux--CentOS7/RHEL7 Ie. I have more work to do to make them part of
+- the build.
+-
+- "bumptag" now can be defined or undefined and we do the right thing.
+- 
+* Thu Mar 02 2017 Todd Warner <t0dd@protonmail.com> 0.12.1.3-0.taw
+- Release 0.12.1.3 - 119fe83
+- Announcement: https://github.com/dashpay/dash/releases/tag/v0.12.1.3
+- 1f6e6fb528151c8703019ed1511562b0c8bc91fe8c7ac6838a3811ffd1af288a  dash-0.12.1.3.tar.gz
+- d4c0f01ea5fa017f6362269495d2cd32e724d9e4d2e584bf5e9a0057b493dfbb  dashcore-0.12.1-contrib.tar.gz
+-
+* Fri Feb 24 2017 Todd Warner <t0dd@protonmail.com> 0.12.1.2-0.taw
+- Release 0.12.1.2 - a1ef547
+- Announcement: https://github.com/dashpay/dash/releases/tag/v0.12.1.2
+- 8a99d35dd7b87c42efa698d2ac36f2cca98aa501ce2f7dcb5e8d27b749efb72d  dash-0.12.1.2.tar.gz
+- 04335cbef729480e6b7c11243a0613a34c128f3388f97e80b255bd05fd27cae3  dashcore-0.12.1-contrib.tar.gz
+-
+- Specfile change: Structure of build tree expansion changed allowing
+- flexibility in how the source is generated upstream (bamboo vs. github)
+- Specfile change: Added a bunch of documentation from the main tree.
+- dashd.init updated
+- dashd.send-email.sh with much clearer messaging.
+-
 * Mon Feb 20 2017 Todd Warner <t0dd@protonmail.com> 0.12.1.1-1.taw
 - Still massaging systemd service and configuration settings.
 - Boosting startup timeout window significantly to avoid shooting ourselves
@@ -596,8 +708,8 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 - Fixed a systemd-managed tmpfile perms issue.
 -
 * Sun Feb 19 2017 Todd Warner <t0dd@protonmail.com> 0.12.1.1-0.taw
-- Build 0.12.1.1  (commit ID e9e5a24)
-- Annoucement: https://github.com/dashpay/dash/releases/tag/v0.12.1.1
+- Release 0.12.1.1 - e9e5a24
+- Announcement: https://github.com/dashpay/dash/releases/tag/v0.12.1.1
 - Stability improvements. Governance object sync time improvements.
 - systemd service file and configuration tweaks.
 - lots of other bug fixes
@@ -611,6 +723,6 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 - should help troubleshoot.
 -
 * Sun Feb 05 2017 Todd Warner <t0dd@protonmail.com> 0.12.1.0-0.taw
-- v12.1 GA
-- Annoucement: https://github.com/dashpay/dash/releases/tag/v0.12.1.0
+- Release 12.1.0 - 56971f8
+- Announcement: https://github.com/dashpay/dash/releases/tag/v0.12.1.0
 -
