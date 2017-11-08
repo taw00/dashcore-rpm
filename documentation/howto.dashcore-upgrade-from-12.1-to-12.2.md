@@ -9,6 +9,10 @@ The process for upgrade is actually rather trivial. You may also want to review
 the dash.org official documentation found here:
 <https://dashpay.atlassian.net/wiki/spaces/DOC/pages/124092516/Dash+v12.2+-+2017-11-07>
 
+**WARNING: If you are upgrading a Masternode, it will require a wallet-driven
+restart due to a protocol bump, so time your upgrade to happen soon after your
+normal Masternode payout.**
+
 ## The process
 
 #### _summary_
@@ -16,6 +20,7 @@ the dash.org official documentation found here:
 * Back everything up
 * Upgrade Dash Core binary packages from 12.1 to 12.2
 * Start everything back up
+* Send start command from wallet to Masternode (Masternodes only)
 * Monitor the configuration over time and adjust
 
 ### [0] Shut everything down
@@ -127,10 +132,32 @@ sudo -u dashcore tail -f /var/lib/dashcore/debug.log
 
 If this is a masternode...
 ```
-# Check the results of `mnsync status`. If the status never
-# syncs fully, you may have to perform a `mnsync reset`.
+# Check the results of `mnsync status`. If the status never # syncs fully, you
+# may have to perform a `mnsync reset`. Note that the syncing process can take 15
+# to 30 minutes.
 sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf masternode mnsync reset
 ```
+
+### [4] Masternode upgrade only: Send start command from Wallet to Masternode
+
+***WARNING: Upgrade after a Masternode payout. You have to restart the
+Masternode from your collaterolizing wallet. Here's how...***
+
+1. Ensure you have upgraded your wallet as well.
+2. Open your wallet, you can either...
+   * Masternode tab > right click on masternode > Start alias
+   * Tools menu > Debug console > _masternode start <MN Alias>_
+   * From command line: _dash-cli masternode start <MN Alias>_  ---TODO: Need to test this. 
+
+### Masternode upgrade in particular: Monitor your status
+
+```
+# For systemd run masternodes...
+sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf -datadir=/var/lib/dashcore getinfo
+sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf -datadir=/var/lib/dashcore mnsync status
+sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf -datadir=/var/lib/dashcore masternode debug
+```
+
 
 
 ## Done.
