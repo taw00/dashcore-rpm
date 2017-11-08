@@ -45,7 +45,7 @@ Important notes:
 * In this github repo, we bucket the various versions into **stable**,
   **testing**, and **discontinued**.
   - "Stable" packages are found directly in the "source-packages" directory
-  - "Testing" (and release candidate), and "archived" packages have their own folders in the "source-packages" folder.
+  - "Testing" and "archived" packages have their own folders in the "source-packages" folder.
     ...the tree looks like this...
 
 ```
@@ -58,9 +58,8 @@ dashcore-rpm
 ```
 
 * Only use **stable** versions on the mainnet (`testnet=0`).<br />
-  **Release Candidate** and **Testing** versions are test versions and great to
-  play with on the testnet (`testnet=1`). Please don't use them on the
-  mainnet.
+  **Testing** versions are test versions and great to play with on the testnet
+  (`testnet=1`). Please don't use them on the mainnet.
 
 
 ----

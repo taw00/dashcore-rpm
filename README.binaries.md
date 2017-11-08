@@ -121,8 +121,7 @@ system.
 By default, those `*.repo` files configure your system to only pull from the
 "stable" repository.
 
-NOT RECOMMENDED: If you want to install the "release-candidate" or "testing"
-software instead, do this:<br />
+NOT RECOMMENDED: If you want to install the "testing" software instead, do this:<br />
 
 *...fedora:*
 
@@ -235,11 +234,11 @@ This is all explained in the [Masternode
 documentation](https://github.com/taw00/dashcore-rpm/tree/master/documentation).
 
 
-#### Q: Release Candidate, Testing, Discontinued?
+#### Q: Testing?
 
 A. In that repository configaration file that you downloaded and installed in
 directory `/etc/yum.repos.d`, you have access to test versions of Dash. Unless
-you know what you are doing, I do not recommend you enable those repositories.
+you know what you are doing, I do not recommend you enable that repository.
 
 
 #### Q: What are all these packages?

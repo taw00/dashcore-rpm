@@ -1,5 +1,5 @@
 # Dash Core (https://dash.org) for CentOS (and Red Hat Enterprise Linux)
-# Stable, Release Candidate, Test, Discontinued - binaries and sources
+# Stable and Testing repository streams - binaries and sources
 #
 # YUM repository configuration
 # Drop this file, as root, into your /etc/yum.repos.d/ directory...
@@ -34,7 +34,7 @@ enabled=1
 enabled_metadata=1
 
 [dashcore-testing]
-name=Dash Core Testing and Release Candidate packages - epel-$releasever-$basearch
+name=Dash Core Testing packages - epel-$releasever-$basearch
 # Notes:
 # 1. The testing repository always provides the latest packages regardless of
 #    how major the upgrade. In contrast, release quality packages are divided in to their
@@ -46,7 +46,7 @@ skip_if_unavailable=True
 gpgcheck=1
 gpgkey=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-testing/pubkey.gpg
 repo_gpgcheck=0
-# Checks for new RC packages more often than the default 2d (2 days)
+# Checks for new packages more often than the default 2d (2 days)
 #metadata_expire=6h
 metadata_expire=0
 enabled=0
