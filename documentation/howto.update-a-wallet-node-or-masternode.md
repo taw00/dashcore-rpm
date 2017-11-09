@@ -1,7 +1,11 @@
 # HowTo: Update the Dash Wallet, Node, or Masternode Software
 
-Since you have installed your Dash wallet, node, or masternode using the supplied
-RPM packages, upgrading is super super simple.
+If you have installed your Dash wallet, node, or masternode using the supplied
+RPM packages, updating is super super simple.
+
+_Note: Major upgrades where there are protocol shifts will have their own howto
+documents associated. This document only describes less-invasive updates and
+upgrades._
 
 ## How do I know there is a new version available?
 
@@ -14,7 +18,7 @@ sudo dnf upgrade --refresh
 
 ...let's assume there is a new version of the software available...
 
-## I have a wallet installed...
+## Scenario: I have a wallet installed...
 
 Order is not really important in the first two case steps...
 
@@ -26,45 +30,44 @@ sudo dnf upgrade -y --refresh
 ```
 
 * Start up your wallet again.
+* Done!
 
-## I have a node or masternode running as a systemd service
+## Scenario: I have a node or masternode running as a systemd service
 
 ```
-# I certainly have other updates. Let's update everything and reboot.
+# Update the whole operating system along with dash. And then reboot.
 sudo dnf upgrade -y --refresh && sudo reboot
 ```
 
 ...or...
 
 ```
-# I have updates, but I don't want to reboot right now.
+# Just update. Reboot if you want separately.
 sudo dnf upgrade -y --refresh && sudo systemctl restart dashd
 ```
 
 If you set up email triggers you should have received a shutdown email and a
 startup email.
 
+Done!
 
-## I have a node or masternode running from my /home/username/.dashcore directory
+
+## Scenario: I have a node or masternode running from my /home/username/.dashcore directory
 
 ```
 dash-cli stop dashd
 sleep 20
-# If you don't want to reboot, stop the command at --refresh
-sudo dnf upgrade -y --refresh && sudo reboot
-```
-
-...and then after update and reboot...
-
-```
+sudo dnf upgrade -y --refresh
 dashd
 ```
+
+Done!
 
 ---
 
 ### Yes, it is that simple.
 
-Yup. That's it. That's the power of of good packaging, permissions, and
+That's it. That's the power of of good packaging, permissions, and
 integration with the operating system.
 
 Comments, questions, donations - <https://keybase.io/toddwarner>
