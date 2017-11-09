@@ -141,7 +141,7 @@ sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf masternode mnsync reset
 ### [4] Masternode upgrade only: Send start command from Wallet to Masternode
 
 ***WARNING: Upgrade after a Masternode payout. You have to restart the
-Masternode from your collaterolizing wallet. Here's how...***
+Masternode from your collateralizing wallet. Here's how...***
 
 1. Ensure you have upgraded your wallet as well.
 2. Open your wallet, you can either...

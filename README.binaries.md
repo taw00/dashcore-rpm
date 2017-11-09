@@ -196,10 +196,10 @@ sudo dnf upgrade
 sudo yum update -y
 ```
 
-And then after the refreshed packages were updated, restart the wallet or `dashd`.
+And then after the refreshed packages were updated, restart the wallet or
+`dashd`. Please note that for major upgrades, more actions may have to be
+taken.
 
-Nothing needed to be updated? Try again in a couple days... Todd may have been
-visiting his mother.
 
 #### Good luck!
 

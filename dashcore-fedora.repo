@@ -10,48 +10,47 @@
 # To install, for example the GUI client, you would do this at the commandline...
 #   sudo dnf install dashcore-client
 #
-# To update already existing software (check dash.org to seee if there special are upgrade steps that need to be taken)
+# To update already existing software
+# Note: check dash.org to see if there are special upgrade steps that need to be taken.
 #   sudo dnf upgrade
 #
-# To switch from one repository version to the next (example, stable-12.1 to stable)...
+# To switch from one repository version to the next (example, stable-12.1 to stable (latest))...
 #   sudo dnf config-manager --set-disabled dashcore-stable-12.1
 #   sudo dnf config-manager --set-enabled dashcore-stable
 #
-# Note: This file is a convenience file that categorizes the releases nicely.
-# If you are familiar with Fedora COPR, you can follow the direct enablement
-# procedures here instead if you like:
-# https://copr.fedorainfracloud.org/coprs/taw/dashcore-12.2/
+# Notes:
+# * This file is a convenience file that categorizes the releases nicely.
+#   If you are familiar with Fedora COPR, you can follow the direct enablement
+#   procedures here instead if you like:
+#   https://copr.fedorainfracloud.org/coprs/taw/dashcore-12.2/
+# * SRPMs (*.src.rpm files) are mingled with the binaries. It's just how Copr does it.
 #
 # Feedback: t0dd@protonmail.com
 
 [dashcore-stable]
 name=Dash Core 12.2 - stable - fedora-$releasever-$basearch
-# Note: SRPMs (*.src.rpm files) are mingled with the binaries. It's just how Copr does it.
 baseurl=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.2/fedora-$releasever-$basearch/
 type=rpm-md
 skip_if_unavailable=True
 gpgcheck=1
 gpgkey=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.2/pubkey.gpg
 repo_gpgcheck=0
-# Default metadata_expire is typically 2d (2 days)
 metadata_expire=1d
 enabled=1
 enabled_metadata=1
 
 [dashcore-testing]
 name=Dash Core Testing packages - fedora-$releasever-$basearch
-# Notes:
-# 1. The testing repository always provides the latest packages regardless of
-#    how major the upgrade. In contrast, release quality packages are divided in to their
-#    own per-major version repositories.
-# 2. SRPMs (*.src.rpm files) are mingled with the binaries. It's just how Copr does it.
+# Note: The testing repository always provides the latest packages regardless
+# of how major the upgrade. In contrast, release quality packages are divided
+# into their own per-major version repositories.
 baseurl=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-testing/fedora-$releasever-$basearch/
 type=rpm-md
 skip_if_unavailable=True
 gpgcheck=1
 gpgkey=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-testing/pubkey.gpg
 repo_gpgcheck=0
-# Checks for new packages more often than the default 2d (2 days)
+# Default metadata_expire is typically 2d (2 days)
 #metadata_expire=6h
 metadata_expire=0
 enabled=0
@@ -64,14 +63,12 @@ enabled_metadata=1
 
 [dashcore-stable-12.1]
 name=Dash Core 12.1 - deprecated - fedora-$releasever-$basearch
-# Note: SRPMs (*.src.rpm files) are mingled with the binaries. It's just how Copr does it.
 baseurl=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.1/fedora-$releasever-$basearch/
 type=rpm-md
 skip_if_unavailable=True
 gpgcheck=1
 gpgkey=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.1/pubkey.gpg
 repo_gpgcheck=0
-# Default metadata_expire is typically 2d (2 days)
 metadata_expire=1d
 enabled=1
 enabled_metadata=1
