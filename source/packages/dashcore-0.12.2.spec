@@ -40,7 +40,7 @@
 %define _name1 dash
 %define _name2 dashcore
 %define _version_major 0.12.2
-%define _version_minor 0
+%define _version_minor 1
 
 # Note: "bump" and "bumptag" are release-build identifiers.
 # Often the bumptag is undefined, or the builder's initials, a date, or whatever.
@@ -657,7 +657,7 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #
 # Source snapshots...
 #   * Tagged release builds: https://github.com/dashpay/dash/tags
-#     dash-0.12.2.0.tar.gz
+#     dash-0.12.2.1.tar.gz
 #   * Test builds...
 #     dashcore-0.12.2.tar.gz
 #     https://bamboo.dash.org/browse/DASHL-DEV/latestSuccessful
@@ -674,6 +674,11 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Documentation: https://dashpay.atlassian.net/wiki/display/DOC/Testnet
 
 %changelog
+* Sun Nov 12 2017 Todd Warner <t0dd@protonmail.com> 0.12.2.1-0.taw
+- Release - 20bacfa
+- ae2e96ea685d9aa3b442acff986b096659a1d2c6dfd2ef9deef84d75fe2cf2b0 dash-0.12.2.1.tar.gz
+- b09f09d847e02e1509dd157aca1655bbe5ca79106fe4cf2e4370228e0eab79e3 dashcore-0.12.2-contrib.tar.gz
+-
 * Wed Nov 8 2017 Todd Warner <t0dd@protonmail.com> 0.12.2.0-0.taw
 - Release 12.2 - ec8178c
 - 2e0c20c64f5ccc392e51373761f16384642d224587f10c2fdcdbb4f17e185c04 dash-0.12.2.0.tar.gz
