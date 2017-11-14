@@ -13,7 +13,7 @@
 #      this:  % define debug _ package % { n i l }
 # To squelch debuginfo package creation, uncomment the line, and then
 # reconstruct the debug package define as it should be
-#% define debug _package % { n i l }
+%define debug_package %{nil}
 # https://fedoraproject.org/wiki/Changes/Harden_All_Packages
 #% define _hardened_build 0
 
@@ -21,7 +21,7 @@
 # For sentinel, bumptag will be either testing.taw, rc.taw, or just taw
 # depending on whether this is a test, release candidate, or release build. taw
 # are the builder's initials.
-%define bump 0
+%define bump 1
 %define bumptag testing.taw
 %define _release %{bump}.%{bumptag}
 
@@ -225,8 +225,13 @@ exit 0
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
+* Tue Nov 14 2017 Todd Warner <t0dd@protonmail.com> 1.1.0-1.testing.taw
+- Spec file tweaks so that this builds on Fedora 27. I don't know the real
+- cause of the error, but it is related to debuginfo building. But Sentinel
+- doesn't really need debuginfo packages built, so I am just going to nuke them.
+-
 * Tue Nov 7 2017 Todd Warner <t0dd@protonmail.com> 1.1.0-0.testing.taw
-- Release 1.1 in support of dashcore 0.12.2.0 - b21bb6c
+- Release 1.1 in support of dashcore 0.12.2
 - 971aa5e5f4d06ba76e76c9c828402af56f28353254c8db15214ac7071d982de5 sentinel-1.1.0.tar.gz
 - d1526682d6103e15f17a3298c76eda00cd0126903accc762ea7c1a3eb806b1f1 dashcore-sentinel-1.1-contrib.tar.gz
 -
