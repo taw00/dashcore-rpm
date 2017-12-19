@@ -81,12 +81,12 @@ tail -f ~/.dashcore/testnet3/debug.log
 Watch these..
 ```
 # General info
-watch dash-cli getinfo"
+watch dash-cli getinfo
 ```
 
 ```
 # Masternode sync status
-watch dash-cli mnsync status"
+watch dash-cli mnsync status
 ```
 
 ```
