@@ -1,8 +1,12 @@
 # Overview: Dash Masternode<br />_...on Fedora, CentOS or Red Hat Enterprise Linux_
 
+***Manage a Dash Masternode like a systems administrator.***
+ 
 > The objective of this set of documents is to illustrate how you can operate a
-> Dash Masternode which requires setting up a collateral-bearing wallet on one
-> system and a full node configured to be a masternode on a another.
+> Dash Masternode. This requires setting up a collateral-bearing wallet on one
+> system and a full node configured to be a masternode on a another. Using this
+> guidance, you can manage a robust Masternode deployment that once set up,
+> requires little maintenance expect the occassional update or upgrade.
 >
 > These instructions are specific to the Red Hat-family of linuxes.
 
