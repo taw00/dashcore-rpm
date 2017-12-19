@@ -40,10 +40,10 @@
 %define _name1 dash
 %define _name2 dashcore
 %define _version_major 0.12.2
-%define _version_minor 1
+%define _version_minor 2
 
 # Note: "bump" and "bumptag" are release-build identifiers.
-# Often the bumptag is undefined, or the builder's initials, a date, or whatever.
+# Often the bumptag is undefined, the builder's initials, a date, or whatever.
 # To undefine, flip-flop the define/undefine ordering
 
 %define bump 0
@@ -71,6 +71,7 @@ Summary: Dash - Digital Cash - Peer-to-peer, privacy-centric, digital currency
 # upstream dash team convention, bamboo - dashcore-0.12.2 ...for example dashcore-0.12.2.tar.gz
 %define _archivebasename2 %{_name2}-%{_version_major}
 
+# ...flipflop these rules for the build type...
 # testing and rc builds...
 %define archivebasename %{_archivebasename2}
 # stable builds...
@@ -78,13 +79,13 @@ Summary: Dash - Digital Cash - Peer-to-peer, privacy-centric, digital currency
 
 %define archivebasename_contrib %{_archivebasename2}-contrib
 
-
-# The exploded tree of code in BUILD/
+# the exploded tree of code in rpmbuild/BUILD/
 # sourcetree is top dir
 # dashtree and contribtree hang off of it
 %define sourcetree %{_name2}-%{_version_major}
 %define contribtree %{_archivebasename2}
 
+# ...flipflop these rules for the build type...
 # testing and rc builds...
 %define dashtree %{_archivebasename2}
 # stable builds...
@@ -657,7 +658,7 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #
 # Source snapshots...
 #   * Tagged release builds: https://github.com/dashpay/dash/tags
-#     dash-0.12.2.1.tar.gz
+#     dash-0.12.2.2.tar.gz
 #   * Test builds...
 #     dashcore-0.12.2.tar.gz
 #     https://bamboo.dash.org/browse/DASHL-DEV/latestSuccessful
@@ -674,26 +675,36 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Documentation: https://dashpay.atlassian.net/wiki/display/DOC/Testnet
 
 %changelog
+* Tue Dec 19 2017 Todd Warner <t0dd@protonmail.com> 0.12.2.2-0.taw
+- Release - 8506678
+- fd5f1576bc8ef70e5823f665b86a334937813e300f037a03bcd127b83773d771 dash-0.12.2.2.tar.gz
+- b09f09d847e02e1509dd157aca1655bbe5ca79106fe4cf2e4370228e0eab79e3 dashcore-0.12.2-contrib.tar.gz
+- https://github.com/dashpay/dash/releases/tag/v0.12.2.2
+-
 * Sun Nov 12 2017 Todd Warner <t0dd@protonmail.com> 0.12.2.1-0.taw
 - Release - 20bacfa
 - ae2e96ea685d9aa3b442acff986b096659a1d2c6dfd2ef9deef84d75fe2cf2b0 dash-0.12.2.1.tar.gz
 - b09f09d847e02e1509dd157aca1655bbe5ca79106fe4cf2e4370228e0eab79e3 dashcore-0.12.2-contrib.tar.gz
+- https://github.com/dashpay/dash/releases/tag/v0.12.2.1
 -
 * Wed Nov 8 2017 Todd Warner <t0dd@protonmail.com> 0.12.2.0-0.taw
 - Release 12.2 - ec8178c
 - 2e0c20c64f5ccc392e51373761f16384642d224587f10c2fdcdbb4f17e185c04 dash-0.12.2.0.tar.gz
 - b09f09d847e02e1509dd157aca1655bbe5ca79106fe4cf2e4370228e0eab79e3 dashcore-0.12.2-contrib.tar.gz
+- https://github.com/dashpay/dash/releases/tag/v0.12.2.0
 -
 * Tue Apr 11 2017 Todd Warner <t0dd@protonmail.com> 0.12.1.5-0.taw
 - Fixes a watchdog propagation issue.
 - 4e52b2427f1ea46f0ff5b31b0dd044478fba6a076611a97a9c2d3d345374459f  dash-0.12.1.5.tar.gz
 - e3e4351656afda2ff23cb142d264af4b4d04d0bbe9f3326ce24019423f6adf94  dashcore-0.12.1-contrib.tar.gz
+- https://github.com/dashpay/dash/releases/tag/v0.12.1.5
 -
 * Wed Mar 22 2017 Todd Warner <t0dd@protonmail.com> 0.12.1.4-0.taw
 - Added RPC port to available firewalld services.
 - Renamed firewalld services to match bitcoin's firewalld service name taxonomies.
 - 7218baaa1aa8052960ffc0c36904b6f5647256f9773c17e8506be37a2d3cc0cb  dash-0.12.1.4.tar.gz
 - e3e4351656afda2ff23cb142d264af4b4d04d0bbe9f3326ce24019423f6adf94  dashcore-0.12.1-contrib.tar.gz
+- https://github.com/dashpay/dash/releases/tag/v0.12.1.4
 - 
 * Sat Mar 04 2017 Todd Warner <t0dd@protonmail.com> 0.12.1.3-1.taw
 - Brought back the test scripts (most of them), made them conditional. Added

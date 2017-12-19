@@ -40,13 +40,13 @@
 %define _name1 dash
 %define _name2 dashcore
 %define _version_major 0.12.2
-%define _version_minor 1
+%define _version_minor 2
 
 # Note: "bump" and "bumptag" are release-build identifiers.
-# Often the bumptag is undefined, or the builder's initials, a date, or whatever.
+# Often the bumptag is undefined, the builder's initials, a date, or whatever.
 # To undefine, flip-flop the define/undefine ordering
 
-%define bump 0.testing
+%define bump 1.testing
 %undefine bumptag
 %define bumptag taw
 
@@ -79,7 +79,7 @@ Summary: Dash - Digital Cash - Peer-to-peer, privacy-centric, digital currency
 
 %define archivebasename_contrib %{_archivebasename2}-contrib
 
-# the exploded tree of code in BUILD
+# the exploded tree of code in rpmbuild/BUILD/
 # sourcetree is top dir
 # dashtree and contribtree hang off of it
 %define sourcetree %{_name2}-%{_version_major}
@@ -658,7 +658,7 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #
 # Source snapshots...
 #   * Tagged release builds: https://github.com/dashpay/dash/tags
-#     dash-0.12.2.1.tar.gz
+#     dash-0.12.2.2.tar.gz
 #   * Test builds...
 #     dashcore-0.12.2.tar.gz
 #     https://bamboo.dash.org/browse/DASHL-DEV/latestSuccessful
@@ -675,6 +675,16 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Documentation: https://dashpay.atlassian.net/wiki/display/DOC/Testnet
 
 %changelog
+* Tue Dec 19 2017 Todd Warner <t0dd@protonmail.com> 0.12.2.2-1.testing.taw
+- Release Candidate - 8506678
+- 2ce4cc76540be3760ebb7c31a81ede67b9682924da68d905fbbad58273d33b2f dashcore-0.12.2.tar.gz
+- b09f09d847e02e1509dd157aca1655bbe5ca79106fe4cf2e4370228e0eab79e3 dashcore-0.12.2-contrib.tar.gz
+-
+* Sat Dec 09 2017 Todd Warner <t0dd@protonmail.com> 0.12.2.2-0.testing.taw
+- Release Candidate - f9f28e7
+- fb8b023836b2cbe81b437e867b6b1176edbd7220435cf4620acc1417a5111b0d dashcore-0.12.2.tar.gz
+- b09f09d847e02e1509dd157aca1655bbe5ca79106fe4cf2e4370228e0eab79e3 dashcore-0.12.2-contrib.tar.gz
+-
 * Sun Nov 12 2017 Todd Warner <t0dd@protonmail.com> 0.12.2.1-0.testing.taw
 - Release Candidate - 20bacfa
 - c1522e62ed3117639e84b757af43ed06d8ea202e25e3f62b20c7d9ee5337cc36 dashcore-0.12.2.tar.gz
