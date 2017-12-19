@@ -34,7 +34,7 @@ Upgrading the operating system takes me roughly 5 minutes to perform (speed of
 internet connection dependent). And the instructions can't be much simpler.
 This example uses Fedora 27 as the target version of the upgrade.
 
-1. Update your current version of Fedora to all it's latest packages.
+1. Update your current version of Fedora to all its latest packages.
 
 ```
 # Update everything and clean up any cruft...
@@ -64,7 +64,6 @@ sudo rpm -qa | grep dashcore
 ```
 
 Your Dash Masternode should be up and running just fine, but examine it and
-watch it until satisfied. Troubleshooting guidance can be found here:
-<https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.dashcore-troubleshooting.md>
+watch it until satisfied. Troubleshooting guidance can be found here: [Dash Core Troubleshooting Guide](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.dashcore-troubleshooting.md)
 
 That's it! Your done.
