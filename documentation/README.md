@@ -98,6 +98,17 @@ Data directory: Usually either `/var/lib/dashcore` or `$HOME/.dashcore`
 
 ---
 
+### Disclaimer!
+
+These packages are built and tested. But just like with cryptocurrency, you
+must assume the risk associated to this space. I only claim that I made a best
+effort to build packages that work and function as expected. They may not in
+your context. Additionally, these packages are built from code provided by the
+Dash community. I have zero control over any vulnerabilities that code may
+contain. Please test your configation thoroughly before associating significant
+sums of money. Dash carefully!
+
+
 ### Good luck! Comments and Feedback...
 
 Got a dash of feedback? *...har har...* Send it my way <https://keybase.io/toddwarner>    

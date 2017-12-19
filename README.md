@@ -31,6 +31,16 @@ more about the available binary RPMs, please visit this link:
 
 ---
 
+### Disclaimer!
+
+These packages are built and tested. But just like with cryptocurrency, you
+must assume the risk associated to this space. I only claim that I made a best
+effort to build packages that work and function as expected. They may not in
+your context. Additionally, these packages are built from code provided by the
+Dash community. I have zero control over any vulnerabilities that code may
+contain. Please test your configation thoroughly before associating significant
+sums of money. Dash carefully!
+
 ### Send comment and feedback - <https://keybase.io/toddwarner>
 
 _Come say hello to me. I am **t0dd**, **taw**, **taw00**, or **agrarian**, in various forums:
