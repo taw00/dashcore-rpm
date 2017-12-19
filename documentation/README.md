@@ -41,8 +41,8 @@ A Dash Full Node is a un-collatoralized member of a decentralized network of
 servers that validate transactions and blocks.
 
 A Dash Masternode is a member of a network of incentivized servers that perform
-expanded critical services for the Dash cryptocurrency protocol above an beyond
-the services of a full node.
+expanded critical services for the Dash cryptocurrency protocol above and
+beyond the services of a full node.
 
 Dash is open source and the name of the overarching project. Learn more
 at www.dash.org.
