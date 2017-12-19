@@ -3,14 +3,19 @@
 If you have installed your Dash wallet, node, or masternode using the supplied
 RPM packages, updating is super super simple.
 
-_Note: Major upgrades where there are protocol shifts will have their own howto
-documents associated. This document only describes less-invasive updates and
-upgrades._
+_Note1: Major upgrades where there are protocol shifts (for example, the 12.1 to
+12.2 was an upgrade not an update). will have their own howto documents
+associated. This document only describes less-invasive updates and upgrades._
+
+_Note2: If you need to upgrade your operating system, read this document
+instead: [How to Upgrade Your Masternode's Operating System](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.upgrade-the-operating-system.md) 
 
 ## How do I know there is a new version available?
 
-The operating system will tell you within a day or two of a release whether new
-packages are available. Or you can check with a...
+If you are interfacing the operating system with a UI (GNOME, for example), it
+will tell you within a day or two of a release whether new packages are
+available. If you are operating headless though (like most Masternodes), this
+is how you check...
 
 ```
 sudo dnf upgrade --refresh
