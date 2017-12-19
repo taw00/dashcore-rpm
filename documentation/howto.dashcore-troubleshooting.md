@@ -8,7 +8,7 @@ common issues.
 > NOTE: THIS IS A WORK IN PROGRESS -- more to come
 
 
-## Tail this, watch that
+## Tail this; watch that
 
 There are a number of log files and watch commands you can issue to monitor the health of your masternode, wallet, node, etc.
 
