@@ -1,17 +1,21 @@
 .TH MASTERNODE.CONF "5" "December 2016" "masternode.conf"
 .SH NAME
-masternode.conf \- configuration file for a dash masternode controlling wallet
+masternode.conf \- configuration file for a Dash Wallet utilized as manager of Masternode(s) collateral
 .SH SYNOPSIS
-The masternode.conf file resides in the dash data directory and serves to link your wallet to your masternode(s). The wallet contains collateral in reserve that is required for an operational masternode.
+The masternode.conf file resides in the dash data directory for a masternode's managing wallet and serves to link the wallet to the masternode(s). The wallet contains collateral in reserve that is required for an operational masternode. The masternode itself does not need or use a masternode.conf file (a common confusion).
 
 Note or ToDo: This document is far from complete.
 .SH LOCATION
-$HOME/.dashcore/masternode.conf --or if run as system service-- /var/lib/dashcore/masternode.conf
+$HOME/.dashcore/masternode.conf --or if run as system service (rare)-- /var/lib/dashcore/masternode.conf
 
 .SH CONFIGURATION ROWS
 .nf
-# Format: alias IP:port masternodeprivkey collateral_output_txid collateral_output_index
-# Example: mn1 127.0.0.2:19999 93HaYBVUCYjEMeeH1Y4sBGLALQZE1Yc1K64xiqgX37tGBDQL8Xg 2bcd3c84c84f87eaa86e4e56834c92927a07f9e18718810b92e0d0324456a67c 0
+# masternode.conf
+# Dash Core Wallet configuration file (enables Masternode management)
+#
+# Format and example...
+# alias IP:port       masternodeprivkey                                   collateral_output_txid                                          collateral_output_index
+# mn1 127.0.0.2:19999 93HaYBVUCYjEMeeH1Y4sBGLALQZE1Yc1K64xiqgX37tGBDQL8Xg 2bcd3c84c84f87eaa86e4e56834c92927a07f9e18718810b92e0d0324456a67c 0
 .fi
 .SH AUTHOR
 This manual page was written by Todd Warner <t0dd@protonmail.com>
