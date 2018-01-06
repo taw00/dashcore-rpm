@@ -7,7 +7,7 @@
 #   sudo curl -O https://raw.githubusercontent.com/taw00/dashcore-rpm/master/dashcore-fedora.repo
 #   sudo dnf list | grep dashcore
 #
-# To install, for example the GUI client, you would do this at the commandline...
+# To install, for example the GUI client, you would do this at the commandline:
 #   sudo dnf install dashcore-client
 #
 # To update already existing software
@@ -34,6 +34,7 @@ type=rpm-md
 skip_if_unavailable=True
 gpgcheck=1
 gpgkey=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.2/pubkey.gpg
+# GnuPG fingerprint should be: C007F5C5B0827208031C8D6251A9F10DA3DF1F94
 repo_gpgcheck=0
 metadata_expire=1d
 enabled=1
