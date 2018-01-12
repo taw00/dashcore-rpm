@@ -40,13 +40,13 @@
 %define _name1 dash
 %define _name2 dashcore
 %define _version_major 0.12.2
-%define _version_minor 2
+%define _version_minor 3
 
 # Note: "bump" and "bumptag" are release-build identifiers.
 # Often the bumptag is undefined, the builder's initials, a date, or whatever.
 # To undefine, flip-flop the define/undefine ordering
 
-%define bump 1.testing
+%define bump 0.testing
 %undefine bumptag
 %define bumptag taw
 
@@ -301,7 +301,7 @@ mkdir -p SELinux
 cp -p %{contribtree}/contrib/linux/selinux/dash.{te,if,fc} SELinux
 
 # We leave with this structure (for example)...
-# ~/rpmbuild/BUILD/dashcore-0.12.2/dash-0.12.2.2/
+# ~/rpmbuild/BUILD/dashcore-0.12.2/dash-0.12.2.3/
 # ~/rpmbuild/BUILD/dashcore-0.12.2/dashcore-0.12.2/contrib/...
 # ...unless we are using the bamboo nomenclature...
 # ~/rpmbuild/BUILD/dashcore-0.12.2/dashcore-0.12.2/
@@ -658,12 +658,11 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #
 # Source snapshots...
 #   * Tagged release builds: https://github.com/dashpay/dash/tags
-#     dash-0.12.2.2.tar.gz
+#     dash-0.12.2.3.tar.gz
 #   * Test builds...
 #     dashcore-0.12.2.tar.gz
-#     https://bamboo.dash.org/browse/DASHL-DEV/latestSuccessful
-#     https://bamboo.dash.org/browse/DASHL-DEV-<BUILD_NUMBER>/artifact/JOB1/gitian-linux-dash-src/src
-#     https://bamboo.dash.org/artifact/DASHL-DEV/JOB1/build-<BUILD_NUMBER>/gitian-linux-dash-src/src/dashcore-0.12.2.tar.gz
+#     https://bamboo.dash.org/browse/DASHL-REL/latestSuccessful
+#     Then > Artifacts > gitian-linux-dash-src > [download the tar.gz file]
 #
 # Dash Core git repos...
 #   * Dash: https://github.com/dashpay/dash
@@ -675,6 +674,12 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Documentation: https://dashpay.atlassian.net/wiki/display/DOC/Testnet
 
 %changelog
+* Thu Jan 11 2018 Todd Warner <t0dd@protonmail.com> 0.12.2.3-0.testing.taw
+- Release - e596762
+- 92a770c256ab8b1ef9b6e32f0e54862341f316a343d9a9afb028c0511f076964 dashcore-0.12.2.tar.gz
+- b09f09d847e02e1509dd157aca1655bbe5ca79106fe4cf2e4370228e0eab79e3 dashcore-0.12.2-contrib.tar.gz
+- https://github.com/dashpay/dash/releases/tag/v0.12.2.3
+-
 * Tue Dec 19 2017 Todd Warner <t0dd@protonmail.com> 0.12.2.2-1.testing.taw
 - Release Candidate - 8506678
 - 2ce4cc76540be3760ebb7c31a81ede67b9682924da68d905fbbad58273d33b2f dashcore-0.12.2.tar.gz

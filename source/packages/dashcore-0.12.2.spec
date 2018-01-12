@@ -40,7 +40,7 @@
 %define _name1 dash
 %define _name2 dashcore
 %define _version_major 0.12.2
-%define _version_minor 2
+%define _version_minor 3
 
 # Note: "bump" and "bumptag" are release-build identifiers.
 # Often the bumptag is undefined, the builder's initials, a date, or whatever.
@@ -301,7 +301,7 @@ mkdir -p SELinux
 cp -p %{contribtree}/contrib/linux/selinux/dash.{te,if,fc} SELinux
 
 # We leave with this structure (for example)...
-# ~/rpmbuild/BUILD/dashcore-0.12.2/dash-0.12.2.2/
+# ~/rpmbuild/BUILD/dashcore-0.12.2/dash-0.12.2.3/
 # ~/rpmbuild/BUILD/dashcore-0.12.2/dashcore-0.12.2/contrib/...
 # ...unless we are using the bamboo nomenclature...
 # ~/rpmbuild/BUILD/dashcore-0.12.2/dashcore-0.12.2/
@@ -658,12 +658,11 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #
 # Source snapshots...
 #   * Tagged release builds: https://github.com/dashpay/dash/tags
-#     dash-0.12.2.2.tar.gz
+#     dash-0.12.2.3.tar.gz
 #   * Test builds...
 #     dashcore-0.12.2.tar.gz
-#     https://bamboo.dash.org/browse/DASHL-DEV/latestSuccessful
-#     https://bamboo.dash.org/browse/DASHL-DEV-<BUILD_NUMBER>/artifact/JOB1/gitian-linux-dash-src/src
-#     https://bamboo.dash.org/artifact/DASHL-DEV/JOB1/build-<BUILD_NUMBER>/gitian-linux-dash-src/src/dashcore-0.12.2.tar.gz
+#     https://bamboo.dash.org/browse/DASHL-REL/latestSuccessful
+#     Then > Artifacts > gitian-linux-dash-src > [download the tar.gz file]
 #
 # Dash Core git repos...
 #   * Dash: https://github.com/dashpay/dash
@@ -675,6 +674,12 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Documentation: https://dashpay.atlassian.net/wiki/display/DOC/Testnet
 
 %changelog
+* Thu Jan 11 2018 Todd Warner <t0dd@protonmail.com> 0.12.2.3-0.taw
+- Release - e596762
+- 5347351483ce39d1dd0be4d93ee19aba1a6b02bc7f90948b4eea4466ad79d1c3 dash-0.12.2.3.tar.gz
+- b09f09d847e02e1509dd157aca1655bbe5ca79106fe4cf2e4370228e0eab79e3 dashcore-0.12.2-contrib.tar.gz
+- https://github.com/dashpay/dash/releases/tag/v0.12.2.3
+-
 * Tue Dec 19 2017 Todd Warner <t0dd@protonmail.com> 0.12.2.2-0.taw
 - Release - 8506678
 - fd5f1576bc8ef70e5823f665b86a334937813e300f037a03bcd127b83773d771 dash-0.12.2.2.tar.gz
