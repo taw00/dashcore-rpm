@@ -1,12 +1,10 @@
 # Dash for Fedora, CentOS, and Red Hat Enterprise Linux
 
-**Stable source packages: 0.12.1**
-
 The most current source packages can be found in this directory:
 <https://github.com/taw00/dashcore-rpm/tree/master/source/packages>
 
 From these source packages, we have successfully built Dash Core for
-Fedora versions 25, 26, 27 and CentOS 7 (and therefore RHEL7).
+Fedora versions 26, 27 and CentOS 7 (and therefore RHEL7).
 
 The original components used to build these packages come from:
 
