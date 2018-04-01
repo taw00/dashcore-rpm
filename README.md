@@ -43,10 +43,16 @@ sums of money. Dash carefully!
 
 ### Send comment and feedback - <https://keybase.io/toddwarner>
 
-_Come say hello to me. I am **t0dd**, **taw**, **taw00**, or **agrarian**, in various forums:
+_Come say hello to me. I am **t0dd**, **taw**, or **taw00** in various forums:
 [Dash Nation on Discord](https://dashchat.org/),
 [dash.org's forum](https://www.dash.org/forum/),
 [#dash:chat.cryptochat.io (matrix network)](https://riot.im/app/#/room/#dash:chat.cryptochat.io),
 [#dashpay on freenode IRC](http://freenode.net/),
 [Dash Knights 2.0 on Telegram](https://web.telegram.org/#/im?p=@DashDigitalCash), and
 [/r/dashpay/](https://www.reddit.com/r/dashpay) on Reddit._
+
+_If you like my Dash stuff, also check out my Zcash builds which I maintain in
+support of the [Zcash](https://z.cash) Project:
+<https://github.com/taw00/zcash-rpms>. I am a huge fan of both endeavors; don't
+FUD me. :)_
+
