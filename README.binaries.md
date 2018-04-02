@@ -18,7 +18,7 @@ Otherwise, keep reading.
 
 ## *"TL;DR ...I just want to install the Dash Core GUI Wallet!"*
 
-Proper packaging and repositories make installation trivial.
+Proper packaging and repositories make installation and future upgrades trivial.
 
 Assuming you are logging in as a normal user who has `sudo` priviledges.<br />
 At the terminal command line...
