@@ -18,7 +18,7 @@ Group=dashcore
 EnvironmentFile=/etc/sysconfig/dashd
 
 #PIDFile=/run/dashd/dashd.pid # PIDFile= is unneccessary (systemd figures it out) and throws false errors in the journal
-ExecStart=/usr/sbin/dashd -daemon -disablewallet -conf=${CONFIG_FILE} -datadir=${DATA_DIR} -pid=/run/dashd/dashd.pid $OPTIONS
+ExecStart=/usr/sbin/dashd -daemon -conf=${CONFIG_FILE} -datadir=${DATA_DIR} -pid=/run/dashd/dashd.pid $OPTIONS
 # Experimental: sleep then mnsync reset
 #ExecStartPost=/usr/bin/sleep $START_SLEEP_TIME
 #ExecStartPost=/usr/bin/dash-cli -conf=${CONFIG_FILE} -datadir=${DATA_DIR} mnsync reset
