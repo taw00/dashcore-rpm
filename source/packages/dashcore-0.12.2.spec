@@ -17,28 +17,23 @@
 # associated to future work or experimental elements of this spec file and
 # build.
 #
-# Note about RPM and commented out defined variables/macros in this (or any)
-# spec file. You MUST break up the define declaration. Commenting it out is
-# not good enough because... it is a macro, more than a variable. So, if you
-# want to have a macro linger around, but want to disable it, either nil it
-# out, undefine it, or break up the define like this "% define your_macro..."
-# RPM is weird.
+# Note commented out macros in this (or any) spec file. You MUST double up the
+# %%'s or rpmbuild will yell at you. RPM is weird.
 #
 # Enjoy. Todd Warner <t0dd@protonmail.com>
 
 %global selinux_variants mls strict targeted
 %define testing_extras 0
 
-# Usually want a debug package available and built. If you do not want them
-# built, reconstruct this nil'ifying define below. It is deconstructed because
-# RPM recognizes certain things, like defines, even if they are in commments.
-#% define debug _package % { n i l }
+# We usually want a debug package available and built. If you DO NOT want them
+# built, un-double the %%'s and uncomment the line.
+#%%define debug_package %%{nil}
 
 # https://fedoraproject.org/wiki/Changes/Harden_All_Packages
 %define _hardened_build 0
 
-%define _name1 dash
-%define _name2 dashcore
+%define _name_d dash
+%define _name_dc dashcore
 %define _version_major 0.12.2
 %define _version_minor 3
 
@@ -46,7 +41,7 @@
 # Often the bumptag is undefined, the builder's initials, a date, or whatever.
 # To undefine, flip-flop the define/undefine ordering
 
-%define bump 0
+%define bump 1
 %undefine bumptag
 %define bumptag taw
 
@@ -57,51 +52,50 @@
 %endif
 
 
-Name: %{_name2}
+Name: %{_name_dc}
 Version: %{_version_major}.%{_version_minor}
 Release: %{_release}%{?dist}
 Vendor: Dash.org
 Packager: Todd Warner <t0dd@protonmail.com>
 Summary: Dash - Digital Cash - Peer-to-peer, privacy-centric, digital currency
 
-# upstream bitcoin team convention - v0.12.2 ...for example v0.12.2.tar.gz
-%define _archivebasename0 v%{version}
-# upstream dash team convention, github - dash-0.12.2.0 ...for example dash-0.12.2.0.tar.gz
-%define _archivebasename1 %{_name1}-%{version}
-# upstream dash team convention, bamboo - dashcore-0.12.2 ...for example dashcore-0.12.2.tar.gz
-%define _archivebasename2 %{_name2}-%{_version_major}
+%define _nmv_d %{_name_d}-%{_version_major}
+%define _nmv_dc %{_name_dc}-%{_version_major}
+%define _nv_d %{_name_d}-%{version}
+%define _nv_dc %{_name_dc}-%{version}
+%define _nvr_d %{_name_d}-%{version}-%{_release}
+%define _nvr_dc %{_name_dc}-%{version}-%{_release}
 
-# ...flipflop these rules for the build type...
-# testing and rc builds...
-%define archivebasename %{_archivebasename2}
-# stable builds...
-%define archivebasename %{_archivebasename1}
+# dashcore source tarball file basename
+# Set srcarchive value to the appropriate on for this build.
+# github or from bamboo (the team build system).
+#   - github convention - dash-0.12.2.3 - e.g. dash-0.12.2.3.tar.gz
+#   - bamboo - dashcore-0.12.2 - e.g. dashcore-0.12.2.tar.gz
+%define _srcarchive_github %{_name_d}-%{version}
+%define _srcarchive_bamboo %{_name_dc}-%{_version_major}
 
-%define archivebasename_contrib %{_archivebasename2}-contrib
+%define srcarchive %{_srcarchive_github}
+%define srccontribarchive %{_name_dc}-%{_version_major}-contrib
 
-# the exploded tree of code in rpmbuild/BUILD/
-# sourcetree is top dir
-# dashtree and contribtree hang off of it
-%define sourcetree %{_name2}-%{_version_major}
-%define contribtree %{_archivebasename2}
-
-# ...flipflop these rules for the build type...
-# testing and rc builds...
-%define dashtree %{_archivebasename2}
-# stable builds...
-%define dashtree %{_archivebasename1}
+# Unarchived source tree structure (extracted in .../BUILD)
+#   srcroot               dascore-0.2.12
+#      \_srccodetree        \_dash-0.2.12.3
+#      \_srccontribtree     \_dashcore-0.2.12
+%define srcroot %{_name_dc}-%{_version_major}
+%define srccodetree %{_name_d}-%{version}
+%define srccontribtree %{_name_dc}-%{_version_major}
 
 
 Group: Applications/System
 License: MIT
 URL: http://dash.org/
 # upstream
-Source0: %{archivebasename}.tar.gz
+Source0: %{srcarchive}.tar.gz
 
 # Source archive of contributions not yet in main upstream package.
 # Icons, manpages, desktop stuff, systemd stuff, etc.
 # includes some future SELinux policy stuff as well (.te, .if, .fc)
-Source1: %{archivebasename_contrib}.tar.gz
+Source1: %{srccontribarchive}.tar.gz
 
 BuildRoot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
@@ -109,16 +103,16 @@ BuildRequires: gcc-c++
 BuildRequires: qt5-qtbase-devel qt5-linguist
 BuildRequires: qrencode-devel miniupnpc-devel protobuf-devel openssl-devel
 BuildRequires: desktop-file-utils autoconf automake
-#BuildRequires: checkpolicy selinux-policy-devel selinux-policy-doc
 BuildRequires: boost-devel libdb4-cxx-devel libevent-devel
 BuildRequires: libtool java
+#BuildRequires: checkpolicy selinux-policy-devel selinux-policy-doc
 
 # I don't think this check is needed anymore -comment out for now. -t0dd
 ## ZeroMQ not testable yet on RHEL due to lack of python3-zmq so
 ## enable only for Fedora
-#%if 0%{?fedora}
+#%%if 0%%{?fedora}
 #BuildRequires: python3-zmq zeromq-devel
-#%endif
+#%%endif
 
 # Python tests still use OpenSSL for secp256k1, so we still need this to run
 # the testsuite on RHEL7, until Red Hat fixes OpenSSL on RHEL7. It has already
@@ -130,7 +124,6 @@ BuildRequires: libtool java
 %if %{testing_extras} && 0%{?rhel}
 BuildRequires: openssl-compat-dashcore-libs
 %endif
-
 
 
 # dashcore-client
@@ -149,11 +142,11 @@ BuildRequires: systemd
 Requires(pre): shadow-utils
 Requires(post):	/usr/sbin/semodule, /sbin/restorecon, /sbin/fixfiles
 Requires(postun): /usr/sbin/semodule, /sbin/restorecon, /sbin/fixfiles
-#t0dd Requires: selinux-policy
-#t0dd Requires: policycoreutils-python
 Requires: openssl-libs
 Requires: dashcore-utils = %{version}-%{release}
 Requires: dashcore-sentinel
+#t0dd Requires: selinux-policy
+#t0dd Requires: policycoreutils-python
 
 
 # dashcore-libs
@@ -172,38 +165,35 @@ Requires: dashcore-libs = %{version}-%{release}
 Summary: Dash - Digital Cash - Peer-to-peer, privacy-centric, digital currency (commandline utils)
 
 
-
-# dashcore SRPM
+# dashcore src.rpm
 %description
 This is the source package for building most of the Dash Core set of binary
 packages.  It will build dashcore-{client,server,utils,libs,devel,debuginfo}.
 
 Dash (Digital Cash) is an open source peer-to-peer cryptocurrency that offers
-instant transactions (InstantSend), private transactions (PrivateSend) and token
-fungibility. Dash operates a decentralized governance and budgeting system,
-making it the first decentralized autonomous organization (DAO). Dash is also a
-platform for innovative decentralized crypto-tech.
+instant transactions (InstantSend), private transactions (PrivateSend) and
+token fungibility. Dash operates a decentralized governance and budgeting
+system, making it the first decentralized autonomous organization (DAO). Dash
+is also a platform for innovative decentralized crypto-tech.
 
-Dash is open source and the name of the overarching project. Learn more
-at www.dash.org.
-
+Dash is open source and the name of the overarching project. Learn more at
+dash.org.
 
 
 # dashcore-client
 %description client
-This package provides dash-qt, a user-friendly GUI wallet manager for personal
-use. This package requires the dashcore-utils RPM package to be installed as
-well.
-
+This package provides dash-qt, a user-friendly-er GUI wallet manager for
+personal use. This package requires the dashcore-utils RPM package to be
+installed as well.
 
 Dash (Digital Cash) is an open source peer-to-peer cryptocurrency that offers
-instant transactions (InstantSend), private transactions (PrivateSend) and token
-fungibility. Dash operates a decentralized governance and budgeting system,
-making it the first decentralized autonomous organization (DAO). Dash is also a
-platform for innovative decentralized crypto-tech.
+instant transactions (InstantSend), private transactions (PrivateSend) and
+token fungibility. Dash operates a decentralized governance and budgeting
+system, making it the first decentralized autonomous organization (DAO). Dash
+is also a platform for innovative decentralized crypto-tech.
 
-Dash is open source and the name of the overarching project. Learn more
-at www.dash.org.
+Dash is open source and the name of the overarching project. Learn more at
+dash.org.
 
 
 # dashcore-server
@@ -219,18 +209,18 @@ running a Masternode.
 -
 
 Dash (Digital Cash) is an open source peer-to-peer cryptocurrency that offers
-instant transactions (InstantSend), private transactions (PrivateSend) and token
-fungibility. Dash operates a decentralized governance and budgeting system,
-making it the first decentralized autonomous organization (DAO). Dash is also a
-platform for innovative decentralized crypto-tech.
+instant transactions (InstantSend), private transactions (PrivateSend) and
+token fungibility. Dash operates a decentralized governance and budgeting
+system, making it the first decentralized autonomous organization (DAO). Dash
+is also a platform for innovative decentralized crypto-tech.
 
 A Dash Full Node is a un-collatoralized member of a decentralized network of
-servers that validate transactions and blocks. A Dash Masternode is a member
-of a network of incentivized servers that perform expanded critical services
-for the Dash cryptocurrency protocol.
+servers that validate transactions and blocks. A Dash Masternode is a member of
+a network of incentivized servers that perform expanded critical services for
+the Dash cryptocurrency protocol.
 
-Dash is open source and the name of the overarching project. Learn more
-at www.dash.org.
+Dash is open source and the name of the overarching project. Learn more at
+dash.org.
 
 
 # dashcore-libs
@@ -239,66 +229,68 @@ This package provides libdashconsensus, which is used by third party
 applications to verify scripts (and other functionality in the future).
 
 Dash (Digital Cash) is an open source peer-to-peer cryptocurrency that offers
-instant transactions (InstantSend), private transactions (PrivateSend) and token
-fungibility. Dash operates a decentralized governance and budgeting system,
-making it the first decentralized autonomous organization (DAO). Dash is also a
-platform for innovative decentralized crypto-tech.
+instant transactions (InstantSend), private transactions (PrivateSend) and
+token fungibility. Dash operates a decentralized governance and budgeting
+system, making it the first decentralized autonomous organization (DAO). Dash
+is also a platform for innovative decentralized crypto-tech.
 
-Dash is open source and the name of the overarching project. Learn more
-at www.dash.org.
+Dash is open source and the name of the overarching project. Learn more at
+dash.org.
 
 
 # dashcore-devel
 %description devel
-This package provides the libraries and header files necessary to
-compile programs which use libdashconsensus.
+This package provides the libraries and header files necessary to compile
+programs which use libdashconsensus.
 
 Dash (Digital Cash) is an open source peer-to-peer cryptocurrency that offers
-instant transactions (InstantSend), private transactions (PrivateSend) and token
-fungibility. Dash operates a decentralized governance and budgeting system,
-making it the first decentralized autonomous organization (DAO). Dash is also a
-platform for innovative decentralized crypto-tech.
+instant transactions (InstantSend), private transactions (PrivateSend) and
+token fungibility. Dash operates a decentralized governance and budgeting
+system,
 
-Dash is open source and the name of the overarching project. Learn more
-at www.dash.org.
+Dash is open source and the name of the overarching project. Learn more at
+dash.org.
 
 
 # dashcore-utils
 %description utils
-This package provides dash-cli, a utility to communicate with and
-control a Dash server via its RPC protocol, and dash-tx, a utility
-to create custom Dash transactions.
+This package provides dash-cli, a utility to communicate with and control a
+Dash server via its RPC protocol, and dash-tx, a utility to create custom Dash
+transactions.
 
 Dash (Digital Cash) is an open source peer-to-peer cryptocurrency that offers
-instant transactions (InstantSend), private transactions (PrivateSend) and token
-fungibility. Dash operates a decentralized governance and budgeting system,
-making it the first decentralized autonomous organization (DAO). Dash is also a
-platform for innovative decentralized crypto-tech.
+instant transactions (InstantSend), private transactions (PrivateSend) and
+token fungibility. Dash operates a decentralized governance and budgeting
+system, making it the first decentralized autonomous organization (DAO). Dash
+is also a platform for innovative decentralized crypto-tech.
 
-Dash is open source and the name of the overarching project. Learn more
-at www.dash.org.
+Dash is open source and the name of the overarching project. Learn more at
+dash.org.
 
 
 
 %prep
-# dash upstream stuff
-#%setup -q -n %{sourcetree}
-%setup -q -T -a 0 -c %{sourcetree}
-# extra contributions - Source1
-#%setup -q -T -D -b 1 -n %{sourcetree}
-%setup -q -T -D -a 1
-# Patch addressed by removing one dir path level (-p1)
-#%patch0 -p1
+# Prep section starts us in directory .../BUILD
+# process dashcore - Source0 - untars in:
+# .../BUILD/dashcore-0.12.2/dashcore-0.12.2.3/
+mkdir %{srcroot}
+%setup -q -T -D -a 0 -n %{srcroot}
+#%%setup -q -T -a 0 -c -n %{srcroot}
+# extra contributions - Source1 - untars in:
+# .../BUILD/dashcore-0.12.2/dashcore-0.12.2
+%setup -q -T -D -a 1 -n %{srcroot}
+
+# Prep section now moves us into .../BUILD/%{srcroot}
+# .../BUILD/dashcore-0.12.2/
 
 # Install README files
-#t0dd cp -p %{SOURCE8} %{SOURCE9} %{SOURCE10} .
+#t0dd cp -p %%{SOURCE8} %%{SOURCE9} %%{SOURCE10} .
 
-# Prep SELinux policy -- XXX NOT USED YET
-# Done here because action is taken in the %build step
-#mkdir -p %{sourcetree}/SELinux
-# At this moment, we are in the sourcetree directory
-mkdir -p SELinux
-cp -p %{contribtree}/contrib/linux/selinux/dash.{te,if,fc} SELinux
+# Prep SELinux policy -- NOT USED YET
+# Done here to prep for action taken in the %%build step
+# At this moment, we are in the srcroot directory
+mkdir -p selinux-tmp
+cp -p %{srccontribtree}/contrib/linux/selinux/dash.{te,if,fc} selinux-tmp/
 
 # We leave with this structure (for example)...
 # ~/rpmbuild/BUILD/dashcore-0.12.2/dash-0.12.2.3/
@@ -309,22 +301,19 @@ cp -p %{contribtree}/contrib/linux/selinux/dash.{te,if,fc} SELinux
 
 
 %build
-# Building in dashcore-X.Y.Z
-# But we need to cd into dashcore-X.Y.Z/dash-X.Y.Z.zz
-# ...unless we are using the bamboo nomenclature...
-# But we need to cd into dashcore-X.Y.Z/dashcore-X.Y.Z
-
-# We start in sourcetree (dashcore-X.Y.Z)
+# This section starts us in directory .../BUILD/dashcore-0.12.2
+# So, we're in srcroot. We need to cd into srccodetree, the codetree.
 # cd into dashcore-X.Y.Z/dash-X.Y.Z.zz
-cd %{dashtree}
+cd %{srccodetree}
 ./autogen.sh
 %configure --enable-reduce-exports --enable-glibc-back-compat
 
 make %{?_smp_mflags}
 
+# Not using for now. Doubling up %%'s to stop macro expansion in comments.
 #t0dd # Build SELinux policy
-#t0dd pushd SELinux
-#t0dd for selinuxvariant in %{selinux_variants}
+#t0dd pushd selinux-tmp
+#t0dd for selinuxvariant in %%{selinux_variants}
 #t0dd do
 #t0dd # FIXME: Create and debug SELinux policy
 #t0dd   make NAME=${selinuxvariant} -f /usr/share/selinux/devel/Makefile
@@ -333,12 +322,14 @@ make %{?_smp_mflags}
 #t0dd done
 #t0dd popd
 
-# Exit from sourcetree/<the dash tree>
+# Exit from srccodetree back into the root of the tree
 cd ..
 
 
 %check
-cd %{dashtree}
+# This section starts us in directory .../BUILD/dashcore-0.12.2
+# So, we start in that root tree structure cd in to the code tree and the contrib tree and in and out installing things to the buildroot.
+cd %{srccodetree}
 %if %{testing_extras}
 # Run all the tests
 make check
@@ -354,18 +345,15 @@ cd ..
 
 
 %install
-rm -rf %{buildroot}
-mkdir %{buildroot}
-
-# We start in sourcetree, i.e. dashcore-0.12.2, we need to cd into the dashtree
-cd %{dashtree}
+rm -rf %{buildroot} ; mkdir %{buildroot}
+# This section starts us in directory .../BUILD/dashcore-0.12.2
+# First, cd into the code tree and do stuff...
+cd %{srccodetree}
 make INSTALL="install -p" CP="cp -p" DESTDIR=%{buildroot} install
 cd ..
 
 # TODO: Upstream puts dashd in the wrong directory. Need to fix the
-# upstream Makefiles to relocate it.
-#mkdir -p -m755 %{buildroot}%{_sbindir}
-#mv %{buildroot}%{_bindir}/dashd %{buildroot}%{_sbindir}/dashd
+# upstream Makefiles to relocate it. Someday.
 install -d -m755 -p %{buildroot}%{_sbindir}
 install -D -m755 -p %{buildroot}%{_bindir}/dashd %{buildroot}%{_sbindir}/dashd
 rm -f %{buildroot}%{_bindir}/dashd
@@ -379,15 +367,15 @@ rm -f %{buildroot}%{_bindir}/bench_dash
 
 # Install / config ancillary files
 # Cheatsheet for macros:
-#   %{_datadir} = /usr/share
-#   %{_mandir} = /usr/share/man
-#   %{_sysconfdir} = /etc
-#   %{_localstatedir} = /var
-#   %{_sharedstatedir} is /var/lib
-#   %{_prefix} = /usr
-#   %{_tmpfilesdir} = /usr/lib/tmpfiles.d
-#   %{_unitdir} = /usr/lib/systemd/system
-#   %{_libdir} = /usr/lib or /usr/lib64 (depending on system)
+#   _datadir = /usr/share
+#   _mandir = /usr/share/man
+#   _sysconfdir = /etc
+#   _localstatedir = /var
+#   _sharedstatedir is /var/lib
+#   _prefix = /usr
+#   _tmpfilesdir = /usr/lib/tmpfiles.d
+#   _unitdir = /usr/lib/systemd/system
+#   _libdir = /usr/lib or /usr/lib64 (depending on system)
 #   https://fedoraproject.org/wiki/Packaging:RPMMacros
 install -d %{buildroot}%{_datadir}
 install -d %{buildroot}%{_mandir}
@@ -402,7 +390,7 @@ install -d -m750 -p %{buildroot}%{_sysconfdir}/dashcore
 install -d -m750 -p %{buildroot}%{_sharedstatedir}/dashcore
 
 # Man Pages (from contrib)
-cd %{contribtree}
+cd %{srccontribtree}
 install -d %{buildroot}%{_mandir}/man1
 install -D -m644 ./contrib/linux/man/man1/* %{buildroot}%{_mandir}/man1/
 gzip %{buildroot}%{_mandir}/man1/dashd.1
@@ -414,7 +402,7 @@ gzip %{buildroot}%{_mandir}/man5/masternode.conf.5
 cd ..
 
 # Desktop elements - desktop file and kde protocol file (from contrib)
-cd %{contribtree}
+cd %{srccontribtree}
 install -D -m644 ./contrib/linux/desktop/dash-qt.desktop %{buildroot}%{_datadir}/applications/dash-qt.desktop
 install -D -m644 ./contrib/linux/desktop/usr-share-kde4-services_dash-qt.protocol %{buildroot}%{_datadir}/kde4/services/dash-qt.protocol
 # Desktop elements - hicolor icons
@@ -438,28 +426,95 @@ install -D -m644 ./contrib/linux/desktop/dash-HighContrast-scalable.svg %{buildr
 cd ..
 
 # Misc pixmaps - unsure if they are even used... (from contrib)
-cd %{contribtree}
+cd %{srccontribtree}
 install -d %{buildroot}%{_datadir}/pixmaps
 install -D -m644 ./contrib/extras/pixmaps/* %{buildroot}%{_datadir}/pixmaps/
 cd ..
 
 # TESTING ONLY: For test releases, uncomment the next line
-#desktop-file-validate %{buildroot}%{_datadir}/applications/dash-qt.desktop
+#desktop-file-validate %%{buildroot}%%{_datadir}/applications/dash-qt.desktop
 
-# Install that dated dash.conf.example document (from contrib)
-cd %{contribtree}
-# TODO: need masternode.conf example also... or just update the man page?
-# Note: doesn't need to be in buildroot I don't think.
-install -D -m644 ./contrib/extras/dash.conf.example doc/dash.conf.example
-cd ..
-
+# Config
 # Install default configuration file (from contrib)
-cd %{contribtree}
+cd %{srccontribtree}
 install -D -m640 ./contrib/linux/systemd/etc-dashcore_dash.conf %{buildroot}%{_sysconfdir}/dashcore/dash.conf
+install -D -m644 ./contrib/linux/systemd/etc-dashcore_dash.conf ./contrib/extras/dash.conf.example
+echo "\
+# ---------------------------------------------------------------------------
+# Example of a minimalistic configuration. Change the password. Additionally,
+# some of these settings are more explicit than they need to be.
+
+# Note, the RPM spec file sets dashcore user's homedir to be /var/lib/dashcore
+# The datadir is also set to the same.
+datadir=/var/lib/dashcore
+
+testnet=0
+daemon=1
+# We allow RPC calls
+server=1
+# We participate peer-to-peer
+listen=1
+maxconnections=8
+
+# A systemd managed masternode probably not going to be a wallet as well
+# Set to 0 if you also want it to be a wallet.
+disablewallet=1
+
+# Only localhost allowed to connect to make RPC calls.
+rpcallowip=127.0.0.1
+
+# Example RPC username and password.
+rpcuser=rpcuser-CHANGEME-`head -c 32 /dev/urandom | base64 | head -c 4`
+rpcpassword=CHANGEME`head -c 32 /dev/urandom | base64`
+" >> %{buildroot}%{_sysconfdir}/dashcore/dash.conf
+
+echo "\
+# ---------------------------------------------------------------------------
+# Example of a minimalistic configuration. Change the password if you use
+# this. Additionally, some of these settings are more explicit than they need
+# to be.
+
+# Commented out means datadir is ~/.dashcore
+#datadir=/var/lib/dashcore
+
+testnet=0
+daemon=0
+# We allow RPC calls
+server=1
+# We participate peer-to-peer
+listen=1
+maxconnections=8
+
+# Set to 0 if you also want this to be a wallet.
+disablewallet=0
+
+# Only localhost allowed to connect to make RPC calls.
+rpcallowip=127.0.0.1
+
+# Example RPC username and password.
+rpcuser=rpcuser-CHANGEME-`head -c 32 /dev/urandom | base64 | head -c 4`
+rpcpassword=CHANGEME`head -c 32 /dev/urandom | base64`
+" >> ./contrib/extras/dash.conf.example
+
+# ...convenience symlink:
+#    /var/lib/dashcore/dash.conf -> /etc/dashcore/dash.conf
+install -d %{buildroot}%{_sharedstatedir}/dashcore/.dashcore
+echo "\
+This directory and symlink only exist as a convenience so that you don't
+have to type -conf=/etc/dashcore/dash.conf all the time on the commandline.
+
+The dashcore user home dir is here: /var/lib/dashcore
+The dash config file is housed here: /etc/dashcore/dash.conf
+The systemd managed dash datadir is here: /var/lib/dashcore
+
+Therefore, if -conf= is not specified on the commandline, dash will look for
+the configuration file in /var/lib/dashcore/.dashcore/dash.conf
+" > %{buildroot}%{_sharedstatedir}/dashcore/.dashcore/README
+ln -s %{_sysconfdir}/dashcore/dash.conf %{buildroot}%{_sharedstatedir}/dashcore/.dashcore/dash.conf
 cd ..
 
 # Install system services files (from contrib)
-cd %{contribtree}
+cd %{srccontribtree}
 install -D -m600 -p ./contrib/linux/systemd/etc-sysconfig_dashd %{buildroot}%{_sysconfdir}/sysconfig/dashd
 install -d %{buildroot}%{_sysconfdir}/sysconfig/dashd-scripts
 install -D -m755 -p ./contrib/linux/systemd/etc-sysconfig-dashd-scripts_dashd.send-email.sh %{buildroot}%{_sysconfdir}/sysconfig/dashd-scripts/dashd.send-email.sh
@@ -468,28 +523,29 @@ install -D -m644 -p ./contrib/linux/systemd/usr-lib-tmpfiles.d_dashd.conf %{buil
 # ...logrotate file rules
 install -D -m644 -p ./contrib/linux/logrotate/etc-logrotate.d_dashcore %{buildroot}/etc/logrotate.d/dashcore
 # ...ghosting a log file - we have to own the log file
-#install -d %{buildroot}%{_sharedstatedir}/dashcore # already created above
+#install -d %%{buildroot}%%{_sharedstatedir}/dashcore # already created above
 install -d %{buildroot}%{_sharedstatedir}/dashcore/testnet3
 touch %{buildroot}%{_sharedstatedir}/dashcore/debug.log
 touch %{buildroot}%{_sharedstatedir}/dashcore/testnet3/debug.log
 cd ..
 
 
-# Service definition files for firewalld for full nodes and masternodes (from contrib)
-cd %{contribtree}
+# FirewallD service definition files for full and master -nodes (from contrib)
+cd %{srccontribtree}
 install -D -m644 -p ./contrib/linux/firewalld/usr-lib-firewalld-services_dashcore.xml %{buildroot}%{_prefix}/lib/firewalld/services/dashcore.xml
 install -D -m644 -p ./contrib/linux/firewalld/usr-lib-firewalld-services_dashcore-testnet.xml %{buildroot}%{_prefix}/lib/firewalld/services/dashcore-testnet.xml
 install -D -m644 -p ./contrib/linux/firewalld/usr-lib-firewalld-services_dashcore-rpc.xml %{buildroot}%{_prefix}/lib/firewalld/services/dashcore-rpc.xml
 install -D -m644 -p ./contrib/linux/firewalld/usr-lib-firewalld-services_dashcore-testnet-rpc.xml %{buildroot}%{_prefix}/lib/firewalld/services/dashcore-testnet-rpc.xml
 cd ..
 
+# Not using for now. Doubling up %%'s to stop macro expansion in comments.
 #t0dd # Install SELinux policy
-#t0dd for selinuxvariant in %{selinux_variants}
+#t0dd for selinuxvariant in %%{selinux_variants}
 #t0dd do
-#t0dd 	install -d %{buildroot}%{_datadir}/selinux/${selinuxvariant}
+#t0dd 	install -d %%{buildroot}%%{_datadir}/selinux/${selinuxvariant}
 #t0dd 	install -p -m 644 SELinux/dash.pp.${selinuxvariant} \
-#t0dd 		%{buildroot}%{_datadir}/selinux/${selinuxvariant}/dash.pp
-#t0dd donex
+#t0dd 		%%{buildroot}%%{_datadir}/selinux/${selinuxvariant}/dash.pp
+#t0dd done
 
 
 %clean
@@ -504,7 +560,7 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 # dashcore-server
 %pre server
 # This is for the case that you run dash core as a service (systemctl start dash)
-# %{_sharedstatedir} is /var/lib
+# _sharedstatedir is /var/lib
 getent group dashcore >/dev/null || groupadd -r dashcore
 getent passwd dashcore >/dev/null || useradd -r -g dashcore -d %{_sharedstatedir}/dashcore -s /sbin/nologin -c "System user 'dashcore' to isolate Dash Core execution" dashcore
 exit 0
@@ -516,19 +572,20 @@ exit 0
 # firewalld only partially picks up changes to its services files without this
 test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 
-#t0dd for selinuxvariant in %{selinux_variants}
+# Not using for now. Doubling up %%'s to stop macro expansion in comments.
+#t0dd for selinuxvariant in %%{selinux_variants}
 #t0dd do
 #t0dd 	/usr/sbin/semodule -s ${selinuxvariant} -i \
-#t0dd 		%{_datadir}/selinux/${selinuxvariant}/dash.pp \
+#t0dd 		%%{_datadir}/selinux/${selinuxvariant}/dash.pp \
 #t0dd 		&> /dev/null || :
 #t0dd done
 #t0dd # FIXME This is less than ideal, but until dwalsh gives me a better way...
-#t0dd /usr/sbin/semanage port -a -t dash_port_t -p tcp 8332
-#t0dd /usr/sbin/semanage port -a -t dash_port_t -p tcp 8333
-#t0dd /usr/sbin/semanage port -a -t dash_port_t -p tcp 18332
-#t0dd /usr/sbin/semanage port -a -t dash_port_t -p tcp 18333
+#t0dd /usr/sbin/semanage port -a -t dash_port_t -p tcp 9999
+#t0dd /usr/sbin/semanage port -a -t dash_port_t -p tcp 9998
+#t0dd /usr/sbin/semanage port -a -t dash_port_t -p tcp 19999
+#t0dd /usr/sbin/semanage port -a -t dash_port_t -p tcp 19998
 #t0dd /sbin/fixfiles -R dashcore-server restore &> /dev/null || :
-#t0dd /sbin/restorecon -R %{_sharedstatedir}/dashcore || :
+#t0dd /sbin/restorecon -R %%{_sharedstatedir}/dashcore || :
 
 
 # dashcore-server
@@ -544,21 +601,22 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 # dashcore-server
 %postun server
 %systemd_postun dashd.service
+# Not using for now. Doubling up %%'s to stop macro expansion in comments.
 #t0dd# Do this upon uninstall (not upgrades)
 #t0dd if [ $1 -eq 0 ] ; then
 #t0dd 	# FIXME This is less than ideal, but until dwalsh gives me a better way...
-#t0dd 	/usr/sbin/semanage port -d -p tcp 8332
-#t0dd 	/usr/sbin/semanage port -d -p tcp 8333
-#t0dd 	/usr/sbin/semanage port -d -p tcp 18332
-#t0dd 	/usr/sbin/semanage port -d -p tcp 18333
-#t0dd 	for selinuxvariant in %{selinux_variants}
+#t0dd 	/usr/sbin/semanage port -d -p tcp 9999
+#t0dd 	/usr/sbin/semanage port -d -p tcp 9998
+#t0dd 	/usr/sbin/semanage port -d -p tcp 19999
+#t0dd 	/usr/sbin/semanage port -d -p tcp 19998
+#t0dd 	for selinuxvariant in %%{selinux_variants}
 #t0dd 	do
 #t0dd 		/usr/sbin/semodule -s ${selinuxvariant} -r dash \
 #t0dd 		&> /dev/null || :
 #t0dd 	done
 #t0dd 	/sbin/fixfiles -R dashcore-server restore &> /dev/null || :
-#t0dd 	[ -d %{_sharedstatedir}/dashcore ] && \
-#t0dd 		/sbin/restorecon -R %{_sharedstatedir}/dashcore \
+#t0dd 	[ -d %%{_sharedstatedir}/dashcore ] && \
+#t0dd 		/sbin/restorecon -R %%{_sharedstatedir}/dashcore \
 #t0dd 		&> /dev/null || :
 #t0dd fi
 
@@ -567,8 +625,8 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 # dashcore-client
 %files client
 %defattr(-,root,root,-)
-%license %{dashtree}/COPYING
-%doc %{dashtree}/doc/*.md %{contribtree}/contrib/extras/dash.conf.example
+%license %{srccodetree}/COPYING
+%doc %{srccodetree}/doc/*.md %{srccontribtree}/contrib/extras/dash.conf.example
 %{_bindir}/dash-qt
 %{_datadir}/applications/dash-qt.desktop
 %{_datadir}/kde4/services/dash-qt.protocol
@@ -580,7 +638,7 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 %{_prefix}/lib/firewalld/services/dashcore-testnet.xml
 %{_prefix}/lib/firewalld/services/dashcore-rpc.xml
 %{_prefix}/lib/firewalld/services/dashcore-testnet-rpc.xml
-%config(noreplace) %attr(640,dashcore,dashcore) %{_sysconfdir}/dashcore/dash.conf
+#%%config(noreplace) %%attr(640,dashcore,dashcore) %%{_sysconfdir}/dashcore/dash.conf
 
 %if %{testing_extras}
 %{_bindir}/test_dash-qt
@@ -590,15 +648,24 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 # dashcore-server
 %files server
 %defattr(-,root,root,-)
-%license %{dashtree}/COPYING
-%doc %{dashtree}/doc/*.md %{contribtree}/contrib/extras/dash.conf.example
+%license %{srccodetree}/COPYING
+%doc %{srccodetree}/doc/*.md %{srccontribtree}/contrib/extras/dash.conf.example
 %dir %attr(750,dashcore,dashcore) %{_sharedstatedir}/dashcore
 %dir %attr(750,dashcore,dashcore) %{_sharedstatedir}/dashcore/testnet3
 %dir %attr(750,dashcore,dashcore) %{_sysconfdir}/dashcore
 %dir %attr(755,dashcore,dashcore) %{_sysconfdir}/sysconfig/dashd-scripts
 %config(noreplace) %attr(600,root,root) %{_sysconfdir}/sysconfig/dashd
 %attr(755,root,root) %{_sysconfdir}/sysconfig/dashd-scripts/dashd.send-email.sh
+
+# dash.conf
 %config(noreplace) %attr(640,dashcore,dashcore) %{_sysconfdir}/dashcore/dash.conf
+# ...convenience symlink:
+#    /var/lib/dashcore/.dashcore/dash.conf -> /etc/dashcore/dash.conf
+# ...this is probably really bad form.
+%dir %attr(750,dashcore,dashcore) %{_sharedstatedir}/dashcore/.dashcore
+%attr(640,dashcore,dashcore) %{_sharedstatedir}/dashcore/.dashcore/README
+%attr(770,dashcore,dashcore) %{_sharedstatedir}/dashcore/.dashcore/dash.conf
+
 # Log files - they don't initially exist, but we still own them
 %ghost %{_sharedstatedir}/dashcore/debug.log
 %ghost %{_sharedstatedir}/dashcore/testnet3/debug.log
@@ -608,13 +675,13 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 %{_prefix}/lib/firewalld/services/dashcore-testnet.xml
 %{_prefix}/lib/firewalld/services/dashcore-rpc.xml
 %{_prefix}/lib/firewalld/services/dashcore-testnet-rpc.xml
-%doc SELinux/*
+%doc selinux-tmp/*
 %{_sbindir}/dashd
 %{_tmpfilesdir}/dashd.conf
 %{_mandir}/man1/dashd.1.gz
 %{_mandir}/man5/dash.conf.5.gz
 %{_mandir}/man5/masternode.conf.5.gz
-#t0dd %{_datadir}/selinux/*/dash.pp
+#t0dd %%{_datadir}/selinux/*/dash.pp
 
 %if %{testing_extras}
 %{_bindir}/test_dash
@@ -625,14 +692,14 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 # dashcore-libs
 %files libs
 %defattr(-,root,root,-)
-%license %{dashtree}/COPYING
+%license %{srccodetree}/COPYING
 %{_libdir}/libdashconsensus.so*
 
 
 # dashcore-devel
 %files devel
 %defattr(-,root,root,-)
-%license %{dashtree}/COPYING
+%license %{srccodetree}/COPYING
 %{_includedir}/dashconsensus.h
 %{_libdir}/libdashconsensus.a
 %{_libdir}/libdashconsensus.la
@@ -642,7 +709,7 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 # dashcore-utils
 %files utils
 %defattr(-,root,root,-)
-%license %{dashtree}/COPYING
+%license %{srccodetree}/COPYING
 %{_bindir}/dash-cli
 %{_bindir}/dash-tx
 
@@ -660,9 +727,9 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Tagged release builds: https://github.com/dashpay/dash/tags
 #     dash-0.12.2.3.tar.gz
 #   * Test builds...
-#     dashcore-0.12.2.tar.gz
 #     https://bamboo.dash.org/browse/DASHL-REL/latestSuccessful
 #     Then > Artifacts > gitian-linux-dash-src > [download the tar.gz file]
+#     dashcore-0.12.3.tar.gz
 #
 # Dash Core git repos...
 #   * Dash: https://github.com/dashpay/dash
@@ -674,6 +741,13 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Documentation: https://dashpay.atlassian.net/wiki/display/DOC/Testnet
 
 %changelog
+* Fri Apr 06 2018 Todd Warner <t0dd@protonmail.com> 0.12.2.3-1.taw
+- spec file cleanup. dash.conf cleanup and improvements.
+- Create convenience symlink to /etc/dashcore/dash.conf so you don't have to
+- put -conf= on the commandline all the time.
+- 2cee47fc92196b5839eb4a230db080939263b9d3940a1a04231c0f656e96b336 dashcore-0.12.2-contrib.tar.gz
+- https://github.com/dashpay/dash/releases/tag/v0.12.2.3
+-
 * Thu Jan 11 2018 Todd Warner <t0dd@protonmail.com> 0.12.2.3-0.taw
 - Release - e596762
 - 5347351483ce39d1dd0be4d93ee19aba1a6b02bc7f90948b4eea4466ad79d1c3 dash-0.12.2.3.tar.gz
