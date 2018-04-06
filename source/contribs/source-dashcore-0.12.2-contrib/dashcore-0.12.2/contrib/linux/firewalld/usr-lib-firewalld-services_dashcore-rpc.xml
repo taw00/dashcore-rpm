@@ -3,7 +3,7 @@
      Location if installed by an rpm: /usr/lib/firewalld/
      Location if installed by a human: /etc/firewalld/services/ -->
 <service>
-  <short>Dash Core Full Node or Masternode - RPC Port</short>
+  <short>Dash Core Full Node or Masternode - default RPC Port</short>
   <description>Dash (Digital Cash) is an open source peer-to-peer
   cryptocurrency that offers instant transactions (InstantSend), private
   transactions (PrivateSend) and token fungibility.
