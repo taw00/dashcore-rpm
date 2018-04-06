@@ -1,7 +1,7 @@
-# Dash (digital cash) cryptocurrency spec file
+# Dash (Digital Cash) Cryptocurrency full node and wallet
 #
-# This is the source spec for building Dash GUI Wallet, Masternode, and Full
-# Node. Dash Masternode Sentinel is built with another spec file.
+# This is the rpm source spec for building a Dash GUI Wallet, Masternode, and
+# Full Node. Dash Masternode Sentinel is built with another spec file.
 #
 # Consumer facing...
 # * dashcore-client
@@ -41,7 +41,7 @@
 # Often the bumptag is undefined, the builder's initials, a date, or whatever.
 # To undefine, flip-flop the define/undefine ordering
 
-%define bump 1
+%define bump 2
 %undefine bumptag
 %define bumptag taw
 
@@ -170,14 +170,17 @@ Summary: Dash - Digital Cash - Peer-to-peer, privacy-centric, digital currency (
 This is the source package for building most of the Dash Core set of binary
 packages.  It will build dashcore-{client,server,utils,libs,devel,debuginfo}.
 
-Dash (Digital Cash) is an open source peer-to-peer cryptocurrency that offers
-instant transactions (InstantSend), private transactions (PrivateSend) and
-token fungibility. Dash operates a decentralized governance and budgeting
-system, making it the first decentralized autonomous organization (DAO). Dash
-is also a platform for innovative decentralized crypto-tech.
+Dash (Digital Cash) is an open source peer-to-peer cryptocurrency with a strong
+focus on serving the payments industry. Dash offers a form of money that is
+portable, inexpensive, divisible and fast. It can be spent securely both online
+and in person with minimal transaction fees. Dash offers instant transactions
+(InstantSend), private transactions (PrivateSend), and operates a
+self-governing and self-funding model. This decentralized governance and
+budgeting system makes it one of the first ever successful decentralized
+autonomous organizations (DAO). Dash is also a platform for innovative
+decentralized crypto-tech.
 
-Dash is open source and the name of the overarching project. Learn more at
-dash.org.
+Learn more at www.dash.org.
 
 
 # dashcore-client
@@ -186,14 +189,17 @@ This package provides dash-qt, a user-friendly-er GUI wallet manager for
 personal use. This package requires the dashcore-utils RPM package to be
 installed as well.
 
-Dash (Digital Cash) is an open source peer-to-peer cryptocurrency that offers
-instant transactions (InstantSend), private transactions (PrivateSend) and
-token fungibility. Dash operates a decentralized governance and budgeting
-system, making it the first decentralized autonomous organization (DAO). Dash
-is also a platform for innovative decentralized crypto-tech.
+Dash (Digital Cash) is an open source peer-to-peer cryptocurrency with a strong
+focus on serving the payments industry. Dash offers a form of money that is
+portable, inexpensive, divisible and fast. It can be spent securely both online
+and in person with minimal transaction fees. Dash offers instant transactions
+(InstantSend), private transactions (PrivateSend), and operates a
+self-governing and self-funding model. This decentralized governance and
+budgeting system makes it one of the first ever successful decentralized
+autonomous organizations (DAO). Dash is also a platform for innovative
+decentralized crypto-tech.
 
-Dash is open source and the name of the overarching project. Learn more at
-dash.org.
+Learn more at www.dash.org.
 
 
 # dashcore-server
@@ -208,19 +214,23 @@ running a Masternode.
 
 -
 
-Dash (Digital Cash) is an open source peer-to-peer cryptocurrency that offers
-instant transactions (InstantSend), private transactions (PrivateSend) and
-token fungibility. Dash operates a decentralized governance and budgeting
-system, making it the first decentralized autonomous organization (DAO). Dash
-is also a platform for innovative decentralized crypto-tech.
-
 A Dash Full Node is a un-collatoralized member of a decentralized network of
 servers that validate transactions and blocks. A Dash Masternode is a member of
 a network of incentivized servers that perform expanded critical services for
 the Dash cryptocurrency protocol.
 
-Dash is open source and the name of the overarching project. Learn more at
-dash.org.
+Dash (Digital Cash) is an open source peer-to-peer cryptocurrency with a strong
+focus on serving the payments industry. Dash offers a form of money that is
+portable, inexpensive, divisible and fast. It can be spent securely both online
+and in person with minimal transaction fees. Dash offers instant transactions
+(InstantSend), private transactions (PrivateSend), and operates a
+self-governing and self-funding model. This decentralized governance and
+budgeting system makes it one of the first ever successful decentralized
+autonomous organizations (DAO). Dash is also a platform for innovative
+decentralized crypto-tech.
+
+Learn more at www.dash.org.
+
 
 
 # dashcore-libs
@@ -228,14 +238,17 @@ dash.org.
 This package provides libdashconsensus, which is used by third party
 applications to verify scripts (and other functionality in the future).
 
-Dash (Digital Cash) is an open source peer-to-peer cryptocurrency that offers
-instant transactions (InstantSend), private transactions (PrivateSend) and
-token fungibility. Dash operates a decentralized governance and budgeting
-system, making it the first decentralized autonomous organization (DAO). Dash
-is also a platform for innovative decentralized crypto-tech.
+Dash (Digital Cash) is an open source peer-to-peer cryptocurrency with a strong
+focus on serving the payments industry. Dash offers a form of money that is
+portable, inexpensive, divisible and fast. It can be spent securely both online
+and in person with minimal transaction fees. Dash offers instant transactions
+(InstantSend), private transactions (PrivateSend), and operates a
+self-governing and self-funding model. This decentralized governance and
+budgeting system makes it one of the first ever successful decentralized
+autonomous organizations (DAO). Dash is also a platform for innovative
+decentralized crypto-tech.
 
-Dash is open source and the name of the overarching project. Learn more at
-dash.org.
+Learn more at www.dash.org.
 
 
 # dashcore-devel
@@ -243,13 +256,17 @@ dash.org.
 This package provides the libraries and header files necessary to compile
 programs which use libdashconsensus.
 
-Dash (Digital Cash) is an open source peer-to-peer cryptocurrency that offers
-instant transactions (InstantSend), private transactions (PrivateSend) and
-token fungibility. Dash operates a decentralized governance and budgeting
-system,
+Dash (Digital Cash) is an open source peer-to-peer cryptocurrency with a strong
+focus on serving the payments industry. Dash offers a form of money that is
+portable, inexpensive, divisible and fast. It can be spent securely both online
+and in person with minimal transaction fees. Dash offers instant transactions
+(InstantSend), private transactions (PrivateSend), and operates a
+self-governing and self-funding model. This decentralized governance and
+budgeting system makes it one of the first ever successful decentralized
+autonomous organizations (DAO). Dash is also a platform for innovative
+decentralized crypto-tech.
 
-Dash is open source and the name of the overarching project. Learn more at
-dash.org.
+Learn more at www.dash.org.
 
 
 # dashcore-utils
@@ -258,14 +275,17 @@ This package provides dash-cli, a utility to communicate with and control a
 Dash server via its RPC protocol, and dash-tx, a utility to create custom Dash
 transactions.
 
-Dash (Digital Cash) is an open source peer-to-peer cryptocurrency that offers
-instant transactions (InstantSend), private transactions (PrivateSend) and
-token fungibility. Dash operates a decentralized governance and budgeting
-system, making it the first decentralized autonomous organization (DAO). Dash
-is also a platform for innovative decentralized crypto-tech.
+Dash (Digital Cash) is an open source peer-to-peer cryptocurrency with a strong
+focus on serving the payments industry. Dash offers a form of money that is
+portable, inexpensive, divisible and fast. It can be spent securely both online
+and in person with minimal transaction fees. Dash offers instant transactions
+(InstantSend), private transactions (PrivateSend), and operates a
+self-governing and self-funding model. This decentralized governance and
+budgeting system makes it one of the first ever successful decentralized
+autonomous organizations (DAO). Dash is also a platform for innovative
+decentralized crypto-tech.
 
-Dash is open source and the name of the overarching project. Learn more at
-dash.org.
+Learn more at www.dash.org.
 
 
 
@@ -638,6 +658,7 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 %{_prefix}/lib/firewalld/services/dashcore-testnet.xml
 %{_prefix}/lib/firewalld/services/dashcore-rpc.xml
 %{_prefix}/lib/firewalld/services/dashcore-testnet-rpc.xml
+#%%dir %%attr(750,dashcore,dashcore) %%{_sysconfdir}/dashcore
 #%%config(noreplace) %%attr(640,dashcore,dashcore) %%{_sysconfdir}/dashcore/dash.conf
 
 %if %{testing_extras}
@@ -652,12 +673,12 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 %doc %{srccodetree}/doc/*.md %{srccontribtree}/contrib/extras/dash.conf.example
 %dir %attr(750,dashcore,dashcore) %{_sharedstatedir}/dashcore
 %dir %attr(750,dashcore,dashcore) %{_sharedstatedir}/dashcore/testnet3
-%dir %attr(750,dashcore,dashcore) %{_sysconfdir}/dashcore
 %dir %attr(755,dashcore,dashcore) %{_sysconfdir}/sysconfig/dashd-scripts
 %config(noreplace) %attr(600,root,root) %{_sysconfdir}/sysconfig/dashd
 %attr(755,root,root) %{_sysconfdir}/sysconfig/dashd-scripts/dashd.send-email.sh
 
 # dash.conf
+%dir %attr(750,dashcore,dashcore) %{_sysconfdir}/dashcore
 %config(noreplace) %attr(640,dashcore,dashcore) %{_sysconfdir}/dashcore/dash.conf
 # ...convenience symlink:
 #    /var/lib/dashcore/.dashcore/dash.conf -> /etc/dashcore/dash.conf
@@ -718,6 +739,7 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #
 # Dash...
 #   * Project website: https://www.dash.org
+#   * Project documentation: https://docs.dash.org
 #
 # Dash Core on Fedora/CentOS/RHEL...
 #   * Git Repo: https://github.com/taw00/dashcore-rpm
@@ -741,6 +763,9 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Documentation: https://dashpay.atlassian.net/wiki/display/DOC/Testnet
 
 %changelog
+* Fri Apr 06 2018 Todd Warner <t0dd@protonmail.com> 0.12.2.3-2.taw
+- Improved rpm text descriptions and some updated comments.
+-
 * Fri Apr 06 2018 Todd Warner <t0dd@protonmail.com> 0.12.2.3-1.taw
 - spec file cleanup. dash.conf cleanup and improvements.
 - Create convenience symlink to /etc/dashcore/dash.conf so you don't have to
