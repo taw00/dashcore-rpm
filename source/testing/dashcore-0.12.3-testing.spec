@@ -406,12 +406,13 @@ install -d %{buildroot}%{_prefix}
 install -d %{buildroot}%{_tmpfilesdir}
 install -d %{buildroot}%{_unitdir}
 
-# Application specific basic directory structure
+# Application as systemd service directory structure
 # /etc/dashcore/
 install -d -m750 -p %{buildroot}%{_sysconfdir}/dashcore
 # /var/lib/dashcore/...
 install -d -m750 -p %{buildroot}%{_sharedstatedir}/dashcore
 install -d -m750 -p %{buildroot}%{_sharedstatedir}/dashcore/testnet3
+install -d %{buildroot}%{_sharedstatedir}/dashcore/.dashcore
 # /var/log/dashcore/...
 install -d -m700 %{buildroot}%{_localstatedir}/log/dashcore
 install -d -m700 %{buildroot}%{_localstatedir}/log/dashcore/testnet3
@@ -424,7 +425,6 @@ ln -s %{_localstatedir}/log/dashcore/debug.log %{buildroot}%{_sharedstatedir}/da
 # debug.log: /var/lib/dashcore/testnet3/debug.log -> /var/log/dashcore/testnet3/debug.log
 ln -s %{_localstatedir}/log/dashcore/testnet3/debug.log %{buildroot}%{_sharedstatedir}/dashcore/testnet3/debug.log
 # config: /var/lib/dashcore/.dashcore/dash.conf -> /etc/dashcore/dash.conf (convenience symlink)
-install -d %{buildroot}%{_sharedstatedir}/dashcore/.dashcore
 ln -s %{_sysconfdir}/dashcore/dash.conf %{buildroot}%{_sharedstatedir}/dashcore/.dashcore/dash.conf
 
 # Man Pages (from contrib)
@@ -713,31 +713,41 @@ fi
 %files server
 %defattr(-,root,root,-)
 %license %{srccodetree}/COPYING
-%doc %{srccodetree}/doc/*.md %{srccontribtree}/extras/dash.conf.example
+
+# Application as systemd service directory structure
+# /etc/dashcore/
+%dir %attr(750,dashcore,dashcore) %{_sysconfdir}/dashcore
+# /var/lib/dashcore/...
 %dir %attr(750,dashcore,dashcore) %{_sharedstatedir}/dashcore
 %dir %attr(750,dashcore,dashcore) %{_sharedstatedir}/dashcore/testnet3
+%dir %attr(750,dashcore,dashcore) %{_sharedstatedir}/dashcore/.dashcore
+# /var/log/dashcore/...
+%dir %attr(700,dashcore,dashcore) %{_localstatedir}/log/dashcore
+%dir %attr(700,dashcore,dashcore) %{_localstatedir}/log/dashcore/testnet3
+# /etc/sysconfig/dashd-scripts/
 %dir %attr(755,dashcore,dashcore) %{_sysconfdir}/sysconfig/dashd-scripts
+
+%doc %{srccodetree}/doc/*.md %{srccontribtree}/extras/dash.conf.example
 %config(noreplace) %attr(600,root,root) %{_sysconfdir}/sysconfig/dashd
 %attr(755,root,root) %{_sysconfdir}/sysconfig/dashd-scripts/dashd.send-email.sh
 # ...log files - they don't initially exist, but we still own them
-%dir %attr(700,dashcore,dashcore) %{_localstatedir}/log/dashcore
-%dir %attr(700,dashcore,dashcore) %{_localstatedir}/log/dashcore/testnet3
 %ghost %{_localstatedir}/log/dashcore/debug.log
 %ghost %{_localstatedir}/log/dashcore/testnet3/debug.log
 # ...the symlinks for log files...
-%attr(770,dashcore,dashcore) %{_sharedstatedir}/dashcore/debug.log
-%attr(770,dashcore,dashcore) %{_sharedstatedir}/dashcore/testnet3/debug.log
+#%%attr(777,dashcore,dashcore) %%{_sharedstatedir}/dashcore/debug.log
+#%%attr(777,dashcore,dashcore) %%{_sharedstatedir}/dashcore/testnet3/debug.log
+%{_sharedstatedir}/dashcore/debug.log
+%{_sharedstatedir}/dashcore/testnet3/debug.log
 %attr(644,root,root) /etc/logrotate.d/dashcore
 
 # dash.conf
-%dir %attr(750,dashcore,dashcore) %{_sysconfdir}/dashcore
 %config(noreplace) %attr(640,dashcore,dashcore) %{_sysconfdir}/dashcore/dash.conf
 # ...convenience symlink:
 #    /var/lib/dashcore/.dashcore/dash.conf -> /etc/dashcore/dash.conf
 # ...this is probably really bad form.
-%dir %attr(750,dashcore,dashcore) %{_sharedstatedir}/dashcore/.dashcore
 %attr(640,dashcore,dashcore) %{_sharedstatedir}/dashcore/.dashcore/README
-%attr(770,dashcore,dashcore) %{_sharedstatedir}/dashcore/.dashcore/dash.conf
+#%%attr(777,dashcore,dashcore) %%{_sharedstatedir}/dashcore/.dashcore/dash.conf
+%{_sharedstatedir}/dashcore/.dashcore/dash.conf
 
 %{_unitdir}/dashd.service
 %{_prefix}/lib/firewalld/services/dashcore.xml
