@@ -595,20 +595,12 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 # _sharedstatedir is /var/lib
 getent group dashcore >/dev/null || groupadd -r dashcore
 getent passwd dashcore >/dev/null || useradd -r -g dashcore -d %{_sharedstatedir}/dashcore -s /sbin/nologin -c "System user 'dashcore' to isolate Dash Core execution" dashcore
-exit 0
-
-
-# dashcore-server
-%post server
-%systemd_post dashd.service
-# firewalld only partially picks up changes to its services files without this
-test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 
 # Notes:
 #  _sharedstatedir is /var/lib
 #  /var/lib/dashcore is the $HOME for the dashcore user
 
-# Fix the debug.log directory structure if it is broken as of 1.0.15-6
+# Fix the debug.log directory structure if it is not aligned to /var/log/ standards.
 # If /var/lib/dashcore/debug.log is not a symlink, we need to fix that.
 %define vlibdc %{_sharedstatedir}/dashcore
 %define vlibdc_dl %{vlibdc}/debug.log
@@ -634,6 +626,17 @@ then
    chmod 644 %{vlogdc_tdl}*
   fi
 fi
+
+
+
+exit 0
+
+
+# dashcore-server
+%post server
+%systemd_post dashd.service
+# firewalld only partially picks up changes to its services files without this
+test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 
 # Not using for now. Doubling up %%'s to stop macro expansion in comments.
 #t0dd for selinuxvariant in %%{selinux_variants}
