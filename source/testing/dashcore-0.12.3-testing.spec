@@ -69,8 +69,8 @@ Summary: Dash - Digital Cash - Peer-to-peer, privacy-centric, digital currency
 # dashcore source tarball file basename
 # Set srcarchive value to the appropriate on for this build.
 # github or from bamboo (the team build system).
-#   - github convention - dash-0.12.2.3 - e.g. dash-0.12.2.3.tar.gz
-#   - bamboo - dashcore-0.12.2 - e.g. dashcore-0.12.2.tar.gz
+#   - github convention - dash-0.12.3.0 - e.g. dash-0.12.3.0.tar.gz
+#   - bamboo - dashcore-0.12.3 - e.g. dashcore-0.12.3.tar.gz
 %define _srcarchive_github %{_name_d}-%{version}
 %define _srcarchive_bamboo %{_name_dc}-%{_version_major}
 
@@ -78,12 +78,12 @@ Summary: Dash - Digital Cash - Peer-to-peer, privacy-centric, digital currency
 %define srccontribarchive %{_name_dc}-%{_version_major}-contrib
 
 # Unarchived source tree structure (extracted in .../BUILD)
-#   srcroot               dascore-0.2.12
-#      \_srccodetree        \_dash-0.2.12.3
-#      \_srccontribtree     \_dashcore-0.2.12
+#   srcroot               dascore-0.12.3
+#      \_srccodetree        \_dash-0.12.3.0
+#      \_srccontribtree     \_dashcore-0.12.3-contrib
 %define srcroot %{_name_dc}-%{_version_major}
 %define srccodetree %{_name_d}-%{version}
-%define srccontribtree %{_name_dc}-%{_version_major}
+%define srccontribtree %{_name_dc}-%{_version_major}-contrib
 
 
 Group: Applications/System
@@ -292,16 +292,16 @@ Learn more at www.dash.org.
 %prep
 # Prep section starts us in directory .../BUILD
 # process dashcore - Source0 - untars in:
-# .../BUILD/dashcore-0.12.2/dashcore-0.12.2.3/
+# .../BUILD/dashcore-0.12.3/dashcore-0.12.3.0/
 mkdir %{srcroot}
 %setup -q -T -D -a 0 -n %{srcroot}
 #%%setup -q -T -a 0 -c -n %{srcroot}
 # extra contributions - Source1 - untars in:
-# .../BUILD/dashcore-0.12.2/dashcore-0.12.2
+# .../BUILD/dashcore-0.12.3/dashcore-0.12.3-contrib/
 %setup -q -T -D -a 1 -n %{srcroot}
 
 # Prep section now moves us into .../BUILD/%{srcroot}
-# .../BUILD/dashcore-0.12.2/
+# .../BUILD/dashcore-0.12.3/
 
 # Install README files
 #t0dd cp -p %%{SOURCE8} %%{SOURCE9} %%{SOURCE10} .
@@ -313,15 +313,15 @@ mkdir -p selinux-tmp
 cp -p %{srccontribtree}/contrib/linux/selinux/dash.{te,if,fc} selinux-tmp/
 
 # We leave with this structure (for example)...
-# ~/rpmbuild/BUILD/dashcore-0.12.2/dash-0.12.2.3/
-# ~/rpmbuild/BUILD/dashcore-0.12.2/dashcore-0.12.2/contrib/...
+# ~/rpmbuild/BUILD/dashcore-0.12.3/dash-0.12.3.0/
+# ~/rpmbuild/BUILD/dashcore-0.12.3/dashcore-0.12.3-contrib/...
 # ...unless we are using the bamboo nomenclature...
-# ~/rpmbuild/BUILD/dashcore-0.12.2/dashcore-0.12.2/
-# ~/rpmbuild/BUILD/dashcore-0.12.2/dashcore-0.12.2/contrib/...
+# ~/rpmbuild/BUILD/dashcore-0.12.3/dashcore-0.12.3/
+# ~/rpmbuild/BUILD/dashcore-0.12.3/dashcore-0.12.3-contrib/...
 
 
 %build
-# This section starts us in directory .../BUILD/dashcore-0.12.2
+# This section starts us in directory .../BUILD/dashcore-0.12.3
 # So, we're in srcroot. We need to cd into srccodetree, the codetree.
 # cd into dashcore-X.Y.Z/dash-X.Y.Z.zz
 cd %{srccodetree}
@@ -347,7 +347,7 @@ cd ..
 
 
 %check
-# This section starts us in directory .../BUILD/dashcore-0.12.2
+# This section starts us in directory .../BUILD/dashcore-0.12.3
 # So, we start in that root tree structure cd in to the code tree and the contrib tree and in and out installing things to the buildroot.
 cd %{srccodetree}
 %if %{testing_extras}
@@ -366,7 +366,7 @@ cd ..
 
 %install
 rm -rf %{buildroot} ; mkdir %{buildroot}
-# This section starts us in directory .../BUILD/dashcore-0.12.2
+# This section starts us in directory .../BUILD/dashcore-0.12.3
 # First, cd into the code tree and do stuff...
 cd %{srccodetree}
 make INSTALL="install -p" CP="cp -p" DESTDIR=%{buildroot} install
@@ -514,7 +514,7 @@ rpcallowip=127.0.0.1
 # Example RPC username and password.
 rpcuser=rpcuser-CHANGEME-`head -c 32 /dev/urandom | base64 | head -c 4`
 rpcpassword=CHANGEME`head -c 32 /dev/urandom | base64`
-" >> ./contrib/extras/dash.conf.example
+" >> ./extras/dash.conf.example
 
 # ...convenience symlink:
 #    /var/lib/dashcore/dash.conf -> /etc/dashcore/dash.conf
@@ -535,13 +535,13 @@ cd ..
 
 # Install system services files (from contrib)
 cd %{srccontribtree}
-install -D -m600 -p ./contrib/linux/systemd/etc-sysconfig_dashd %{buildroot}%{_sysconfdir}/sysconfig/dashd
+install -D -m600 -p ./linux/systemd/etc-sysconfig_dashd %{buildroot}%{_sysconfdir}/sysconfig/dashd
 install -d %{buildroot}%{_sysconfdir}/sysconfig/dashd-scripts
-install -D -m755 -p ./contrib/linux/systemd/etc-sysconfig-dashd-scripts_dashd.send-email.sh %{buildroot}%{_sysconfdir}/sysconfig/dashd-scripts/dashd.send-email.sh
-install -D -m644 -p ./contrib/linux/systemd/usr-lib-systemd-system_dashd.service %{buildroot}%{_unitdir}/dashd.service
-install -D -m644 -p ./contrib/linux/systemd/usr-lib-tmpfiles.d_dashd.conf %{buildroot}%{_tmpfilesdir}/dashd.conf
+install -D -m755 -p ./linux/systemd/etc-sysconfig-dashd-scripts_dashd.send-email.sh %{buildroot}%{_sysconfdir}/sysconfig/dashd-scripts/dashd.send-email.sh
+install -D -m644 -p ./linux/systemd/usr-lib-systemd-system_dashd.service %{buildroot}%{_unitdir}/dashd.service
+install -D -m644 -p ./linux/systemd/usr-lib-tmpfiles.d_dashd.conf %{buildroot}%{_tmpfilesdir}/dashd.conf
 # ...logrotate file rules
-install -D -m644 -p ./contrib/linux/logrotate/etc-logrotate.d_dashcore %{buildroot}/etc/logrotate.d/dashcore
+install -D -m644 -p ./linux/logrotate/etc-logrotate.d_dashcore %{buildroot}/etc/logrotate.d/dashcore
 # ...ghosting a log file - we have to own the log file
 #install -d %%{buildroot}%%{_sharedstatedir}/dashcore # already created above
 install -d %{buildroot}%{_sharedstatedir}/dashcore/testnet3
@@ -552,10 +552,10 @@ cd ..
 
 # FirewallD service definition files for full and master -nodes (from contrib)
 cd %{srccontribtree}
-install -D -m644 -p ./contrib/linux/firewalld/usr-lib-firewalld-services_dashcore.xml %{buildroot}%{_prefix}/lib/firewalld/services/dashcore.xml
-install -D -m644 -p ./contrib/linux/firewalld/usr-lib-firewalld-services_dashcore-testnet.xml %{buildroot}%{_prefix}/lib/firewalld/services/dashcore-testnet.xml
-install -D -m644 -p ./contrib/linux/firewalld/usr-lib-firewalld-services_dashcore-rpc.xml %{buildroot}%{_prefix}/lib/firewalld/services/dashcore-rpc.xml
-install -D -m644 -p ./contrib/linux/firewalld/usr-lib-firewalld-services_dashcore-testnet-rpc.xml %{buildroot}%{_prefix}/lib/firewalld/services/dashcore-testnet-rpc.xml
+install -D -m644 -p ./linux/firewalld/usr-lib-firewalld-services_dashcore.xml %{buildroot}%{_prefix}/lib/firewalld/services/dashcore.xml
+install -D -m644 -p ./linux/firewalld/usr-lib-firewalld-services_dashcore-testnet.xml %{buildroot}%{_prefix}/lib/firewalld/services/dashcore-testnet.xml
+install -D -m644 -p ./linux/firewalld/usr-lib-firewalld-services_dashcore-rpc.xml %{buildroot}%{_prefix}/lib/firewalld/services/dashcore-rpc.xml
+install -D -m644 -p ./linux/firewalld/usr-lib-firewalld-services_dashcore-testnet-rpc.xml %{buildroot}%{_prefix}/lib/firewalld/services/dashcore-testnet-rpc.xml
 cd ..
 
 # Not using for now. Doubling up %%'s to stop macro expansion in comments.
@@ -677,7 +677,7 @@ fi
 %files client
 %defattr(-,root,root,-)
 %license %{srccodetree}/COPYING
-%doc %{srccodetree}/doc/*.md %{srccontribtree}/contrib/extras/dash.conf.example
+%doc %{srccodetree}/doc/*.md %{srccontribtree}/extras/dash.conf.example
 %{_bindir}/dash-qt
 %{_datadir}/applications/dash-qt.desktop
 %{_datadir}/kde4/services/dash-qt.protocol
@@ -701,7 +701,7 @@ fi
 %files server
 %defattr(-,root,root,-)
 %license %{srccodetree}/COPYING
-%doc %{srccodetree}/doc/*.md %{srccontribtree}/contrib/extras/dash.conf.example
+%doc %{srccodetree}/doc/*.md %{srccontribtree}/extras/dash.conf.example
 %dir %attr(750,dashcore,dashcore) %{_sharedstatedir}/dashcore
 %dir %attr(750,dashcore,dashcore) %{_sharedstatedir}/dashcore/testnet3
 %dir %attr(755,dashcore,dashcore) %{_sysconfdir}/sysconfig/dashd-scripts
@@ -782,7 +782,7 @@ fi
 #
 # Source snapshots...
 #   * Tagged release builds: https://github.com/dashpay/dash/tags
-#     dash-0.12.2.3.tar.gz
+#     dash-0.12.3.0.tar.gz
 #   * Test builds...
 #     https://bamboo.dash.org/browse/DASHL-REL/latestSuccessful
 #     Then > Artifacts > gitian-linux-dash-src > [download the tar.gz file]
@@ -791,18 +791,13 @@ fi
 # Dash Core git repos...
 #   * Dash: https://github.com/dashpay/dash
 #   * Sentinel: https://github.com/dashpay/sentinel
-#
-# The last testnet effort...
-#   * Announcement: https://www.dash.org/forum/threads/v12-2-testing.17412/
-#              old: https://www.dash.org/forum/threads/12.1-testnet-testing-phase-two-ignition.10818/
-#   * Documentation: https://dashpay.atlassian.net/wiki/display/DOC/Testnet
 
 %changelog
 * Fri Apr 6 2018 Todd Warner <t0dd@protonmail.com> 0.12.3.0-0.testing.taw
 - PLACEHOLDER ENTRY
-- Release - 
+- Release - PLACEHOLDER
 - PLACEHOLDER-HASH dashcore-0.12.3.tar.gz
-- PLACEHOLDER-HASH dashcore-0.12.3-contrib.tar.gz
+- 329c49b034c601e082f815a5aa12d9f865de17343809d3e9f01b10f7eaa619f8 dashcore-0.12.3-contrib.tar.gz
 - https://github.com/dashpay/dash/releases/tag/v0.12.3.0
 -
 * Tue Dec 19 2017 Todd Warner <t0dd@protonmail.com> 0.12.2.2-1.testing.taw
