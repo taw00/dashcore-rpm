@@ -592,6 +592,37 @@ exit 0
 # firewalld only partially picks up changes to its services files without this
 test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 
+# Notes:
+#  _sharedstatedir is /var/lib
+#  /var/lib/dashcore is the $HOME for the dashcore user
+
+# Fix the debug.log directory structure if it is broken as of 1.0.15-6
+# If /var/lib/dashcore/debug.log is not a symlink, we need to fix that.
+%define vlibdc %{_sharedstatedir}/dashcore
+%define vlibdc_dl %{vlibdc}/debug.log
+%define vlibdc_tdl %{vlibdc}/testnet3/debug.log
+%define vlogdc %{_localstatedir}/log/dashcore
+%define vlogdc_dl %{vlogdc}/debug.log
+%define vlogdc_tdl %{vlogdc}/testnet3/debug.log
+# If either debug.log is not a symlink, we need to move files and then fix the symlinks
+# Hopefully this doesn't break because dashcore may have debug.log open
+if [ -e %{vlibdc_dl} -a -f %{vlibdc_dl} -a ! -h %{vlibdc_dl} ]
+then
+   mv %{vlibdc_dl}* %{vlogdc}/
+   ln -s %{vlogdc_dl} %{vlibdc_dl}
+   chown dashcore:dashcore %{vlogdc_dl}*
+   chmod 644 %{vlogdc_dl}*
+  fi
+fi
+if [ -e %{vlibdc_tdl} -a -f %{vlibdc_tdl} -a ! -h %{vlibdc_tdl} ]
+then
+   mv %{vlibdc_tdl}* %{vlogtdc}/
+   ln -s %{vlogdc_tdl} %{vlibdc_tdl}
+   chown dashcore:dashcore %{vlogdc_tdl}*
+   chmod 644 %{vlogdc_tdl}*
+  fi
+fi
+
 # Not using for now. Doubling up %%'s to stop macro expansion in comments.
 #t0dd for selinuxvariant in %%{selinux_variants}
 #t0dd do
@@ -676,6 +707,10 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 %dir %attr(755,dashcore,dashcore) %{_sysconfdir}/sysconfig/dashd-scripts
 %config(noreplace) %attr(600,root,root) %{_sysconfdir}/sysconfig/dashd
 %attr(755,root,root) %{_sysconfdir}/sysconfig/dashd-scripts/dashd.send-email.sh
+%dir %attr(700,dashcore,dashcore) %{_localstatedir}/log/dashcore
+%dir %attr(700,dashcore,dashcore) %{_localstatedir}/log/dashcore/testnet3
+%ghost %{_localstatedir}/log/dashcore/debug.log
+%ghost %{_localstatedir}/log/dashcore/testnet3/debug.log
 
 # dash.conf
 %dir %attr(750,dashcore,dashcore) %{_sysconfdir}/dashcore
