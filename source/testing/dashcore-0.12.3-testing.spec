@@ -310,7 +310,7 @@ mkdir %{srcroot}
 # Done here to prep for action taken in the %%build step
 # At this moment, we are in the srcroot directory
 mkdir -p selinux-tmp
-cp -p %{srccontribtree}/contrib/linux/selinux/dash.{te,if,fc} selinux-tmp/
+cp -p %{srccontribtree}/linux/selinux/dash.{te,if,fc} selinux-tmp/
 
 # We leave with this structure (for example)...
 # ~/rpmbuild/BUILD/dashcore-0.12.3/dash-0.12.3.0/
@@ -406,49 +406,67 @@ install -d %{buildroot}%{_prefix}
 install -d %{buildroot}%{_tmpfilesdir}
 install -d %{buildroot}%{_unitdir}
 
+# Application specific basic directory structure
+# /etc/dashcore/
 install -d -m750 -p %{buildroot}%{_sysconfdir}/dashcore
+# /var/lib/dashcore/...
 install -d -m750 -p %{buildroot}%{_sharedstatedir}/dashcore
+install -d -m750 -p %{buildroot}%{_sharedstatedir}/dashcore/testnet3
+# /var/log/dashcore/...
+install -d -m700 %{buildroot}%{_localstatedir}/log/dashcore
+install -d -m700 %{buildroot}%{_localstatedir}/log/dashcore/testnet3
+# /etc/sysconfig/dashd-scripts/
+install -d %{buildroot}%{_sysconfdir}/sysconfig/dashd-scripts
+
+# Symlinks needed
+# debug.log: /var/lib/dashcore/debug.log -> /var/log/dashcore/debug.log
+ln -s %{_localstatedir}/log/dashcore/debug.log %{buildroot}%{_sharedstatedir}/dashcore/debug.log
+# debug.log: /var/lib/dashcore/testnet3/debug.log -> /var/log/dashcore/testnet3/debug.log
+ln -s %{_localstatedir}/log/dashcore/testnet3/debug.log %{buildroot}%{_sharedstatedir}/dashcore/testnet3/debug.log
+# config: /var/lib/dashcore/.dashcore/dash.conf -> /etc/dashcore/dash.conf (convenience symlink)
+install -d %{buildroot}%{_sharedstatedir}/dashcore/.dashcore
+ln -s %{_sysconfdir}/dashcore/dash.conf %{buildroot}%{_sharedstatedir}/dashcore/.dashcore/dash.conf
 
 # Man Pages (from contrib)
 cd %{srccontribtree}
 install -d %{buildroot}%{_mandir}/man1
-install -D -m644 ./contrib/linux/man/man1/* %{buildroot}%{_mandir}/man1/
+install -D -m644 ./linux/man/man1/* %{buildroot}%{_mandir}/man1/
 gzip %{buildroot}%{_mandir}/man1/dashd.1
 gzip %{buildroot}%{_mandir}/man1/dash-qt.1
 install -d %{buildroot}%{_mandir}/man5
-install -D -m644 ./contrib/linux/man/man5/* %{buildroot}%{_mandir}/man5/
+install -D -m644 ./linux/man/man5/* %{buildroot}%{_mandir}/man5/
 gzip %{buildroot}%{_mandir}/man5/dash.conf.5
 gzip %{buildroot}%{_mandir}/man5/masternode.conf.5
 cd ..
 
 # Desktop elements - desktop file and kde protocol file (from contrib)
 cd %{srccontribtree}
-install -D -m644 ./contrib/linux/desktop/dash-qt.desktop %{buildroot}%{_datadir}/applications/dash-qt.desktop
-install -D -m644 ./contrib/linux/desktop/usr-share-kde4-services_dash-qt.protocol %{buildroot}%{_datadir}/kde4/services/dash-qt.protocol
+install -D -m644 ./linux/desktop/dash-qt.desktop %{buildroot}%{_datadir}/applications/dash-qt.desktop
+install -D -m644 ./linux/desktop/usr-share-kde4-services_dash-qt.protocol %{buildroot}%{_datadir}/kde4/services/dash-qt.protocol
 # Desktop elements - hicolor icons
-install -D -m644 ./contrib/linux/desktop/dash-hicolor-128.png      %{buildroot}%{_datadir}/icons/hicolor/128x128/apps/dash.png
-install -D -m644 ./contrib/linux/desktop/dash-hicolor-16.png       %{buildroot}%{_datadir}/icons/hicolor/16x16/apps/dash.png
-install -D -m644 ./contrib/linux/desktop/dash-hicolor-22.png       %{buildroot}%{_datadir}/icons/hicolor/22x22/apps/dash.png
-install -D -m644 ./contrib/linux/desktop/dash-hicolor-24.png       %{buildroot}%{_datadir}/icons/hicolor/24x24/apps/dash.png
-install -D -m644 ./contrib/linux/desktop/dash-hicolor-256.png      %{buildroot}%{_datadir}/icons/hicolor/256x256/apps/dash.png
-install -D -m644 ./contrib/linux/desktop/dash-hicolor-32.png       %{buildroot}%{_datadir}/icons/hicolor/32x32/apps/dash.png
-install -D -m644 ./contrib/linux/desktop/dash-hicolor-48.png       %{buildroot}%{_datadir}/icons/hicolor/48x48/apps/dash.png
-install -D -m644 ./contrib/linux/desktop/dash-hicolor-scalable.svg %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/dash.svg
+install -D -m644 ./linux/desktop/dash-hicolor-128.png      %{buildroot}%{_datadir}/icons/hicolor/128x128/apps/dash.png
+install -D -m644 ./linux/desktop/dash-hicolor-16.png       %{buildroot}%{_datadir}/icons/hicolor/16x16/apps/dash.png
+install -D -m644 ./linux/desktop/dash-hicolor-22.png       %{buildroot}%{_datadir}/icons/hicolor/22x22/apps/dash.png
+install -D -m644 ./linux/desktop/dash-hicolor-24.png       %{buildroot}%{_datadir}/icons/hicolor/24x24/apps/dash.png
+install -D -m644 ./linux/desktop/dash-hicolor-256.png      %{buildroot}%{_datadir}/icons/hicolor/256x256/apps/dash.png
+install -D -m644 ./linux/desktop/dash-hicolor-32.png       %{buildroot}%{_datadir}/icons/hicolor/32x32/apps/dash.png
+install -D -m644 ./linux/desktop/dash-hicolor-48.png       %{buildroot}%{_datadir}/icons/hicolor/48x48/apps/dash.png
+install -D -m644 ./linux/desktop/dash-hicolor-scalable.svg %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/dash.svg
 # Desktop elements - HighContrast icons
-install -D -m644 ./contrib/linux/desktop/dash-HighContrast-128.png      %{buildroot}%{_datadir}/icons/HighContrast/128x128/apps/dash.png
-install -D -m644 ./contrib/linux/desktop/dash-HighContrast-16.png       %{buildroot}%{_datadir}/icons/HighContrast/16x16/apps/dash.png
-install -D -m644 ./contrib/linux/desktop/dash-HighContrast-22.png       %{buildroot}%{_datadir}/icons/HighContrast/22x22/apps/dash.png
-install -D -m644 ./contrib/linux/desktop/dash-HighContrast-24.png       %{buildroot}%{_datadir}/icons/HighContrast/24x24/apps/dash.png
-install -D -m644 ./contrib/linux/desktop/dash-HighContrast-256.png      %{buildroot}%{_datadir}/icons/HighContrast/256x256/apps/dash.png
-install -D -m644 ./contrib/linux/desktop/dash-HighContrast-32.png       %{buildroot}%{_datadir}/icons/HighContrast/32x32/apps/dash.png
-install -D -m644 ./contrib/linux/desktop/dash-HighContrast-48.png       %{buildroot}%{_datadir}/icons/HighContrast/48x48/apps/dash.png
-install -D -m644 ./contrib/linux/desktop/dash-HighContrast-scalable.svg %{buildroot}%{_datadir}/icons/HighContrast/scalable/apps/dash.svg
+install -D -m644 ./linux/desktop/dash-HighContrast-128.png      %{buildroot}%{_datadir}/icons/HighContrast/128x128/apps/dash.png
+install -D -m644 ./linux/desktop/dash-HighContrast-16.png       %{buildroot}%{_datadir}/icons/HighContrast/16x16/apps/dash.png
+install -D -m644 ./linux/desktop/dash-HighContrast-22.png       %{buildroot}%{_datadir}/icons/HighContrast/22x22/apps/dash.png
+install -D -m644 ./linux/desktop/dash-HighContrast-24.png       %{buildroot}%{_datadir}/icons/HighContrast/24x24/apps/dash.png
+install -D -m644 ./linux/desktop/dash-HighContrast-256.png      %{buildroot}%{_datadir}/icons/HighContrast/256x256/apps/dash.png
+install -D -m644 ./linux/desktop/dash-HighContrast-32.png       %{buildroot}%{_datadir}/icons/HighContrast/32x32/apps/dash.png
+install -D -m644 ./linux/desktop/dash-HighContrast-48.png       %{buildroot}%{_datadir}/icons/HighContrast/48x48/apps/dash.png
+install -D -m644 ./linux/desktop/dash-HighContrast-scalable.svg %{buildroot}%{_datadir}/icons/HighContrast/scalable/apps/dash.svg
 cd ..
 
 # Misc pixmaps - unsure if they are even used... (from contrib)
 cd %{srccontribtree}
 install -d %{buildroot}%{_datadir}/pixmaps
-install -D -m644 ./contrib/extras/pixmaps/* %{buildroot}%{_datadir}/pixmaps/
+install -D -m644 ./extras/pixmaps/* %{buildroot}%{_datadir}/pixmaps/
 cd ..
 
 # TESTING ONLY: For test releases, uncomment the next line
@@ -457,8 +475,8 @@ cd ..
 # Config
 # Install default configuration file (from contrib)
 cd %{srccontribtree}
-install -D -m640 ./contrib/linux/systemd/etc-dashcore_dash.conf %{buildroot}%{_sysconfdir}/dashcore/dash.conf
-install -D -m644 ./contrib/linux/systemd/etc-dashcore_dash.conf ./contrib/extras/dash.conf.example
+install -D -m640 ./linux/systemd/etc-dashcore_dash.conf %{buildroot}%{_sysconfdir}/dashcore/dash.conf
+install -D -m644 ./linux/systemd/etc-dashcore_dash.conf ./extras/dash.conf.example
 echo "\
 # ---------------------------------------------------------------------------
 # Example of a minimalistic configuration. Change the password. Additionally,
@@ -516,9 +534,7 @@ rpcuser=rpcuser-CHANGEME-`head -c 32 /dev/urandom | base64 | head -c 4`
 rpcpassword=CHANGEME`head -c 32 /dev/urandom | base64`
 " >> ./extras/dash.conf.example
 
-# ...convenience symlink:
-#    /var/lib/dashcore/dash.conf -> /etc/dashcore/dash.conf
-install -d %{buildroot}%{_sharedstatedir}/dashcore/.dashcore
+# ...message about the convenience symlink:
 echo "\
 This directory and symlink only exist as a convenience so that you don't
 have to type -conf=/etc/dashcore/dash.conf all the time on the commandline.
@@ -530,21 +546,17 @@ The systemd managed dash datadir is here: /var/lib/dashcore
 Therefore, if -conf= is not specified on the commandline, dash will look for
 the configuration file in /var/lib/dashcore/.dashcore/dash.conf
 " > %{buildroot}%{_sharedstatedir}/dashcore/.dashcore/README
-ln -s %{_sysconfdir}/dashcore/dash.conf %{buildroot}%{_sharedstatedir}/dashcore/.dashcore/dash.conf
 cd ..
 
 # Install system services files (from contrib)
 cd %{srccontribtree}
 install -D -m600 -p ./linux/systemd/etc-sysconfig_dashd %{buildroot}%{_sysconfdir}/sysconfig/dashd
-install -d %{buildroot}%{_sysconfdir}/sysconfig/dashd-scripts
 install -D -m755 -p ./linux/systemd/etc-sysconfig-dashd-scripts_dashd.send-email.sh %{buildroot}%{_sysconfdir}/sysconfig/dashd-scripts/dashd.send-email.sh
 install -D -m644 -p ./linux/systemd/usr-lib-systemd-system_dashd.service %{buildroot}%{_unitdir}/dashd.service
 install -D -m644 -p ./linux/systemd/usr-lib-tmpfiles.d_dashd.conf %{buildroot}%{_tmpfilesdir}/dashd.conf
 # ...logrotate file rules
 install -D -m644 -p ./linux/logrotate/etc-logrotate.d_dashcore %{buildroot}/etc/logrotate.d/dashcore
 # ...ghosting a log file - we have to own the log file
-#install -d %%{buildroot}%%{_sharedstatedir}/dashcore # already created above
-install -d %{buildroot}%{_sharedstatedir}/dashcore/testnet3
 touch %{buildroot}%{_sharedstatedir}/dashcore/debug.log
 touch %{buildroot}%{_sharedstatedir}/dashcore/testnet3/debug.log
 cd ..
@@ -707,10 +719,15 @@ fi
 %dir %attr(755,dashcore,dashcore) %{_sysconfdir}/sysconfig/dashd-scripts
 %config(noreplace) %attr(600,root,root) %{_sysconfdir}/sysconfig/dashd
 %attr(755,root,root) %{_sysconfdir}/sysconfig/dashd-scripts/dashd.send-email.sh
+# ...log files - they don't initially exist, but we still own them
 %dir %attr(700,dashcore,dashcore) %{_localstatedir}/log/dashcore
 %dir %attr(700,dashcore,dashcore) %{_localstatedir}/log/dashcore/testnet3
 %ghost %{_localstatedir}/log/dashcore/debug.log
 %ghost %{_localstatedir}/log/dashcore/testnet3/debug.log
+# ...the symlinks for log files...
+%attr(770,dashcore,dashcore) %{_sharedstatedir}/dashcore/debug.log
+%attr(770,dashcore,dashcore) %{_sharedstatedir}/dashcore/testnet3/debug.log
+%attr(644,root,root) /etc/logrotate.d/dashcore
 
 # dash.conf
 %dir %attr(750,dashcore,dashcore) %{_sysconfdir}/dashcore
@@ -722,10 +739,6 @@ fi
 %attr(640,dashcore,dashcore) %{_sharedstatedir}/dashcore/.dashcore/README
 %attr(770,dashcore,dashcore) %{_sharedstatedir}/dashcore/.dashcore/dash.conf
 
-# Log files - they don't initially exist, but we still own them
-%ghost %{_sharedstatedir}/dashcore/debug.log
-%ghost %{_sharedstatedir}/dashcore/testnet3/debug.log
-%attr(644,root,root) /etc/logrotate.d/dashcore
 %{_unitdir}/dashd.service
 %{_prefix}/lib/firewalld/services/dashcore.xml
 %{_prefix}/lib/firewalld/services/dashcore-testnet.xml
