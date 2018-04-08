@@ -4,73 +4,112 @@
 # required to operate a Dash Masternode. It will build the dashcore-sentinel
 # package.
 #
+# Note about edits within the spec: Any comments beginning with #t0dd are
+# associated to future work or experimental elements of this spec file and
+# build.
+#
+# Note commented out macros in this (or any) spec file. You MUST double up
+# the %%'s or rpmbuild will yell at you. RPM is weird.
+#
 # Enjoy. Todd Warner <t0dd@protonmail.com>
 
+Packager: Todd Warner <t0dd@protonmail.com>
 
-# To produce a debuginfo package:
-#   1. Comment out the debug package define
-#   2. Even commented, it causes problems, so turn it into something like
-#      this:  % define debug _ package % { n i l }
-# To squelch debuginfo package creation, uncomment the line, and then
-# reconstruct the debug package define as it should be
-%define debug_package %{nil}
-# https://fedoraproject.org/wiki/Changes/Harden_All_Packages
-#% define _hardened_build 0
+# flip-flop next two lines if you don't want the minor bump
+%undefine _release_minorbump
+%define _release_minorbump taw0
 
-# Note: "bump" and "bumptag" are release-build identifiers.
-# For sentinel, bumptag will be either testing.taw, rc.taw, or just taw
-# depending on whether this is a test, release candidate, or release build. taw
-# are the builder's initials.
-%define bump 1
-%define bumptag testing.taw
-%define _release %{bump}.%{bumptag}
+# flip-flop next two lines if we are not testing
+%undefine _release_minor_snapinfo
+%define _release_minor_snapinfo 1.testing
 
-%define _name1 sentinel 
-%define _name2 dashcore-sentinel 
+# name-version-release
+# ...where release is...
+# <pkgrel>[.<extraver>][.<snapinfo>]%%{?dist}[.<minorbump>]
+# ...for example...
+# name: dashcore-server
+# version: 1.1.0 (major=1.1 and minor=0)
+# release: 1.1.testing.fc27.taw0
+#   _release_major (pkgrel): 1 -- should never be 0 if not testing
+#   _release_minor_snapinfo (extraver.snapinfo): 1.testing -- disappears
+#     -- disappears (undefined) at GA and then _release_major is bumped
+#   %%{?dist}: .fc27 -- includes the decimal point
+#   _release_minorbump: initials+decimal - taw or taw0 or taw1 or etc.
 
+%define _name_s sentinel
+%define _name_dcs dashcore-sentinel
+Name: %{_name_dcs}
 %define _version_major 1.1
 %define _version_minor 0
-
-
-Name: %{_name2}
 Version: %{_version_major}.%{_version_minor}
-Release: %{_release}%{?dist}
+%define _release_major 1
+
+# ---------------- end of commonly edited elements ----------------------------
+
+# "Release" gets complicated...
+
+%define _release_pt1 %{_release_major}%{?dist}
+%if 0%{?_release_minor_snapinfo:1}
+# extraver.snapinfo.[dist]...
+%define _release_pt1 %{_release_major}.%{_release_minor_snapinfo}%{?dist}
+%endif
+
+### builder initials and incremental bumps go here!
+### Examples: taw, taw0, taw1, etc.
+#%%define _release_minorbump taw0 -- defined at top
+
+%define _release %{_release_pt1}
+%if %{?_release_minorbump}
+%define _release %{_release_pt1}.%{_release_minorbump}
+%endif
+Release: %{_release}
+
 Vendor: Dash.org
-Packager: Todd Warner <t0dd@protonmail.com>
 Summary: Dash Masternode Sentinel - required toolset for Dash Masternodes
 
+# We usually do not want a debug package available and built for sentinel. If
+# you DO want them built, double the %%'s and comment the line.
+%define debug_package %{nil}
+
+# https://fedoraproject.org/wiki/Changes/Harden_All_Packages
+#%%define _hardened_build 0
+
+# I never actually use these
+#%%define _nmv_s %%{_name_s}-%%{_version_major}
+#%%define _nmv_dcs %%{_name_dcs}-%%{_version_major}
+#%%define _nv_s %%{_name_s}-%%{version}
+#%%define _nv_dcs %%{_name_dcs}-%%{version}
+#%%define _nvr_s %%{_name_s}-%%{version}-%%{_release}
+#%%define _nvr_dcs %%{_name_dcs}-%%{version}-%%{_release}
+
 # Various archive and tree naming conventions (for example)
-# 1. sentinel-1.1.0 (upstream dash team convention, github, etc - eg. sentinel-1.0.1.tar.gz)
-# 2. sentinel-1.1.0-1
-# 3. dashcore-sentinel-1.1
-# 4. dashcore-sentinel
-%define _basename1 %{_name1}-%{version}
-%define _basename2 %{_name1}-%{version}-%{bump}
-%define _basename3 %{_name2}-%{_version_major}
-%define _basename4 %{_name2}
+# 1. sentinel-1.1.0
+#    (upstream dash team convention, github, etc - eg. sentinel-1.0.1.tar.gz)
+# 2. dashcore-sentinel-1.1
+%define _srcarchive_github %{_name_s}-%{version}
+%define srcarchive %{_srcarchive_github}
+%define srccontribarchive %{_name_dcs}-%{_version_major}-contrib
 
-# archivebasename is a "symlink" to whichever source tarball we are using
-%define archivebasename %{_basename1}
-%define archivebasename_contrib %{_basename3}-contrib
-
-# the exploded tree of code in BUILD
-# sourcetree is top dir: dashcore-sentinel-1.0
-# sentineltree and contribtree hang off of it
-%define sourcetree %{_basename3}
-%define sentineltree %{_basename1}
-%define contribtree %{_basename3}
+# Unarchived source tree structure (extracted in .../BUILD)
+#   srcroot               dashcore-sentinel-1.1
+#      \_srccodetree        \_sentinel-1.1.0 (github tree example)
+#      \_srccontribtree     \_dashcore-sentinel-1.1-contrib
+%define _srccodetree_github %{_name_s}-%{version}
+%define srcroot %{_name_dcs}-%{_version_major}
+%define srccontribtree %{_name_dcs}-%{_version_major}-contrib
+%define srccodetree %{_srccodetree_github}
 
 
 Group: Applications/System
 License: MIT
 URL: http://dash.org/
-Source0: %{archivebasename}.tar.gz
-Source1: %{archivebasename_contrib}.tar.gz
+Source0: %{srcarchive}.tar.gz
+Source1: %{srccontribarchive}.tar.gz
 
 BuildRoot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
 BuildRequires: /usr/bin/virtualenv
-Requires: dashcore-server >= 0.12.2
+Requires: dashcore-server >= 0.12.3
 
 
 # Nuke auto-requires that rpmbuild will generate because of the virtualenv
@@ -87,19 +126,23 @@ upcoming Dash release (codename Evolution).
 Sentinel is implemented as a Python application that binds to a local version
 dashd instance on each Dash Masternode.
 
-Dash (Digital Cash) is an open source peer-to-peer cryptocurrency that offers
-instant transactions (InstantSend), private transactions (PrivateSend) and token
-fungibility. Dash operates a decentralized governance and budgeting system,
-making it the first decentralized autonomous organization (DAO). Dash is also a
-platform for innovative decentralized crypto-tech.
+Dash (Digital Cash) is an open source peer-to-peer cryptocurrency with a strong
+focus on serving the payments industry. Dash offers a form of money that is
+portable, inexpensive, divisible and fast. It can be spent securely both online
+and in person with minimal transaction fees. Dash offers instant transactions
+(InstantSend), private transactions (PrivateSend), and operates a
+self-governing and self-funding model. This decentralized governance and
+budgeting system makes it one of the first ever successful decentralized
+autonomous organizations (DAO). Dash is also a platform for innovative
+decentralized crypto-tech.
 
-Dash is open source and the name of the overarching project. Learn more
-at www.dash.org.
+Learn more at www.dash.org.
+
 
 
 %prep
 # Upstream code exploded into sentinel-1.0/sentinel-1.0
-%setup -q -T -a 0 -c %{sourcetree}
+%setup -q -T -a 0 -c %{srcroot}
 # contrib stuff exploded into sentinel-1.0/dashcore-sentinel
 %setup -q -T -D -a 1
 
@@ -115,7 +158,7 @@ at www.dash.org.
 #   TODO: Build from locally known and signed libraries -- a future endeavor.
 # Building in dashcore-sentinel-X.Y
 # cd into dashcore-sentinel-X.Y/sentinel-X.Y.Z
-cd %{sentineltree}
+cd %{srccodetree}
 /usr/bin/virtualenv ./venv
 ./venv/bin/pip install -r ./requirements.txt
 cd ..
@@ -125,26 +168,53 @@ cd ..
 
 
 %install
-rm -rf %{buildroot}
-mkdir %{buildroot}
-%define varlibtarget %{_sharedstatedir}/dashcore/sentinel
+# This section starts us in directory .../BUILD/sentinel-1.1 (srcroot)
+rm -rf %{buildroot} ; mkdir %{buildroot}
 
-#install -d %{buildroot}%{_sharedstatedir}
-install -d %{buildroot}%{varlibtarget}
-pwd
-cp -a %{sentineltree}/* %{buildroot}%{varlibtarget}/
-#rm -rf %{buildroot}%{varlibtarget}/contrib # Contrib files placed individually
-#install -D -m640 ./* %{buildroot}%{varlibtarget}/
-
-pwd
-# Replace core sentinel configuration file with contributed configuration file
-install -D -m640 %{contribtree}/contrib/linux/var-lib-dashcore-sentinel_sentinel.conf %{buildroot}%{varlibtarget}/sentinel.conf
-
-# Logrotate file rules
-install -D -m644 %{contribtree}/contrib/linux/etc-logrotate.d_dashcore-sentinel %{buildroot}/etc/logrotate.d/dashcore-sentinel
-
-# Ghosting a log file - we have to own the directory and log file
+# Install / config ancillary files
+# Cheatsheet for built-in RPM macros:
+#   _datadir = /usr/share
+#   _mandir = /usr/share/man
+#   _sysconfdir = /etc
+#   _localstatedir = /var
+#   _sharedstatedir is /var/lib
+#   _prefix = /usr
+#   _tmpfilesdir = /usr/lib/tmpfiles.d
+#   _unitdir = /usr/lib/systemd/system
+#   _libdir = /usr/lib or /usr/lib64 (depending on system)
+#   https://fedoraproject.org/wiki/Packaging:RPMMacros
+install -d %{buildroot}%{_sysconfdir}
+install -d %{buildroot}%{_sysconfdir}/dashcore
+install -d %{buildroot}%{_localstatedir}
+install -d %{buildroot}%{_localstatedir}/log
 install -d -m700 %{buildroot}%{_localstatedir}/log/dashcore
+install -d %{buildroot}%{_sharedstatedir}
+install -d %{buildroot}%{_sharedstatedir}/dashcore
+install -d %{buildroot}%{_sharedstatedir}/dashcore/sentinel
+install -d %{buildroot}%{_prefix}
+install -d %{buildroot}%{_tmpfilesdir}
+install -d %{buildroot}%{_unitdir}
+install -d %{buildroot}%{_mandir}/man1
+#install -d -m755 -p %{buildroot}%{_sbindir}
+#install -d -m755 -p %{buildroot}%{_bindir}
+#install -d -m755 -p %{buildroot}%{_includedir}
+#install -d -m755 -p %{buildroot}%{_libdir}
+
+cp -a %{srccodetree}/* %{buildroot}%{_sharedstatedir}/dashcore/sentinel/
+
+# Replace core sentinel configuration file with contributed configuration file
+# Remove supplied sentinel configuration file
+# Place contributed configuration file into /etc/dashcore
+# Create symlink to that file...
+#   /var/lib/dashcore/sentinel/sentinel.conf -> /etc/dashcore/sentinel.conf
+rm -f %{buildroot}%{_sharedstatedir}/dashcore/sentinel/sentinel.conf
+install -D -m640 %{srccontribtree}/linux/var-lib-dashcore-sentinel_sentinel.conf %{buildroot}%{_sysconfig}/dashcore/sentinel.conf
+ln -s %{_sysconfig}/dashcore/sentinel.conf %{buildroot}%{_sharedstatedir}/dashcore/sentinel/sentinel.conf
+
+# Log files
+# ...logrotate file rules
+install -D -m644 -p %{srccontribtree}/linux/etc-logrotate.d_dashcore-sentinel %{buildroot}/etc/logrotate.d/dashcore-sentinel
+# ...ghosted log files - need to exist in the installed buildroot
 touch %{buildroot}%{_localstatedir}/log/dashcore/sentinel.log
 
 # Right now, things are being run out of /var/lib/dashcore/sentinel
@@ -154,8 +224,6 @@ touch %{buildroot}%{_localstatedir}/log/dashcore/sentinel.log
 # should live in /usr/sbin. But it doesn't. The rest of the program should
 # probably live in /var/lib.
 #
-# Consideration: Maybe punt and shove everything in /opt/dashcore/sentinel
-# and call it a day. That's ugly packaging though. For now, it stays in /var/lib
 
 
 %clean
@@ -168,6 +236,25 @@ getent group dashcore >/dev/null || groupadd -r dashcore
 getent passwd dashcore >/dev/null ||
   useradd -r -g dashcore -d %{_sharedstatedir}/dashcore -s /sbin/nologin \
   -c "System user 'dashcore' to isolate Dash Core execution" dashcore
+
+# Fix the sentinel.conf configuration file location if it is in
+# /var/lib/dashcore/sentinel. We want it in /etc/dashcore/
+# Also if /var/lib/dashcore/sentinel/sentinel.conf is not a symlink, we need
+# to fix that.
+#    /var/lib/dashcore/sentinel/sentinel.conf -> /etc/dashcore/sentinel.conf
+%define vlds %{_sharedstatedir}/dashcore/sentinel
+%define etcd %{_sysconfdir}/dashcore
+%define vlds_conf %{vlds}/sentinel.conf
+%define etcd_conf %{etcd}/sentinel.conf
+if [ -e %{vlds_conf} -a -f %{vlds_conf} -a ! -h %{vlds_conf} ]
+then
+   mv %{vlds_conf} %{etcd}/
+   ln -s %{etcd_conf} %{vlds_conf}
+   chown dashcore:dashcore %{vlds_conf}
+   chown -R dashcore:dashcore %{etcd_conf}
+   chmod 640 %{etcd_conf}*
+fi
+
 exit 0
 
 
@@ -187,44 +274,63 @@ exit 0
 
 
 %files
+# This section starts us in directory .../BUILD/sentinel-1.1 (srcroot)
 %defattr(-,dashcore,dashcore,-)
-%license %attr(-,root,root) %{sentineltree}/LICENSE
-%doc %attr(-,root,root) %{sentineltree}/README.md %{contribtree}/contrib/linux/README.redhat.md
-# Log directory and file
-%dir %attr(700,dashcore,dashcore) %{_localstatedir}/log/dashcore
-%ghost %{_localstatedir}/log/dashcore/sentinel.log
-%attr(644,root,root) /etc/logrotate.d/dashcore-sentinel
-# Code and Data Directories (combined, for now), includes config file
+%license %attr(-,root,root) %{srccodetree}/LICENSE
+%doc %attr(-,root,root) %{srccodetree}/README.md %{srccontribtree}/linux/README.redhat.md
+
+# Directories
+# /etc/dashcore
+%dir %attr(750,dashcore,dashcore) %{_sysconfdir}/dashcore
+# /var/lib/dashcore
+# /var/lib/dashcore/sentinel
 %dir %attr(750,dashcore,dashcore) %{_sharedstatedir}/dashcore
 %dir %attr(750,dashcore,dashcore) %{_sharedstatedir}/dashcore/sentinel
-%{_sharedstatedir}/dashcore/sentinel/*
-%config(noreplace) %{_sharedstatedir}/dashcore/sentinel/sentinel.conf
+# /var/log/dashcore
+%dir %attr(700,dashcore,dashcore) %{_localstatedir}/log/dashcore
 
+# sentinel.conf
+%config(noreplace) %{_sysconfdir}/dashcore/sentinel.conf
+# ...convenience symlink - this is probably really bad form:
+#    /var/lib/dashcore/sentinel/sentinel.conf -> /etc/dashcore/sentinel.conf
+%{_sharedstatedir}/dashcore/sentinel/sentinel.conf
+
+# The logs
+%attr(644,root,root) /etc/logrotate.d/dashcore-sentinel
+%ghost %{_localstatedir}/log/dashcore/sentinel.log
+
+# Code and data directories
+%{_sharedstatedir}/dashcore/sentinel/*
 
 
 # Dash Core Information
 # 
 # Dash...
-#   * Project website: https://www.dash.org
+#   * Project website: https://www.dash.org/
+#   * Project documentation: https://docs.dash.org/
+#   * Developer documentation: https://dash-docs.github.io/
 #
 # Dash Core on Fedora/CentOS/RHEL...
 #   * Git Repo: https://github.com/taw00/dashcore-rpm
 #   * Documentation: https://github.com/taw00/dashcore-rpm/tree/master/documentation
 #
-# The last testnet effort...
+# The last major testnet effort...
 #   * Announcement: https://www.dash.org/forum/threads/12-1-testnet-testing-phase-two-ignition.10818/
 #   * Documentation: https://dashpay.atlassian.net/wiki/display/DOC/Testnet
-#
-# Source snapshots...
-#   * https://bamboo.dash.org/browse/DASHL-DEV/latestSuccessful
-#   * https://bamboo.dash.org/browse/DASHL-DEV-<BUILD_NUMBER>/artifact/JOB1/gitian-linux-dash-src/src
-#   * https://bamboo.dash.org/artifact/DASHL-DEV/JOB1/build-<BUILD_NUMBER>/gitian-linux-dash-src/src/dashcore-0.12.1.tar.gz
 #
 # Dash Core git repos...
 #   * Dash: https://github.com/dashpay/dash
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
+* Sun Apr 8 2018 Todd Warner <t0dd@protonmail.com> 1.1.0-1.1.testing.taw0
+- Refactor sentinel spec
+- Versions use more canonical packaging standards.
+- Configuration file is in /etc/dashcore/sentinel.conf now (but still symlinked
+  from /var/lib/dashcore/sentinel.conf)
+- Contrib tree is restructured a bit to reduce redundancy.
+- Updated some information in contrib README and other text.
+-
 * Tue Nov 14 2017 Todd Warner <t0dd@protonmail.com> 1.1.0-1.testing.taw
 - Spec file tweaks so that this builds on Fedora 27. I don't know the real
 - cause of the error, but it is related to debuginfo building. But Sentinel

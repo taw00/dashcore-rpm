@@ -17,8 +17,8 @@
 # associated to future work or experimental elements of this spec file and
 # build.
 #
-# Note commented out macros in this (or any) spec file. You MUST double up the
-# %%'s or rpmbuild will yell at you. RPM is weird.
+# Note commented out macros in this (or any) spec file. You MUST double up
+# the %%'s or rpmbuild will yell at you. RPM is weird.
 #
 # Enjoy. Todd Warner <t0dd@protonmail.com>
 
@@ -41,10 +41,11 @@ Packager: Todd Warner <t0dd@protonmail.com>
 # <pkgrel>[.<extraver>][.<snapinfo>]%%{?dist}[.<minorbump>]
 # ...for example...
 # name: dashcore-server
-# version: 0.12.3.0
+# version: 0.12.3.0 (major=0.12.3 and minor=0)
 # release: 0.1.testing.fc27.taw0
-#   _release_major (pkgrel): 0 -- becomes 1 at GA (should never be 0 if not testing)
-#   _release_minor_snapinfo (extraver.snapinfo): 1.testing -- disappears (undefined) at GA
+#   _release_major (pkgrel): 0 should never be 0 if not testing
+#   _release_minor_snapinfo (extraver.snapinfo): 1.testing
+#     -- disappears (undefined) at GA and then _release_major is bumped
 #   %%{?dist}: .fc27 -- includes the decimal point
 #   _release_minorbump: initials+decimal - taw or taw0 or taw1 or etc.
 
@@ -83,20 +84,20 @@ Summary: Dash - Digital Cash - Peer-to-peer, privacy-centric, digital currency
 %global selinux_variants mls strict targeted
 %define testing_extras 0
 
-# We usually want a debug package available and built. If you DO NOT want them
-# built, un-double the %%'s and uncomment the line.
+# We usually want a debug package available and built. If you DO NOT want
+# them built, un-double the %%'s and uncomment the line.
 #%%define debug_package %%{nil}
 
 # https://fedoraproject.org/wiki/Changes/Harden_All_Packages
 %define _hardened_build 0
 
-
-%define _nmv_d %{_name_d}-%{_version_major}
-%define _nmv_dc %{_name_dc}-%{_version_major}
-%define _nv_d %{_name_d}-%{version}
-%define _nv_dc %{_name_dc}-%{version}
-%define _nvr_d %{_name_d}-%{version}-%{_release}
-%define _nvr_dc %{_name_dc}-%{version}-%{_release}
+# I never end up using these...
+#%%define _nmv_d %%{_name_d}-%%{_version_major}
+#%%define _nmv_dc %%{_name_dc}-%%{_version_major}
+#%%define _nv_d %%{_name_d}-%%{version}
+#%%define _nv_dc %%{_name_dc}-%%{version}
+#%%define _nvr_d %%{_name_d}-%%{version}-%%{_release}
+#%%define _nvr_dc %%{_name_dc}-%%{version}-%%{_release}
 
 # dashcore source tarball file basename
 # Set srcarchive value to the appropriate on for this build.
@@ -658,17 +659,17 @@ if [ -e %{vlibdc_dl} -a -f %{vlibdc_dl} -a ! -h %{vlibdc_dl} ]
 then
    mv %{vlibdc_dl}* %{vlogdc}/
    ln -s %{vlogdc_dl} %{vlibdc_dl}
+   chown dashcore:dashcore %{vlibdc_dl}
    chown -R dashcore:dashcore %{vlogdc}
    chmod 644 %{vlogdc_dl}*
-  fi
 fi
 if [ -e %{vlibdc_tdl} -a -f %{vlibdc_tdl} -a ! -h %{vlibdc_tdl} ]
 then
    mv %{vlibdc_tdl}* %{vlogtdc}/testnet3/
    ln -s %{vlogdc_tdl} %{vlibdc_tdl}
+   chown dashcore:dashcore %{vlibdc_tdl}
    chown -R dashcore:dashcore %{vlogdc}
    chmod 644 %{vlogdc_tdl}*
-  fi
 fi
 
 exit 0
@@ -851,12 +852,17 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 # Dash Core Information
 #
 # Dash...
-#   * Project website: https://www.dash.org
-#   * Project documentation: https://docs.dash.org
+#   * Project website: https://www.dash.org/
+#   * Project documentation: https://docs.dash.org/
+#   * Developer documentation: https://dash-docs.github.io/
 #
 # Dash Core on Fedora/CentOS/RHEL...
 #   * Git Repo: https://github.com/taw00/dashcore-rpm
 #   * Documentation: https://github.com/taw00/dashcore-rpm/tree/master/documentation
+#
+# The last major testnet effort...
+#   * Announcement: https://www.dash.org/forum/threads/12-1-testnet-testing-phase-two-ignition.10818/
+#   * Documentation: https://dashpay.atlassian.net/wiki/display/DOC/Testnet
 #
 # Source snapshots...
 #   * Release builds...
