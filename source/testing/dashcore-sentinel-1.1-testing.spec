@@ -40,9 +40,9 @@ Packager: Todd Warner <t0dd@protonmail.com>
 Summary: Dash Masternode Sentinel - required toolset for Dash Masternodes
 
 # Various archive and tree naming conventions (for example)
-# 1. sentinel-1.0.1 (upstream dash team convention, github, etc - eg. sentinel-1.0.1.tar.gz)
-# 2. sentinel-1.0.1-1
-# 3. dashcore-sentinel-1.0
+# 1. sentinel-1.1.0 (upstream dash team convention, github, etc - eg. sentinel-1.0.1.tar.gz)
+# 2. sentinel-1.1.0-1
+# 3. dashcore-sentinel-1.1
 # 4. dashcore-sentinel
 %define _basename1 %{_name1}-%{version}
 %define _basename2 %{_name1}-%{version}-%{bump}

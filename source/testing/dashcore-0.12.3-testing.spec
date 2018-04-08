@@ -22,6 +22,64 @@
 #
 # Enjoy. Todd Warner <t0dd@protonmail.com>
 
+Packager: Todd Warner <t0dd@protonmail.com>
+
+# flip-flop next two lines if you don't want the minor bump
+%undefine _release_minorbump
+%define _release_minorbump taw0
+
+# flip-flop next two lines if we are not testing
+%undefine _release_minor_snapinfo
+%define _release_minor_snapinfo 1.testing
+
+# flip-flop these depending on the archive nomenclature/structure being used (github or bamboo)
+%undefine bamboo_build_nomenclature
+%define bamboo_build_nomenclature 1
+
+# name-version-release
+# ...where release is...
+# <pkgrel>[.<extraver>][.<snapinfo>]%%{?dist}[.<minorbump>]
+# ...for example...
+# name: dashcore-server
+# version: 0.12.3.0
+# release: 0.1.testing.fc27.taw0
+#   _release_major (pkgrel): 0 -- becomes 1 at GA (should never be 0 if not testing)
+#   _release_minor_snapinfo (extraver.snapinfo): 1.testing -- disappears (undefined) at GA
+#   %%{?dist}: .fc27 -- includes the decimal point
+#   _release_minorbump: initials+decimal - taw or taw0 or taw1 or etc.
+
+%define _name_d dash
+%define _name_dc dashcore
+Name: %{_name_dc}
+%define _version_major 0.12.3
+%define _version_minor 0
+Version: %{_version_major}.%{_version_minor}
+%define _release_major 0
+
+# ---------------- end of commonly edited elements ----------------------------
+
+# "Release" gets complicated...
+
+%define _release_pt1 %{_release_major}%{?dist}
+%if 0%{?_release_minor_snapinfo:1}
+# extraver.snapinfo.[dist]...
+%define _release_pt1 %{_release_major}.%{_release_minor_snapinfo}%{?dist}
+%endif
+
+### builder initials and incremental bumps go here!
+### Examples: taw, taw0, taw1, etc.
+#%%define _release_minorbump taw0 -- defined at top
+
+%define _release %{_release_pt1}
+%if %{?_release_minorbump}
+%define _release %{_release_pt1}.%{_release_minorbump}
+%endif
+Release: %{_release}
+
+
+Vendor: Dash.org
+Summary: Dash - Digital Cash - Peer-to-peer, privacy-centric, digital currency
+
 %global selinux_variants mls strict targeted
 %define testing_extras 0
 
@@ -32,32 +90,6 @@
 # https://fedoraproject.org/wiki/Changes/Harden_All_Packages
 %define _hardened_build 0
 
-%define _name_d dash
-%define _name_dc dashcore
-%define _version_major 0.12.3
-%define _version_minor 0
-
-# Note: "bump" and "bumptag" are release-build identifiers.
-# Often the bumptag is undefined, the builder's initials, a date, or whatever.
-# To undefine, flip-flop the define/undefine ordering
-
-%define bump 0.testing
-%undefine bumptag
-%define bumptag taw
-
-%if %{?bumptag}
-%define _release %{bump}.%{bumptag}
-%else
-%define _release %{bump}
-%endif
-
-
-Name: %{_name_dc}
-Version: %{_version_major}.%{_version_minor}
-Release: %{_release}%{?dist}
-Vendor: Dash.org
-Packager: Todd Warner <t0dd@protonmail.com>
-Summary: Dash - Digital Cash - Peer-to-peer, privacy-centric, digital currency
 
 %define _nmv_d %{_name_d}-%{_version_major}
 %define _nmv_dc %{_name_dc}-%{_version_major}
@@ -74,16 +106,26 @@ Summary: Dash - Digital Cash - Peer-to-peer, privacy-centric, digital currency
 %define _srcarchive_github %{_name_d}-%{version}
 %define _srcarchive_bamboo %{_name_dc}-%{_version_major}
 
+%if %{?bamboo_build_nomenclature}
+%define srcarchive %{_srcarchive_bamboo}
+%else
 %define srcarchive %{_srcarchive_github}
+%endif
 %define srccontribarchive %{_name_dc}-%{_version_major}-contrib
 
 # Unarchived source tree structure (extracted in .../BUILD)
-#   srcroot               dascore-0.12.3
-#      \_srccodetree        \_dash-0.12.3.0
+#   srcroot               dashcore-0.12.3
+#      \_srccodetree        \_dash-0.12.3.0 (github tree example)
 #      \_srccontribtree     \_dashcore-0.12.3-contrib
+%define _srccodetree_github %{_name_d}-%{version}
+%define _srccodetree_bamboo %{_name_dc}-%{_version_major}
 %define srcroot %{_name_dc}-%{_version_major}
-%define srccodetree %{_name_d}-%{version}
 %define srccontribtree %{_name_dc}-%{_version_major}-contrib
+%if %{?bamboo_build_nomenclature}
+%define srccodetree %{_srccodetree_bamboo}
+%else
+%define srccodetree %{_srccodetree_github}
+%endif
 
 
 Group: Applications/System
@@ -321,7 +363,7 @@ cp -p %{srccontribtree}/linux/selinux/dash.{te,if,fc} selinux-tmp/
 
 
 %build
-# This section starts us in directory .../BUILD/dashcore-0.12.3
+# This section starts us in directory .../BUILD/dashcore-0.12.3 (ie. srcroot)
 # So, we're in srcroot. We need to cd into srccodetree, the codetree.
 # cd into dashcore-X.Y.Z/dash-X.Y.Z.zz
 cd %{srccodetree}
@@ -347,8 +389,7 @@ cd ..
 
 
 %check
-# This section starts us in directory .../BUILD/dashcore-0.12.3
-# So, we start in that root tree structure cd in to the code tree and the contrib tree and in and out installing things to the buildroot.
+# This section starts us in directory .../BUILD/dashcore-0.12.3 (srcroot)
 cd %{srccodetree}
 %if %{testing_extras}
 # Run all the tests
@@ -365,24 +406,23 @@ cd ..
 
 
 %install
+# This section starts us in directory .../BUILD/dashcore-0.12.3 (srcroot)
 rm -rf %{buildroot} ; mkdir %{buildroot}
-# This section starts us in directory .../BUILD/dashcore-0.12.3
 # First, cd into the code tree and do stuff...
 cd %{srccodetree}
 make INSTALL="install -p" CP="cp -p" DESTDIR=%{buildroot} install
 cd ..
-
-# TODO: Upstream puts dashd in the wrong directory. Need to fix the
-# upstream Makefiles to relocate it. Someday.
-install -d -m755 -p %{buildroot}%{_sbindir}
-install -D -m755 -p %{buildroot}%{_bindir}/dashd %{buildroot}%{_sbindir}/dashd
-rm -f %{buildroot}%{_bindir}/dashd
 
 %if ! %{testing_extras}
 # Remove the test binaries if still floating around
 rm -f %{buildroot}%{_bindir}/test_*
 rm -f %{buildroot}%{_bindir}/bench_dash
 %endif
+
+# Stick dashd into sbin instead of bin
+install -d -m755 -p %{buildroot}%{_sbindir}
+install -D -m755 -p %{buildroot}%{_bindir}/dashd %{buildroot}%{_sbindir}/dashd
+rm -f %{buildroot}%{_bindir}/dashd
 
 
 # Install / config ancillary files
@@ -398,7 +438,10 @@ rm -f %{buildroot}%{_bindir}/bench_dash
 #   _libdir = /usr/lib or /usr/lib64 (depending on system)
 #   https://fedoraproject.org/wiki/Packaging:RPMMacros
 install -d %{buildroot}%{_datadir}
+install -d %{buildroot}%{_datadir}/pixmaps
 install -d %{buildroot}%{_mandir}
+install -d %{buildroot}%{_mandir}/man1
+install -d %{buildroot}%{_mandir}/man5
 install -d %{buildroot}%{_sysconfdir}
 install -d %{buildroot}%{_localstatedir}
 install -d %{buildroot}%{_sharedstatedir}
@@ -429,11 +472,9 @@ ln -s %{_sysconfdir}/dashcore/dash.conf %{buildroot}%{_sharedstatedir}/dashcore/
 
 # Man Pages (from contrib)
 cd %{srccontribtree}
-install -d %{buildroot}%{_mandir}/man1
 install -D -m644 ./linux/man/man1/* %{buildroot}%{_mandir}/man1/
 gzip %{buildroot}%{_mandir}/man1/dashd.1
 gzip %{buildroot}%{_mandir}/man1/dash-qt.1
-install -d %{buildroot}%{_mandir}/man5
 install -D -m644 ./linux/man/man5/* %{buildroot}%{_mandir}/man5/
 gzip %{buildroot}%{_mandir}/man5/dash.conf.5
 gzip %{buildroot}%{_mandir}/man5/masternode.conf.5
@@ -465,7 +506,6 @@ cd ..
 
 # Misc pixmaps - unsure if they are even used... (from contrib)
 cd %{srccontribtree}
-install -d %{buildroot}%{_datadir}/pixmaps
 install -D -m644 ./extras/pixmaps/* %{buildroot}%{_datadir}/pixmaps/
 cd ..
 
@@ -548,21 +588,22 @@ the configuration file in /var/lib/dashcore/.dashcore/dash.conf
 " > %{buildroot}%{_sharedstatedir}/dashcore/.dashcore/README
 cd ..
 
-# Install system services files (from contrib)
+# System services
 cd %{srccontribtree}
 install -D -m600 -p ./linux/systemd/etc-sysconfig_dashd %{buildroot}%{_sysconfdir}/sysconfig/dashd
 install -D -m755 -p ./linux/systemd/etc-sysconfig-dashd-scripts_dashd.send-email.sh %{buildroot}%{_sysconfdir}/sysconfig/dashd-scripts/dashd.send-email.sh
 install -D -m644 -p ./linux/systemd/usr-lib-systemd-system_dashd.service %{buildroot}%{_unitdir}/dashd.service
 install -D -m644 -p ./linux/systemd/usr-lib-tmpfiles.d_dashd.conf %{buildroot}%{_tmpfilesdir}/dashd.conf
+
+# Log files
 # ...logrotate file rules
 install -D -m644 -p ./linux/logrotate/etc-logrotate.d_dashcore %{buildroot}/etc/logrotate.d/dashcore
-# ...ghosting a log file - we have to own the log file
-touch %{buildroot}%{_sharedstatedir}/dashcore/debug.log
-touch %{buildroot}%{_sharedstatedir}/dashcore/testnet3/debug.log
+# ...ghosted log files - need to exist in the installed buildroot
+touch %{buildroot}%{_localstatedir}/log/dashcore/debug.log
+touch %{buildroot}%{_localstatedir}/log/dashcore/testnet3/debug.log
 cd ..
 
-
-# FirewallD service definition files for full and master -nodes (from contrib)
+# Service definition files for firewalld for full and master nodes
 cd %{srccontribtree}
 install -D -m644 -p ./linux/firewalld/usr-lib-firewalld-services_dashcore.xml %{buildroot}%{_prefix}/lib/firewalld/services/dashcore.xml
 install -D -m644 -p ./linux/firewalld/usr-lib-firewalld-services_dashcore-testnet.xml %{buildroot}%{_prefix}/lib/firewalld/services/dashcore-testnet.xml
@@ -602,32 +643,33 @@ getent passwd dashcore >/dev/null || useradd -r -g dashcore -d %{_sharedstatedir
 
 # Fix the debug.log directory structure if it is not aligned to /var/log/ standards.
 # If /var/lib/dashcore/debug.log is not a symlink, we need to fix that.
+#    /var/lib/dashcore/debug.log -> /var/log/dashcore/debug.log
+#    /var/lib/dashcore/testnet3/debug.log -> /var/log/dashcore/testnet3/debug.log
 %define vlibdc %{_sharedstatedir}/dashcore
 %define vlibdc_dl %{vlibdc}/debug.log
 %define vlibdc_tdl %{vlibdc}/testnet3/debug.log
 %define vlogdc %{_localstatedir}/log/dashcore
 %define vlogdc_dl %{vlogdc}/debug.log
 %define vlogdc_tdl %{vlogdc}/testnet3/debug.log
-# If either debug.log is not a symlink, we need to move files and then fix the symlinks
-# Hopefully this doesn't break because dashcore may have debug.log open
+# If either debug.log in /var/lib/dashcore is not a symlink, we need to move
+# files and then fix the symlinks Hopefully this doesn't break because
+# dashcore may have debug.log open
 if [ -e %{vlibdc_dl} -a -f %{vlibdc_dl} -a ! -h %{vlibdc_dl} ]
 then
    mv %{vlibdc_dl}* %{vlogdc}/
    ln -s %{vlogdc_dl} %{vlibdc_dl}
-   chown dashcore:dashcore %{vlogdc_dl}*
+   chown -R dashcore:dashcore %{vlogdc}
    chmod 644 %{vlogdc_dl}*
   fi
 fi
 if [ -e %{vlibdc_tdl} -a -f %{vlibdc_tdl} -a ! -h %{vlibdc_tdl} ]
 then
-   mv %{vlibdc_tdl}* %{vlogtdc}/
+   mv %{vlibdc_tdl}* %{vlogtdc}/testnet3/
    ln -s %{vlogdc_tdl} %{vlibdc_tdl}
-   chown dashcore:dashcore %{vlogdc_tdl}*
+   chown -R dashcore:dashcore %{vlogdc}
    chmod 644 %{vlogdc_tdl}*
   fi
 fi
-
-
 
 exit 0
 
@@ -718,6 +760,7 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 %license %{srccodetree}/COPYING
 
 # Application as systemd service directory structure
+%defattr(-,dashcore,dashcore,-)
 # /etc/dashcore/
 %dir %attr(750,dashcore,dashcore) %{_sysconfdir}/dashcore
 # /var/lib/dashcore/...
@@ -729,28 +772,35 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 %dir %attr(700,dashcore,dashcore) %{_localstatedir}/log/dashcore/testnet3
 # /etc/sysconfig/dashd-scripts/
 %dir %attr(755,dashcore,dashcore) %{_sysconfdir}/sysconfig/dashd-scripts
+%defattr(-,root,root,-)
 
 %doc %{srccodetree}/doc/*.md %{srccontribtree}/extras/dash.conf.example
 %config(noreplace) %attr(600,root,root) %{_sysconfdir}/sysconfig/dashd
 %attr(755,root,root) %{_sysconfdir}/sysconfig/dashd-scripts/dashd.send-email.sh
+
+# The logs
+%attr(644,root,root) /etc/logrotate.d/dashcore
 # ...log files - they don't initially exist, but we still own them
 %ghost %{_localstatedir}/log/dashcore/debug.log
 %ghost %{_localstatedir}/log/dashcore/testnet3/debug.log
 # ...the symlinks for log files...
+%defattr(-,dashcore,dashcore,-)
 #%%attr(777,dashcore,dashcore) %%{_sharedstatedir}/dashcore/debug.log
 #%%attr(777,dashcore,dashcore) %%{_sharedstatedir}/dashcore/testnet3/debug.log
 %{_sharedstatedir}/dashcore/debug.log
 %{_sharedstatedir}/dashcore/testnet3/debug.log
-%attr(644,root,root) /etc/logrotate.d/dashcore
+%defattr(-,root,root,-)
 
 # dash.conf
 %config(noreplace) %attr(640,dashcore,dashcore) %{_sysconfdir}/dashcore/dash.conf
 # ...convenience symlink:
 #    /var/lib/dashcore/.dashcore/dash.conf -> /etc/dashcore/dash.conf
 # ...this is probably really bad form.
-%attr(640,dashcore,dashcore) %{_sharedstatedir}/dashcore/.dashcore/README
+%defattr(-,dashcore,dashcore,-)
 #%%attr(777,dashcore,dashcore) %%{_sharedstatedir}/dashcore/.dashcore/dash.conf
 %{_sharedstatedir}/dashcore/.dashcore/dash.conf
+%defattr(-,root,root,-)
+%attr(640,dashcore,dashcore) %{_sharedstatedir}/dashcore/.dashcore/README
 
 %{_unitdir}/dashd.service
 %{_prefix}/lib/firewalld/services/dashcore.xml
@@ -794,6 +844,8 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 %license %{srccodetree}/COPYING
 %{_bindir}/dash-cli
 %{_bindir}/dash-tx
+%{_mandir}/man1/dash-cli.1.gz
+%{_mandir}/man1/dash-tx.1.gz
 
 
 # Dash Core Information
@@ -807,24 +859,28 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Documentation: https://github.com/taw00/dashcore-rpm/tree/master/documentation
 #
 # Source snapshots...
-#   * Tagged release builds: https://github.com/dashpay/dash/tags
-#     dash-0.12.3.0.tar.gz
+#   * Release builds...
+#     https://github.com/dashpay/dash/tags
+#     https://github.com/dashpay/dash/releases
+#     example: dash-0.12.3.0.tar.gz
 #   * Test builds...
+#     https://bamboo.dash.org/browse/DASHL-DEV/latestSuccessful ...or...
 #     https://bamboo.dash.org/browse/DASHL-REL/latestSuccessful
 #     Then > Artifacts > gitian-linux-dash-src > [download the tar.gz file]
-#     dashcore-0.12.3.tar.gz
+#     example: dashcore-0.12.3.tar.gz
 #
 # Dash Core git repos...
 #   * Dash: https://github.com/dashpay/dash
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
-* Fri Apr 6 2018 Todd Warner <t0dd@protonmail.com> 0.12.3.0-0.testing.taw
-- PLACEHOLDER ENTRY
-- Release - PLACEHOLDER
-- PLACEHOLDER-HASH dashcore-0.12.3.tar.gz
+* Sun Apr 8 2018 Todd Warner <t0dd@protonmail.com> 0.12.3.0-0.1.testing.taw0
+- Release - eecc692236efa0dd62b953f538b0099b2ffa324a
+- name-version-release more closely matches industry guidelines:
+  https://fedoraproject.org/wiki/Packaging:Versioning
+- f60a03c640425f821a2ea92968aef3ccf2a921e2d668e47bea14521d5e788b99 dashcore-0.12.3.tar.gz
 - 329c49b034c601e082f815a5aa12d9f865de17343809d3e9f01b10f7eaa619f8 dashcore-0.12.3-contrib.tar.gz
-- https://github.com/dashpay/dash/releases/tag/v0.12.3.0
+- https://bamboo.dash.org/browse/DASHL-DEV-341
 -
 * Tue Dec 19 2017 Todd Warner <t0dd@protonmail.com> 0.12.2.2-1.testing.taw
 - Release Candidate - 8506678

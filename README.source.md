@@ -41,7 +41,7 @@ binary runnable RPM packages associated to the Dash project.
 Important notes:
 
 * In this github repo, we bucket the various versions into **stable**,
-  **testing**, and **discontinued**.
+  **testing**, and **archive**.
   - "Stable" packages are found directly in the "source-packages" directory
   - "Testing" and "archived" packages have their own folders in the "source-packages" folder.
     ...the tree looks like this...
@@ -95,10 +95,11 @@ sudo rpm -ivh https://linux.ringingliberty.com/bitcoin/el7/x86_64/bitcoin-releas
 
 #### [1]  Set up your Build environment
 
-RPM? How? What?: <https://fedoraproject.org/wiki/How_to_create_an_RPM_package>
-(read especially "Preparing your system")
-
-Also very useful: <https://github.com/rpm-software-management/mock/wiki>
+RPM? How? What?:
+* <https://fedoraproject.org/wiki/How_to_create_an_RPM_package>  
+  (read especially "Preparing your system")
+* <https://github.com/rpm-software-management/mock/wiki>
+* <https://fedoraproject.org/wiki/Packaging:Versioning>
 
 In order to build from a source RPM, you first need to set up your environment.
 If you have not already, do this as your normal user (not root) from the
@@ -108,7 +109,7 @@ commandline:
 # As a normal user (not root)
 # For RHEL and CentOS, it's the same, just don't include the "fedora-packager"
 sudo dnf install @development-tools fedora-packager rpmdevtools rpm-sign
-sudo usermod -a -G mock [your user name] # no brackets
+sudo usermod -a -G mock $USER
 newgrp -
 ```
 
@@ -146,11 +147,14 @@ config_opts['bootstrap_module_install'] = []
 
 For example, at the time of this writing the latest Dash src.rpm of version
 `0.12.2.3`, is considered "stable". For the purposes of this document, we are
-going use version-release `0.12.2.3-0.taw` as our example. Download the lastest
+going use version-release `0.12.2.3-1.taw` as our example. Download the lastest
 version that is specific to your linux distribution Fedora, CentOS, or RHEL. If
 you are attempting to build in a different environment, download the source RPM
 that as closely matches your platform and experiment away.
 
+Note: Future builds (12.3) are going to move towards a more "correct"
+convention for version-release nomenclature. They will look something like
+`0.12.3.0-0.testing.fc27.taw0` and `0.12.3.0-1.fc27.taw0`
 
 #### [3] Verify the RPM has not been tampered with
 
@@ -195,7 +199,7 @@ and import it locally.
 `$ rpm --checksig -v dashcore-0.12.2.?-?.taw.*.src.rpm` ...or...
 `$ rpm -Kv dashcore-0.12.2.?-?.taw.*.src.rpm`
 
-You should see something like: `dashcore-0.12.2.3-0.taw.fc27.src.rpm: rsa sha1 (md5) pgp md5 OK`<br />
+You should see something like: `dashcore-0.12.2.3-1.taw.fc27.src.rpm: rsa sha1 (md5) pgp md5 OK`<br />
 *Notice the "pgp" and the "OK"*
 
 And if you used the verbose flag, `-v`, then you should see my key ID: `694673ed`
@@ -206,7 +210,7 @@ you did not successfully import my key in step 1.
 
 Another way to look at this information is via...
 
-`$ rpm -qpi dashcore-0.12.2.3-0.taw.*.src.rpm | grep 'Name\|\|Version\|Release\|Signature'`
+`$ rpm -qpi dashcore-0.12.2.3-1.taw.*.src.rpm | grep 'Name\|\|Version\|Release\|Signature'`
 
 
 #### [4] Install the source RPM
@@ -217,7 +221,7 @@ Again, from the command line as a normal user... First, move that source RPM int
 # As a normal user (not root)
 mv dashcore-*.src.rpm ~/rpmbuild/SRPMS/
 # Install the sucker (do not use sudo here!):
-rpm -ivh ~/rpmbuild/SRPMS/dashcore-0.12.2.3-0.taw.fc27.src.rpm #Or whatever version you are installing.
+rpm -ivh ~/rpmbuild/SRPMS/dashcore-0.12.2.3-1.taw.fc27.src.rpm #Or whatever version you are installing.
 ```
 
 That should explode source code and patch instruction into
@@ -256,7 +260,7 @@ rpmbuild -bs ~/rpmbuild/SPECS dashcore-0.12.2.spec
 ```
 
 This will create a source package and place it in `~/rpmbuild/SRPMS/`. For
-example `~/rpmbuild/SRPMS/dashcore-0.12.2.3-0.taw.fc27.src.rpm`
+example `~/rpmbuild/SRPMS/dashcore-0.12.2.3-1.taw.fc27.src.rpm`
 
 Now build it...
 
@@ -264,7 +268,7 @@ Now build it...
 # As a normal user (not root)
 # Hint hint: With mock you can build for targets that are not your OS version
 #            and architecture!
-mock -r fedora-27-x86_64 ~/rpmbuild/SRPMS/dashcore-0.12.2.3-0.taw.fc27.src.rpm
+mock -r fedora-27-x86_64 ~/rpmbuild/SRPMS/dashcore-0.12.2.3-1.taw.fc27.src.rpm
 ```
 
 This will build packages in the mock builddir: `/var/lib/mock/fedora-27-x86_64/root/builddir/build/RPMS/`
