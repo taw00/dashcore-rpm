@@ -9,8 +9,11 @@ configuration.
 
 0. That the masternode is running as a systemd managed service. And therefore,
 1. The masternode's `datadir` is located in /var/lib/dashcore
-2. The masternode's configuration file, `dash.conf`, is found in
-   /etc/dashcore/dash.conf
+2. The masternode's dashd configuration file, `dash.conf`, is found in
+   `/etc/dashcore/dash.conf` (symlinked from `/var/lib/dashcore/dash.conf`)
+2. The masternode's sentinel configuration file, `sentinel.conf`, is found in
+   `/etc/dashcore/sentinel.conf` (symlinked from
+   `/var/lib/dashcore/sentinel/sentinel.conf`)
 3. That Sentinel will run as system user `dashcore`
 
 Therefore, if you intend to run multiple masternodes on one system. Or if you
@@ -24,19 +27,19 @@ configuration file, this README does not articulate those scenarios.
 After setting up, configuring, and _fully syncing_ your masternode, you need to.
 
 0. Start the masternode from your collateral-bearing wallet
-1. Edit `/var/lib/dashcore/sentinel/sentinel.conf`
-2. Ensure `dash_conf` points at your `dashd`'s `dash.conf` file
+1. Edit `/etc/dashcore/sentinel.conf`
+2. Ensure `dash_conf` points at your dashd's `dash.conf` file
    * `dash_conf=$HOME/.dashcore/dash.conf` is the upstream default
    * `dash_conf=/etc/dashcore/dash.conf` is the packaged default and recommended
-     for `dashd` running as a systemd managed daemon.
-3. You can probably leave `network=testnet` (or mainnet) commented. dash_conf
-   should override this. Regardless, let it be the leader in this setting.
+     for dashd running as a systemd managed daemon.
+3. You can probably leave `network=testnet` (or mainnet) commented. `dash_conf`
+   should override this. Let it be the leader in this setting.
 4. Once edited and saved, do this...
 
 Verify everything works (do this as root user) - _note: your masternode must be fully
 sync'ed and started by the managing wallet_...
 ```
-cd /var/lib/dashcore/sentinel && sudo -u dashcore ./venv/bin/python scripts/crontab.p
+cd /var/lib/dashcore/sentinel && sudo -u dashcore ./venv/bin/python scripts/crontab.py
 ```
 
 Then edit the dashcore system user's crontab...
@@ -46,11 +49,12 @@ sudo -u dashcore crontab -e
 
 And within that editor, add this line:
 ```
-*/2 * * * * cd /var/lib/dashcore/sentinel && ./venv/bin/python scripts/crontab.py >/dev/null 2>&1
+* * * * * cd /var/lib/dashcore/sentinel && ./venv/bin/python bin/sentinel.py >/dev/null 2>&1
 ```
 
 # Good luck!
 
+That's a minimalistic configuration.
 For more information on this topic, please visit <https://github.com/taw00/dashcore-rpm/tree/master/documentation>
 
 Happy Masternoding! -t0dd
