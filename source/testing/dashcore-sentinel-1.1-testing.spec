@@ -208,8 +208,8 @@ cp -a %{srccodetree}/* %{buildroot}%{_sharedstatedir}/dashcore/sentinel/
 # Create symlink to that file...
 #   /var/lib/dashcore/sentinel/sentinel.conf -> /etc/dashcore/sentinel.conf
 rm -f %{buildroot}%{_sharedstatedir}/dashcore/sentinel/sentinel.conf
-install -D -m640 %{srccontribtree}/linux/var-lib-dashcore-sentinel_sentinel.conf %{buildroot}%{_sysconfig}/dashcore/sentinel.conf
-ln -s %{_sysconfig}/dashcore/sentinel.conf %{buildroot}%{_sharedstatedir}/dashcore/sentinel/sentinel.conf
+install -D -m640 %{srccontribtree}/linux/etc-dashcore_sentinel.conf %{buildroot}%{_sysconfdir}/dashcore/sentinel.conf
+ln -s %{_sysconfdir}/dashcore/sentinel.conf %{buildroot}%{_sharedstatedir}/dashcore/sentinel/sentinel.conf
 
 # Log files
 # ...logrotate file rules
@@ -293,7 +293,7 @@ exit 0
 %config(noreplace) %{_sysconfdir}/dashcore/sentinel.conf
 # ...convenience symlink - this is probably really bad form:
 #    /var/lib/dashcore/sentinel/sentinel.conf -> /etc/dashcore/sentinel.conf
-%{_sharedstatedir}/dashcore/sentinel/sentinel.conf
+#%%{_sharedstatedir}/dashcore/sentinel/sentinel.conf --picked up by SPLAT below
 
 # The logs
 %attr(644,root,root) /etc/logrotate.d/dashcore-sentinel
