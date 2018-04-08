@@ -42,7 +42,7 @@ Important notes:
 
 * In this github repo, we bucket the various versions into **stable**,
   **testing**, and **archive**.
-  - "Stable" packages are found directly in the "source-packages" directory
+  - "Stable" packages are found directly in the "source" directory
   - "Testing" and "archived" packages have their own folders in the "source-packages" folder.
     ...the tree looks like this...
 
@@ -53,6 +53,9 @@ dashcore-rpm
     ├── source-dashcore-<version>-contrib   ← icons, extra configuration, etc.
     ├── source-dashcore-sentinel-<version>-contrib   ← extra configuration
     └── testing
+       ├── archive
+       ├── source-dashcore-<version>-contrib   ← icons, extra configuration, etc.
+       └── source-dashcore-sentinel-<version>-contrib   ← extra configuration
 ```
 
 * Only use **stable** versions on the mainnet (`testnet=0`).<br />
