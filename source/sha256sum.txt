@@ -1,6 +1,0 @@
-b9319681fbce766f61845d263d02b96123fc15d254b524b2453a05138cda35f7  dashcore-0.12.2.3-2.taw.fc27.src.rpm
-4831aa660be50f39dc2d31d0d6e6af995edea71f21f947dd11d7de29776e997d  dashcore-0.12.2.spec
-1049141f0ef00b8b0cb4c7f47cb47ef6849146c0afc01ead209b8d855ce6325d  dashcore-sentinel-1.1.0-0.taw.fc26.src.rpm
-7cc3ac9dd945797ee3f030f32ce87f7ae128ee52fd2f2aa05d1ea074ccd78ebc  dashcore-sentinel-1.1.spec
-84c2da03c9c6e14caac70cca8cfe6ec2eb7e9c07d3e79be1b23895d5bc64e624  openssl-compat-dashcore-1.0.2f-1.taw.fc24.src.rpm
-65a4fab5f19f417e76a4b27cb9d9de1b8cbe2965348b9590cfa3962dad3baea3  openssl-compat-dashcore.spec
