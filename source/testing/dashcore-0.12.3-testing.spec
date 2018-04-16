@@ -20,17 +20,7 @@
 # Note commented out macros in this (or any) spec file. You MUST double up
 # the %%'s or rpmbuild will yell at you. RPM is weird.
 #
-# Enjoy. Todd Warner <t0dd@protonmail.com>
-
-Packager: Todd Warner <t0dd@protonmail.com>
-
-# flip-flop next two lines if you don't want the minor bump
-%undefine _release_minorbump
-%define _release_minorbump taw0
-
-# flip-flop next two lines if we are not testing
-%undefine _release_minor_snapinfo
-%define _release_minor_snapinfo 1.testing
+# Enjoy. -t0dd
 
 # flip-flop these depending on the archive nomenclature/structure being used (github or bamboo)
 %undefine bamboo_build_nomenclature
@@ -40,14 +30,16 @@ Packager: Todd Warner <t0dd@protonmail.com>
 # ...where release is...
 # <pkgrel>[.<extraver>][.<snapinfo>]%%{?dist}[.<minorbump>]
 # ...for example...
-# name: dashcore-server
+# name: dashcore
 # version: 0.12.3.0 (major=0.12.3 and minor=0)
-# release: 0.1.testing.fc27.taw0
-#   _release_major (pkgrel): 0 should never be 0 if not testing
-#   _release_minor_snapinfo (extraver.snapinfo): 1.testing
-#     -- disappears (undefined) at GA and then _release_major is bumped
-#   %%{?dist}: .fc27 -- includes the decimal point
-#   _release_minorbump: initials+decimal - taw or taw0 or taw1 or etc.
+# release: 0.2.testing.fc27.taw0 (major=0, minorsnap=1.testing, bump=taw0)
+#   _relmajor (pkgrel): 0 should never be 0 if not testing
+#   _relminorsnap (extraver.snapinfo): 2.testing
+#     Testing --> GA looks like this: 0.2.testing --> 1
+#   dist macro: .fc27 -- includes the decimal point
+#   _relbump: initials+decimal - taw or taw0 or taw1 or etc.
+# https://fedoraproject.org/wiki/Packaging:Versioning
+# https://fedoraproject.org/wiki/Package_Versioning_Examples
 
 %define _name_d dash
 %define _name_dc dashcore
@@ -55,30 +47,32 @@ Name: %{_name_dc}
 %define _version_major 0.12.3
 %define _version_minor 0
 Version: %{_version_major}.%{_version_minor}
-%define _release_major 0
+%define _relmajor 0
+# flip-flop next two lines if you don't want the minor bump
+%undefine _relbump
+%define _relbump taw0
+# flip-flop next two lines if we are not testing
+%undefine _relminorsnap
+%define _relminorsnap 2.testing
+
 
 # ---------------- end of commonly edited elements ----------------------------
 
 # "Release" gets complicated...
 
-%define _release_pt1 %{_release_major}%{?dist}
-%if 0%{?_release_minor_snapinfo:1}
+%define _release_partial %{_relmajor}%{?dist}
+%if 0%{?_relminorsnap:1}
 # extraver.snapinfo.[dist]...
-%define _release_pt1 %{_release_major}.%{_release_minor_snapinfo}%{?dist}
+%define _release_partial %{_relmajor}.%{_relminorsnap}%{?dist}
 %endif
 
-### builder initials and incremental bumps go here!
-### Examples: taw, taw0, taw1, etc.
-#%%define _release_minorbump taw0 -- defined at top
-
-%define _release %{_release_pt1}
-%if %{?_release_minorbump}
-%define _release %{_release_pt1}.%{_release_minorbump}
+%define _release %{_release_partial}
+%if %{?_relbump}
+%define _release %{_release_partial}.%{_relbump}
 %endif
 Release: %{_release}
 
 
-Vendor: Dash.org
 Summary: Dash - Digital Cash - Peer-to-peer, privacy-centric, digital currency
 
 %global selinux_variants mls strict targeted
@@ -434,10 +428,10 @@ rm -f %{buildroot}%{_bindir}/dashd
 #   _localstatedir = /var
 #   _sharedstatedir is /var/lib
 #   _prefix = /usr
-#   _tmpfilesdir = /usr/lib/tmpfiles.d
-#   _unitdir = /usr/lib/systemd/system
 #   _libdir = /usr/lib or /usr/lib64 (depending on system)
 #   https://fedoraproject.org/wiki/Packaging:RPMMacros
+%define _tmpfilesdir /usr/lib/tmpfiles.d
+%define _unitdir /usr/lib/systemd/system
 install -d %{buildroot}%{_datadir}
 install -d %{buildroot}%{_datadir}/pixmaps
 install -d %{buildroot}%{_mandir}
@@ -881,7 +875,7 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 
 %changelog
 * Sun Apr 8 2018 Todd Warner <t0dd@protonmail.com> 0.12.3.0-0.1.testing.taw0
-- Release - eecc692236efa0dd62b953f538b0099b2ffa324a
+- Release STILL EXPERIMENTING - eecc692236efa0dd62b953f538b0099b2ffa324a
 - name-version-release more closely matches industry guidelines:
   https://fedoraproject.org/wiki/Packaging:Versioning
 - f60a03c640425f821a2ea92968aef3ccf2a921e2d668e47bea14521d5e788b99 dashcore-0.12.3.tar.gz

@@ -11,9 +11,7 @@
 # Note commented out macros in this (or any) spec file. You MUST double up
 # the %%'s or rpmbuild will yell at you. RPM is weird.
 #
-# Enjoy. Todd Warner <t0dd@protonmail.com>
-
-Packager: Todd Warner <t0dd@protonmail.com>
+# Enjoy. -t0dd
 
 # flip-flop next two lines if you don't want the minor bump
 %undefine _release_minorbump
@@ -21,7 +19,7 @@ Packager: Todd Warner <t0dd@protonmail.com>
 
 # flip-flop next two lines if we are not testing
 %undefine _release_minor_snapinfo
-%define _release_minor_snapinfo 1.testing
+%define _release_minor_snapinfo 2.testing
 
 # name-version-release
 # ...where release is...
@@ -64,23 +62,17 @@ Version: %{_version_major}.%{_version_minor}
 %endif
 Release: %{_release}
 
-Vendor: Dash.org
 Summary: Dash Masternode Sentinel - required toolset for Dash Masternodes
 
-# We usually do not want a debug package available and built for sentinel. If
-# you DO want them built, double the %%'s and comment the line.
+# how are debug info and build_ids managed (I only halfway understand this):
+# https://github.com/rpm-software-management/rpm/blob/master/macros.in
 %define debug_package %{nil}
+%define _unique_build_ids 1
+%define _build_id_links alldebug
+
 
 # https://fedoraproject.org/wiki/Changes/Harden_All_Packages
 #%%define _hardened_build 0
-
-# I never actually use these
-#%%define _nmv_s %%{_name_s}-%%{_version_major}
-#%%define _nmv_dcs %%{_name_dcs}-%%{_version_major}
-#%%define _nv_s %%{_name_s}-%%{version}
-#%%define _nv_dcs %%{_name_dcs}-%%{version}
-#%%define _nvr_s %%{_name_s}-%%{version}-%%{_release}
-#%%define _nvr_dcs %%{_name_dcs}-%%{version}-%%{_release}
 
 # Various archive and tree naming conventions (for example)
 # 1. sentinel-1.1.0
@@ -109,7 +101,7 @@ Source1: %{srccontribarchive}.tar.gz
 BuildRoot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
 BuildRequires: /usr/bin/virtualenv
-Requires: dashcore-server >= 0.12.3
+Requires: dashcore-server >= 0.12.2
 
 
 # Nuke auto-requires that rpmbuild will generate because of the virtualenv
@@ -179,10 +171,10 @@ rm -rf %{buildroot} ; mkdir %{buildroot}
 #   _localstatedir = /var
 #   _sharedstatedir is /var/lib
 #   _prefix = /usr
-#   _tmpfilesdir = /usr/lib/tmpfiles.d
-#   _unitdir = /usr/lib/systemd/system
 #   _libdir = /usr/lib or /usr/lib64 (depending on system)
 #   https://fedoraproject.org/wiki/Packaging:RPMMacros
+%define _tmpfilesdir /usr/lib/tmpfiles.d
+%define _unitdir /usr/lib/systemd/system
 install -d %{buildroot}%{_sysconfdir}
 install -d %{buildroot}%{_sysconfdir}/dashcore
 install -d %{buildroot}%{_localstatedir}
@@ -323,35 +315,38 @@ exit 0
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
+* Mon Apr 9 2018 Todd Warner <t0dd@protonmail.com> 1.1.0-1.2.testing.taw0
+- Remove .build_ids... because they conflict all the time.
+- _tmpfilesdir and _unitdir don't exist on f25 - not a huge deal, but still.
+
 * Sun Apr 8 2018 Todd Warner <t0dd@protonmail.com> 1.1.0-1.1.testing.taw0
 - Refactor sentinel spec
 - Versions use more canonical packaging standards.
-- Configuration file is in /etc/dashcore/sentinel.conf now (but still symlinked
+- Configuration file is in /etc/dashcore/sentinel.conf now (but still symlinked  
   from /var/lib/dashcore/sentinel.conf)
 - Contrib tree is restructured a bit to reduce redundancy.
 - Updated some information in contrib README and other text.
--
+
 * Tue Nov 14 2017 Todd Warner <t0dd@protonmail.com> 1.1.0-1.testing.taw
 - Spec file tweaks so that this builds on Fedora 27. I don't know the real
 - cause of the error, but it is related to debuginfo building. But Sentinel
 - doesn't really need debuginfo packages built, so I am just going to nuke them.
--
+
 * Tue Nov 7 2017 Todd Warner <t0dd@protonmail.com> 1.1.0-0.testing.taw
 - Release 1.1 in support of dashcore 0.12.2
 - 971aa5e5f4d06ba76e76c9c828402af56f28353254c8db15214ac7071d982de5 sentinel-1.1.0.tar.gz
 - d1526682d6103e15f17a3298c76eda00cd0126903accc762ea7c1a3eb806b1f1 dashcore-sentinel-1.1-contrib.tar.gz
--
+
 * Fri Feb 24 2017 Todd Warner <t0dd@protonmail.com> 1.0.1-0.rc.taw
 - Release 1.0.1 - Release Candidate - 4ac8523
 - 407c509cc00706645e899dc6fa5bdc1f6ea156381ab8b84d669ed59c1a070fad  sentinel-1.0.1.tar.gz
--
+
 * Fri Feb 10 2017 Todd Warner <t0dd@protonmail.com> 1.0-2.taw
 - Building debuginfo RPMs as well now.
--
+
 * Mon Feb 06 2017 Todd Warner <t0dd@protonmail.com> 1.0-1.taw
 - Fixed a broken file in the contribs that hosed the sentinel.conf file.
-- 
+
 * Sun Feb 05 2017 Todd Warner <t0dd@protonmail.com> 1.0-0.taw
 - Release 1.0 - d822f41 - in tandem with Dash Core 12.1 release
-- 
 
