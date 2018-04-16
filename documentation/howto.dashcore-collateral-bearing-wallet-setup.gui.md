@@ -62,10 +62,9 @@ Log onto the system as a normal user (not root), install the Dash wallet:
 
 ...if using Fedora:
 
-```
-cd /etc/yum.repos.d/
-sudo curl -O  https://raw.githubusercontent.com/taw00/dashcore-rpm/master/dashcore-fedora.repo
-cd -
+```bash
+sudo rpm --import https://keybase.io/toddwarner/key.asc
+sudo dnf install -y https://raw.githubusercontent.com/taw00/dashcore-rpm/master/toddpkgs-dashcore-repo-1.0-1.fc27.taw0.noarch.rpm
 sudo dnf install -y dashcore-client firewalld
 ```
 
@@ -79,10 +78,9 @@ sudo dnf install -y dashcore-client firewalld
 
 ...if using CentOS or RHEL
 
-```
-cd /etc/yum.repos.d/
-sudo curl -O  https://raw.githubusercontent.com/taw00/dashcore-rpm/master/dashcore-centos.repo
-cd -
+```bash
+sudo rpm --import https://keybase.io/toddwarner/key.asc
+sudo yum install -y https://raw.githubusercontent.com/taw00/dashcore-rpm/master/toddpkgs-dashcore-repo-1.0-1.el7.centos.taw0.noarch.rpm
 sudo yum install -y dashcore-client firewalld
 ```
 <!--

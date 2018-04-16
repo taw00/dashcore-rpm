@@ -245,10 +245,9 @@ trivial. This is how easy it is.
 
 ...if this is Fedora
 
-```
-cd /etc/yum.repos.d/
-sudo curl -O https://raw.githubusercontent.com/taw00/dashcore-rpm/master/dashcore-fedora.repo
-cd -
+```bash
+sudo rpm --import https://keybase.io/toddwarner/key.asc
+sudo dnf install -y https://raw.githubusercontent.com/taw00/dashcore-rpm/master/toddpkgs-dashcore-repo-1.0-1.fc27.taw0.noarch.rpm
 ```
 <!--
 ```
@@ -260,10 +259,9 @@ cd -
 
 ...if this is CentOS or Red Hat Enterprise Linux
 
-```
-cd /etc/yum.repos.d/
-sudo curl -O https://raw.githubusercontent.com/taw00/dashcore-rpm/master/dashcore-centos.repo
-cd -
+```bash
+sudo rpm --import https://keybase.io/toddwarner/key.asc
+sudo yum install -y https://raw.githubusercontent.com/taw00/dashcore-rpm/master/toddpkgs-dashcore-repo-1.0-1.el7.centos.taw0.noarch.rpm
 ```
 
 <!--

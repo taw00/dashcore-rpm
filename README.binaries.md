@@ -11,34 +11,28 @@ their system.
 > What is a Masternode? <https://dashpay.atlassian.net/wiki/display/DOC/Masternode><br />
 > What are these Linuxes? [Fedora](https://getfedora.org/), [CentOS](https://www.centos.org/), [RHEL](https://www.redhat.com/en/technologies/linux-platforms/enterprise-linux)
  
-If you know your way around yum, dnf, and Dash Core, I could reduce this document to two lines...<br />
-**dashcore-fedora.repo:** <https://github.com/taw00/dashcore-rpm/blob/master/dashcore-fedora.repo><br />
-**dashcore-centos.repo:** <https://github.com/taw00/dashcore-rpm/blob/master/dashcore-centos.repo><br />
-Otherwise, keep reading.
-
 ## *"TL;DR ...I just want to install the Dash Core GUI Wallet!"*
 
-Proper packaging and repositories make installation and future upgrades trivial.
+Proper packaging and repositories make installation and future upgrades
+trivial.
 
 Assuming you are logging in as a normal user who has `sudo` priviledges.<br />
 At the terminal command line...
 
-```
+```bash
 # My system is Fedora...
-cd /etc/yum.repos.d/
-sudo curl -O https://raw.githubusercontent.com/taw00/dashcore-rpm/master/dashcore-fedora.repo
-cd -
+sudo rpm --import https://keybase.io/toddwarner/key.asc
+sudo dnf install -y https://raw.githubusercontent.com/taw00/dashcore-rpm/master/toddpkgs-dashcore-repo-1.0-1.fc27.taw0.noarch.rpm
 sudo dnf install -y dashcore-client --refresh
 dash-qt
 ```
 
 ...or if you are running CentOS or RHEL...
 
-```
+```bash
 # My system is CentOS or RHEL
-cd /etc/yum.repos.d/
-sudo curl -O https://raw.githubusercontent.com/taw00/dashcore-rpm/master/dashcore-centos.repo
-cd -
+sudo rpm --import https://keybase.io/toddwarner/key.asc
+sudo yum install -y https://raw.githubusercontent.com/taw00/dashcore-rpm/master/toddpkgs-dashcore-repo-1.0-1.el7.centos.taw0.noarch.rpm
 sudo yum install -y dashcore-client
 dash-qt
 ```
