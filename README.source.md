@@ -275,6 +275,22 @@ perhaps `/var/lib/mock/fedora-27-x86_64/root/builddir/build/RPMS/`. That chroot
 tree gets blown away by default nearly every time you use mock (a good thing),
 so... just fair warning.
 
+If you want to noodle around the mock chroot, (a) add `--no-clean` to your mock commands above and (b) use the built in mock shell to look around...
+```bash
+mock --shell
+# you will be "fakeroot" in that chroot, login as the mockbuild user...
+su -l mockbuild
+ll
+pwd
+```
+
+When you are satisfied with the build, cleanup the mock environment and set it
+back to it's original state...
+```bash
+# As a normal user (not root)
+mock --scrub all
+```
+
 
 **&#11835; Method 2: rpmbuild (works but not recommended)**
 

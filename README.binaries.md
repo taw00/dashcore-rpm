@@ -34,11 +34,38 @@ dash-qt
 sudo rpm --import https://keybase.io/toddwarner/key.asc
 sudo yum install -y https://raw.githubusercontent.com/taw00/dashcore-rpm/master/toddpkgs-dashcore-repo-1.0-1.el7.centos.taw0.noarch.rpm
 sudo yum install -y dashcore-client
-dash-qt
+dash-qt # Or browse your menuing system and look for "Dash"
 ```
 
-**Boom! Done!** You should now see a Dash GUI Wallet open up on your screen and
-reference to it in your desktop menus.
+**Boom! Done!** You should now see a Dash Core Wallet graphical application
+open up on your screen and a reference to it in your desktop menus.
+
+_Note that all configuration/data for the wallet will populate the `~/.dashcore/` directory._
+
+## *"TL;DR ...I have a masternode and I want to manage it via a hardware wallet!"*
+
+Assumption: Your workstation is a Fedora Linux system (supported for Fedora 27 only at the moment).
+
+The commands below assume you are logging in as a normal user who has `sudo`
+priviledges. At the terminal command line...
+
+```bash
+# My system is Fedora...
+sudo rpm --import https://keybase.io/toddwarner/key.asc
+sudo dnf install -y https://raw.githubusercontent.com/taw00/dashcore-rpm/master/toddpkgs-dashcore-repo-1.0-1.fc27.taw0.noarch.rpm
+sudo dnf install -y dash-masternode-tool --refresh
+```
+
+Now browse your menuing system and select the "Dash Masternode Tool" icon.
+**Boom!** You should now see the Dash Masternode Tool graphical application
+open up on your screen. For more information on how to actually USE the tool,
+please visit
+<https://github.com/Bertrand256/dash-masternode-tool/blob/master/README.md>.
+
+_Note that all configuration/data for the Dash Masternode Tool will populate
+the `~/.config/dash-masternode-tool/` directory. This diverges from the default
+used by the raw tool from the Bertrand256 repositories. He uses
+~/DashMasternodeTool/ instead._
 
 ## *"TL;DR ...I want to install a Dash Masternode!"*
 

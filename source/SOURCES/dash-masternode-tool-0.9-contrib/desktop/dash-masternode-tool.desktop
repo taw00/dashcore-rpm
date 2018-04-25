@@ -2,7 +2,7 @@
 Name=Dash Masternode Tool
 Comment=Dash Masternode Tool - manage a Dash Masternode collateralizing hardware wallet
 GenericName=Dash Masternode Tool to manage a Dash Masternode Wallet.
-Exec=/usr/bin/dash-masternode-tool --data-dir .config/dash-masternode-tool
+Exec=/usr/bin/dash-masternode-tool
 Terminal=false
 X-MultipleArgs=false
 Type=Application

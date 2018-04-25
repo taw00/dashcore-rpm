@@ -75,16 +75,16 @@ Summary: Manage a Dash Masternode collateralizing hardware wallet
 # if pre-production - "targetIsProduction 0"
 # 0
 %define pkgrel_preprod 0
-# 0.1
-%define extraver_preprod 1
-# 0.1.testing (pre-prod)
+# 0.2
+%define extraver_preprod 2
+# 0.2.testing (pre-prod)
 %define snapinfo testing
 
 # if sourceIsPrebuilt (rp=repackaged)
-# 1.rp (prod) or 0.1.testing.rp (pre-prod)
+# 1.rp (prod) or 0.2.testing.rp (pre-prod)
 %define snapinfo_rp rp
 
-# 1.[DIST].taw0 or 1.rp.[DIST].taw0 (prod) or 0.1.testing.rp.[DIST].taw0 (pre-prod)
+# 1.[DIST].taw0 or 1.rp.[DIST].taw0 (prod) or 0.2.testing.rp.[DIST].taw0 (pre-prod)
 %define minorbump taw0
 
 # Extracted source tree structure (extracted in .../BUILD)
@@ -113,9 +113,9 @@ Source2: %{srccodetree2}.tar.gz
 #Requires: 
 
 # BuildRequires indicates everything you need to build the RPM
-BuildRequires: python3-devel python3-virtualenv libusbx-devel libudev-devel git
+BuildRequires: python3-devel python3-virtualenv libusbx-devel libudev-devel
 # For debugging purposes...
-BuildRequires: tree vim-enhanced less
+BuildRequires: tree
 # For desktop environments, you want to test the {name}.desktop file (from -contrib)
 BuildRequires: desktop-file-utils 
 
@@ -312,12 +312,12 @@ cd ..
 # Create directories
 install -d %{buildroot}%{_libdir}/%{name}
 install -d -m755 -p %{buildroot}%{_bindir}
-install -d -m755 -p %{buildroot}%{_sbindir}
 install -d %{buildroot}%{_datadir}/applications
+install -d %{buildroot}%{_datadir}/%{name}
 
-# Binaries - a little ugly - symbolic link creation
-ln -s %{_bindir}/%{name} %{buildroot}%{_bindir}/%{_name2}
-install -D -p ./dist/linux/%{_name2} %{buildroot}%{_bindir}/%{name}
+# Binaries
+install -D -m755 -p %{srccontribtree}/dash-masternode-tool %{buildroot}%{_bindir}/%{name}
+install -D -m755 -p ./dist/linux/%{_name2} %{buildroot}%{_datadir}/%{name}/%{_name2}
 
 # Most use LICENSE or COPYING... not LICENSE.txt
 install -D -p %{srccodetree}/LICENSE.txt %{srccodetree}/LICENSE
@@ -370,7 +370,7 @@ desktop-file-validate %{buildroot}%{_datadir}/applications/%{name}.desktop
 
 # Binaries
 %{_bindir}/%{name}
-%{_bindir}/%{_name2}
+%{_datadir}/%{name}/%{_name2}
 
 ## Desktop
 %{_datadir}/icons/*
@@ -419,7 +419,10 @@ desktop-file-validate %{buildroot}%{_datadir}/applications/%{name}.desktop
 
 %changelog
 * Wed Apr 25 2018 Todd Warner <t0dd@protonmail.com> 0.9.18-1.taw0
-- Initial package.
+- Initial build.
+
+* Wed Apr 25 2018 Todd Warner <t0dd@protonmail.com> 0.9.18-0.2.testing.taw0
+- Fix the default config file issues of non-existence and permissions.
 
 * Tue Apr 24 2018 Todd Warner <t0dd@protonmail.com> 0.9.18-0.1.testing.taw0
 - Initial test package.
