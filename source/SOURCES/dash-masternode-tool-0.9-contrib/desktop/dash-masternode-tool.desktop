@@ -1,0 +1,16 @@
+[Desktop Entry]
+Name=Dash Masternode Tool
+Comment=Dash Masternode Tool - manage a Dash Masternode collateralizing hardware wallet
+GenericName=Dash Masternode Tool to manage a Dash Masternode Wallet.
+Exec=/usr/bin/dash-masternode-tool --data-dir .config/dash-masternode-tool
+Terminal=false
+X-MultipleArgs=false
+Type=Application
+# https://www.freedesktop.org/wiki/Specifications/menu-spec/
+# https://specifications.freedesktop.org/menu-spec/1.0/ar01s03.html#desktop-entry-extensions-examples
+# https://specifications.freedesktop.org/menu-spec/1.0/apa.html
+Categories=Network;Finance;X-Cryptocurrency;X-Dash;
+MimeType=text/plain;
+StartupNotify=true
+Icon=dash-masternode-tool
+Name[en_US]=Dash Masternode Tool
