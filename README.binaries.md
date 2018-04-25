@@ -44,7 +44,7 @@ _Note that all configuration/data for the wallet will populate the `~/.dashcore/
 
 ## *"TL;DR ...I have a masternode and I want to manage it via a hardware wallet!"*
 
-#### Install the Dash Masternode Tool on your Fedora Linux workstation
+### Install the _Dash Masternode Tool_ on your Fedora Linux workstation
 
 Assumption: Your workstation is a Fedora Linux system (only supported for
 Fedora 27 at the moment). The commands below also assume you are logging in as
