@@ -21,6 +21,8 @@ The source packages are housed directly within this repository. For more about
 the source packages and build instructions, please visit this link:
 <https://github.com/taw00/dashcore-rpm/blob/master/README.source.md>
 
+## Binary (executable) RPMs
+
 **Binary (executable) RPMs are pre-built for you (from these sources) and are
 available through external repositories that your packaging system can
 understand.** This makes deploying and maintaining Dash on a Fedora, CentOS, or
