@@ -541,7 +541,7 @@ install -D -m755 -p ./contrib/linux/systemd/etc-sysconfig-dashd-scripts_dashd.se
 install -D -m644 -p ./contrib/linux/systemd/usr-lib-systemd-system_dashd.service %{buildroot}%{_unitdir}/dashd.service
 install -D -m644 -p ./contrib/linux/systemd/usr-lib-tmpfiles.d_dashd.conf %{buildroot}%{_tmpfilesdir}/dashd.conf
 # ...logrotate file rules
-install -D -m644 -p ./contrib/linux/logrotate/etc-logrotate.d_dashcore %{buildroot}/etc/logrotate.d/dashcore
+install -D -m644 -p ./contrib/linux/logrotate/etc-logrotate.d_dashcore %{buildroot}%{_sysconfdir}/logrotate.d/dashcore
 # ...ghosting a log file - we have to own the log file
 #install -d %%{buildroot}%%{_sharedstatedir}/dashcore # already created above
 install -d %{buildroot}%{_sharedstatedir}/dashcore/testnet3
@@ -690,7 +690,7 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 # Log files - they don't initially exist, but we still own them
 %ghost %{_sharedstatedir}/dashcore/debug.log
 %ghost %{_sharedstatedir}/dashcore/testnet3/debug.log
-%attr(644,root,root) /etc/logrotate.d/dashcore
+%attr(644,root,root) %{_sysconfdir}/logrotate.d/dashcore
 %{_unitdir}/dashd.service
 %{_prefix}/lib/firewalld/services/dashcore.xml
 %{_prefix}/lib/firewalld/services/dashcore-testnet.xml
