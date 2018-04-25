@@ -1,6 +1,6 @@
 # Dash for Fedora, CentOS, and Red Hat Enterprise Linux<br />_...wallet, node, and masternode_
 
-This document describes what is available for Fedora, CentOS, and Red Hat
+This document describes what is available to Fedora, CentOS, and Red Hat
 Enterprise Linux (RHEL) users seeking natively compiled Dash Core software. This
 document will also guide those users through the process of configuring their
 systems to easily install, verify, and update that software. Once configured,
@@ -27,7 +27,7 @@ sudo dnf install -y dashcore-client --refresh
 dash-qt
 ```
 
-...or if you are running CentOS or RHEL...
+...if using CentOS or RHEL
 
 ```bash
 # My system is CentOS or RHEL
@@ -74,18 +74,18 @@ access. Log into a terminal and do this...
 
 *...if using Fedora:*
 
-```
-cd /etc/yum.repos.d/
-sudo curl -O https://raw.githubusercontent.com/taw00/dashcore-rpm/master/dashcore-fedora.repo
-cd -
+```bash
+# My system is Fedora...
+sudo rpm --import https://keybase.io/toddwarner/key.asc
+sudo dnf install -y https://raw.githubusercontent.com/taw00/dashcore-rpm/master/toddpkgs-dashcore-repo-1.0-1.fc27.taw0.noarch.rpm
 ```
 
 *...if using CentOS or RHEL*
 
-```
-cd /etc/yum.repos.d/
-sudo curl -O https://raw.githubusercontent.com/taw00/dashcore-rpm/master/dashcore-centos.repo
-cd -
+```bash
+# My system is CentOS or RHEL
+sudo rpm --import https://keybase.io/toddwarner/key.asc
+sudo yum install -y https://raw.githubusercontent.com/taw00/dashcore-rpm/master/toddpkgs-dashcore-repo-1.0-1.el7.centos.taw0.noarch.rpm
 ```
 
 That's it! You are now configured to install Dash Core through your package
@@ -166,11 +166,21 @@ dependencies, give you a list, and ask you if you are sure. You will see that
 for `dashcore-server`, `dashcore-utils` will also be installed. It's a needed
 dependency because it contains the `dash-cli` command line utility.
 
-You want the GUI wallet instead? Say "N"o to that installation request, run the
-same command as above, but choose `dashcore-client` instead. YUM and DNF also
-automatically check to see if they packages are digitally signed appropriately
-and if the files are corrupt. Fancy! If you are familiar with `apt-get`, it's
-more or less the same thing if someone built similar packages for Ubuntu.
+**You want the GUI wallet instead?** Say "N"o to that installation request, run the
+same command as above, but choose `dashcore-client` instead.
+
+Have you set up a masternode and **manage your wallet via a hardware wallet
+(Trezor, Ledger, or Keepkey)?** Say "N"o to that installation request, run the
+same command as above, but choose `dash-masternode-tool` install. _Note that
+managing your masternode via a hardware wallet using `dash-masternode-tool` is
+beyond the scope of this document. Use this repo to install it, and read more
+how to use it via
+<https://github.com/Bertrand256/dash-masternode-tool/blob/master/README.md>._
+
+YUM and DNF also automatically check to see if they packages are digitally
+signed appropriately and if the files are corrupt. Fancy! If you are familiar
+with `apt-get`, it's more or less the same thing if someone built similar
+packages for Ubuntu.
 
 **Future upgrades...**
 

@@ -11,7 +11,14 @@ For a general overview of Dash Masternode setup, please refer to the overview do
 [here](https://github.com/taw00/dashcore-rpm/blob/master/documentation/README.md).
 
 This document chronicals the first step in the process: Setting up a
-collateral-bearing dash wallet. This document describes one way of doing it. There are other ways, but we will focus on simplicity here.
+collateral-bearing dash wallet using the Dash Core reference software. This
+document describes one way of doing it. There are other ways, but we will focus
+on simplicity here.
+
+> If you wish to use a hardware wallet instead (recommended)
+and you are running Fedora Linux, install the `dash-masternode-tool` instead on
+your workstation, and follow the guidelines found here:
+<https://github.com/Bertrand256/dash-masternode-tool/blob/master/README.md>.
 
 Once you complete all the steps in this document, you may continue with the to the masternode setup process. Refer to the masternode setup guide referenced in the overview document above.
 
