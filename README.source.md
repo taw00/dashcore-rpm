@@ -1,35 +1,34 @@
 # Dash for Fedora, CentOS, and Red Hat Enterprise Linux
 
 The most current source packages can be found in this directory:
-<https://github.com/taw00/dashcore-rpm/tree/master/source/packages>
+<https://github.com/taw00/dashcore-rpm/tree/master/source/SRPMS>
 
-From these source packages, we have successfully built Dash Core for
-Fedora versions 26, 27 and CentOS 7 (and therefore RHEL7).
+From these source packages, we have successfully built Dash Core for Fedora
+versions 26, 27 and CentOS 7 (and therefore RHEL7). Dash Masternode Tool has
+been successfully built for Fedora version 27 x86\_64 (it's a desktop
+application).
 
 The original components used to build these packages come from:
 
 * Tagged release builds / source archives:
   - Dash <https://github.com/dashpay/dash/releases>
   - Sentinel <https://github.com/dashpay/sentinel/releases>
+  - Dash Masternode Tool  <https://github.com/Bertrand256/dash-masternode-tool/releases>
 
 * Directly from the build system and non-tagged repositories:
   - Dash <https://bamboo.dash.org/browse/DASHL-DEV/latestSuccessful>
   - Sentinel <https://github.com/dashpay/sentinel>
+  - Dash Masternode Tool  <https://github.com/Bertrand256/dash-masternode-tool>
 
-Each RPM contains my own contributed imagery and configuration. The latest
-versions can be found here:
+Each RPM contains my own contributed imagery and configuration. If you wish to
+browse my contributions, browse to this link and explore the directories ending
+in `-contrib`:
 
-<https://github.com/taw00/dashcore-rpm/tree/master/source/contribs/>
-
-<!-- * Dash 12.2 Contrib: <https://github.com/taw00/dashcore-rpm/tree/master/source/contribs/source-dashcore-0.12.2-contrib> -->
-* Dash 12.2 Contrib: <https://github.com/taw00/dashcore-rpm/tree/master/source/SOURCES/source-dashcore-0.12.2-contrib>
-* Sentinel 1.0 Contrib: <https://github.com/taw00/dashcore-rpm/tree/master/source/SOURCES/source-dashcore-sentinel-1.0-contrib>
-
+<https://github.com/taw00/dashcore-rpm/tree/master/source/SOURCES/>
 
 ----
 
-**This repository houses the latest stable (and experimental) releases of
-Dash.** With these SRPMs one should be able to build binary RPMs for your
+With these SRPMs one should be able to build binary RPMs for your
 specific linux variety and architecture.
 
 A source RPM (SRPM or .src.rpm) nicely packages up the source code of a
@@ -40,17 +39,16 @@ binary runnable RPM packages associated to the Dash project.
 
 Important notes:
 
-- All source is organized in directories named just like rpmbuild organizes
-  things: `SOURCES/`, `SRPMS/`, `SPECS/`. The RPMS are housed in the COPR (Fedora
-  Project) repositories and not here (see repo configuration in the installation
-  section).
+- All source is organized in directories named just like `rpmbuild` organizes
+  things: `SOURCES/`, `SRPMS/`, `SPECS/`. The finalized RPMS are housed in the
+  COPR repositories (Fedora Project) and not here (see repo configuration in the
+  installation section).
 - In this github repo, everything directly in the `source/` directory is
   **stable** and, of course, everything found in the `source/testing/` is
   experimental.
-- Source archives named `dashcore-<version>-contrib.tar.gz` and
-  `dashcore-sentinel-<version>-contrib.tar.gz` are my contributions and contain
-  desktop icons and configuration; firewalld, systemd, and logrotation
-  configuration; and more.
+- Source archives with filenames ending in `-contrib.tar.gz` are my
+  contributions and contain desktop icons and configuration; firewalld,
+  systemd, and logrotation configuration; and more.
 
 ```bash
 dashcore-rpm
@@ -60,10 +58,6 @@ dashcore-rpm
     │   └── archive
     ├── SPECS     ← stable rpm spec files
     │   └── archive
-    ├── archive
-    ├── archive
-    ├── source-dashcore-<version>-contrib   ← icons, extra configuration, etc.
-    ├── source-dashcore-sentinel-<version>-contrib   ← extra configuration
     └── testing
         ├── SOURCES   ← experimental code and contrib archives
         ├── SRPMS     ← test src.rpm packages
@@ -146,24 +140,34 @@ usually.
 
 **Configure mock**
 
-Edit `~/.config/mock.cfg` and configured it similarly to this (this is what I
-have uncommented and configured in mine.
+Copy `/etc/mock/site-defaults.cfg` to `~/.config/mock.cfg`
+```
+mkdir -p ~/.config
+cp -i /etc/mock/site-defaults.cfg ~/.config/mock.cfg
+```
+and then edit `~/.config/mock.cfg` and configure it similarly to this (this is
+what I have uncommented and configured in mine.
 
 ```bash
 # ~/.config/mock.cfg
 config_opts['basedir'] = '/var/lib/mock/'
 config_opts['cache_topdir'] = '/var/cache/mock'
 config_opts['rpmbuild_networking'] = True
-config_opts['bootstrap_chroot_additional_packages'] = []
 config_opts['bootstrap_module_enable'] = []
 config_opts['bootstrap_module_install'] = []
+config_opts['environment']['LANG'] = os.environ.setdefault('LANG', 'en_US.UTF-8')
+# This is something I do. I use 'tree', 'vim', 'less' in my testing
+config_opts['chroot_additional_packages'] = ['tree', 'vim-enhanced', 'less']
+# I turn off "cleanup" when doing a lot of testing.
+#config_opts['cleanup_on_success'] = 0
+#config_opts['cleanup_on_failure'] = 0
 ```
 
 
 #### [2] Download a source RPM of your choosing
 
 For example, at the time of this writing the latest Dash src.rpm of version
-`0.12.2.3`, is considered "stable". For the purposes of this document, we are
+`0.12.2`, is considered "stable". For the purposes of this document, we are
 going use version-release `0.12.2.3-1.taw` as our example. Download the lastest
 version that is specific to your linux distribution Fedora, CentOS, or RHEL. If
 you are attempting to build in a different environment, download the source RPM
@@ -171,32 +175,13 @@ that as closely matches your platform and experiment away.
 
 Note: Future builds (12.3) are going to move towards a more "correct"
 convention for version-release nomenclature. They will look something like
-`0.12.3.0-0.testing.fc27.taw0` and `0.12.3.0-1.fc27.taw0`
+`0.12.3.0-0.1.testing.fc27.taw0` and `0.12.3.0-1.fc27.taw0`
 
 #### [3] Verify the RPM has not been tampered with
 
-This is done in one of two ways: (1) with an sha256sum hash check and (2) with
-a GPG signature check. Assuming the source RPM is digitally signed, GPG
-signature verification is vastly more secure, but more complicated.
+This is done with a GPG signature check.
 
-**Verification via sha256sum**
-
-*Note, sha256 hashes are provided within this github repository.*
-
-From the commandline...
-
-```bash
-sha256sum dashcore-0.12.2.?-?.taw.*.src.rpm
-```
-
-The result should match the hash for the RPM your downloaded, otherwise the
-download was complete or the RPM is tampered with or I screwed something up in
-this document.
-
-**Verification of the source RPMs digital signature**
-
-If I built these packages correctly, their appropriate sha256 hash should be
-posted within the sha256sum.txt files included in this repository _and_ they should pass a gpg digital signature check signed by my public key.
+**Verification of the source RPM's digital signature**
 
 (1) Import my GPG key into your RPM keyring if you have not already done so.
 You have to do this as the root user.
@@ -208,8 +193,8 @@ sudo rpm --import https://keybase.io/toddwarner/key.asc
 
 (2) Check the signature
 
-`$ rpm --checksig -v dashcore-0.12.2.?-?.taw.*.src.rpm` ...or...
-`$ rpm -Kv dashcore-0.12.2.?-?.taw.*.src.rpm`
+`$ rpm --checksig -v dashcore-0.12.2.*.src.rpm` ...or...
+`$ rpm -Kv dashcore-0.12.2.*.src.rpm`
 
 You should see something like: `dashcore-0.12.2.3-1.taw.fc27.src.rpm: rsa sha1 (md5) pgp md5 OK`<br />
 *Notice the "pgp" and the "OK"*
@@ -265,7 +250,7 @@ life._
 
 **&#11835; Method 1: mock (recommended)**
 
-Repackage the source rpm.
+Reconstruct the source rpm.
 
 ```bash
 # As a normal user (not root)
@@ -293,8 +278,7 @@ so... just fair warning.
 
 **&#11835; Method 2: rpmbuild (works but not recommended)**
 
-Actually building the binary RPMs is as easy as running the rpmbuild command
-against a specfile. For example:
+With this method, you use `rpmbuild` to execute the process. For example:
 
 ```bash
 # As a normal user (not root)
