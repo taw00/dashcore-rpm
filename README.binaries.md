@@ -291,8 +291,8 @@ you know what you are doing, I do not recommend you enable that repository.
   masternode owners to manage their masternode collateral from a hardware
   wallet like Trezor, Keepkey, or Ledger.
 
-> Note that all "dashcore" applications are representative Dash Core reference
-  implementations of their respective areas of functionality.
+  _Note that all "dashcore" applications are representative Dash Core reference
+  implementations of their respective areas of functionality._
 
 * **dashcore-client** -- dash-qt, a graphical desktop wallet application and
   full node.
