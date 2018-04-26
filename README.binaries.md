@@ -42,6 +42,8 @@ open up on your screen and a reference to it in your desktop menus.
 
 _Note that all configuration/data for the wallet will populate the `~/.dashcore/` directory._
 
+&nbsp;
+
 ## *"TL;DR ...I have a masternode and I want to manage it via a hardware wallet!"*
 
 ### Install the _Dash Masternode Tool_ on your Fedora Linux workstation
@@ -70,7 +72,9 @@ used by the raw tool from the Bertrand256 repositories. He uses
 ~/DashMasternodeTool/ instead which may be fine for a MS Windows system, but
 it's just not very linuxy._
 
-> _**WARNING:** The data directory (see above) contains HIGHLY sensitive information. The Dash Masternode Tool as configured here tightens up the default permissions, but you should really perhaps backing up the ~/.config/dash-masternode-tool directory to a USB stick or something and deleting it locally. If you are confident that you can keep your system secure, then, by all means, leave it as is._
+> _**WARNING:** The data directory (see above) contains HIGHLY sensitive information. The Dash Masternode Tool as configured here tightens up the default permissions, but you should really perhaps consider backing up the ~/.config/dash-masternode-tool directory to a USB stick or something and deleting it locally. If you are confident that you can keep your system secure (you are probably being over-confident), then, by all means, leave it as is._
+
+&nbsp;
 
 ## *"TL;DR ...I want to install a Dash Masternode!"*
 

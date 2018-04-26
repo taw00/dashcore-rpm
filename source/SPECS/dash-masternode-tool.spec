@@ -4,11 +4,12 @@
 # dash-masternode-tool (aka DashMasternodeTool).
 #
 # A Dash Masternode is a Dash cryptocurrency full node with specialized
-# features that enable it to operate as a member of the 2nd tier of functionality
-# on the Dash Network. Dash Masternode operators collateralize a masternode with
-# 1000 dash in a seperate wallet in order to prove ownership. This 1000 dash must
-# be held in a full-node wallet (Dash Core reference wallet) or in a supported
-# hardware wallet --supported the DashMasternodeTool software.
+# features that enable it to operate as a member of the 2nd tier of
+# functionality on the Dash Network. Dash Masternode operators collateralize a
+# masternode with 1000 dash in a seperate wallet in order to prove ownership.
+# This 1000 dash must be held in a full-node wallet (Dash Core reference
+# wallet) or in a supported hardware wallet --supported the DashMasternodeTool
+# software.
 #
 # Therefore if Masternode operators wish to hold their 1000 dash in a hardware
 # wallet, they must use the DashMastenodeTool software in order to manage the
@@ -40,11 +41,8 @@
 # * https://fedoraproject.org/wiki/Licensing:Main
 # * https://fedoraproject.org/wiki/Licensing:Main?rd=Licensing
 #
-# A note about specfile comments:
-# The percent sign + {variable} is a semantic for macro expansion. They are
-# expanded even in comments. To escape them you double up the sign. Therefore
-# all macro values will have their percent signs doubled in comments, example
-# %%{variable}, but in practice they will only be used singularly.
+# A note about specfile comments: commented out macros have to have their %'s
+# doubled up in comments in order to have them properly escaped.
 #
 # ---
 #
@@ -61,87 +59,26 @@ Summary: Manage a Dash Masternode collateralizing hardware wallet
 %define targetIsProduction 1
 %define includeSnapinfo 0
 %define includeMinorbump 1
-%define sourceIsPrebuilt 0
 
 # VERSION
 %define vermajor 0.9
 %define verminor 18
+Version: %{vermajor}.%{verminor}
 
 # RELEASE
 # if production - "targetIsProduction 1"
-# 1
-%define pkgrel_prod 1
+%define pkgrel_prod 2
 
 # if pre-production - "targetIsProduction 0"
-# 0
-%define pkgrel_preprod 0
-# 0.2
-%define extraver_preprod 2
-# 0.2.testing (pre-prod)
+# eg. 1.1.testing
+%define pkgrel_preprod 1
+%define extraver_preprod 1
 %define snapinfo testing
 
-# if sourceIsPrebuilt (rp=repackaged)
-# 1.rp (prod) or 0.2.testing.rp (pre-prod)
-%define snapinfo_rp rp
-
-# 1.[DIST].taw0 or 1.rp.[DIST].taw0 (prod) or 0.2.testing.rp.[DIST].taw0 (pre-prod)
+# if includeMinorbump
 %define minorbump taw0
 
-# Extracted source tree structure (extracted in .../BUILD)
-#   srcroot               {name}-0.9
-#      \_srccodetree        \_{name}-0.9.18
-#      \_srccontribtree     \_{name}-0.9-contrib
-%define srcroot %{name}-%{vermajor}
-%define srccodetree %{name}-%{version}
-%define srccodetree2 btchip-python-0.1.21
-%define srccontribtree %{name}-%{vermajor}-contrib
-
-# You can/should use URLs for sources as well. That is beyond the scope of
-# this example.
-# https://fedoraproject.org/wiki/Packaging:SourceURL
-# dash-masternode-tool-0.9.18
-Source0: %{srccodetree}.tar.gz
-#Source0: https://github.com/Bertrand256/dash-masternode-tool/archive/v0.9.18.tar.gz
-# dash-masternode-tool-0.9-contrib
-Source1: %{srccontribtree}.tar.gz
-# btchip-python-0.1.21
-Source2: %{srccodetree2}.tar.gz
-#Source2: https://github.com/Bertrand256/btchip-python/archive/v0.1.21.tar.gz
-
-# Most of the time, the build system can figure out the requires.
-# But if you need something specific...
-#Requires: 
-
-# BuildRequires indicates everything you need to build the RPM
-BuildRequires: python3-devel python3-virtualenv libusbx-devel libudev-devel
-# For debugging purposes...
-BuildRequires: tree
-# For desktop environments, you want to test the {name}.desktop file (from -contrib)
-BuildRequires: desktop-file-utils 
-
-# CentOS/RHEL/EPEL can't do "Suggests:"
-%if 0%{?fedora:1}
-#Suggests:
-%endif
-
-# obsolete fictitious previous version of package after a rename
-#Provides: spec-pattern = 0.9
-#Obsoletes: spec-pattern < 0.9
-
-License: MIT
-URL: https://github.com/taw00/dashcore-rpm
-# Group is deprecated. Don't use it. Left here as a reminder...
-# https://fedoraproject.org/wiki/RPMGroups 
-#Group: Unspecified
-
-#
-# Build the version string (don't edit this)
-#
-Version: %{vermajor}.%{verminor}
-
-#
-# Build the release string (don't edit this)
-#
+# Building the release string (don't edit this)...
 
 %if %{targetIsProduction}
   %if %{includeSnapinfo}
@@ -168,9 +105,6 @@ Version: %{vermajor}.%{verminor}
 %undefine _relbuilder_pt2
 %if ! %{includeSnapinfo}
   %undefine snapinfo
-%endif
-%if ! %{sourceIsPrebuilt}
-  %undefine snapinfo_rp
 %endif
 %if 0%{?snapinfo_rp:1}
   %if 0%{?snapinfo:1}
@@ -207,6 +141,55 @@ Version: %{vermajor}.%{verminor}
 Release: %{_release}
 # ----------- end of release building section
 
+
+# Extracted source tree structure (extracted in .../BUILD)
+#   srcroot               dash-masternode-tool-0.9
+#      \_srccodetree        \_dash-masternode-tool-0.9.18
+#      \_srccodetree2       \_btchip-python-0.1.21
+#      \_srccontribtree     \_dash-masternode-tool-0.9-contrib
+%define srcroot %{name}-%{vermajor}
+%define srccodetree %{name}-%{version}
+%define srccodetree2 btchip-python-0.1.26
+%define srccontribtree %{name}-%{vermajor}-contrib
+
+# You should use URLs for sources.
+# https://fedoraproject.org/wiki/Packaging:SourceURL
+# dash-masternode-tool-0.9.18
+Source0: %{srccodetree}.tar.gz
+#Source0: https://github.com/Bertrand256/dash-masternode-tool/archive/v0.9.18.tar.gz
+# dash-masternode-tool-0.9-contrib
+Source1: %{srccontribtree}.tar.gz
+# btchip-python-0.1.21
+Source2: %{srccodetree2}.tar.gz
+#Source2: https://github.com/Bertrand256/btchip-python/archive/v0.1.21.tar.gz
+
+# Most of the time, the build system can figure out the requires.
+# But if you need something specific...
+#Requires:
+
+# BuildRequires indicates everything you need to build the RPM
+BuildRequires: python3-devel python3-virtualenv libusbx-devel libudev-devel
+# For debugging purposes...
+BuildRequires: tree
+# For desktop environments, you want to test the {name}.desktop file (from -contrib)
+BuildRequires: desktop-file-utils
+
+# CentOS/RHEL/EPEL can't do "Suggests:"
+%if 0%{?fedora:1}
+#Suggests:
+%endif
+
+# obsolete fictitious previous version of package after a rename
+#Provides: spec-pattern = 0.9
+#Obsoletes: spec-pattern < 0.9
+
+License: MIT
+URL: https://github.com/taw00/dashcore-rpm
+# Group is deprecated. Don't use it. Left here as a reminder...
+# https://fedoraproject.org/wiki/RPMGroups
+#Group: Unspecified
+
+
 # If you comment out "debug_package" RPM will create additional RPMs that can
 # be used for debugging purposes. I am not an expert at this, BUT ".build_ids"
 # are associated to debug packages, and I have lately run into packaging
@@ -230,8 +213,10 @@ manage their Masternodes from a collateralize-holding hardware wallet.
 
 This tool will allow you to..
 
-* Send the start masternode command if the collateral is controlled by a hardware wallet
-* Transfer masternode earnings safely, without touching the 1000 Dash funding transaction
+* Send the start masternode command if the collateral is controlled by a
+  hardware wallet
+* Transfer masternode earnings safely, without touching the 1000 Dash
+  funding transaction
 * Sign messages with a hardware wallet
 * Vote on proposals
 * Initialize/recover hardware wallets seeds
@@ -242,7 +227,7 @@ Supported hardware wallets: Trezor (model One and T), KeepKey, Ledger Nano S
 
 
 %prep
-# Prep section starts us in directory .../BUILD (_builddir)
+# Prep section starts us in directory .../BUILD -i.e.- {_builddir}
 #
 # I create a root dir and place the source and contribution trees under it.
 # Extracted source tree structure (extracted in .../BUILD)
@@ -275,7 +260,7 @@ cd ../.. ; /usr/bin/tree -df -L 2 BUILD ; cd -
 
 
 %build
-# This section starts us in directory <_builddir>/<srcroot>
+# This section starts us in directory {_builddir}/{srcroot}
 
 ## Man Pages - not used as of yet
 #gzip %%{buildroot}%%{_mandir}/man1/*.1
@@ -292,7 +277,7 @@ cd ..
 #   {buildroot}, therefore mirroring the final directory and file structure of
 #   an installed RPM.
 #
-# This section starts us in directory <_builddir>/<srcroot>
+# This section starts us in directory {_builddir}/{srcroot}
 
 # Cheatsheet for built-in RPM macros:
 #   _bindir = /usr/bin
@@ -316,8 +301,9 @@ install -d %{buildroot}%{_datadir}/applications
 install -d %{buildroot}%{_datadir}/%{name}
 
 # Binaries
-install -D -m755 -p %{srccontribtree}/dash-masternode-tool %{buildroot}%{_bindir}/%{name}
+install -D -m755 -p %{srccontribtree}/desktop/%{name}-desktop-script.sh %{buildroot}%{_datadir}/%{name}/
 install -D -m755 -p ./dist/linux/%{_name2} %{buildroot}%{_datadir}/%{name}/%{_name2}
+ln -s %{_datadir}/%{name}/%{_name2} %{buildroot}%{_bindir}/%{name}
 
 # Most use LICENSE or COPYING... not LICENSE.txt
 install -D -p %{srccodetree}/LICENSE.txt %{srccodetree}/LICENSE
@@ -371,6 +357,7 @@ desktop-file-validate %{buildroot}%{_datadir}/applications/%{name}.desktop
 # Binaries
 %{_bindir}/%{name}
 %{_datadir}/%{name}/%{_name2}
+%{_datadir}/%{name}/%{name}-desktop-script.sh
 
 ## Desktop
 %{_datadir}/icons/*
@@ -418,6 +405,16 @@ desktop-file-validate %{buildroot}%{_datadir}/applications/%{name}.desktop
 
 
 %changelog
+* Thu Apr 26 2018 Todd Warner <t0dd@protonmail.com> 0.9.18-2.taw0
+- Updated build.
+
+* Thu Apr 26 2018 Todd Warner <t0dd@protonmail.com> 0.9.18-1.1.testing.taw0
+- specfile: cleaned up the version and release building logic
+- code: updated btchip-python source
+- Pushed the desktop script into /usr/share/ and added a symlink to the actual  
+  binary so that a user can call dmt from the commandline and change the  
+  default datadir.
+
 * Wed Apr 25 2018 Todd Warner <t0dd@protonmail.com> 0.9.18-1.taw0
 - Initial build.
 
