@@ -174,4 +174,3 @@ rules are rechecked (see `howto.secure-your-dash-masternode.md`).
 ### Good luck! Comments and Feedback...
 
 Got a dash of feedback? Send it my way: <https://keybase.io/toddwarner><br />
-And of course, donations are welcome: [XyxQq4qgp9B53QWQgSqSxJb4xddhzk5Zhh](dash:XyxQq4qgp9B53QWQgSqSxJb4xddhzk5Zhh)

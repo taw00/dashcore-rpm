@@ -365,4 +365,3 @@ Those steps are covered in another set of documents
 ### Good luck! Comments and Feedback...
 
 Got a dash of feedback? Send it my way: <https://keybase.io/toddwarner>
-And of course, donations are welcome: [XyxQq4qgp9B53QWQgSqSxJb4xddhzk5Zhh](dash:XyxQq4qgp9B53QWQgSqSxJb4xddhzk5Zhh)

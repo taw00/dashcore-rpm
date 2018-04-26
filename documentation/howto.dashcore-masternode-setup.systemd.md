@@ -657,7 +657,6 @@ If all went well, you have a working Dash Masternode! Congratulations. I hope
 this was helpful.
 
 Got a dash of feedback? *...har har...* Send it my way <https://keybase.io/toddwarner>    
-And of course, donations are welcome: [XyxQq4qgp9B53QWQgSqSxJb4xddhzk5Zhh](dash:XyxQq4qgp9B53QWQgSqSxJb4xddhzk5Zhh)
 
 &nbsp;
 
@@ -741,4 +740,3 @@ To learn more, follow this link: <https://github.com/taw00/howto/blob/master/how
 ### Good luck! Comments and Feedback...
 
 Got a dash of feedback? Send it my way: <https://keybase.io/toddwarner>
-And of course, donations are welcome: [XyxQq4qgp9B53QWQgSqSxJb4xddhzk5Zhh](dash:XyxQq4qgp9B53QWQgSqSxJb4xddhzk5Zhh)

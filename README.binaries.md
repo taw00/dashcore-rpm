@@ -327,5 +327,4 @@ you know what you are doing, I do not recommend you enable that repository.
 #### Good luck!
 
 Got a dash of feedback? Send it my way: <https://keybase.io/toddwarner>
-And of course, donations welcome: [XyxQq4qgp9B53QWQgSqSxJb4xddhzk5Zhh](dash:XyxQq4qgp9B53QWQgSqSxJb4xddhzk5Zhh)
 

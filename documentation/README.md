@@ -116,7 +116,6 @@ sums of money. Dash carefully!
 ### Good luck! Comments and Feedback...
 
 Got a dash of feedback? *...har har...* Send it my way <https://keybase.io/toddwarner>    
-And of course, donations welcome: <a href="dash:XyxQq4qgp9B53QWQgSqSxJb4xddhzk5Zhh">XyxQq4qgp9B53QWQgSqSxJb4xddhzk5Zhh</a>
 
 All documents in this directory tree are
 [CC-BY-SA](https://github.com/taw00/dashcore-rpm/blob/master/documentation/LICENSE.cc-by-sa.md)

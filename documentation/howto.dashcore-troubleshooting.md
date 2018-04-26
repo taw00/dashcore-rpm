@@ -107,4 +107,4 @@ sudo -u dashcore watch -n15 "dash-cli -conf=/etc/dashcore/dash.conf masternode l
 
 ### That's all for the moment. Stay tuned. -t0dd
 
-Comments, questions, donations - <https://keybase.io/toddwarner>
+Got a dash of feedback? Send it my way: <https://keybase.io/toddwarner>

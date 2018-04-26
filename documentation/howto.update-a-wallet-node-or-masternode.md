@@ -75,4 +75,4 @@ Done!
 That's it. That's the power of of good packaging, permissions, and
 integration with the operating system.
 
-Comments, questions, donations - <https://keybase.io/toddwarner>
+Got a dash of feedback? Send it my way: <https://keybase.io/toddwarner>
