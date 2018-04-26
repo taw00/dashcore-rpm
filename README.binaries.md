@@ -283,7 +283,19 @@ you know what you are doing, I do not recommend you enable that repository.
 
 #### Q: What are all these packages?
 
-* **dashcore-client** -- The dash-qt wallet and full node.
+* **toddpkgs-dashcore-repo** -- this package enables automation of installation
+  and update of all the packages listed below via dnf or yum repository
+  configuration.
+
+* **dash-masternode-tool** -- A graphical desktop application that enables
+  masternode owners to manage their masternode collateral from a hardware
+  wallet like Trezor, Keepkey, or Ledger.
+
+Note that all "dashcore" applications are representative Dash Core reference
+implementations of their respective areas of functionality.
+
+* **dashcore-client** -- dash-qt, a graphical desktop wallet application and
+  full node.
 
 * **dashcore-utils** -- dash-cli, a utility to communicate with and control a
   Dash server via its RPC protocol, and dash-tx, a utility to create custom Dash
@@ -305,7 +317,7 @@ you know what you are doing, I do not recommend you enable that repository.
   SRPM. You want to build binaries for your RPM-based linux distribution? Use
   this source RPM to do so easily.
 
-* **dashcore-debuginfo** -- debug information for package dash. Debug
+* **dashcore-debuginfo** -- debug information for package dashcore. Debug
   information is useful when developing applications that use this package or
   when debugging this package. (*99.999% of you do not need to install this*)
 
