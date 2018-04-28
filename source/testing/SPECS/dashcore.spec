@@ -23,35 +23,20 @@
 # Enjoy. -t0dd
 
 # flip-flop these depending on the archive nomenclature/structure being used (github or bamboo)
-%undefine bamboo_build_nomenclature
 %define bamboo_build_nomenclature 1
+%undefine bamboo_build_nomenclature
 
 # Package (RPM) name-version-release.
 # <name>-<vermajor.<verminor>-<pkgrel>[.<extraver>][.<snapinfo>].DIST[.<minorbump>]
-# name-version-release
-# ...where release is...
-# <pkgrel>[.<extraver>][.<snapinfo>]%%{?dist}[.<minorbump>]
-# ...for example...
-# name: dashcore
-# version: 0.12.3.0 (major=0.12.3 and minor=0)
-# release: 0.2.testing.fc27.taw0 (major=0, minorsnap=1.testing, bump=taw0)
-#   _relmajor (pkgrel): 0 should never be 0 if not testing
-#   _relminorsnap (extraver.snapinfo): 2.testing
-#     Testing --> GA looks like this: 0.2.testing --> 1
-#   dist macro: .fc27 -- includes the decimal point
-#   minorbump: initials+decimal - taw or taw0 or taw1 or etc.
-# https://fedoraproject.org/wiki/Packaging:Versioning
-# https://fedoraproject.org/wiki/Package_Versioning_Examples
 
 %define _name_d dash
 %define _name_dc dashcore
 Name: %{_name_dc}
-Summary: Dash - Digital Cash - Peer-to-peer, privacy-centric, digital currency
+Summary: Peer-to-peer, privacy-centric, digital currency
 
 %define targetIsProduction 0
 %define includeSnapinfo 1
 %define includeMinorbump 1
-%define sourceIsPrebuilt 0
 
 # VERSION
 %define vermajor 0.12.3
@@ -60,22 +45,15 @@ Version: %{vermajor}.%{verminor}
 
 # RELEASE
 # if production - "targetIsProduction 1"
-# 1
 %define pkgrel_prod 1
 
 # if pre-production - "targetIsProduction 0"
-# 0
+# eg. 0.3.testing.201804-28
 %define pkgrel_preprod 0
-# 0.2
-%define extraver_preprod 2
-# 0.2.testing (pre-prod)
-%define snapinfo testing
+%define extraver_preprod 3
+%define snapinfo testing.20180428
 
-# if sourceIsPrebuilt (rp=repackaged)
-# 1.rp (prod) or 0.2.testing.rp (pre-prod)
-%define snapinfo_rp rp
-
-# 1.[DIST].taw0 or 1.rp.[DIST].taw0 (prod) or 0.2.testing.rp.[DIST].taw0 (pre-prod)
+# if includeMinorbump
 %define minorbump taw0
 
 #
@@ -108,7 +86,11 @@ Version: %{vermajor}.%{verminor}
 %if ! %{includeSnapinfo}
   %undefine snapinfo
 %endif
-%if ! %{sourceIsPrebuilt}
+%if 0%{?sourceIsPrebuilt:1}
+  %if ! %{sourceIsPrebuilt}
+    %undefine snapinfo_rp
+  %endif
+%else
   %undefine snapinfo_rp
 %endif
 %if 0%{?snapinfo_rp:1}
@@ -170,27 +152,31 @@ Release: %{_release}
 
 # You should use URLs for sources.
 # https://fedoraproject.org/wiki/Packaging:SourceURL
-# dash-0.12.3.0 (bamboo) or dashcore-0.12.3 (github)
+# dash-0.12.3.0 (github) or dashcore-0.12.3 (bamboo)
 Source0: %{srccodetree}.tar.gz
 # dashcore-0.12.3-contrib
 Source1: %{srccontribtree}.tar.gz
 
-
 %global selinux_variants mls strict targeted
 %define testing_extras 0
 
-# We usually want a debug package available and built. If you DO NOT want
-# them built, un-double the %%'s and uncomment the line.
+# If you comment out "debug_package" RPM will create additional RPMs that can
+# be used for debugging purposes. I am not an expert at this, BUT ".build_ids"
+# are associated to debug packages, and I have lately run into packaging
+# conflicts because of them. This is a topic I can't share a whole lot of
+# wisdom about, but for now... I turn all that off.
+#
+# How debug info and build_ids managed (I only halfway understand this):
+# https://github.com/rpm-software-management/rpm/blob/master/macros.in
 #%%define debug_package %%{nil}
+%define _unique_build_ids 1
+%define _build_id_links alldebug
 
 # https://fedoraproject.org/wiki/Changes/Harden_All_Packages
-%define _hardened_build 0
+%define _hardened_build 1
 
 License: MIT
 URL: http://dash.org/
-# Group is deprecated. Don't use it. Left here as a reminder...
-# https://fedoraproject.org/wiki/RPMGroups 
-#Group: Unspecified
 
 BuildRequires: gcc-c++
 BuildRequires: qt5-qtbase-devel qt5-linguist
@@ -198,7 +184,12 @@ BuildRequires: qrencode-devel miniupnpc-devel protobuf-devel openssl-devel
 BuildRequires: desktop-file-utils autoconf automake
 BuildRequires: boost-devel libdb4-cxx-devel libevent-devel
 BuildRequires: libtool java
+
 #BuildRequires: checkpolicy selinux-policy-devel selinux-policy-doc
+
+# I will often add tree, vim-enhanced, and less for mock environment
+# introspection
+#BuildRequires: tree vim-enhanced less
 
 # I don't think this check is needed anymore -comment out for now. -t0dd
 ## ZeroMQ not testable yet on RHEL due to lack of python3-zmq so
@@ -221,13 +212,13 @@ BuildRequires: openssl-compat-dashcore-libs
 
 # dashcore-client
 %package client
-Summary: Dash - Digital Cash - Peer-to-peer, privacy-centric, digital currency (dash-qt GUI client)
+Summary: Peer-to-peer; privacy-centric; digital currency, protocol, and platform for payments and dApps (dash-qt GUI reference client)
 Requires: dashcore-utils = %{version}-%{release}
 
 
 # dashcore-server
 %package server
-Summary: Dash - Digital Cash - Peer-to-peer, privacy-centric, digital currency (dashd server)
+Summary: Peer-to-peer; privacy-centric; digital currency, protocol, and platform for payments and dApps (dashd reference server)
 Requires(post):	systemd
 Requires(preun): systemd
 Requires(postun): systemd
@@ -244,24 +235,25 @@ Requires: dashcore-sentinel
 
 # dashcore-libs
 %package libs
-Summary: Dash - Digital Cash - Peer-to-peer, privacy-centric, digital currency (consensus libraries)
+Summary: Peer-to-peer; privacy-centric; digital currency, protocol, and platform for payments and dApps (consensus libraries)
 
 
 # dashcore-devel
 %package devel
-Summary: Dash - Digital Cash - Peer-to-peer, privacy-centric, digital currency (dev libraries and headers)
+Summary: Peer-to-peer; privacy-centric; digital currency, protocol, and platform for payments and dApps (dev libraries and headers)
 Requires: dashcore-libs = %{version}-%{release}
 
 
 # dashcore-utils
 %package utils
-Summary: Dash - Digital Cash - Peer-to-peer, privacy-centric, digital currency (commandline utils)
+Summary: Peer-to-peer; privacy-centric; digital currency, protocol, and platform for payments and dApps (commandline utils)
 
 
 # dashcore src.rpm
 %description
-This is the source package for building most of the Dash Core set of binary
-packages.  It will build dashcore-{client,server,utils,libs,devel,debuginfo}.
+Dash Core reference implementation. This is the source package for building
+most of the Dash Core set of binary packages.  It will build
+dashcore-{client,server,utils,libs,devel,debuginfo}.
 
 Dash (Digital Cash) is an open source peer-to-peer cryptocurrency with a
 strong focus on serving the payments industry. Dash offers a form of money
@@ -278,9 +270,9 @@ Learn more at www.dash.org.
 
 # dashcore-client
 %description client
-This package provides dash-qt, a user-friendly-er GUI wallet manager for
-personal use. This package requires the dashcore-utils RPM package to be
-installed as well.
+Dash Core reference implementation. This package provides dash-qt, a
+user-friendly-er graphical wallet manager for personal use. This package
+requires the dashcore-utils RPM package to be installed as well.
 
 Dash (Digital Cash) is an open source peer-to-peer cryptocurrency with a
 strong focus on serving the payments industry. Dash offers a form of money
@@ -297,10 +289,11 @@ Learn more at www.dash.org.
 
 # dashcore-server
 %description server
-This package provides dashd, a peer-to-peer node and wallet server. It is the
-command line installation without a GUI. It can be used as a commandline
-wallet but is typically used to run a Dash Full Node or Masternode. This
-package requires the dashcore-utils and dashcore-sentinel RPM packages to be
+Dash Core reference implementation. This package provides dashd, a
+peer-to-peer node and wallet server. It is the command line installation
+without a graphical user interface. It can be used as a commandline wallet
+but is typically used to run a Dash Full Node or Masternode. This package
+requires the dashcore-utils and dashcore-sentinel RPM packages to be
 installed.
 
 Please refer to Dash Core documentation at dash.org for more information
@@ -365,6 +358,8 @@ Learn more at www.dash.org.
 
 # dashcore-utils
 %description utils
+Dash is Digital Cash
+
 This package provides dash-cli, a utility to communicate with and control a
 Dash server via its RPC protocol, and dash-tx, a utility to create custom
 Dash transactions.
@@ -907,56 +902,53 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
-* Thu Apr 25 2018 Todd Warner <t0dd@protonmail.com> 0.12.3.0-0.2.testing.taw0
+* Sat Apr 28 2018 Todd Warner <t0dd@protonmail.com> 0.12.3.0-0.3.testing.20180428.taw0
+- Another 12.3 test build (from github.com origin/develop)
+
+* Wed Apr 25 2018 Todd Warner <t0dd@protonmail.com> 0.12.3.0-0.2.testing.taw0
 - Major cleanup
 
 * Sun Apr 8 2018 Todd Warner <t0dd@protonmail.com> 0.12.3.0-0.1.testing.taw0
-- Release STILL EXPERIMENTING - eecc692236efa0dd62b953f538b0099b2ffa324a
+- 12.3 test build
 - name-version-release more closely matches industry guidelines:  
   https://fedoraproject.org/wiki/Packaging:Versioning
-- f60a03c640425f821a2ea92968aef3ccf2a921e2d668e47bea14521d5e788b99 dashcore-0.12.3.tar.gz
-- 329c49b034c601e082f815a5aa12d9f865de17343809d3e9f01b10f7eaa619f8 dashcore-0.12.3-contrib.tar.gz
 - https://bamboo.dash.org/browse/DASHL-DEV-341
+
+* Fri Apr 06 2018 Todd Warner <t0dd@protonmail.com> 0.12.2.3-2.taw
+- Improved rpm text descriptions and some updated comments.
+
+* Fri Apr 06 2018 Todd Warner <t0dd@protonmail.com> 0.12.2.3-1.taw
+- spec file cleanup. dash.conf cleanup and improvements.
+- Create convenience symlink to /etc/dashcore/dash.conf so you don't have to
+- put -conf= on the commandline all the time.
+
+* Tue Dec 19 2017 Todd Warner <t0dd@protonmail.com> 0.12.2.2-0.taw
+- Release - 8506678
 
 * Tue Dec 19 2017 Todd Warner <t0dd@protonmail.com> 0.12.2.2-1.testing.taw
 - Release Candidate - 8506678
-- 2ce4cc76540be3760ebb7c31a81ede67b9682924da68d905fbbad58273d33b2f dashcore-0.12.2.tar.gz
-- b09f09d847e02e1509dd157aca1655bbe5ca79106fe4cf2e4370228e0eab79e3 dashcore-0.12.2-contrib.tar.gz
 
 * Sat Dec 09 2017 Todd Warner <t0dd@protonmail.com> 0.12.2.2-0.testing.taw
 - Release Candidate - f9f28e7
-- fb8b023836b2cbe81b437e867b6b1176edbd7220435cf4620acc1417a5111b0d dashcore-0.12.2.tar.gz
-- b09f09d847e02e1509dd157aca1655bbe5ca79106fe4cf2e4370228e0eab79e3 dashcore-0.12.2-contrib.tar.gz
 
 * Sun Nov 12 2017 Todd Warner <t0dd@protonmail.com> 0.12.2.1-0.testing.taw
 - Release Candidate - 20bacfa
-- c1522e62ed3117639e84b757af43ed06d8ea202e25e3f62b20c7d9ee5337cc36 dashcore-0.12.2.tar.gz
-- b09f09d847e02e1509dd157aca1655bbe5ca79106fe4cf2e4370228e0eab79e3 dashcore-0.12.2-contrib.tar.gz
 
 * Wed Nov 8 2017 Todd Warner <t0dd@protonmail.com> 0.12.2.0-1.testing.taw
 - Release Candidate - ec8178c
-- 8faccdeb2d56e398f336705730039aea26f86eaa6a34bbd7a11bb2896f68cb84 dashcore-0.12.2.tar.gz
-- b09f09d847e02e1509dd157aca1655bbe5ca79106fe4cf2e4370228e0eab79e3 dashcore-0.12.2-contrib.tar.gz
 
 * Fri Oct 20 2017 Todd Warner <t0dd@protonmail.com> 0.12.2.0-0.testing.taw
-- 824fb78820094053a0db7cdf9f883e66bd69114c1bf3517f1638bbd1971233b9 dashcore-0.12.2.tar.gz
-- b09f09d847e02e1509dd157aca1655bbe5ca79106fe4cf2e4370228e0eab79e3 dashcore-0.12.2-contrib.tar.gz
+- Initial 12.2 test build
 
 * Tue Apr 11 2017 Todd Warner <t0dd@protonmail.com> 0.12.1.5-0.rc.taw
 - Fixes a watchdog propagation issue.
-- 4e52b2427f1ea46f0ff5b31b0dd044478fba6a076611a97a9c2d3d345374459f  dash-0.12.1.5.tar.gz
-- e3e4351656afda2ff23cb142d264af4b4d04d0bbe9f3326ce24019423f6adf94  dashcore-0.12.1-contrib.tar.gz
 
 * Wed Mar 22 2017 Todd Warner <t0dd@protonmail.com> 0.12.1.4-0.rc.taw
 - Added RPC port to available firewalld services.
 - Renamed firewalld services to match bitcoin's firewalld service name taxonomies.
-- 7218baaa1aa8052960ffc0c36904b6f5647256f9773c17e8506be37a2d3cc0cb  dash-0.12.1.4.tar.gz
-- e3e4351656afda2ff23cb142d264af4b4d04d0bbe9f3326ce24019423f6adf94  dashcore-0.12.1-contrib.tar.gz
 
 * Fri Mar 10 2017 Todd Warner <t0dd@protonmail.com> 0.12.1.3-2.rc.taw
 - Added RPC port to available firewalld services.
-- 1f6e6fb528151c8703019ed1511562b0c8bc91fe8c7ac6838a3811ffd1af288a  dash-0.12.1.3.tar.gz
-- 15d74665442062bce83e0c5d309d7c0d26de7cbd485a838b0d3630e3ad6855b2  dashcore-0.12.1-contrib.tar.gz
 
 * Sat Mar 04 2017 Todd Warner <t0dd@protonmail.com> 0.12.1.3-1.rc.taw
 - Brought back the test scripts (most of them), made them conditional. Added
@@ -970,14 +962,10 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 * Thu Mar 02 2017 Todd Warner <t0dd@protonmail.com> 0.12.1.3-0.rc.taw
 - Release 0.12.1.3 - 119fe83
 - Announcement: https://github.com/dashpay/dash/releases/tag/v0.12.1.3
-- 1f6e6fb528151c8703019ed1511562b0c8bc91fe8c7ac6838a3811ffd1af288a  dash-0.12.1.3.tar.gz
-- d4c0f01ea5fa017f6362269495d2cd32e724d9e4d2e584bf5e9a0057b493dfbb  dashcore-0.12.1-contrib.tar.gz
 
 * Fri Feb 24 2017 Todd Warner <t0dd@protonmail.com> 0.12.1.2-0.rc.taw
 - Release 0.12.1.2 Release Candidate - a1ef547
 - Announcement: https://github.com/dashpay/dash/releases/tag/v0.12.1.2
-- 8a99d35dd7b87c42efa698d2ac36f2cca98aa501ce2f7dcb5e8d27b749efb72d  dash-0.12.1.2.tar.gz
-- 04335cbef729480e6b7c11243a0613a34c128f3388f97e80b255bd05fd27cae3  dashcore-0.12.1-contrib.tar.gz
 
 - Specfile change: Structure of build tree expansion changed allowing
 - flexibility in how the source is generated upstream (bamboo vs. github)
@@ -1010,4 +998,4 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 * Sun Feb 05 2017 Todd Warner <t0dd@protonmail.com> 0.12.1.0-0.taw
 - Release 12.1.0 - 56971f8
 - Announcement: https://github.com/dashpay/dash/releases/tag/v0.12.1.0
--
+

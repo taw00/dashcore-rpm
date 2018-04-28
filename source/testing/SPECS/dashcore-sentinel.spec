@@ -13,107 +13,164 @@
 #
 # Enjoy. -t0dd
 
-# flip-flop next two lines if you don't want the minor bump
-%undefine _release_minorbump
-%define _release_minorbump taw0
-
-# flip-flop next two lines if we are not testing
-%undefine _release_minor_snapinfo
-%define _release_minor_snapinfo 2.testing
-
-# name-version-release
-# ...where release is...
-# <pkgrel>[.<extraver>][.<snapinfo>]%%{?dist}[.<minorbump>]
-# ...for example...
-# name: dashcore-server
-# version: 1.1.0 (major=1.1 and minor=0)
-# release: 1.1.testing.fc27.taw0
-#   _release_major (pkgrel): 1 -- should never be 0 if not testing
-#   _release_minor_snapinfo (extraver.snapinfo): 1.testing -- disappears
-#     -- disappears (undefined) at GA and then _release_major is bumped
-#   %%{?dist}: .fc27 -- includes the decimal point
-#   _release_minorbump: initials+decimal - taw or taw0 or taw1 or etc.
+# Package (RPM) name-version-release.
+# <name>-<vermajor.<verminor>-<pkgrel>[.<extraver>][.<snapinfo>].DIST[.<minorbump>]
 
 %define _name_s sentinel
 %define _name_dcs dashcore-sentinel
 Name: %{_name_dcs}
-%define _version_major 1.1
-%define _version_minor 0
-Version: %{_version_major}.%{_version_minor}
-%define _release_major 1
+Summary: A required helper agent for Dash Masternodes
 
-# ---------------- end of commonly edited elements ----------------------------
+%define targetIsProduction 0
+%define includeSnapinfo 1
+%define includeMinorbump 1
 
-# "Release" gets complicated...
 
-%define _release_pt1 %{_release_major}%{?dist}
-%if 0%{?_release_minor_snapinfo:1}
-# extraver.snapinfo.[dist]...
-%define _release_pt1 %{_release_major}.%{_release_minor_snapinfo}%{?dist}
+# VERSION
+# eg. 1.0.1
+%define vermajor 1.2
+%define verminor 0
+Version: %{vermajor}.%{verminor}
+
+
+# RELEASE
+# if production - "targetIsProduction 1"
+%define pkgrel_prod 1
+
+# if pre-production - "targetIsProduction 0"
+# eg. 0.3.testing
+%define pkgrel_preprod 0
+%define extraver_preprod 1
+#%%define snapinfo testing
+%define snapinfo testing.20180428
+
+# if includeMinorbump
+%define minorbump taw0
+
+# Building the release string (don't edit this)...
+
+%if %{targetIsProduction}
+  %if %{includeSnapinfo}
+    %{warn:"Warning: target is production and yet you want snapinfo included. This is not typical."}
+  %endif
+%else
+  %if ! %{includeSnapinfo}
+    %{warn:"Warning: target is pre-production and yet you elected not to incude snapinfo (testing, beta, ...). This is not typical."}
+  %endif
 %endif
 
-### builder initials and incremental bumps go here!
-### Examples: taw, taw0, taw1, etc.
-#%%define _release_minorbump taw0 -- defined at top
-
-%define _release %{_release_pt1}
-%if %{?_release_minorbump}
-%define _release %{_release_pt1}.%{_release_minorbump}
+# release numbers
+%undefine _relbuilder_pt1
+%if %{targetIsProduction}
+  %define _pkgrel %{pkgrel_prod}
+  %define _relbuilder_pt1 %{pkgrel_prod}
+%else
+  %define _pkgrel %{pkgrel_preprod}
+  %define _extraver %{extraver_preprod}
+  %define _relbuilder_pt1 %{_pkgrel}.%{_extraver}
 %endif
+
+# snapinfo and repackage (pre-built) indicator
+%undefine _relbuilder_pt2
+%if ! %{includeSnapinfo}
+  %undefine snapinfo
+%endif
+%if 0%{?sourceIsPrebuilt:1}
+  %if ! %{sourceIsPrebuilt}
+    %undefine snapinfo_rp
+  %endif
+%else
+  %undefine snapinfo_rp
+%endif
+%if 0%{?snapinfo_rp:1}
+  %if 0%{?snapinfo:1}
+    %define _relbuilder_pt2 %{snapinfo}.%{snapinfo_rp}
+  %else
+    %define _relbuilder_pt2 %{snapinfo_rp}
+  %endif
+%else
+  %if 0%{?snapinfo:1}
+    %define _relbuilder_pt2 %{snapinfo}
+  %endif
+%endif
+
+# put it all together
+# pt1 will always be defined. pt2 and minorbump may not be
+%define _release %{_relbuilder_pt1}
+%if ! %{includeMinorbump}
+  %undefine minorbump
+%endif
+%if 0%{?_relbuilder_pt2:1}
+  %if 0%{?minorbump:1}
+    %define _release %{_relbuilder_pt1}.%{_relbuilder_pt2}%{?dist}.%{minorbump}
+  %else
+    %define _release %{_relbuilder_pt1}.%{_relbuilder_pt2}%{?dist}
+  %endif
+%else
+  %if 0%{?minorbump:1}
+    %define _release %{_relbuilder_pt1}%{?dist}.%{minorbump}
+  %else
+    %define _release %{_relbuilder_pt1}%{?dist}
+  %endif
+%endif
+
 Release: %{_release}
-
-Summary: Dash Masternode Sentinel - required toolset for Dash Masternodes
-
-# how are debug info and build_ids managed (I only halfway understand this):
-# https://github.com/rpm-software-management/rpm/blob/master/macros.in
-%define debug_package %{nil}
-%define _unique_build_ids 1
-%define _build_id_links alldebug
-
-
-# https://fedoraproject.org/wiki/Changes/Harden_All_Packages
-#%%define _hardened_build 0
+# ----------- end of release building section
 
 # Various archive and tree naming conventions (for example)
-# 1. sentinel-1.1.0
+# 1. sentinel-1.2.0
 #    (upstream dash team convention, github, etc - eg. sentinel-1.0.1.tar.gz)
-# 2. dashcore-sentinel-1.1
+# 2. dashcore-sentinel-1.2
 %define _srcarchive_github %{_name_s}-%{version}
 %define srcarchive %{_srcarchive_github}
-%define srccontribarchive %{_name_dcs}-%{_version_major}-contrib
+%define srccontribarchive %{_name_dcs}-%{vermajor}-contrib
+
+Source0: %{srcarchive}.tar.gz
+Source1: %{srccontribarchive}.tar.gz
 
 # Unarchived source tree structure (extracted in .../BUILD)
 #   srcroot               dashcore-sentinel-1.1
 #      \_srccodetree        \_sentinel-1.1.0 (github tree example)
 #      \_srccontribtree     \_dashcore-sentinel-1.1-contrib
-%define _srccodetree_github %{_name_s}-%{version}
-%define srcroot %{_name_dcs}-%{_version_major}
-%define srccontribtree %{_name_dcs}-%{_version_major}-contrib
+%define srcroot %{_name_dcs}-%{vermajor}
+%define _srccodetree_github %{_srcarchive_github}
 %define srccodetree %{_srccodetree_github}
+%define srccontribtree %{_name_dcs}-%{vermajor}-contrib
 
+# Most of the time, the build system can figure out the requires.
+# But if you need something specific...
+Requires: dashcore-server >= 0.12.3
 
-Group: Applications/System
+# For mock environments I add vim-enhanced and less so I can introspect by hand
+#BuildRequires: tree vim-enhanced less
+BuildRequires: /usr/bin/virtualenv
+# Nuke the auto-requires that rpmbuild will generate because of the
+# virtualenv things we do in the %build section.
+%global __requires_exclude .*/BUILD/.*/venv/bin/python
+
+# If you comment out "debug_package" RPM will create additional RPMs that can
+# be used for debugging purposes. I am not an expert at this, BUT ".build_ids"
+# are associated to debug packages, and I have lately run into packaging
+# conflicts because of them. This is a topic I can't share a whole lot of
+# wisdom about, but for now... I turn all that off.
+#
+# How debug info and build_ids managed (I only halfway understand this):
+# https://github.com/rpm-software-management/rpm/blob/master/macros.in
+%define debug_package %{nil}
+%define _unique_build_ids 1
+%define _build_id_links alldebug
+
+# https://fedoraproject.org/wiki/Changes/Harden_All_Packages
+%define _hardened_build 1
+
 License: MIT
 URL: http://dash.org/
-Source0: %{srcarchive}.tar.gz
-Source1: %{srccontribarchive}.tar.gz
-
-BuildRoot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
-
-BuildRequires: /usr/bin/virtualenv
-Requires: dashcore-server >= 0.12.2
-
-
-# Nuke auto-requires that rpmbuild will generate because of the virtualenv
-# things we do in the %build section. Note, this statement has to be placed
-# here in the SPEC file (before we hit %description)
-%global __requires_exclude .*/BUILD/.*/venv/bin/python
 
 
 %description
-Dash Core Sentinel is an autonomous agent for persisting, processing and
-automating Dash governance objects and tasks, and for expanded functions in the
-upcoming Dash release (codename Evolution).
+Dash Core reference implementation. Dash Core Sentinel is an autonomous agent
+for persisting, processing and automating Dash governance objects and tasks,
+and for expanded functions in the upcoming Dash release (codename Evolution).
 
 Sentinel is implemented as a Python application that binds to a local version
 dashd instance on each Dash Masternode.
@@ -131,37 +188,28 @@ decentralized crypto-tech.
 Learn more at www.dash.org.
 
 
-
 %prep
-# Upstream code exploded into sentinel-1.0/sentinel-1.0
-%setup -q -T -a 0 -c %{srcroot}
-# contrib stuff exploded into sentinel-1.0/dashcore-sentinel
-%setup -q -T -D -a 1
-
-# We leave with this structure...
-# ~/rpmbuild/BUILD/dashcore-sentinel-X.Y/sentinel-X.Y.Z/
-# ~/rpmbuild/BUILD/dashcore-sentinel-X.Y/dashcore-sentinel-X.Y/
-
+# .../BUILD/dashcore-sentinel-X.Y/sentinel-x.y.z/
+# .../BUILD/dashcore-sentinel-X.Y/dashcore-sentinel-x.y/
+mkdir %{srcroot}
+# sourcecode
+%setup -q -T -D -a 0 -n %{srcroot}
+# contrib
+%setup -q -T -D -a 1 -n %{srcroot}
 
 
 %build
 # WARNING: This build process pulls down libraries from the internet.
 #   This is less than ideal for many reasons.
 #   TODO: Build from locally known and signed libraries -- a future endeavor.
-# Building in dashcore-sentinel-X.Y
-# cd into dashcore-sentinel-X.Y/sentinel-X.Y.Z
 cd %{srccodetree}
 /usr/bin/virtualenv ./venv
 ./venv/bin/pip install -r ./requirements.txt
 cd ..
 
 
-%check
-
-
 %install
-# This section starts us in directory .../BUILD/sentinel-1.1 (srcroot)
-rm -rf %{buildroot} ; mkdir %{buildroot}
+# This section starts us in directory .../BUILD/sentinel-x.y (srcroot)
 
 # Install / config ancillary files
 # Cheatsheet for built-in RPM macros:
@@ -199,7 +247,7 @@ cp -a %{srccodetree}/* %{buildroot}%{_sharedstatedir}/dashcore/sentinel/
 # Place contributed configuration file into /etc/dashcore
 # Create symlink to that file...
 #   /var/lib/dashcore/sentinel/sentinel.conf -> /etc/dashcore/sentinel.conf
-rm -f %{buildroot}%{_sharedstatedir}/dashcore/sentinel/sentinel.conf
+mv %{buildroot}%{_sharedstatedir}/dashcore/sentinel/sentinel.conf %{buildroot}%{_sharedstatedir}/dashcore/sentinel/sentinel.conf.orig-upstream
 install -D -m640 %{srccontribtree}/linux/etc-dashcore_sentinel.conf %{buildroot}%{_sysconfdir}/dashcore/sentinel.conf
 ln -s %{_sysconfdir}/dashcore/sentinel.conf %{buildroot}%{_sharedstatedir}/dashcore/sentinel/sentinel.conf
 
@@ -266,7 +314,7 @@ exit 0
 
 
 %files
-# This section starts us in directory .../BUILD/sentinel-1.1 (srcroot)
+# This section starts us in directory .../BUILD/sentinel-x.y (srcroot)
 %defattr(-,dashcore,dashcore,-)
 %license %attr(-,root,root) %{srccodetree}/LICENSE
 %doc %attr(-,root,root) %{srccodetree}/README.md %{srccontribtree}/linux/README.redhat.md
@@ -281,18 +329,20 @@ exit 0
 # /var/log/dashcore
 %dir %attr(700,dashcore,dashcore) %{_localstatedir}/log/dashcore
 
+# Code and data directories
+%{_sharedstatedir}/dashcore/sentinel/*
+
 # sentinel.conf
-%config(noreplace) %{_sysconfdir}/dashcore/sentinel.conf
 # ...convenience symlink - this is probably really bad form:
 #    /var/lib/dashcore/sentinel/sentinel.conf -> /etc/dashcore/sentinel.conf
-#%%{_sharedstatedir}/dashcore/sentinel/sentinel.conf --picked up by SPLAT below
+%config(noreplace) %{_sysconfdir}/dashcore/sentinel.conf
+# already picked up by %%{_sharedstatedir}/dashcore/sentinel/* directive
+#%%{_sharedstatedir}/dashcore/sentinel/sentinel.conf
+#%%{_sharedstatedir}/dashcore/sentinel/sentinel.conf.orig-upstream
 
 # The logs
 %attr(644,root,root) /etc/logrotate.d/dashcore-sentinel
 %ghost %{_localstatedir}/log/dashcore/sentinel.log
-
-# Code and data directories
-%{_sharedstatedir}/dashcore/sentinel/*
 
 
 # Dash Core Information
@@ -306,20 +356,19 @@ exit 0
 #   * Git Repo: https://github.com/taw00/dashcore-rpm
 #   * Documentation: https://github.com/taw00/dashcore-rpm/tree/master/documentation
 #
-# The last major testnet effort...
-#   * Announcement: https://www.dash.org/forum/threads/12-1-testnet-testing-phase-two-ignition.10818/
-#   * Documentation: https://dashpay.atlassian.net/wiki/display/DOC/Testnet
-#
 # Dash Core git repos...
 #   * Dash: https://github.com/dashpay/dash
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
-* Mon Apr 9 2018 Todd Warner <t0dd@protonmail.com> 1.1.0-1.2.testing.taw0
+* Sat Apr 28 2018 Todd Warner <t0dd@protonmail.com> 1.2.0-0.1.testing.taw[n]
+- Test build 1.2.0 (an assumed next version number)
+
+* Mon Apr 9 2018 Todd Warner <t0dd@protonmail.com> 1.1.0-1.2.testing.taw[n]
 - Remove .build_ids... because they conflict all the time.
 - _tmpfilesdir and _unitdir don't exist on f25 - not a huge deal, but still.
 
-* Sun Apr 8 2018 Todd Warner <t0dd@protonmail.com> 1.1.0-1.1.testing.taw0
+* Sun Apr 8 2018 Todd Warner <t0dd@protonmail.com> 1.1.0-1.1.testing.taw[n]
 - Refactor sentinel spec
 - Versions use more canonical packaging standards.
 - Configuration file is in /etc/dashcore/sentinel.conf now (but still symlinked  
@@ -332,14 +381,14 @@ exit 0
 - cause of the error, but it is related to debuginfo building. But Sentinel
 - doesn't really need debuginfo packages built, so I am just going to nuke them.
 
-* Tue Nov 7 2017 Todd Warner <t0dd@protonmail.com> 1.1.0-0.testing.taw
+* Tue Nov 7 2017 Todd Warner <t0dd@protonmail.com> 1.1.0-0.taw
 - Release 1.1 in support of dashcore 0.12.2
-- 971aa5e5f4d06ba76e76c9c828402af56f28353254c8db15214ac7071d982de5 sentinel-1.1.0.tar.gz
-- d1526682d6103e15f17a3298c76eda00cd0126903accc762ea7c1a3eb806b1f1 dashcore-sentinel-1.1-contrib.tar.gz
+
+* Tue Nov 7 2017 Todd Warner <t0dd@protonmail.com> 1.1.0-0.testing.taw
+- Release 1.1 in support of dashcore 0.12.2 - testing
 
 * Fri Feb 24 2017 Todd Warner <t0dd@protonmail.com> 1.0.1-0.rc.taw
 - Release 1.0.1 - Release Candidate - 4ac8523
-- 407c509cc00706645e899dc6fa5bdc1f6ea156381ab8b84d669ed59c1a070fad  sentinel-1.0.1.tar.gz
 
 * Fri Feb 10 2017 Todd Warner <t0dd@protonmail.com> 1.0-2.taw
 - Building debuginfo RPMs as well now.
