@@ -67,12 +67,22 @@ please visit
 <https://github.com/Bertrand256/dash-masternode-tool/blob/master/README.md>.
 
 > _Note that all configuration/data for the Dash Masternode Tool will populate
-the `~/.config/dash-masternode-tool/` directory. This diverges from the default
-used by the raw tool from the Bertrand256 repositories. He uses
-~/DashMasternodeTool/ instead which may be fine for a MS Windows system, but
-it's just not very linuxy._
+  the `~/.config/dmt/` directory. This diverges from the default
+  used by the raw tool from the Bertrand256 repositories. He uses
+  ~/DashMasternodeTool/ (in 0.9.18) and will use ~/.dmt/ in future versions. If
+  you wish to align with upstream's defaults, just run dash-masternode-tool
+  from the commandline with `--data-dir=~/.dmt/` (after you `mkdir ~/.dmt` of
+  course) and for the desktop... edit
+  `/usr/share/dash-masternode-desktop-script.sh` and change it semi-permanently
+  there (your changes will be lost upon subsequent RPM upgrades). TODO: I will
+  have to make this editable somewhere else eventually._
 
-> _**WARNING:** The data directory (see above) contains HIGHLY sensitive information. The Dash Masternode Tool as configured here tightens up the default permissions, but you should really perhaps consider backing up the ~/.config/dash-masternode-tool directory to a USB stick or something and deleting it locally. If you are confident that you can keep your system secure (you are probably being over-confident), then, by all means, leave it as is._
+> _**WARNING:** The data directory (see above) contains HIGHLY sensitive
+  information. The Dash Masternode Tool as configured here tightens up the
+  default permissions, but you should really perhaps consider backing up the
+  ~/.config/dmt directory to a USB stick or something and deleting it locally.
+  If you are confident that you can keep your system secure (you are probably
+  being over-confident), then, by all means, leave it as is._
 
 &nbsp;
 

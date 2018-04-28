@@ -67,11 +67,11 @@ Version: %{vermajor}.%{verminor}
 
 # RELEASE
 # if production - "targetIsProduction 1"
-%define pkgrel_prod 2
+%define pkgrel_prod 3
 
 # if pre-production - "targetIsProduction 0"
 # eg. 1.1.testing
-%define pkgrel_preprod 1
+%define pkgrel_preprod 2
 %define extraver_preprod 1
 %define snapinfo testing
 
@@ -105,6 +105,13 @@ Version: %{vermajor}.%{verminor}
 %undefine _relbuilder_pt2
 %if ! %{includeSnapinfo}
   %undefine snapinfo
+%endif
+%if 0%{?sourceIsPrebuilt:1}
+  %if ! %{sourceIsPrebuilt}
+    %undefine snapinfo_rp
+  %endif
+%else
+  %undefine snapinfo_rp
 %endif
 %if 0%{?snapinfo_rp:1}
   %if 0%{?snapinfo:1}
@@ -309,28 +316,30 @@ ln -s %{_datadir}/%{name}/%{_name2} %{buildroot}%{_bindir}/%{name}
 install -D -p %{srccodetree}/LICENSE.txt %{srccodetree}/LICENSE
 
 # Desktop
-install -D -m644 -p %{srccontribtree}/desktop/%{name}.hicolor.16x16.png        %{buildroot}%{_datadir}/icons/hicolor/16x16/apps/%{name}.png
-install -D -m644 -p %{srccontribtree}/desktop/%{name}.hicolor.22x22.png        %{buildroot}%{_datadir}/icons/hicolor/22x22/apps/%{name}.png
-install -D -m644 -p %{srccontribtree}/desktop/%{name}.hicolor.24x24.png        %{buildroot}%{_datadir}/icons/hicolor/24x24/apps/%{name}.png
-install -D -m644 -p %{srccontribtree}/desktop/%{name}.hicolor.32x32.png        %{buildroot}%{_datadir}/icons/hicolor/32x32/apps/%{name}.png
-install -D -m644 -p %{srccontribtree}/desktop/%{name}.hicolor.48x48.png        %{buildroot}%{_datadir}/icons/hicolor/48x48/apps/%{name}.png
-install -D -m644 -p %{srccontribtree}/desktop/%{name}.hicolor.128x128.png      %{buildroot}%{_datadir}/icons/hicolor/128x128/apps/%{name}.png
-install -D -m644 -p %{srccontribtree}/desktop/%{name}.hicolor.256x256.png      %{buildroot}%{_datadir}/icons/hicolor/256x256/apps/%{name}.png
-install -D -m644 -p %{srccontribtree}/desktop/%{name}.hicolor.512x512.png      %{buildroot}%{_datadir}/icons/hicolor/512x512/apps/%{name}.png
-install -D -m644 -p %{srccontribtree}/desktop/%{name}.hicolor.svg              %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/%{name}.svg
+cd %{srccontribtree}/desktop/
+install -D -m644 -p %{name}.hicolor.16x16.png        %{buildroot}%{_datadir}/icons/hicolor/16x16/apps/%{name}.png
+install -D -m644 -p %{name}.hicolor.22x22.png        %{buildroot}%{_datadir}/icons/hicolor/22x22/apps/%{name}.png
+install -D -m644 -p %{name}.hicolor.24x24.png        %{buildroot}%{_datadir}/icons/hicolor/24x24/apps/%{name}.png
+install -D -m644 -p %{name}.hicolor.32x32.png        %{buildroot}%{_datadir}/icons/hicolor/32x32/apps/%{name}.png
+install -D -m644 -p %{name}.hicolor.48x48.png        %{buildroot}%{_datadir}/icons/hicolor/48x48/apps/%{name}.png
+install -D -m644 -p %{name}.hicolor.128x128.png      %{buildroot}%{_datadir}/icons/hicolor/128x128/apps/%{name}.png
+install -D -m644 -p %{name}.hicolor.256x256.png      %{buildroot}%{_datadir}/icons/hicolor/256x256/apps/%{name}.png
+install -D -m644 -p %{name}.hicolor.512x512.png      %{buildroot}%{_datadir}/icons/hicolor/512x512/apps/%{name}.png
+install -D -m644 -p %{name}.hicolor.svg              %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/%{name}.svg
 
-install -D -m644 -p %{srccontribtree}/desktop/%{name}.highcontrast.16x16.png   %{buildroot}%{_datadir}/icons/HighContrast/16x16/apps/%{name}.png
-install -D -m644 -p %{srccontribtree}/desktop/%{name}.highcontrast.22x22.png   %{buildroot}%{_datadir}/icons/HighContrast/22x22/apps/%{name}.png
-install -D -m644 -p %{srccontribtree}/desktop/%{name}.highcontrast.24x24.png   %{buildroot}%{_datadir}/icons/HighContrast/24x24/apps/%{name}.png
-install -D -m644 -p %{srccontribtree}/desktop/%{name}.highcontrast.32x32.png   %{buildroot}%{_datadir}/icons/HighContrast/32x32/apps/%{name}.png
-install -D -m644 -p %{srccontribtree}/desktop/%{name}.highcontrast.48x48.png   %{buildroot}%{_datadir}/icons/HighContrast/48x48/apps/%{name}.png
-install -D -m644 -p %{srccontribtree}/desktop/%{name}.highcontrast.128x128.png %{buildroot}%{_datadir}/icons/HighContrast/128x128/apps/%{name}.png
-install -D -m644 -p %{srccontribtree}/desktop/%{name}.highcontrast.256x256.png %{buildroot}%{_datadir}/icons/HighContrast/256x256/apps/%{name}.png
-install -D -m644 -p %{srccontribtree}/desktop/%{name}.highcontrast.512x512.png %{buildroot}%{_datadir}/icons/HighContrast/512x512/apps/%{name}.png
-install -D -m644 -p %{srccontribtree}/desktop/%{name}.highcontrast.svg         %{buildroot}%{_datadir}/icons/HighContrast/scalable/apps/%{name}.svg
+install -D -m644 -p %{name}.highcontrast.16x16.png   %{buildroot}%{_datadir}/icons/HighContrast/16x16/apps/%{name}.png
+install -D -m644 -p %{name}.highcontrast.22x22.png   %{buildroot}%{_datadir}/icons/HighContrast/22x22/apps/%{name}.png
+install -D -m644 -p %{name}.highcontrast.24x24.png   %{buildroot}%{_datadir}/icons/HighContrast/24x24/apps/%{name}.png
+install -D -m644 -p %{name}.highcontrast.32x32.png   %{buildroot}%{_datadir}/icons/HighContrast/32x32/apps/%{name}.png
+install -D -m644 -p %{name}.highcontrast.48x48.png   %{buildroot}%{_datadir}/icons/HighContrast/48x48/apps/%{name}.png
+install -D -m644 -p %{name}.highcontrast.128x128.png %{buildroot}%{_datadir}/icons/HighContrast/128x128/apps/%{name}.png
+install -D -m644 -p %{name}.highcontrast.256x256.png %{buildroot}%{_datadir}/icons/HighContrast/256x256/apps/%{name}.png
+install -D -m644 -p %{name}.highcontrast.512x512.png %{buildroot}%{_datadir}/icons/HighContrast/512x512/apps/%{name}.png
+install -D -m644 -p %{name}.highcontrast.svg         %{buildroot}%{_datadir}/icons/HighContrast/scalable/apps/%{name}.svg
 
-install -D -m644 -p %{srccontribtree}/desktop/%{name}.desktop %{buildroot}%{_datadir}/applications/%{name}.desktop
+install -D -m644 -p %{name}.desktop %{buildroot}%{_datadir}/applications/%{name}.desktop
 desktop-file-validate %{buildroot}%{_datadir}/applications/%{name}.desktop
+cd ../../
 
 ## Man Pages - not used as of yet
 #install -d %%{buildroot}%%{_mandir}
@@ -351,7 +360,8 @@ desktop-file-validate %{buildroot}%{_datadir}/applications/%{name}.desktop
 #
 %defattr(-,root,root,-)
 %license %{srccodetree}/LICENSE
-%doc %{srccontribtree}/ABOUT-THIS-RPM.md
+%doc %{srccontribtree}/README.about-this-rpm.md
+%doc %{srccontribtree}/README.changelog.md
 %doc %{srccodetree}/README.md
 
 # Binaries
@@ -405,19 +415,26 @@ desktop-file-validate %{buildroot}%{_datadir}/applications/%{name}.desktop
 
 
 %changelog
-* Thu Apr 26 2018 Todd Warner <t0dd@protonmail.com> 0.9.18-1.1.testing.taw0
+* Sat Apr 28 2018 Todd Warner <t0dd@protonmail.com> 0.9.18-2.1.testing.taw[n]
+- Default --data-dir is now ~/.config/dmt  
+- Upstream default is moving to ~/.dmt, so I am more closely mirroring this.
+
+* Thu Apr 26 2018 Todd Warner <t0dd@protonmail.com> 0.9.18-2.taw[n]
+- Updated stable build.
+
+* Thu Apr 26 2018 Todd Warner <t0dd@protonmail.com> 0.9.18-1.1.testing.taw[n]
 - specfile: cleaned up the version and release building logic
 - code: updated btchip-python source
 - Pushed the desktop script into /usr/share/ and added a symlink to the actual  
   binary so that a user can call dmt from the commandline and change the  
-  default datadir.
+  default data dir.
 
-* Wed Apr 25 2018 Todd Warner <t0dd@protonmail.com> 0.9.18-1.taw0
-- Initial build.
+* Wed Apr 25 2018 Todd Warner <t0dd@protonmail.com> 0.9.18-1.taw[n]
+- Initial stable build.
 
-* Wed Apr 25 2018 Todd Warner <t0dd@protonmail.com> 0.9.18-0.2.testing.taw0
+* Wed Apr 25 2018 Todd Warner <t0dd@protonmail.com> 0.9.18-0.2.testing.taw[n]
 - Fix the default config file issues of non-existence and permissions.
 
-* Tue Apr 24 2018 Todd Warner <t0dd@protonmail.com> 0.9.18-0.1.testing.taw0
+* Tue Apr 24 2018 Todd Warner <t0dd@protonmail.com> 0.9.18-0.1.testing.taw[n]
 - Initial test package.
 
