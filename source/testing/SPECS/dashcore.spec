@@ -54,7 +54,7 @@ Version: %{vermajor}.%{verminor}
 %define snapinfo testing.20180428
 
 # if includeMinorbump
-%define minorbump taw0
+%define minorbump taw1
 
 #
 # Build the release string (don't edit this)
@@ -661,6 +661,7 @@ getent group dashcore >/dev/null || groupadd -r dashcore
 getent passwd dashcore >/dev/null || useradd -r -g dashcore -d %{_sharedstatedir}/dashcore -s /sbin/nologin -c "System user 'dashcore' to isolate Dash Core execution" dashcore
 
 # Notes:
+#  _localstatedir is /var
 #  _sharedstatedir is /var/lib
 #  /var/lib/dashcore is the $HOME for the dashcore user
 
@@ -688,7 +689,7 @@ then
 fi
 if [ -e %{vlibdc_tdl} -a -f %{vlibdc_tdl} -a ! -h %{vlibdc_tdl} ]
 then
-   mv %{vlibdc_tdl}* %{vlogtdc}/testnet3/
+   mv %{vlibdc_tdl}* %{vlogdc}/testnet3/
    ln -s %{vlogdc_tdl} %{vlibdc_tdl}
    chown dashcore:dashcore %{vlibdc_tdl}
    chown -R dashcore:dashcore %{vlogdc}
@@ -902,13 +903,13 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
-* Sat Apr 28 2018 Todd Warner <t0dd@protonmail.com> 0.12.3.0-0.3.testing.20180428.taw0
+* Sat Apr 28 2018 Todd Warner <t0dd@protonmail.com> 0.12.3.0-0.3.testing.20180428.taw[n]
 - Another 12.3 test build (from github.com origin/develop)
 
-* Wed Apr 25 2018 Todd Warner <t0dd@protonmail.com> 0.12.3.0-0.2.testing.taw0
+* Wed Apr 25 2018 Todd Warner <t0dd@protonmail.com> 0.12.3.0-0.2.testing.taw[n]
 - Major cleanup
 
-* Sun Apr 8 2018 Todd Warner <t0dd@protonmail.com> 0.12.3.0-0.1.testing.taw0
+* Sun Apr 8 2018 Todd Warner <t0dd@protonmail.com> 0.12.3.0-0.1.testing.taw[n]
 - 12.3 test build
 - name-version-release more closely matches industry guidelines:  
   https://fedoraproject.org/wiki/Packaging:Versioning
