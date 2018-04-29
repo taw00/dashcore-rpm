@@ -415,7 +415,7 @@ cd ../../
 
 
 %changelog
-* Sat Apr 28 2018 Todd Warner <t0dd@protonmail.com> 0.9.18-2.1.testing.taw[n]
+* Sat Apr 28 2018 Todd Warner <t0dd@protonmail.com> 0.9.18-3.taw[n]
 - Updated stable build.
 
 * Sat Apr 28 2018 Todd Warner <t0dd@protonmail.com> 0.9.18-2.1.testing.taw[n]
