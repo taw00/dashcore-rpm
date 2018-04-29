@@ -53,7 +53,7 @@
 
 Name: dash-masternode-tool
 %define _name2 DashMasternodeTool
-Summary: Manage a Dash Masternode collateralizing hardware wallet
+Summary: Manage and collateralize a Dash Masternode with a hardware wallet
 #BuildArch: noarch
 
 %define targetIsProduction 0
@@ -67,12 +67,12 @@ Version: %{vermajor}.%{verminor}
 
 # RELEASE
 # if production - "targetIsProduction 1"
-%define pkgrel_prod 3
+%define pkgrel_prod 4
 
 # if pre-production - "targetIsProduction 0"
-# eg. 1.1.testing
-%define pkgrel_preprod 2
-%define extraver_preprod 1
+# eg. 3.1.testing -- pkgrel_preprod should always = pkgrel_prod-1
+%define pkgrel_preprod 3
+%define extraver_preprod 2
 %define snapinfo testing
 
 # if includeMinorbump
@@ -172,14 +172,16 @@ Source2: %{srccodetree2}.tar.gz
 
 # Most of the time, the build system can figure out the requires.
 # But if you need something specific...
-#Requires:
+Requires: zenity
 
 # BuildRequires indicates everything you need to build the RPM
 BuildRequires: python3-devel python3-virtualenv libusbx-devel libudev-devel
 # For debugging purposes...
 BuildRequires: tree
-# For desktop environments, you want to test the {name}.desktop file (from -contrib)
-BuildRequires: desktop-file-utils
+# So I can introspect the mock build environment...
+#BuildRequires: tree vim-enhanced less
+# Required for desktop applications (validation of .desktop and .xml files)
+BuildRequires: desktop-file-utils libappstream-glib
 
 # CentOS/RHEL/EPEL can't do "Suggests:"
 %if 0%{?fedora:1}
@@ -215,8 +217,8 @@ URL: https://github.com/taw00/dashcore-rpm
 
 
 %description
-DashMasternodeTool (aka dash-masternode-tool) enables Dash Masternode owners to
-manage their Masternodes from a collateralize-holding hardware wallet.
+DashMasternodeTool (aka dash-masternode-tool) enables Dash Masternode owners
+to manage their Masternodes from a collateralize-holding hardware wallet.
 
 This tool will allow you to..
 
@@ -297,9 +299,10 @@ cd ..
 #   _prefix = /usr
 #   _libdir = /usr/lib or /usr/lib64 (depending on system)
 #   https://fedoraproject.org/wiki/Packaging:RPMMacros
-# These two are defined in RPM versions in newer versions of Fedora (not el7)
+# These three are defined in newer versions of RPM (Fedora not el7)
 %define _tmpfilesdir /usr/lib/tmpfiles.d
 %define _unitdir /usr/lib/systemd/system
+%define _metainfodir %{_datadir}/metainfo
 
 # Create directories
 install -d %{buildroot}%{_libdir}/%{name}
@@ -337,8 +340,16 @@ install -D -m644 -p %{name}.highcontrast.256x256.png %{buildroot}%{_datadir}/ico
 install -D -m644 -p %{name}.highcontrast.512x512.png %{buildroot}%{_datadir}/icons/HighContrast/512x512/apps/%{name}.png
 install -D -m644 -p %{name}.highcontrast.svg         %{buildroot}%{_datadir}/icons/HighContrast/scalable/apps/%{name}.svg
 
-install -D -m644 -p %{name}.desktop %{buildroot}%{_datadir}/applications/%{name}.desktop
+# dash-masternode-tool.desktop
+# https://fedoraproject.org/wiki/Packaging:Guidelines?rd=PackagingGuidelines#Desktop_files
+#install -D -m644 -p %%{name}.desktop %%{buildroot}%%{_datadir}/applications/%%{name}.desktop
+desktop-file-install --dir=%{buildroot}%{_datadir}/applications/ %{name}.desktop
 desktop-file-validate %{buildroot}%{_datadir}/applications/%{name}.desktop
+
+# dash-masternode-tool.appdata.xml
+# https://fedoraproject.org/wiki/Packaging:AppData
+install -D -m644 -p %{name}.appdata.xml %{buildroot}%{_metainfodir}/%{name}.appdata.xml
+appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/*.appdata.xml
 cd ../../
 
 ## Man Pages - not used as of yet
@@ -372,6 +383,8 @@ cd ../../
 ## Desktop
 %{_datadir}/icons/*
 %{_datadir}/applications/%{name}.desktop
+%{_metainfodir}/%{name}.appdata.xml
+#%%{_metainfodir}/%%{name}.metainfo.xml
 
 
 
@@ -415,6 +428,18 @@ cd ../../
 
 
 %changelog
+* Sun Apr 29 2018 Todd Warner <t0dd@protonmail.com> 0.9.18-3.2.testing.taw[n]
+- Using zenity for the dialogue box.
+- Will choose between ~/.config/dmt or ~/.dmt
+- Logic all fixed. Finally.
+
+* Sat Apr 28 2018 Todd Warner <t0dd@protonmail.com> 0.9.18-3.1.testing.taw[n]
+- I broke things with the data-dir... fixing!
+- Added missing .appdata.xml file (required for desktop applications in linux)
+
+* Sat Apr 28 2018 Todd Warner <t0dd@protonmail.com> 0.9.18-3.taw[n]
+- Updated stable build.
+
 * Sat Apr 28 2018 Todd Warner <t0dd@protonmail.com> 0.9.18-2.1.testing.taw[n]
 - Default --data-dir is now ~/.config/dmt  
 - Upstream default is moving to ~/.dmt, so I am more closely mirroring this.
