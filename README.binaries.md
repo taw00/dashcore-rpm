@@ -66,16 +66,12 @@ open up on your screen. For more information on how to actually USE the tool,
 please visit
 <https://github.com/Bertrand256/dash-masternode-tool/blob/master/README.md>.
 
-> _Note that all configuration/data for the Dash Masternode Tool will populate
-  the `~/.config/dmt/` directory. This diverges from the default
-  used by the raw tool from the Bertrand256 repositories. He uses
-  ~/DashMasternodeTool/ (in 0.9.18) and will use ~/.dmt/ in future versions. If
-  you wish to align with upstream's defaults, just run dash-masternode-tool
-  from the commandline with `--data-dir=~/.dmt/` (after you `mkdir ~/.dmt` of
-  course) and for the desktop... edit
-  `/usr/share/dash-masternode-desktop-script.sh` and change it semi-permanently
-  there (your changes will be lost upon subsequent RPM upgrades). TODO: I will
-  have to make this editable somewhere else eventually._
+> _Note that my version of the Dash Masternode Tool uses `~/.config/dmt/` as
+  its data directory. This diverges from the default used by the raw tool from
+  the Bertrand256 repositories. He uses ~/.dmt/. This version will fall back to
+  `~/.dmt/` if you prefer that location (i.e., just move the directory to that
+  location and the tool will use it.. I personally consider is a reasonable
+  choice, but less pedantically "correct".
 
 > _**WARNING:** The data directory (see above) contains HIGHLY sensitive
   information. The Dash Masternode Tool as configured here tightens up the
