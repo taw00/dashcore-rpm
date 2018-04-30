@@ -113,21 +113,23 @@ RPM? How? What?:
 * <https://fedoraproject.org/wiki/Packaging:Versioning>
 
 In order to build from a source RPM, you first need to set up your environment.
-If you have not already, do this as your normal user (not root) from the
+If you have not already, _**do this as your normal user (not root)**_ from the
 commandline:
 
 ```bash
-# As a normal user (not root)
-# For RHEL and CentOS, it's the same, just don't include the "fedora-packager"
-sudo dnf install @development-tools fedora-packager rpmdevtools rpm-sign
-sudo usermod -a -G mock $USER
-newgrp -
-```
-
-```bash
-# As a normal user (not root)
-# Create your working folder ~/rpmbuild/
+# Install needed packages
+sudo dnf install @development-tools rpmdevtools rpm-sign
+# optional
+#sudo dnf install fedora-packager
+# create your working folder ~/rpmbuild/[SOURCES,SRPMS,SPECS,RPMS]
 rpmdev-setuptree
+
+# Add yourself to the mock group
+# mock group membership allows you to build in mock build # environments
+sudo usermod -a -G mock $USER
+# refresh your login so that the new group shows up for this user
+# (not as reliable as logging out and logging back in again)
+newgrp -
 ```
 
 ***If that fails,*** you need to read more about setting up your development
@@ -141,14 +143,14 @@ usually.
 **Configure mock**
 
 Copy `/etc/mock/site-defaults.cfg` to `~/.config/mock.cfg`
-```
+```sh
 mkdir -p ~/.config
 cp -i /etc/mock/site-defaults.cfg ~/.config/mock.cfg
 ```
 and then edit `~/.config/mock.cfg` and configure it similarly to this (this is
 what I have uncommented and configured in mine.
 
-```bash
+```sh
 # ~/.config/mock.cfg
 config_opts['basedir'] = '/var/lib/mock/'
 config_opts['cache_topdir'] = '/var/cache/mock'
