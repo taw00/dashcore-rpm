@@ -1,6 +1,6 @@
 Name:		toddpkgs-dashcore-repo
 Version:	1.0
-Release:	1%{?dist}.taw0
+Release:	2%{?dist}.taw0
 Summary:	Repository configuration to enable management of dashcore packages (Dash Cryptocurrency Core Wallet and Node)
 
 Group:		System Environment/Base
@@ -75,10 +75,18 @@ install -D -m644 todd-694673ED-public-2030-01-04.2016-11-07.asc %{buildroot}%{_s
 
 
 %changelog
-* Mon Apr 16 2018 Todd Warner <t0dd at protonmail.com> 1.0-1.taw0
-- Initial build
+* Tue May 1 2018 Todd Warner <t0dd at protonmail.com> 1.0-2.taw[n]
+- GA release
 
-* Mon Apr 16 2018 Todd Warner <t0dd at protonmail.com> 1.0-0.1.testing.taw0
+* Tue May 1 2018 Todd Warner <t0dd at protonmail.com> 1.0-1.1.testing.taw[n]
+- Commented out the old 12.1 repo. It kept polluting the journal with error  
+  messages about missing metadata.
+- af7300b59589b0e93e411a64be433a9923e9c53b3314326d59566261db29a0c3  toddpkgs-dashcore-repo-1.0.tar.gz
+
+* Mon Apr 16 2018 Todd Warner <t0dd at protonmail.com> 1.0-1.taw[n]
+- GA release
+
+* Mon Apr 16 2018 Todd Warner <t0dd at protonmail.com> 1.0-0.1.testing.taw[n]
 - Initial test build
 - 2bd69f2980df5985694a003159d202bbf6b7b01849d152c4bb10d8f42728017e  toddpkgs-dashcore-repo-1.0.tar.gz
 

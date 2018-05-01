@@ -59,25 +59,20 @@ enabled_metadata=1
 
 
 ##
-## VERSION 12.1 Repositories
+## DEPRECATED or DECOMMISSIONED - don't use these anymore
 ##
 
-[dashcore-stable-12.1]
-name=Dash Core 12.1 - deprecated - fedora-$releasever-$basearch
-baseurl=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.1/fedora-$releasever-$basearch/
-type=rpm-md
-skip_if_unavailable=True
-gpgcheck=1
-gpgkey=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.1/pubkey.gpg
-repo_gpgcheck=0
-metadata_expire=1d
-enabled=0
-enabled_metadata=1
-
-
-##
-## DON'T USE THESE ANYMORE
-##
+#[dashcore-stable-12.1]
+#name=Dash Core 12.1 - deprecated - fedora-$releasever-$basearch
+#baseurl=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.1/fedora-$releasever-$basearch/
+#type=rpm-md
+#skip_if_unavailable=True
+#gpgcheck=1
+#gpgkey=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.1/pubkey.gpg
+#repo_gpgcheck=0
+#metadata_expire=1d
+#enabled=0
+#enabled_metadata=0
 
 #[dashcore-testing]
 #name=Dash Core - NOT USED ANYMORE - TESTING from Keybase Repos - fedora-$releasever-$basearch
