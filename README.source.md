@@ -4,9 +4,9 @@ The most current source packages can be found in this directory:
 <https://github.com/taw00/dashcore-rpm/tree/master/source/SRPMS>
 
 From these source packages, we have successfully built Dash Core for Fedora
-versions 26, 27 and CentOS 7 (and therefore RHEL7). Dash Masternode Tool has
-been successfully built for Fedora version 27 x86\_64 (it's a desktop
-application).
+versions 26, 27, 28, and CentOS 7 (and therefore RHEL7). Dash Masternode Tool
+has been successfully built for Fedora versions 27 and 28  x86\_64 (it's a
+desktop application).
 
 The original components used to build these packages come from:
 
@@ -170,7 +170,7 @@ config_opts['chroot_additional_packages'] = ['tree', 'vim-enhanced', 'less']
 
 For example, at the time of this writing the latest Dash src.rpm of version
 `0.12.2`, is considered "stable". For the purposes of this document, we are
-going use version-release `0.12.2.3-1.taw` as our example. Download the lastest
+going use version-release `0.12.2.3-2.taw` as our example. Download the lastest
 version that is specific to your linux distribution Fedora, CentOS, or RHEL. If
 you are attempting to build in a different environment, download the source RPM
 that as closely matches your platform and experiment away.
@@ -198,7 +198,7 @@ sudo rpm --import https://keybase.io/toddwarner/key.asc
 `$ rpm --checksig -v dashcore-0.12.2.*.src.rpm` ...or...
 `$ rpm -Kv dashcore-0.12.2.*.src.rpm`
 
-You should see something like: `dashcore-0.12.2.3-1.taw.fc27.src.rpm: rsa sha1 (md5) pgp md5 OK`<br />
+You should see something like: `dashcore-0.12.2.3-2.taw.fc27.src.rpm: rsa sha1 (md5) pgp md5 OK`<br />
 *Notice the "pgp" and the "OK"*
 
 And if you used the verbose flag, `-v`, then you should see my key ID: `694673ed`
@@ -209,7 +209,7 @@ you did not successfully import my key in step 1.
 
 Another way to look at this information is via...
 
-`$ rpm -qpi dashcore-0.12.2.3-1.taw.*.src.rpm | grep 'Name\|\|Version\|Release\|Signature'`
+`$ rpm -qpi dashcore-0.12.2.3-2.taw.*.src.rpm | grep 'Name\|\|Version\|Release\|Signature'`
 
 
 #### [4] Install the source RPM
@@ -220,7 +220,7 @@ Again, from the command line as a normal user... First, move that source RPM int
 # As a normal user (not root)
 mv dashcore-*.src.rpm ~/rpmbuild/SRPMS/
 # Install the sucker (do not use sudo here!):
-rpm -ivh ~/rpmbuild/SRPMS/dashcore-0.12.2.3-1.taw.fc27.src.rpm #Or whatever version you are installing.
+rpm -ivh ~/rpmbuild/SRPMS/dashcore-0.12.2.3-2.taw.fc27.src.rpm #Or whatever version you are installing.
 ```
 
 That should explode source code and patch instruction into
@@ -260,7 +260,7 @@ mock --buildsrpm --spec ~/rpmbuild/SPECS/dashcore-0.12.2.spec --sources ~/rpmbui
 ```
 
 This will create a source package and place it in `~/rpmbuild/SRPMS/`. For
-example `~/rpmbuild/SRPMS/dashcore-0.12.2.3-1.taw.fc27.src.rpm`
+example `~/rpmbuild/SRPMS/dashcore-0.12.2.3-2.taw.fc27.src.rpm`
 
 Now build it...
 
@@ -268,7 +268,7 @@ Now build it...
 # As a normal user (not root)
 # Hint hint: With mock you can build for targets that are not your OS version
 #            and architecture!
-mock -r fedora-27-x86_64 ~/rpmbuild/SRPMS/dashcore-0.12.2.3-1.taw.fc27.src.rpm --resultdir ~/rpmbuild/RPMS/
+mock -r fedora-27-x86_64 ~/rpmbuild/SRPMS/dashcore-0.12.2.3-2.taw.fc27.src.rpm --resultdir ~/rpmbuild/RPMS/
 ```
 
 This will build packages in `~/rpmbuild/RPMS/` Note, if you did not add

@@ -6,22 +6,11 @@
 #
 # Enjoy. Todd Warner <t0dd@protonmail.com>
 
-
-# To produce a debuginfo package:
-#   1. Comment out the debug package define
-#   2. Even commented, it causes problems, so turn it into something like
-#      this:  % define debug _ package % { n i l }
-# To squelch debuginfo package creation, uncomment the line, and then
-# reconstruct the debug package define as it should be
-#% define debug _package % { n i l }
-# https://fedoraproject.org/wiki/Changes/Harden_All_Packages
-#% define _hardened_build 0
-
 # Note: "bump" and "bumptag" are release-build identifiers.
 # For sentinel, bumptag will be either testing.taw, rc.taw, or just taw
 # depending on whether this is a test, release candidate, or release build. taw
 # are the builder's initials.
-%define bump 0
+%define bump 1
 %define bumptag taw
 %define _release %{bump}.%{bumptag}
 
@@ -72,6 +61,14 @@ BuildRoot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 BuildRequires: /usr/bin/virtualenv
 Requires: dashcore-server >= 0.12.2
 
+# How debug info and build_ids managed (I only halfway understand this):
+# https://github.com/rpm-software-management/rpm/blob/master/macros.in
+%define debug_package %{nil}
+%define _unique_build_ids 1
+%define _build_id_links alldebug
+
+# https://fedoraproject.org/wiki/Changes/Harden_All_Packages
+%define _hardened_build 1
 
 # Nuke auto-requires that rpmbuild will generate because of the virtualenv
 # things we do in the %build section. Note, this statement has to be placed
@@ -188,18 +185,28 @@ exit 0
 
 %files
 %defattr(-,dashcore,dashcore,-)
+
 %license %attr(-,root,root) %{sentineltree}/LICENSE
 %doc %attr(-,root,root) %{sentineltree}/README.md %{contribtree}/contrib/linux/README.redhat.md
+
 # Log directory and file
 %dir %attr(700,dashcore,dashcore) %{_localstatedir}/log/dashcore
 %ghost %{_localstatedir}/log/dashcore/sentinel.log
 %attr(644,root,root) /etc/logrotate.d/dashcore-sentinel
+
 # Code and Data Directories (combined, for now), includes config file
 %dir %attr(750,dashcore,dashcore) %{_sharedstatedir}/dashcore
 %dir %attr(750,dashcore,dashcore) %{_sharedstatedir}/dashcore/sentinel
-%{_sharedstatedir}/dashcore/sentinel/*
 %config(noreplace) %{_sharedstatedir}/dashcore/sentinel/sentinel.conf
-
+%{_sharedstatedir}/dashcore/sentinel/bin
+%{_sharedstatedir}/dashcore/sentinel/database
+%{_sharedstatedir}/dashcore/sentinel/lib
+%{_sharedstatedir}/dashcore/sentinel/share
+%{_sharedstatedir}/dashcore/sentinel/test
+%{_sharedstatedir}/dashcore/sentinel/venv
+%{_sharedstatedir}/dashcore/sentinel/README.md
+%{_sharedstatedir}/dashcore/sentinel/LICENSE
+%{_sharedstatedir}/dashcore/sentinel/requirements.txt
 
 
 # Dash Core Information
@@ -225,6 +232,9 @@ exit 0
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
+* Tue May 1 2018 Todd Warner <t0dd@protonmail.com> 1.1.0-1.taw
+- Build failing on Fedora 28 due to pedantic spec file checks. Fixed!
+
 * Tue Nov 7 2017 Todd Warner <t0dd@protonmail.com> 1.1.0-0.taw
 - Release 1.1 in support of dashcore 0.12.2.0 - b21bb6c
 - 971aa5e5f4d06ba76e76c9c828402af56f28353254c8db15214ac7071d982de5 sentinel-1.1.0.tar.gz

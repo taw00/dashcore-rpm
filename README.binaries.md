@@ -49,8 +49,8 @@ _Note that all configuration/data for the wallet will populate the `~/.dashcore/
 ### Install the _Dash Masternode Tool_ on your Fedora Linux workstation
 
 Assumption: Your workstation is a Fedora Linux system (only supported for
-Fedora 27 at the moment). The commands below also assume you are logging in as
-a normal user who has `sudo` priviledges.
+Fedora 27 and Fedora 28 at the moment). The commands below also assume you are
+logging in as a normal user who has `sudo` priviledges.
 
 At the terminal command line...
 
