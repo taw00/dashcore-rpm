@@ -22,7 +22,7 @@ At the terminal command line...
 ```bash
 # My system is Fedora...
 sudo rpm --import https://keybase.io/toddwarner/key.asc
-sudo dnf install -y https://raw.githubusercontent.com/taw00/dashcore-rpm/master/toddpkgs-dashcore-repo-1.0-1.fc27.taw0.noarch.rpm
+sudo dnf install -y https://raw.githubusercontent.com/taw00/dashcore-rpm/master/toddpkgs-dashcore-repo-1.0-2.fc27.taw0.noarch.rpm
 sudo dnf install -y dashcore-client --refresh
 dash-qt
 ```
@@ -32,7 +32,7 @@ dash-qt
 ```bash
 # My system is CentOS or RHEL
 sudo rpm --import https://keybase.io/toddwarner/key.asc
-sudo yum install -y https://raw.githubusercontent.com/taw00/dashcore-rpm/master/toddpkgs-dashcore-repo-1.0-1.el7.centos.taw0.noarch.rpm
+sudo yum install -y https://raw.githubusercontent.com/taw00/dashcore-rpm/master/toddpkgs-dashcore-repo-1.0-2.el7.centos.taw0.noarch.rpm
 sudo yum install -y dashcore-client
 dash-qt # Or browse your menuing system and look for "Dash"
 ```
@@ -56,7 +56,7 @@ At the terminal command line...
 
 ```bash
 sudo rpm --import https://keybase.io/toddwarner/key.asc
-sudo dnf install -y https://raw.githubusercontent.com/taw00/dashcore-rpm/master/toddpkgs-dashcore-repo-1.0-1.fc27.taw0.noarch.rpm
+sudo dnf install -y https://raw.githubusercontent.com/taw00/dashcore-rpm/master/toddpkgs-dashcore-repo-1.0-2.fc27.taw0.noarch.rpm
 sudo dnf install -y dash-masternode-tool --refresh
 ```
 
@@ -119,7 +119,7 @@ access. Log into a terminal and do this...
 ```bash
 # My system is Fedora...
 sudo rpm --import https://keybase.io/toddwarner/key.asc
-sudo dnf install -y https://raw.githubusercontent.com/taw00/dashcore-rpm/master/toddpkgs-dashcore-repo-1.0-1.fc27.taw0.noarch.rpm
+sudo dnf install -y https://raw.githubusercontent.com/taw00/dashcore-rpm/master/toddpkgs-dashcore-repo-1.0-2.fc27.taw0.noarch.rpm
 ```
 
 *...if using CentOS or RHEL*
@@ -127,7 +127,7 @@ sudo dnf install -y https://raw.githubusercontent.com/taw00/dashcore-rpm/master/
 ```bash
 # My system is CentOS or RHEL
 sudo rpm --import https://keybase.io/toddwarner/key.asc
-sudo yum install -y https://raw.githubusercontent.com/taw00/dashcore-rpm/master/toddpkgs-dashcore-repo-1.0-1.el7.centos.taw0.noarch.rpm
+sudo yum install -y https://raw.githubusercontent.com/taw00/dashcore-rpm/master/toddpkgs-dashcore-repo-1.0-2.el7.centos.taw0.noarch.rpm
 ```
 
 That's it! You are now configured to install Dash Core through your package
