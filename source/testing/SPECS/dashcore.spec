@@ -38,16 +38,16 @@ Summary: Peer-to-peer, privacy-centric, digital currency
 %define includeSnapinfo 1
 %define includeMinorbump 1
 
-# VERSION
+# VERSION
 %define vermajor 0.12.3
 %define verminor 0
 Version: %{vermajor}.%{verminor}
 
-# RELEASE
-# if production - "targetIsProduction 1"
+# RELEASE
+# if production - "targetIsProduction 1"
 %define pkgrel_prod 1
 
-# if pre-production - "targetIsProduction 0"
+# if pre-production - "targetIsProduction 0"
 # eg. 0.3.testing.201804-28
 %define pkgrel_preprod 0
 %define extraver_preprod 3
@@ -62,11 +62,11 @@ Version: %{vermajor}.%{verminor}
 
 %if %{targetIsProduction}
   %if %{includeSnapinfo}
-    %{warn:"Warning: target is production and yet you want snapinfo included. This is not typical."}
+    %{warn:"Warning: target is production and yet you want snapinfo included. This is not typical."}
   %endif
 %else
   %if ! %{includeSnapinfo}
-    %{warn:"Warning: target is pre-production and yet you elected not to incude snapinfo (testing, beta, ...). This is not typical."}
+    %{warn:"Warning: target is pre-production and yet you elected not to incude snapinfo (testing, beta, ...). This is not typical."}
   %endif
 %endif
 
@@ -152,9 +152,9 @@ Release: %{_release}
 
 # You should use URLs for sources.
 # https://fedoraproject.org/wiki/Packaging:SourceURL
-# dash-0.12.3.0 (github) or dashcore-0.12.3 (bamboo)
+# dash-0.12.3.0 (github) or dashcore-0.12.3 (bamboo)
 Source0: %{srccodetree}.tar.gz
-# dashcore-0.12.3-contrib
+# dashcore-0.12.3-contrib
 Source1: %{srccontribtree}.tar.gz
 
 %global selinux_variants mls strict targeted
@@ -464,7 +464,7 @@ cd ..
 #   _prefix = /usr
 #   _libdir = /usr/lib or /usr/lib64 (depending on system)
 #   https://fedoraproject.org/wiki/Packaging:RPMMacros
-# These two are defined in RPM versions in newer versions of Fedora (not el7)
+# These two are defined in RPM versions in newer versions of Fedora (not el7)
 %define _tmpfilesdir /usr/lib/tmpfiles.d
 %define _unitdir /usr/lib/systemd/system
 

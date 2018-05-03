@@ -1,9 +1,9 @@
 # dash-masternode-tool.spec
 #
-# This SPEC file serves to configure standard RPM builds for
+# This SPEC file serves to configure standard RPM builds for
 # dash-masternode-tool (aka DashMasternodeTool).
 #
-# A Dash Masternode is a Dash cryptocurrency full node with specialized
+# A Dash Masternode is a Dash cryptocurrency full node with specialized
 # features that enable it to operate as a member of the 2nd tier of
 # functionality on the Dash Network. Dash Masternode operators collateralize a
 # masternode with 1000 dash in a seperate wallet in order to prove ownership.
@@ -18,8 +18,8 @@
 # Read more here:
 # https://github.com/Bertrand256/dash-masternode-tool/blob/master/README.md
 #
-# Source - this SPEC file references source archives found here:
-# https://taw00.github.com/dash-rpm
+# Source - this SPEC file references source archives found here:
+# https://taw00.github.com/dash-rpm
 #  - dash-masternode-tool-<version>.tar.gz
 #  - dash-masternode-tool-<version-major>-contrib.tar.gz
 #
@@ -60,16 +60,16 @@ Summary: Manage and collateralize a Dash Masternode with a hardware wallet
 %define includeSnapinfo 0
 %define includeMinorbump 1
 
-# VERSION
+# VERSION
 %define vermajor 0.9
 %define verminor 18
 Version: %{vermajor}.%{verminor}
 
-# RELEASE
-# if production - "targetIsProduction 1"
+# RELEASE
+# if production - "targetIsProduction 1"
 %define pkgrel_prod 4
 
-# if pre-production - "targetIsProduction 0"
+# if pre-production - "targetIsProduction 0"
 # eg. 3.1.testing -- pkgrel_preprod should always = pkgrel_prod-1
 %define pkgrel_preprod 3
 %define extraver_preprod 2
@@ -82,11 +82,11 @@ Version: %{vermajor}.%{verminor}
 
 %if %{targetIsProduction}
   %if %{includeSnapinfo}
-    %{warn:"Warning: target is production and yet you want snapinfo included. This is not typical."}
+    %{warn:"Warning: target is production and yet you want snapinfo included. This is not typical."}
   %endif
 %else
   %if ! %{includeSnapinfo}
-    %{warn:"Warning: target is pre-production and yet you elected not to incude snapinfo (testing, beta, ...). This is not typical."}
+    %{warn:"Warning: target is pre-production and yet you elected not to incude snapinfo (testing, beta, ...). This is not typical."}
   %endif
 %endif
 
@@ -152,7 +152,7 @@ Release: %{_release}
 # Extracted source tree structure (extracted in .../BUILD)
 #   srcroot               dash-masternode-tool-0.9
 #      \_srccodetree        \_dash-masternode-tool-0.9.18
-#      \_srccodetree2       \_btchip-python-0.1.21
+#      \_srccodetree2       \_btchip-python-0.1.21
 #      \_srccontribtree     \_dash-masternode-tool-0.9-contrib
 %define srcroot %{name}-%{vermajor}
 %define srccodetree %{name}-%{version}
@@ -161,14 +161,14 @@ Release: %{_release}
 
 # You should use URLs for sources.
 # https://fedoraproject.org/wiki/Packaging:SourceURL
-# dash-masternode-tool-0.9.18
+# dash-masternode-tool-0.9.18
 Source0: %{srccodetree}.tar.gz
-#Source0: https://github.com/Bertrand256/dash-masternode-tool/archive/v0.9.18.tar.gz
-# dash-masternode-tool-0.9-contrib
+#Source0: https://github.com/Bertrand256/dash-masternode-tool/archive/v0.9.18.tar.gz
+# dash-masternode-tool-0.9-contrib
 Source1: %{srccontribtree}.tar.gz
-# btchip-python-0.1.21
+# btchip-python-0.1.21
 Source2: %{srccodetree2}.tar.gz
-#Source2: https://github.com/Bertrand256/btchip-python/archive/v0.1.21.tar.gz
+#Source2: https://github.com/Bertrand256/btchip-python/archive/v0.1.21.tar.gz
 
 # Most of the time, the build system can figure out the requires.
 # But if you need something specific...
@@ -176,7 +176,7 @@ Requires: zenity
 
 # BuildRequires indicates everything you need to build the RPM
 BuildRequires: python3-devel python3-virtualenv libusbx-devel libudev-devel
-# For debugging purposes...
+# For debugging purposes...
 BuildRequires: tree
 # So I can introspect the mock build environment...
 #BuildRequires: tree vim-enhanced less
@@ -194,7 +194,7 @@ BuildRequires: desktop-file-utils libappstream-glib
 
 License: MIT
 URL: https://github.com/taw00/dashcore-rpm
-# Group is deprecated. Don't use it. Left here as a reminder...
+# Group is deprecated. Don't use it. Left here as a reminder...
 # https://fedoraproject.org/wiki/RPMGroups
 #Group: Unspecified
 
@@ -222,15 +222,15 @@ to manage their Masternodes from a collateralize-holding hardware wallet.
 
 This tool will allow you to..
 
-* Send the start masternode command if the collateral is controlled by a
+* Send the start masternode command if the collateral is controlled by a
   hardware wallet
-* Transfer masternode earnings safely, without touching the 1000 Dash
+* Transfer masternode earnings safely, without touching the 1000 Dash
   funding transaction
-* Sign messages with a hardware wallet
-* Vote on proposals
-* Initialize/recover hardware wallets seeds
-* Update hardware wallets firmware (Trezor/KeepKey)
-* Participate on Dash Testnet
+* Sign messages with a hardware wallet
+* Vote on proposals
+* Initialize/recover hardware wallets seeds
+* Update hardware wallets firmware (Trezor/KeepKey)
+* Participate on Dash Testnet
 
 Supported hardware wallets: Trezor (model One and T), KeepKey, Ledger Nano S
 
@@ -242,7 +242,7 @@ Supported hardware wallets: Trezor (model One and T), KeepKey, Ledger Nano S
 # Extracted source tree structure (extracted in .../BUILD)
 #   srcroot               dash-masternode-tool-0.9
 #      \_srccodetree        \_dash-masternode-tool-0.9.18
-#      \_srccodetree2       \_btchip-python-0.1.21
+#      \_srccodetree2       \_btchip-python-0.1.21
 #      \_srccontribtree     \_dash-masternode-tool-0.9-contrib
 
 mkdir %{srcroot}
@@ -280,9 +280,9 @@ cd ..
 
 
 %install
-# CREATING RPM:
-# - install step (comes before files step)
-# - This step moves anything needing to be part of the package into the
+# CREATING RPM:
+# - install step (comes before files step)
+# - This step moves anything needing to be part of the package into the
 #   {buildroot}, therefore mirroring the final directory and file structure of
 #   an installed RPM.
 #
@@ -299,7 +299,7 @@ cd ..
 #   _prefix = /usr
 #   _libdir = /usr/lib or /usr/lib64 (depending on system)
 #   https://fedoraproject.org/wiki/Packaging:RPMMacros
-# These three are defined in newer versions of RPM (Fedora not el7)
+# These three are defined in newer versions of RPM (Fedora not el7)
 %define _tmpfilesdir /usr/lib/tmpfiles.d
 %define _unitdir /usr/lib/systemd/system
 %define _metainfodir %{_datadir}/metainfo
@@ -315,10 +315,10 @@ install -D -m755 -p %{srccontribtree}/desktop/%{name}-desktop-script.sh %{buildr
 install -D -m755 -p ./dist/linux/%{_name2} %{buildroot}%{_datadir}/%{name}/%{_name2}
 ln -s %{_datadir}/%{name}/%{_name2} %{buildroot}%{_bindir}/%{name}
 
-# Most use LICENSE or COPYING... not LICENSE.txt
+# Most use LICENSE or COPYING... not LICENSE.txt
 install -D -p %{srccodetree}/LICENSE.txt %{srccodetree}/LICENSE
 
-# Desktop
+# Desktop
 cd %{srccontribtree}/desktop/
 install -D -m644 -p %{name}.hicolor.16x16.png        %{buildroot}%{_datadir}/icons/hicolor/16x16/apps/%{name}.png
 install -D -m644 -p %{name}.hicolor.22x22.png        %{buildroot}%{_datadir}/icons/hicolor/22x22/apps/%{name}.png
@@ -362,9 +362,9 @@ cd ../../
 
 
 %files
-# CREATING RPM:
-# - files step (final step)
-# - This step makes a declaration of ownership of any listed directories
+# CREATING RPM:
+# - files step (final step)
+# - This step makes a declaration of ownership of any listed directories
 #   or files
 # - The install step should have set permissions and ownership correctly,
 #   but of final tweaking is often done in this section
@@ -375,12 +375,12 @@ cd ../../
 %doc %{srccontribtree}/README.changelog.md
 %doc %{srccodetree}/README.md
 
-# Binaries
+# Binaries
 %{_bindir}/%{name}
 %{_datadir}/%{name}/%{_name2}
 %{_datadir}/%{name}/%{name}-desktop-script.sh
 
-## Desktop
+## Desktop
 %{_datadir}/icons/*
 %{_datadir}/applications/%{name}.desktop
 %{_metainfodir}/%{name}.appdata.xml
@@ -389,33 +389,33 @@ cd ../../
 
 
 %pre
-# INSTALLING THE RPM:
-# - pre section (runs before the install process)
-# - system users are added if needed. Any other roadbuilding.
+# INSTALLING THE RPM:
+# - pre section (runs before the install process)
+# - system users are added if needed. Any other roadbuilding.
 #
 # This section starts us in directory .../BUILD/<srcroot>
 #
 
 
 %post
-# INSTALLING THE RPM:
-# - post section (runs after the install process is complete)
+# INSTALLING THE RPM:
+# - post section (runs after the install process is complete)
 #
 #umask 007
-## refresh library context
+## refresh library context
 #/sbin/ldconfig > /dev/null 2>&1
-## refresh systemd context
+## refresh systemd context
 #test -e %%{_sysconfdir}/%%{name}/%%{name}.conf && %%systemd_post %%{name}d.service
 ## refresh firewalld context
 #test -f %%{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 
 
 %postun
-# UNINSTALLING THE RPM:
-# - postun section (runs after an RPM has been removed)
+# UNINSTALLING THE RPM:
+# - postun section (runs after an RPM has been removed)
 #
 #umask 007
-## refresh library context
+## refresh library context
 #/sbin/ldconfig > /dev/null 2>&1
 ## refresh firewalld context
 #test -f %%{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true

@@ -26,18 +26,18 @@ Summary: A required helper agent for Dash Masternodes
 %define includeMinorbump 1
 
 
-# VERSION
+# VERSION
 # eg. 1.0.1
 %define vermajor 1.2
 %define verminor 0
 Version: %{vermajor}.%{verminor}
 
 
-# RELEASE
-# if production - "targetIsProduction 1"
+# RELEASE
+# if production - "targetIsProduction 1"
 %define pkgrel_prod 1
 
-# if pre-production - "targetIsProduction 0"
+# if pre-production - "targetIsProduction 0"
 # eg. 0.3.testing
 %define pkgrel_preprod 0
 %define extraver_preprod 1
@@ -51,11 +51,11 @@ Version: %{vermajor}.%{verminor}
 
 %if %{targetIsProduction}
   %if %{includeSnapinfo}
-    %{warn:"Warning: target is production and yet you want snapinfo included. This is not typical."}
+    %{warn:"Warning: target is production and yet you want snapinfo included. This is not typical."}
   %endif
 %else
   %if ! %{includeSnapinfo}
-    %{warn:"Warning: target is pre-production and yet you elected not to incude snapinfo (testing, beta, ...). This is not typical."}
+    %{warn:"Warning: target is pre-production and yet you elected not to incude snapinfo (testing, beta, ...). This is not typical."}
   %endif
 %endif
 
@@ -141,7 +141,7 @@ Source1: %{srccontribarchive}.tar.gz
 # But if you need something specific...
 Requires: dashcore-server >= 0.12.3
 
-# For mock environments I add vim-enhanced and less so I can introspect by hand
+# For mock environments I add vim-enhanced and less so I can introspect by hand
 #BuildRequires: tree vim-enhanced less
 BuildRequires: /usr/bin/virtualenv
 # Nuke the auto-requires that rpmbuild will generate because of the

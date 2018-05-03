@@ -62,7 +62,7 @@ install -D -m644 todd-694673ED-public-2030-01-04.2016-11-07.asc %{buildroot}%{_s
   install -D -m644 dashcore-epel.repo %{buildroot}%{_sysconfdir}/yum.repos.d/dashcore.repo
 %else
   #%%if 0%{?fedora:1}
-  # Punt and assume dnf: Make this potentially useable beyond Fedora and CentOS/RHEL
+  # Punt and assume dnf: Make this potentially useable beyond Fedora and CentOS/RHEL
   install -D -m644 dashcore-fedora.repo %{buildroot}%{_sysconfdir}/yum.repos.d/dashcore.repo
   #%%endif
 %endif
