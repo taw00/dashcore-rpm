@@ -118,9 +118,7 @@ commandline:
 
 ```bash
 # Install needed packages
-sudo dnf install @development-tools rpmdevtools rpm-sign
-# optional
-#sudo dnf install fedora-packager
+sudo dnf install @development-tools rpmdevtools rpm-sign fedora-packager
 # create your working folder ~/rpmbuild/[SOURCES,SRPMS,SPECS,RPMS]
 rpmdev-setuptree
 
