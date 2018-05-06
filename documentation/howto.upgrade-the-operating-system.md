@@ -54,6 +54,18 @@ sudo dnf system-upgrade download --refresh -y --releasever=28
 # Upgrade!
 sudo dnf system-upgrade reboot
 ```
+<!-- pedantic version.
+```
+# Download upgrade package.
+sudo dnf install dnf-plugin-system-upgrade -y
+# Download upgraded packages (using F28 as the example target OS version)
+sudo dnf system-upgrade download --refresh -y --releasever=28
+# Stop the masternode -- not really needed, but we are being pedantic
+sudo systemctl stop dashcore
+# Upgrade!
+sudo dnf system-upgrade reboot
+```
+-->
 
 3. Log back in and check the status.
 
@@ -63,7 +75,18 @@ sudo rpm -qa | grep release
 sudo rpm -qa | grep dashcore
 ```
 
+4. Clean up cached upgrade data
+
+```
+# Once you are ready (not that you can go back), clean up all the cached data
+# from the upgrade process
+sudo dnf system-upgrade clean
+sudo dnf clean packages
+```
+
+
 Your Dash Masternode should be up and running just fine, but examine it and
-watch it until satisfied. Troubleshooting guidance can be found here: [Dash Core Troubleshooting Guide](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.dashcore-troubleshooting.md)
+monitor until satisfied. Troubleshooting guidance can be found here:
+[Dash Core Troubleshooting Guide](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.dashcore-troubleshooting.md)
 
 That's it! Your done.
