@@ -1,15 +1,14 @@
 # Dash Masternode Sentinel spec file
+# Dash Core reference implementation
+# vim:tw=0:ts=2:sw=2:et:
 #
-# This is the source spec for building the Dash Masternode Sentinel toolchain
-# required to operate a Dash Masternode. It will build the dashcore-sentinel
-# package.
+# This is the source spec for building the Dash Core Masternode Sentinel
+# toolchain required to operate a Dash Masternode. It will build the
+# dashcore-sentinel package.
 #
 # Note about edits within the spec: Any comments beginning with #t0dd are
 # associated to future work or experimental elements of this spec file and
 # build.
-#
-# Note commented out macros in this (or any) spec file. You MUST double up
-# the %%'s or rpmbuild will yell at you. RPM is weird.
 #
 # Enjoy. -t0dd
 
@@ -22,7 +21,6 @@ Name: %{_name_dcs}
 Summary: A required helper agent for Dash Masternodes
 
 %define targetIsProduction 0
-%define includeSnapinfo 1
 %define includeMinorbump 1
 
 
@@ -38,9 +36,9 @@ Version: %{vermajor}.%{verminor}
 %define pkgrel_prod 1
 
 # if pre-production - "targetIsProduction 0"
-# eg. 0.3.testing
+# eg. 0.5.testing -- pkgrel_preprod should always equal pkgrel_prod-1
 %define pkgrel_preprod 0
-%define extraver_preprod 1
+%define extraver_preprod 2
 #%%define snapinfo testing
 %define snapinfo testing.20180428
 
@@ -48,16 +46,6 @@ Version: %{vermajor}.%{verminor}
 %define minorbump taw0
 
 # Building the release string (don't edit this)...
-
-%if %{targetIsProduction}
-  %if %{includeSnapinfo}
-    %{warn:"Warning: target is production and yet you want snapinfo included. This is not typical."}
-  %endif
-%else
-  %if ! %{includeSnapinfo}
-    %{warn:"Warning: target is pre-production and yet you elected not to incude snapinfo (testing, beta, ...). This is not typical."}
-  %endif
-%endif
 
 # release numbers
 %undefine _relbuilder_pt1
@@ -72,7 +60,7 @@ Version: %{vermajor}.%{verminor}
 
 # snapinfo and repackage (pre-built) indicator
 %undefine _relbuilder_pt2
-%if ! %{includeSnapinfo}
+%if %{targetIsProduction}
   %undefine snapinfo
 %endif
 %if 0%{?sourceIsPrebuilt:1}
@@ -117,35 +105,36 @@ Version: %{vermajor}.%{verminor}
 Release: %{_release}
 # ----------- end of release building section
 
-# Various archive and tree naming conventions (for example)
-# 1. sentinel-1.2.0
-#    (upstream dash team convention, github, etc - eg. sentinel-1.0.1.tar.gz)
-# 2. dashcore-sentinel-1.2
-%define _srcarchive_github %{_name_s}-%{version}
-%define srcarchive %{_srcarchive_github}
-%define srccontribarchive %{_name_dcs}-%{vermajor}-contrib
-
-Source0: %{srcarchive}.tar.gz
-Source1: %{srccontribarchive}.tar.gz
-
 # Unarchived source tree structure (extracted in .../BUILD)
 #   srcroot               dashcore-sentinel-1.1
 #      \_srccodetree        \_sentinel-1.1.0 (github tree example)
 #      \_srccontribtree     \_dashcore-sentinel-1.1-contrib
 %define srcroot %{_name_dcs}-%{vermajor}
-%define _srccodetree_github %{_srcarchive_github}
+%define _srccodetree_github %{_name_s}-%{version}
 %define srccodetree %{_srccodetree_github}
 %define srccontribtree %{_name_dcs}-%{vermajor}-contrib
+
+%if %{targetIsProduction}
+Source0: https://github.com/taw00/dashcore-rpm/source/SOURCES/%{srccodetree}.tar.gz
+Source1: https://github.com/taw00/dashcore-rpm/source/SOURCES/%{srccontribtree}.tar.gz
+%else
+Source0: https://github.com/taw00/dashcore-rpm/source/testing/SOURCES/%{srccodetree}.tar.gz
+Source1: https://github.com/taw00/dashcore-rpm/source/testing/SOURCES/%{srccontribtree}.tar.gz
+%endif
 
 # Most of the time, the build system can figure out the requires.
 # But if you need something specific...
 Requires: dashcore-server >= 0.12.3
 
+# Force Python3 as __python default even if Python2 is present (and it usually is).
+# Note, this is going away as an advised path.
+%global __python %{__python3}
+
 # For mock environments I add vim-enhanced and less so I can introspect by hand
 #BuildRequires: tree vim-enhanced less
-BuildRequires: /usr/bin/virtualenv
+BuildRequires: /usr/bin/virtualenv-3
 # Nuke the auto-requires that rpmbuild will generate because of the
-# virtualenv things we do in the %build section.
+# virtualenv things we do in the build section.
 %global __requires_exclude .*/BUILD/.*/venv/bin/python
 
 # If you comment out "debug_package" RPM will create additional RPMs that can
@@ -165,6 +154,8 @@ BuildRequires: /usr/bin/virtualenv
 
 License: MIT
 URL: http://dash.org/
+# Note, for example, this will not build on ppc64le
+ExclusiveArch: x86_64 i686 i386
 
 
 %description
@@ -203,8 +194,8 @@ mkdir %{srcroot}
 #   This is less than ideal for many reasons.
 #   TODO: Build from locally known and signed libraries -- a future endeavor.
 cd %{srccodetree}
-/usr/bin/virtualenv ./venv
-./venv/bin/pip install -r ./requirements.txt
+/usr/bin/virtualenv-3 ./venv
+./venv/bin/pip3 install -r ./requirements.txt
 cd ..
 
 
@@ -213,16 +204,19 @@ cd ..
 
 # Install / config ancillary files
 # Cheatsheet for built-in RPM macros:
+# https://fedoraproject.org/wiki/Packaging:RPMMacros
 #   _datadir = /usr/share
 #   _mandir = /usr/share/man
 #   _sysconfdir = /etc
 #   _localstatedir = /var
 #   _sharedstatedir is /var/lib
-#   _prefix = /usr
+#   _prefix or _usr = /usr
 #   _libdir = /usr/lib or /usr/lib64 (depending on system)
-#   https://fedoraproject.org/wiki/Packaging:RPMMacros
-%define _tmpfilesdir /usr/lib/tmpfiles.d
-%define _unitdir /usr/lib/systemd/system
+# This is used to quiet rpmlint who can't seem to understand that /usr/lib is
+# still used for certain things.
+%define _usr_lib /usr/lib
+%define _tmpfilesdir %{_usr_lib}/tmpfiles.d
+%define _unitdir %{_usr_lib}/systemd/system
 install -d %{buildroot}%{_sysconfdir}
 install -d %{buildroot}%{_sysconfdir}/dashcore
 install -d %{buildroot}%{_localstatedir}
@@ -231,14 +225,13 @@ install -d -m700 %{buildroot}%{_localstatedir}/log/dashcore
 install -d %{buildroot}%{_sharedstatedir}
 install -d %{buildroot}%{_sharedstatedir}/dashcore
 install -d %{buildroot}%{_sharedstatedir}/dashcore/sentinel
-install -d %{buildroot}%{_prefix}
 install -d %{buildroot}%{_tmpfilesdir}
 install -d %{buildroot}%{_unitdir}
 install -d %{buildroot}%{_mandir}/man1
-#install -d -m755 -p %{buildroot}%{_sbindir}
-#install -d -m755 -p %{buildroot}%{_bindir}
-#install -d -m755 -p %{buildroot}%{_includedir}
-#install -d -m755 -p %{buildroot}%{_libdir}
+#install -d -m755 -p %%{buildroot}%%{_sbindir}
+#install -d -m755 -p %%{buildroot}%%{_bindir}
+#install -d -m755 -p %%{buildroot}%%{_includedir}
+#install -d -m755 -p %%{buildroot}%%{_libdir}
 
 cp -a %{srccodetree}/* %{buildroot}%{_sharedstatedir}/dashcore/sentinel/
 
@@ -361,41 +354,46 @@ exit 0
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
-* Sat Apr 28 2018 Todd Warner <t0dd@protonmail.com> 1.2.0-0.1.testing.taw[n]
-- Test build 1.2.0 (an assumed next version number)
+* Wed May 23 2018 Todd Warner <t0dd_at_protonmail.com> 1.2.0-0.2.testing.taw
+  - minor spec file changes
+  - python3-isms
+  - locking down supported architectures w/ ExclusiveArch
 
-* Mon Apr 9 2018 Todd Warner <t0dd@protonmail.com> 1.1.0-1.2.testing.taw[n]
-- Remove .build_ids... because they conflict all the time.
-- _tmpfilesdir and _unitdir don't exist on f25 - not a huge deal, but still.
+* Sat Apr 28 2018 Todd Warner <t0dd_at_protonmail.com> 1.2.0-0.1.testing.taw
+  - Test build 1.2.0
 
-* Sun Apr 8 2018 Todd Warner <t0dd@protonmail.com> 1.1.0-1.1.testing.taw[n]
-- Refactor sentinel spec
-- Versions use more canonical packaging standards.
-- Configuration file is in /etc/dashcore/sentinel.conf now (but still symlinked  
-  from /var/lib/dashcore/sentinel.conf)
-- Contrib tree is restructured a bit to reduce redundancy.
-- Updated some information in contrib README and other text.
+* Mon Apr 9 2018 Todd Warner <t0dd_at_protonmail.com> 1.1.0-1.2.testing.taw
+  - Remove .build_ids... because they conflict all the time.
+  - _tmpfilesdir and _unitdir don't exist on f25 - not a huge deal, but still.
 
-* Tue Nov 14 2017 Todd Warner <t0dd@protonmail.com> 1.1.0-1.testing.taw
-- Spec file tweaks so that this builds on Fedora 27. I don't know the real
-- cause of the error, but it is related to debuginfo building. But Sentinel
-- doesn't really need debuginfo packages built, so I am just going to nuke them.
+* Sun Apr 8 2018 Todd Warner <t0dd_at_protonmail.com> 1.1.0-1.1.testing.taw
+  - Refactor sentinel spec
+  - Versions use more canonical packaging standards.
+  - Configuration file is in /etc/dashcore/sentinel.conf now (but still symlinked  
+    from /var/lib/dashcore/sentinel.conf)
+  - Contrib tree is restructured a bit to reduce redundancy.
+  - Updated some information in contrib README and other text.
 
-* Tue Nov 7 2017 Todd Warner <t0dd@protonmail.com> 1.1.0-0.taw
-- Release 1.1 in support of dashcore 0.12.2
+* Tue Nov 14 2017 Todd Warner <t0dd_at_protonmail.com> 1.1.0-1.testing.taw
+  - Spec file tweaks so that this builds on Fedora 27. I don't know the real
+  - cause of the error, but it is related to debuginfo building. But Sentinel
+  - doesn't really need debuginfo packages built, so I am just going to nuke them.
 
-* Tue Nov 7 2017 Todd Warner <t0dd@protonmail.com> 1.1.0-0.testing.taw
-- Release 1.1 in support of dashcore 0.12.2 - testing
+* Tue Nov 7 2017 Todd Warner <t0dd_at_protonmail.com> 1.1.0-0.taw
+  - Release 1.1 in support of dashcore 0.12.2
 
-* Fri Feb 24 2017 Todd Warner <t0dd@protonmail.com> 1.0.1-0.rc.taw
-- Release 1.0.1 - Release Candidate - 4ac8523
+* Tue Nov 7 2017 Todd Warner <t0dd_at_protonmail.com> 1.1.0-0.testing.taw
+  - Release 1.1 in support of dashcore 0.12.2 - testing
 
-* Fri Feb 10 2017 Todd Warner <t0dd@protonmail.com> 1.0-2.taw
-- Building debuginfo RPMs as well now.
+* Fri Feb 24 2017 Todd Warner <t0dd_at_protonmail.com> 1.0.1-0.rc.taw
+  - Release 1.0.1 - Release Candidate - 4ac8523
 
-* Mon Feb 06 2017 Todd Warner <t0dd@protonmail.com> 1.0-1.taw
-- Fixed a broken file in the contribs that hosed the sentinel.conf file.
+* Fri Feb 10 2017 Todd Warner <t0dd_at_protonmail.com> 1.0-2.taw
+  - Building debuginfo RPMs as well now.
 
-* Sun Feb 05 2017 Todd Warner <t0dd@protonmail.com> 1.0-0.taw
-- Release 1.0 - d822f41 - in tandem with Dash Core 12.1 release
+* Mon Feb 06 2017 Todd Warner <t0dd_at_protonmail.com> 1.0-1.taw
+  - Fixed a broken file in the contribs that hosed the sentinel.conf file.
+
+* Sun Feb 05 2017 Todd Warner <t0dd_at_protonmail.com> 1.0-0.taw
+  - Release 1.0 - d822f41 - in tandem with Dash Core 12.1 release
 
