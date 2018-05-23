@@ -70,7 +70,7 @@ Version: %{vermajor}.%{verminor}
 %define pkgrel_prod 4
 
 # if pre-production - "targetIsProduction 0"
-# eg. 3.1.testing -- pkgrel_preprod should always = pkgrel_prod-1
+# eg. 3.1.testing -- pkgrel_preprod should always equal pkgrel_prod-1
 %define pkgrel_preprod 3
 %define extraver_preprod 2
 %define snapinfo testing
