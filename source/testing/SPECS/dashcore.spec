@@ -71,9 +71,8 @@ Version: %{vermajor}.%{verminor}
 %define snapinfo %{archive_qualifier}
 %endif
 
-
 # if includeMinorbump
-%define minorbump taw0
+%define minorbump taw1
 
 #
 # Build the release string (don't edit this)
@@ -406,6 +405,8 @@ mkdir -p %{srcroot}
 mkdir -p selinux-tmp
 cp -p %{srccontribtree}/linux/selinux/dash.{te,if,fc} selinux-tmp/
 
+cp -a %{srccontribtree}/extras/pixmaps/*.??? %{srccodetree}/share/pixmaps/
+
 
 
 %build
@@ -568,7 +569,7 @@ install -D -m644 dash-HighContrast-scalable.svg %{buildroot}%{_datadir}/icons/Hi
 cd ../../..
 
 # Misc pixmaps - unsure if they are even used... (from contrib)
-install -D -m644 %{srccontribtree}/extras/pixmaps/* %{buildroot}%{_datadir}/pixmaps/
+#install -D -m644 %%{srccontribtree}/extras/pixmaps/*.??? %%{buildroot}%%{_datadir}/pixmaps/
 
 # Config
 # Install default configuration file (from contrib)
@@ -780,7 +781,7 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 %{_datadir}/applications/dash-qt.desktop
 %{_metainfodir}/dash-qt.appdata.xml
 %{_datadir}/kde4/services/dash-qt.protocol
-%{_datadir}/pixmaps/*
+#%%{_datadir}/pixmaps/*
 %{_datadir}/icons/*
 %{_mandir}/man1/dash-qt.1.gz
 %{_mandir}/man5/masternode.conf.5.gz

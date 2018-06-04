@@ -49,10 +49,10 @@ For a general overview of what a masternode is and how it is set up at a high
 level, please refer to the overview document found
 [here](https://github.com/taw00/dashcore-rpm/blob/master/documentation/README.md).
 
-As of this writing (early 2017), before setting up a masternode, you need to
-acquire 1000 DASH and hold it in a specially configured wallet. Do that first.
-You can find instruction for how to set that up here:
-[howto.12.1-dashcore-collateral-bearing-wallet-setup.gui.md](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.12.1-dashcore-collateral-bearing-wallet-setup.gui.md)
+Before setting up a masternode, you need to acquire 1000 DASH and hold it in a
+specially configured wallet. Do that first. You can find instruction for how to
+set that up here:
+[howto.dashcore-collateral-bearing-wallet-setup.gui.md](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.dashcore-collateral-bearing-wallet-setup.gui.md)
 
 Once completed, you may continue.
 
@@ -425,7 +425,7 @@ commandline of this masternode server. For this example, we are going to use
 `93.184.216.34` (yours will be different, of course).
 
 Then take the data you gathered from setting up your wallet in
-[howto.12.1-dashcore-collateral-bearing-wallet-setup.gui.md](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.12.1-dashcore-collateral-bearing-wallet-setup.gui.md)
+[howto.dashcore-collateral-bearing-wallet-setup.gui.md](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.dashcore-collateral-bearing-wallet-setup.gui.md)
 and reconfigured `/etc/dashcore/dash.conf`
 
 ```
@@ -534,7 +534,7 @@ feel free to remove it following the pattern we demonstrated above._
 ## [6] ON WALLET: Add masternode IP address
 
 Go back to your wallet (see
-[howto.12.1-dashcore-collateral-bearing-wallet-setup.gui.md](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.12.1-dashcore-collateral-bearing-wallet-setup.gui.md))
+[howto.dashcore-collateral-bearing-wallet-setup.gui.md](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.dashcore-collateral-bearing-wallet-setup.gui.md))
 and edit the `masternode.conf` file referenced there and replace the example IP
 address with the IP address of this masternode as found in prior steps above.
 
@@ -554,7 +554,7 @@ that 1000 DASH collateral to this masternode and says "Okay, full node, you can
 now operate on the network as a masternode!"
 
 Go back to your wallet (see
-[howto.12.1-dashcore-collateral-bearing-wallet-setup.gui.md](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.12.1-dashcore-collateral-bearing-wallet-setup.gui.md)).
+[howto.dashcore-collateral-bearing-wallet-setup.gui.md](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.dashcore-collateral-bearing-wallet-setup.gui.md)).
 
 * Navigate the menus: Tools > Debug console
 * Enter in that dialogue: `masternode start-alias mn1`<br />

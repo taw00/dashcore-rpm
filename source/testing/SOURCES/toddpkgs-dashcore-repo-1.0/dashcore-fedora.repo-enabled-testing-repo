@@ -1,0 +1,112 @@
+# Dash Core (https://dash.org) for Fedora
+# Stable and Testing repository streams - binaries and sources
+#
+# DNF repository configuration.
+# This file needs to be installed (as root) in your /etc/yum.repos.d/ directory.
+#
+# You can browse https://github.com/taw00/dashcore-rpm, find this file and keep
+# it up-to-date manually, or better yet...
+#
+# Install the RPM that will keep this file current:
+#   sudo rpm --import https://keybase.io/toddwarner/key.asc
+#   sudo dnf install -y https://raw.githubusercontent.com/taw00/dashcore-rpm/master/toddpkgs-dashcore-repo-[...].rpm
+#
+# List the dashcore packages now available
+#   sudo dnf list | grep dashcore
+#
+# To install, for example the GUI client, you would do this at the commandline:
+#   sudo dnf install dashcore-client
+#
+# To update already existing software
+# Note: check dash.org to see if there are special upgrade steps that need to be taken.
+#   sudo dnf upgrade
+#
+# To switch from one repository version to the next (example, stable-12.2 to stable (latest))...
+#   sudo dnf config-manager --set-disabled dashcore-stable-12.2
+#   sudo dnf config-manager --set-enabled dashcore-stable
+#
+# Feedback: t0dd_at_protonmail.com
+
+[dashcore-stable]
+enabled=0
+name=Dash Core 12.3 - stable - fedora-$releasever-$basearch
+baseurl=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.3/fedora-$releasever-$basearch/
+type=rpm-md
+skip_if_unavailable=True
+gpgcheck=1
+gpgkey=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.3/pubkey.gpg
+repo_gpgcheck=0
+metadata_expire=1d
+enabled_metadata=1
+
+[dashcore-stable-12.2]
+enabled=0
+name=Dash Core 12.2 - stable - fedora-$releasever-$basearch
+baseurl=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.2/fedora-$releasever-$basearch/
+type=rpm-md
+skip_if_unavailable=True
+gpgcheck=1
+gpgkey=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.2/pubkey.gpg
+# GnuPG fingerprint should be: C007F5C5B0827208031C8D6251A9F10DA3DF1F94
+repo_gpgcheck=0
+metadata_expire=1d
+enabled_metadata=1
+
+[dashcore-testing]
+enabled=1
+name=Dash Core Test packages - fedora-$releasever-$basearch
+# Note: The testing repository always provides the latest packages regardless
+# of how major the upgrade. In contrast, release quality packages are divided
+# into their own per-major version repositories.
+baseurl=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-testing/fedora-$releasever-$basearch/
+type=rpm-md
+skip_if_unavailable=True
+gpgcheck=1
+gpgkey=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-testing/pubkey.gpg
+repo_gpgcheck=0
+# Default metadata_expire is typically 2d (2 days)
+#metadata_expire=6h
+metadata_expire=60
+enabled_metadata=1
+
+
+##
+## DEPRECATED or DECOMMISSIONED - don't use these anymore
+##
+
+#[dashcore-stable-12.1]
+#name=Dash Core 12.1 - deprecated - fedora-$releasever-$basearch
+#baseurl=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.1/fedora-$releasever-$basearch/
+#type=rpm-md
+#skip_if_unavailable=True
+#gpgcheck=1
+#gpgkey=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.1/pubkey.gpg
+#repo_gpgcheck=0
+#metadata_expire=1d
+#enabled=0
+#enabled_metadata=0
+
+#[dashcore-testing]
+#name=Dash Core - NOT USED ANYMORE - TESTING from Keybase Repos - fedora-$releasever-$basearch
+#baseurl=https://toddwarner.keybase.pub/repo/dashcore/testing/fedora/$releasever/$basearch/
+#type=rpm-md
+## Checks for new test packages more often than the default 2d (2 days)
+##metadata_expire=6h
+#metadata_expire=0
+#gpgcheck=1
+#gpgkey=https://keybase.io/toddwarner/key.asc
+#skip_if_unavailable=True
+#enabled=0
+
+#[dashcore-testing-source]
+#name=Dash Core - NOT USED ANYMORE -TESTING source from Keybase Repos - fedora-$releasever-$basearch
+#baseurl=https://toddwarner.keybase.pub/repo/dashcore/testing/fedora/$releasever/source/
+#type=rpm-md
+## Checks for new test packages more often than the default 2d (2 days)
+##metadata_expire=6h
+#metadata_expire=0
+#gpgcheck=1
+#gpgkey=https://keybase.io/toddwarner/key.asc
+#skip_if_unavailable=True
+#enabled=0
+

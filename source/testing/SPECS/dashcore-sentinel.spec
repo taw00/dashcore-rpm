@@ -1,4 +1,4 @@
-# Dash Masternode Sentinel spec file
+# Dash Core Sentinel Engine (for Masternodes) spec file
 # Dash Core reference implementation
 # vim:tw=0:ts=2:sw=2:et:
 #
@@ -18,7 +18,7 @@
 %define _name_s sentinel
 %define _name_dcs dashcore-sentinel
 Name: %{_name_dcs}
-Summary: A required helper agent for Dash Masternodes
+Summary: A required helper agent for Dash Core Masternodes
 
 %define targetIsProduction 0
 %define includeMinorbump 1
@@ -38,9 +38,9 @@ Version: %{vermajor}.%{verminor}
 # if pre-production - "targetIsProduction 0"
 # eg. 0.5.testing -- pkgrel_preprod should always equal pkgrel_prod-1
 %define pkgrel_preprod 0
-%define extraver_preprod 2
+%define extraver_preprod 3
 #%%define snapinfo testing
-%define snapinfo testing.20180428
+%define snapinfo testing.20180601
 
 # if includeMinorbump
 %define minorbump taw0
@@ -110,8 +110,7 @@ Release: %{_release}
 #      \_srccodetree        \_sentinel-1.1.0 (github tree example)
 #      \_srccontribtree     \_dashcore-sentinel-1.1-contrib
 %define srcroot %{_name_dcs}-%{vermajor}
-%define _srccodetree_github %{_name_s}-%{version}
-%define srccodetree %{_srccodetree_github}
+%define srccodetree %{_name_s}-%{version}
 %define srccontribtree %{_name_dcs}-%{vermajor}-contrib
 
 %if %{targetIsProduction}
@@ -130,7 +129,7 @@ Requires: dashcore-server >= 0.12.3
 # Note, this is going away as an advised path.
 %global __python %{__python3}
 
-# For mock environments I add vim-enhanced and less so I can introspect by hand
+# For mock environments I sometimes add vim and less so I can introspect
 #BuildRequires: tree vim-enhanced less
 BuildRequires: /usr/bin/virtualenv-3
 # Nuke the auto-requires that rpmbuild will generate because of the
@@ -159,9 +158,10 @@ ExclusiveArch: x86_64 i686 i386
 
 
 %description
-Dash Core reference implementation. Dash Core Sentinel is an autonomous agent
-for persisting, processing and automating Dash governance objects and tasks,
-and for expanded functions in the upcoming Dash release (codename Evolution).
+Dash Core reference implementation. Dash Core Sentinel Engine is an autonomous
+agent for persisting, processing and automating Dash governance objects and
+tasks, and for expanded functions in the upcoming Dash release (codename
+Evolution).
 
 Sentinel is implemented as a Python application that binds to a local version
 dashd instance on each Dash Masternode.
@@ -253,14 +253,42 @@ touch %{buildroot}%{_localstatedir}/log/dashcore/sentinel.log
 # Right now, things are being run out of /var/lib/dashcore/sentinel
 #
 # Should this program live in /var/lib? Or should it live elsewhere? Good
-# questions. The executable is ./bin/sentinel.py. It's an oddity. It probably
-# should live in /usr/sbin. But it doesn't. The rest of the program should
-# probably live in /var/lib.
+# questions. The executable is /var/lib/dashcore/sentinel/bin/sentinel.py It's
+# an oddity. It probably should live in /usr/sbin. But it doesn't. The rest of
+# the program should probably live in /var/lib.
 #
 
 
-%clean
-rm -rf %{buildroot}
+%files
+# This section starts us in directory .../BUILD/sentinel-x.y (srcroot)
+%defattr(-,dashcore,dashcore,-)
+%license %attr(-,root,root) %{srccodetree}/LICENSE
+%doc %attr(-,root,root) %{srccodetree}/README.md %{srccontribtree}/linux/README.redhat.md
+
+# Directories
+# /etc/dashcore
+%dir %attr(750,dashcore,dashcore) %{_sysconfdir}/dashcore
+# /var/lib/dashcore
+# /var/lib/dashcore/sentinel
+%dir %attr(750,dashcore,dashcore) %{_sharedstatedir}/dashcore
+%dir %attr(750,dashcore,dashcore) %{_sharedstatedir}/dashcore/sentinel
+# /var/log/dashcore
+%dir %attr(700,dashcore,dashcore) %{_localstatedir}/log/dashcore
+
+# Code and data directories
+%{_sharedstatedir}/dashcore/sentinel/*
+
+# sentinel.conf
+# ...convenience symlink - this is probably really bad form:
+#    /var/lib/dashcore/sentinel/sentinel.conf -> /etc/dashcore/sentinel.conf
+%config(noreplace) %{_sysconfdir}/dashcore/sentinel.conf
+# already picked up by %%{_sharedstatedir}/dashcore/sentinel/* directive
+#%%{_sharedstatedir}/dashcore/sentinel/sentinel.conf
+#%%{_sharedstatedir}/dashcore/sentinel/sentinel.conf.orig-upstream
+
+# The logs
+%attr(644,root,root) /etc/logrotate.d/dashcore-sentinel
+%ghost %{_localstatedir}/log/dashcore/sentinel.log
 
 
 %pre
@@ -306,38 +334,6 @@ exit 0
 /usr/bin/rm -f %{_sharedstatedir}/dashcore/sentinel/database/sentinel.db >> /dev/null 2>&1
 
 
-%files
-# This section starts us in directory .../BUILD/sentinel-x.y (srcroot)
-%defattr(-,dashcore,dashcore,-)
-%license %attr(-,root,root) %{srccodetree}/LICENSE
-%doc %attr(-,root,root) %{srccodetree}/README.md %{srccontribtree}/linux/README.redhat.md
-
-# Directories
-# /etc/dashcore
-%dir %attr(750,dashcore,dashcore) %{_sysconfdir}/dashcore
-# /var/lib/dashcore
-# /var/lib/dashcore/sentinel
-%dir %attr(750,dashcore,dashcore) %{_sharedstatedir}/dashcore
-%dir %attr(750,dashcore,dashcore) %{_sharedstatedir}/dashcore/sentinel
-# /var/log/dashcore
-%dir %attr(700,dashcore,dashcore) %{_localstatedir}/log/dashcore
-
-# Code and data directories
-%{_sharedstatedir}/dashcore/sentinel/*
-
-# sentinel.conf
-# ...convenience symlink - this is probably really bad form:
-#    /var/lib/dashcore/sentinel/sentinel.conf -> /etc/dashcore/sentinel.conf
-%config(noreplace) %{_sysconfdir}/dashcore/sentinel.conf
-# already picked up by %%{_sharedstatedir}/dashcore/sentinel/* directive
-#%%{_sharedstatedir}/dashcore/sentinel/sentinel.conf
-#%%{_sharedstatedir}/dashcore/sentinel/sentinel.conf.orig-upstream
-
-# The logs
-%attr(644,root,root) /etc/logrotate.d/dashcore-sentinel
-%ghost %{_localstatedir}/log/dashcore/sentinel.log
-
-
 # Dash Core Information
 # 
 # Dash...
@@ -354,6 +350,9 @@ exit 0
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
+* Sun Jun 3 2018 Todd Warner <t0dd_at_protonmail.com> 1.2.0-0.3.testing.taw
+  - updated for v12.3-rc2
+
 * Wed May 23 2018 Todd Warner <t0dd_at_protonmail.com> 1.2.0-0.2.testing.taw
   - minor spec file changes
   - python3-isms

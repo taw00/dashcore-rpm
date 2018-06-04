@@ -1,9 +1,17 @@
+%define targetIsProduction 0
 Name:		toddpkgs-dashcore-repo
 Version:	1.0
-Release:	1.1.testing%{?dist}.taw0
 Summary:	Repository configuration to enable management of dashcore packages (Dash Cryptocurrency Core Wallet and Node)
+# Release...
+%define _rel 2.1
+%define _snapinfo testing
+%define _minorbump taw0
+%if %{targetIsProduction}
+Release:	%{_rel}%{?dist}.%{_minorbump}
+%else
+Release:	%{_rel}.%{_snapinfo}%{?dist}.%{_minorbump}
+%endif
 
-Group:		System Environment/Base
 License:	MIT
 URL:		https://github.com/taw00/dashcore-rpm
 Source0:	https://raw.githubusercontent.com/taw00/dashcore-rpm/master/source/SOURCES/toddpkgs-dashcore-repo-1.0.tar.gz
@@ -59,12 +67,17 @@ install -d %{buildroot}%{_sysconfdir}/pki/rpm-gpg
 install -D -m644 todd-694673ED-public-2030-01-04.2016-11-07.asc %{buildroot}%{_sysconfdir}/pki/rpm-gpg/RPM-GPG-KEY-todd-694673ED-public
 
 %if 0%{?rhel:1}
-  install -D -m644 dashcore-epel.repo %{buildroot}%{_sysconfdir}/yum.repos.d/dashcore.repo
+  %if %{targetIsProduction}
+    install -D -m644 dashcore-epel.repo %{buildroot}%{_sysconfdir}/yum.repos.d/dashcore.repo
+  %else
+    install -D -m644 dashcore-epel.repo-enabled-testing-repo %{buildroot}%{_sysconfdir}/yum.repos.d/dashcore.repo
+  %endif
 %else
-  #%%if 0%{?fedora:1}
-  # Punt and assume dnf: Make this potentially useable beyond Fedora and CentOS/RHEL
-  install -D -m644 dashcore-fedora.repo %{buildroot}%{_sysconfdir}/yum.repos.d/dashcore.repo
-  #%%endif
+  %if %{targetIsProduction}
+    install -D -m644 dashcore-fedora.repo %{buildroot}%{_sysconfdir}/yum.repos.d/dashcore.repo
+  %else
+    install -D -m644 dashcore-fedora.repo-enabled-testing-repo %{buildroot}%{_sysconfdir}/yum.repos.d/dashcore.repo
+  %endif
 %endif
 
 
@@ -75,15 +88,19 @@ install -D -m644 todd-694673ED-public-2030-01-04.2016-11-07.asc %{buildroot}%{_s
 
 
 %changelog
-* Tue May 1 2018 Todd Warner <t0dd at protonmail.com> 1.0-1.1.testing.taw[n]
-- Commented out the old 12.1 repo. It kept polluting the journal with error  
-  messages about missing metadata.
-- af7300b59589b0e93e411a64be433a9923e9c53b3314326d59566261db29a0c3  toddpkgs-dashcore-repo-1.0.tar.gz
+* Sun Jun 3 2018 Todd Warner <t0dd_at_protonmail.com> 1.0.2.1.testing.taw
+  - testing repo turned on by default for testing repos ;)
 
-* Mon Apr 16 2018 Todd Warner <t0dd at protonmail.com> 1.0-1.taw[n]
-- GA release
+* Tue May 1 2018 Todd Warner <t0dd_at_protonmail.com> 1.0-2.taw
+  - GA release
 
-* Mon Apr 16 2018 Todd Warner <t0dd at protonmail.com> 1.0-0.1.testing.taw[n]
-- Initial test build
-- 2bd69f2980df5985694a003159d202bbf6b7b01849d152c4bb10d8f42728017e  toddpkgs-dashcore-repo-1.0.tar.gz
+* Tue May 1 2018 Todd Warner <t0dd_at_protonmail.com> 1.0-1.1.testing.taw
+  - Commented out the old 12.1 repo. It kept polluting the journal with error  
+    messages about missing metadata.
+
+* Mon Apr 16 2018 Todd Warner <t0dd_at_protonmail.com> 1.0-1.taw
+  - GA release
+
+* Mon Apr 16 2018 Todd Warner <t0dd_at_protonmail.com> 1.0-0.1.testing.taw
+  - Initial test build
 
