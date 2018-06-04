@@ -22,11 +22,6 @@
 #
 # Enjoy. -t0dd
 
-# flip-flop these depending on the archive nomenclature/structure being used
-# (github or bamboo)
-%define bamboo_build_nomenclature 1
-%undefine bamboo_build_nomenclature
-
 # Package (RPM) name-version-release.
 # <name>-<vermajor.<verminor>-<pkgrel>[.<extraver>][.<snapinfo>].DIST[.<minorbump>]
 
@@ -43,6 +38,24 @@ Summary: Peer-to-peer, privacy-centric, digital currency
 %define verminor 0
 Version: %{vermajor}.%{verminor}
 
+# dashcore source tarball file basename
+# the archive name and directory tree can have some seriously annoying variances
+# (dashcore, dash, somename-vvvv-rc2, etc)
+# - github convention - v0.12.3.0 or dash-0.12.3.0 - e.g. dash-0.12.3.0.tar.gz
+# - bamboo - dashcore-0.12.3 - e.g. dashcore-0.12.3.tar.gz (not used at moment)
+%undefine archive_qualifier
+%define archive_qualifier rc2
+%define _archivename_github1 v%{version}
+%define _archivename_github2 %{_name_d}-%{version}
+%define _archivename_alt1 %{_name_dc}-%{vermajor}
+%if 0%{?archive_qualifier:1}
+%define _archivename_github1 v%{version}-%{archive_qualifier}
+%define _archivename_github2 %{_name_d}-%{version}-%{archive_qualifier}
+%define _archivename_alt1 %{_name_dc}-%{vermajor}-%{archive_qualifier}
+%endif
+%define archivename %{_archivename_github2}
+%define srccodetree %{_archivename_github2}
+
 # RELEASE
 # if production - "targetIsProduction 1"
 %define pkgrel_prod 1
@@ -50,8 +63,14 @@ Version: %{vermajor}.%{verminor}
 # if pre-production - "targetIsProduction 0"
 # eg. 0.3.testing.201804 -- pkgrel_preprod should always equal pkgrel_prod-1
 %define pkgrel_preprod 0
-%define extraver_preprod 5
-%define snapinfo testing.20180510
+%define extraver_preprod 6
+
+%define _snapinfo testing
+%define snapinfo %{_snapinfo}
+%if 0%{?archive_qualifier:1}
+%define snapinfo %{archive_qualifier}
+%endif
+
 
 # if includeMinorbump
 %define minorbump taw0
@@ -118,33 +137,30 @@ Version: %{vermajor}.%{verminor}
 Release: %{_release}
 # ----------- end of release building section
 
-# dashcore source tarball file basename
-# Set value to the appropriate name for this build.
-# github or from bamboo (the team build system).
-#   - github convention - dash-0.12.3.0 - e.g. dash-0.12.3.0.tar.gz
-#   - bamboo - dashcore-0.12.3 - e.g. dashcore-0.12.3.tar.gz
-%define _srccodetree_github %{_name_d}-%{version}
-%define _srccodetree_bamboo %{_name_dc}-%{vermajor}
-
 # Extracted source tree structure (extracted in .../BUILD)
 #   srcroot               dashcore-0.12.3
-#      \_srccodetree        \_dash-0.12.3.0 or dashcore-0.12.3
+#      \_srccodetree        \_dash-0.12.3.0 or dashcore-0.12.3 or dash-0.12.3.0-rc2...
 #      \_srccontribtree     \_dashcore-0.12.3-contrib
 %define srcroot %{name}-%{vermajor}
-%define srccodetree %{name}-%{version}
-%if 0%{?bamboo_build_nomenclature:1}
-  %define srccodetree %{_srccodetree_bamboo}
-%else
-  %define srccodetree %{_srccodetree_github}
-%endif
 %define srccontribtree %{name}-%{vermajor}-contrib
+# srccodetree defined earlier
+
+# Note, that ...
+# https://github.com/dashpay/dash/archive/v0.12.3.0-rc2.tar.gz
+# ...is the same as...
+# https://github.com/dashpay/dash/archive/v0.12.3.0-rc2/dash-0.12.3.0-rc2.tar.gz
+%if 0%{?archive_qualifier:1}
+Source0: https://github.com/dashpay/dash/archive/v%{version}-%{archive_qualifier}/%{archivename}.tar.gz
+%else
+Source0: https://github.com/dashpay/dash/archive/v%{version}/%{archivename}.tar.gz
+%endif
 
 %if %{targetIsProduction}
-Source0: https://github.com/taw00/dashcore-rpm/source/SOURCES/%{srccodetree}.tar.gz
-Source1: https://github.com/taw00/dashcore-rpm/source/SOURCES/%{srccontribtree}.tar.gz
+#Source0: https://github.com/taw00/dashcore-rpm/blob/master/source/SOURCES/%%{archivename}.tar.gz
+Source1: https://github.com/taw00/dashcore-rpm/blob/master/source/SOURCES/%{srccontribtree}.tar.gz
 %else
-Source0: https://github.com/taw00/dashcore-rpm/source/testing/SOURCES/%{srccodetree}.tar.gz
-Source1: https://github.com/taw00/dashcore-rpm/source/testing/SOURCES/%{srccontribtree}.tar.gz
+#Source0: https://github.com/taw00/dashcore-rpm/blob/master/source/testing/SOURCES/%%{archivename}.tar.gz
+Source1: https://github.com/taw00/dashcore-rpm/blob/master/source/testing/SOURCES/%{srccontribtree}.tar.gz
 %endif
 
 %global selinux_variants mls strict targeted
@@ -170,12 +186,11 @@ URL: http://dash.org/
 # Note, for example, this will not build on ppc64le
 ExclusiveArch: x86_64 i686 i386
 
-BuildRequires: gcc-c++
-BuildRequires: qt5-qtbase-devel qt5-linguist
-BuildRequires: qrencode-devel miniupnpc-devel protobuf-devel openssl-devel
-BuildRequires: desktop-file-utils autoconf automake
-BuildRequires: boost-devel libdb4-cxx-devel libevent-devel
-BuildRequires: libtool java
+BuildRequires: gcc-c++ autoconf automake libtool
+BuildRequires: openssl-devel boost-devel libevent-devel
+BuildRequires: libdb4-cxx-devel
+BuildRequires: miniupnpc-devel
+# Other BuildRequires listed per package below
 
 #BuildRequires: checkpolicy selinux-policy-devel selinux-policy-doc
 
@@ -207,6 +222,10 @@ BuildRequires: openssl-compat-dashcore-libs
 %package client
 Summary: Peer-to-peer; privacy-centric; digital currency, protocol, and platform for payments and dApps (dash-qt desktop reference client)
 Requires: dashcore-utils = %{version}-%{release}
+#BuildRequires: qt5-qtbase-devel qt5-linguist qt5-qttools-devel
+BuildRequires: qrencode-devel protobuf-devel
+BuildRequires: qt5-qtbase-devel qt5-linguist
+BuildRequires: libappstream-glib desktop-file-utils
 
 
 # dashcore-server
@@ -553,8 +572,12 @@ install -D -m644 %{srccontribtree}/extras/pixmaps/* %{buildroot}%{_datadir}/pixm
 
 # Config
 # Install default configuration file (from contrib)
+%if %{targetIsProduction}
+%define testnet 0
+%else
+%define testnet 1
+%endif
 install -D -m640 %{srccontribtree}/linux/systemd/etc-dashcore_dash.conf %{buildroot}%{_sysconfdir}/dashcore/dash.conf
-install -D -m644 %{srccontribtree}/linux/systemd/etc-dashcore_dash.conf %{srccontribtree}/extras/dash.conf.example
 echo "\
 # ---------------------------------------------------------------------------
 # Example of a minimalistic configuration. Change the password. Additionally,
@@ -564,7 +587,7 @@ echo "\
 # The datadir is also set to the same.
 datadir=/var/lib/dashcore
 
-testnet=0
+testnet=%{testnet}
 daemon=1
 # We allow RPC calls
 server=1
@@ -578,6 +601,13 @@ disablewallet=1
 
 # Only localhost allowed to connect to make RPC calls.
 rpcallowip=127.0.0.1
+" >> %{buildroot}%{_sysconfdir}/dashcore/dash.conf
+install -D -m644 %{buildroot}%{_sysconfdir}/dashcore/dash.conf %{srccontribtree}/extras/dash.conf.example
+
+# Add the rpcuser name and rpcpassword, but really need to be different for the
+# working dash.conf and the example, just in case the user decides to not
+# change anything.
+echo "\
 
 # Example RPC username and password.
 rpcuser=rpcuser-CHANGEME-`head -c 32 /dev/urandom | base64 | head -c 4`
@@ -585,27 +615,6 @@ rpcpassword=CHANGEME`head -c 32 /dev/urandom | base64`
 " >> %{buildroot}%{_sysconfdir}/dashcore/dash.conf
 
 echo "\
-# ---------------------------------------------------------------------------
-# Example of a minimalistic configuration. Change the password if you use
-# this. Additionally, some of these settings are more explicit than they need
-# to be.
-
-# Commented out means datadir is ~/.dashcore
-#datadir=/var/lib/dashcore
-
-testnet=0
-daemon=0
-# We allow RPC calls
-server=1
-# We participate peer-to-peer
-listen=1
-maxconnections=8
-
-# Set to 0 if you also want this to be a wallet.
-disablewallet=0
-
-# Only localhost allowed to connect to make RPC calls.
-rpcallowip=127.0.0.1
 
 # Example RPC username and password.
 rpcuser=rpcuser-CHANGEME-`head -c 32 /dev/urandom | base64 | head -c 4`
@@ -911,6 +920,11 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
+* Sun Jun 3 2018 Todd Warner <t0dd_at_protonmail.com> 0.12.3.0-0.6.rc2.taw
+  - v12.3-rc2 - https://github.com/dashpay/dash/releases/tag/v0.12.3.0-rc2
+  - /etc/dashcore/dash.conf now has testnet=1 on by default if installing the  
+    test RPMs. Note that dash.conf will be in an .rpmnew file though.
+
 * Wed May 23 2018 Todd Warner <t0dd_at_protonmail.com> 0.12.3.0-0.5.testing.20180510.taw
   - spec file: some cleanup, URL for sources
   - updated all contrib icons to new branding from dash.org/graphics
