@@ -247,7 +247,7 @@ trivial. This is how easy it is.
 
 ```bash
 sudo rpm --import https://keybase.io/toddwarner/key.asc
-sudo dnf install -y https://raw.githubusercontent.com/taw00/dashcore-rpm/master/toddpkgs-dashcore-repo-1.0-2.fc27.taw0.noarch.rpm
+sudo dnf install -y https://raw.githubusercontent.com/taw00/dashcore-rpm/master/toddpkgs-dashcore-repo.fedora.rpm
 ```
 <!--
 ```
@@ -261,7 +261,7 @@ sudo dnf install -y https://raw.githubusercontent.com/taw00/dashcore-rpm/master/
 
 ```bash
 sudo rpm --import https://keybase.io/toddwarner/key.asc
-sudo yum install -y https://raw.githubusercontent.com/taw00/dashcore-rpm/master/toddpkgs-dashcore-repo-1.0-2.el7.centos.taw0.noarch.rpm
+sudo yum install -y https://raw.githubusercontent.com/taw00/dashcore-rpm/master/toddpkgs-dashcore-repo.centos.rpm
 ```
 
 <!--
