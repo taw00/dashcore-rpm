@@ -7,8 +7,8 @@ systems to easily install, verify, and update that software. Once configured,
 updating Dash Core software will be just as trivial as updating the rest of
 their system.
 
-> What is Dash? [dash.org](https://dash.org/), [official documentation](https://dashpay.atlassian.net/wiki/display/DOC/Official+Documentation)<br />
-> What is a Masternode? <https://dashpay.atlassian.net/wiki/display/DOC/Masternode><br />
+> What is Dash? [dash.org](https://dash.org/), [official documentation](https://docs.dash.org)<br />
+> What is a Masternode? <https://docs.dash.org/en/latest/masternodes/index.html><br />
 > What are these Linuxes? [Fedora](https://getfedora.org/), [CentOS](https://www.centos.org/), [RHEL](https://www.redhat.com/en/technologies/linux-platforms/enterprise-linux)
  
 ## *"TL;DR ...I just want to install the Dash Core GUI Wallet!"*
@@ -33,6 +33,7 @@ dash-qt
 # My system is CentOS or RHEL
 sudo rpm --import https://keybase.io/toddwarner/key.asc
 sudo yum install -y https://raw.githubusercontent.com/taw00/dashcore-rpm/master/toddpkgs-dashcore-repo.centos.rpm
+sudo yum clean expire-cache
 sudo yum install -y dashcore-client
 dash-qt # Or browse your menuing system and look for "Dash"
 ```
@@ -172,6 +173,7 @@ sudo dnf list --refresh|grep dashcore
 ```
 sudo yum-config-manager --disable dashcore-stable
 sudo yum-config-manager --enable dashcore-testing
+sudo yum clean expire-cache
 sudo yum list|grep dashcore
 ```
 
