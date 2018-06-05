@@ -319,7 +319,7 @@ If you are using the testnet that `testnet3` directory should have been created 
 ### Edit `masternode.conf` (again use `nano` or some other text editor)
 
 ```
-nano ~/.dashcore/masternoode.conf # if mainnet
+nano ~/.dashcore/masternode.conf # if mainnet
 # ...or...
 nano ~/.dashcore/testnet3/masternode.conf # if testnet
 ```
