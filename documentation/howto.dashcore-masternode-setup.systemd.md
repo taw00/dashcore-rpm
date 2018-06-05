@@ -72,9 +72,9 @@ The objectives are straight-forward:
 
 > A note about minimum requirements. Masternodes are no longer "glorified full
 > nodes". They are doing more and more things and they will need beefier specs
-> over time. The old, 1G RAM and 1G Swap shorthand may not cut it anymore. To
-> read more, please visit this page:
-> <https://dashpay.atlassian.net/wiki/display/DOC/Masternode+Update>
+> over time. The old, 1G RAM and 1G Swap shorthand may not cut it anymore. I
+> recommend at least 2G RAM and 4G swap (twice ram-size) today. This will
+> increase over time.
 
 ***A cloud service installation, for example Vultr***
 
@@ -167,8 +167,7 @@ the "Server" install. You need only a minimum configuration. Dependency
 resolution of installed RPM packages per these instructions will bring in
 anything you need.
 
-Ensure that your bare-metal server meets at least these requirements:<br />
-_Again, revisit this page for more information: <https://dashpay.atlassian.net/wiki/display/DOC/Masternode+Update>_
+Ensure that your bare-metal server meets at least these requirements:
 
 * 2GB RAM
 * 40 GB disk

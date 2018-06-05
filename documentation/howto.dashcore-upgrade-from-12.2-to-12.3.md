@@ -1,13 +1,13 @@
-# HowTo: Upgrade from Dash Core version 12.1 to 12.2
+# HowTo: Upgrade from Dash Core version 12.2 to 12.3
+
+## NOTE: 12.3 is not out yet. This is written in preparation.
 
 > These instructions are specific to node, masternode, and wallet users running
 > the software on Fedora, CentOS, or RHEL plugged into the `yum` or `dnf`
 > install and update process described in other documentation found at
 > <https://github.com/taw00/dashcore-rpm>.
 
-The process for upgrade is actually rather trivial. You may also want to review
-the dash.org official documentation found here:
-<https://dashpay.atlassian.net/wiki/spaces/DOC/pages/124092516/Dash+v12.2+-+2017-11-07>
+The process for upgrade is actually rather trivial.
 
 **WARNING: If you are upgrading a Masternode, it will require a wallet-driven
 restart due to a protocol bump, so time your upgrade to happen soon after your
@@ -18,16 +18,16 @@ normal Masternode payout.**
 #### _...summary..._
 * Shut everything down
 * Back everything up
-* Upgrade Dash Core binary packages from 12.1 to 12.2
+* Upgrade Dash Core binary packages from 12.2 to 12.3
 * Start everything back up
-* Send start command from wallet to Masternode (Masternodes only)
+<!--* Send start command from wallet to Masternode (Masternodes only)-->
 * Monitor the configuration over time and adjust
 
 ### [0] Shut everything down
 
 * If running `dash-qt`, in your menus choose "File" and then "Exit"
-* If running `dashd`, then issue a shutdown with `dash-cli stop`
-* If running `dashd` as a systemd service, then issue a shutdown command with `systemctl stop dash`
+* If running `dashd` manually (not as a systemd service), then issue a shutdown with `dash-cli stop`
+* If running `dashd` as a systemd service, then issue a shutdown command with `sudo systemctl stop dash`
 
 ### [1] Back everything up
 
@@ -45,12 +45,12 @@ This is the general scheme...
 sudo tar cvzf dash-backup-$(date +%F).tar.gz /path/to/dash.conf $(find /path/to/dash-data-directory -name '*.conf' -or -name 'wallet.dat*')
 ```
 
-Scenario: Running dash as a `systemd` service...
+Scenario: You run dashd as a `systemd` service...
 ```
 sudo tar cvzf dashcore-backup-$(date +%F).tar.gz /etc/dashcore/dash.conf $(find /var/lib/dashcore -name '*.conf' -or -name 'wallet.dat*')
 ```
 
-Scenario: Running dash from your home directory...
+Scenario: You run dashd or dash-qt directly and configuration is stored in your home directory...
 ```
 tar cvzf dashcore-backup-$(date +%F).tar.gz $(find ~/.dashcore  -name '*.conf' -or -name 'wallet.dat*')
 ```
@@ -72,30 +72,60 @@ rm -rf x
 * Repeat to yourself: _"I should have been doing this anyway!"_
 
 
-### [2] Upgrade Dash Core binary packages
+### [2] Update your dnf/yum repo file - switch to the new "stable" repo
 
-*...if using Fedora:*
+#### If you have not already installed the `toddpkgs-dashcore-repo` RPM...
+
 ```
-# Update your DNF/YUM repository configuration file:
-cd /etc/yum.repos.d/
-sudo curl -O https://raw.githubusercontent.com/taw00/dashcore-rpm/master/dashcore-fedora.repo
-cd -
+# Fedora...
+sudo rpm --import https://keybase.io/toddwarner/key.asc
+sudo dnf install -y https://raw.githubusercontent.com/taw00/dashcore-rpm/master/toddpkgs-dashcore-repo.fedora.rpm
+sudo dnf list --refresh | grep dashcore
+```
+```
+# CentOS/RHEL...
+sudo rpm --import https://keybase.io/toddwarner/key.asc
+sudo yum install -y https://raw.githubusercontent.com/taw00/dashcore-rpm/master/toddpkgs-dashcore-repo.centos.rpm
+sudo yum clean expire-cache
+sudo yum list | grep dashcore
+```
+
+#### You have...
+
+```
+# Fedora...
+sudo dnf upgrade toddpkgs-dashcore-repo --refresh -y
+sudo dnf list | grep dashcore
+```
+```
+# CentOS/RHEL...
+sudo yum clean expire-cache
+sudo yum update toddpkgs-dashcore-repo -y
+sudo yum list | grep dashcore
+```
+
+Updating that RPM will automatically enable the 12.3 stable repository. If the
+above commands did not show 12.3 packages listed, investigate your
+/etc/yum.repos.d/ directory. The repo definition file may be installed in an
+.rpmnew file or some such and need to be manually moved with the `mv` command.
+
+
+### [3] Upgrade Dash Core binary packages
+
+```
+# Fedora...
 # Upgrade Dash Core and Sentinel
 sudo dnf upgrade -y
 ```
 
-*...if using CentOS or RHEL*
 ```
-# Update your YUM repository configuration file:
-cd /etc/yum.repos.d/
-sudo curl -O https://raw.githubusercontent.com/taw00/dashcore-rpm/master/dashcore-centos.repo
-cd -
+# CentOS/RHEL...
 # Upgrade Dash Core and Sentinel
 sudo yum update -y
 ```
 
 
-### [3] Start everything back up
+### [4] Start everything back up
 
 #### If this is a GUI wallet - `dash-qt`
 
@@ -112,7 +142,7 @@ height as listed at <https://explorer.dash.org>.
 
 If running `dashd` as a normal user and not as a systemd managed service...
 ```
-# Start Dash 12.2:
+# Start the Dash Core server...
 dashd # It will start and daemonize (give you the commandline prompt back)
 # Watch the blockcount (CRTL-C to exit this loop)...
 watch dash-cli getblockcount # CTRL-C to exit
@@ -122,23 +152,26 @@ tail -f ~/.dashcore/debug.log
 
 If running node (or masternode) as a `systemd` service...
 ```
-# Start dashd
+# Start dashd.service...
 sudo systemctl start dashd
 # Watch the blockcount (CRTL-C to exit this loop)...
 watch sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf getblockcount
-# Watch the debug.log
+# Watch the debug.log...
 sudo -u dashcore tail -f /var/lib/dashcore/debug.log
 ```
 
 If this is a masternode...
 ```
-# Check the results of `mnsync status`. If the status never # syncs fully, you
+# Check the results of `mnsync status`. If the status never syncs fully, you
 # may have to perform a `mnsync reset`. Note that the syncing process can take 15
 # to 30 minutes.
 sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf masternode mnsync reset
 ```
 
-### [4] Masternode upgrade only: Send start command from Wallet to Masternode
+<!--
+### [5] Masternode upgrade only: Send start command from Wallet to Masternode
+
+***This may be unrequired -- INVESTIGATING***
 
 ***WARNING: Upgrade after a Masternode payout. You have to restart the
 Masternode from your collateralizing wallet. Here's how...***
@@ -148,6 +181,7 @@ Masternode from your collateralizing wallet. Here's how...***
    * Masternode tab > right click on masternode > Start alias
    * Tools menu > Debug console > _masternode start <MN Alias>_
    * From command line: _dash-cli masternode start <MN Alias>_  ---TODO: Need to test this. 
+-->
 
 ### Masternode upgrade in particular: Monitor your status
 
