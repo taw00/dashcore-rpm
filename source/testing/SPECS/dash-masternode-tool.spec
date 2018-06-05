@@ -26,29 +26,7 @@
 # The originating dash-masternode-tool-<version>.tar.gz comes from the
 # Bertrand256 github repository listed above.
 #
-# ---
-#
-# Further reading (about building RPMs and whatnot):
-# * https://docs.fedoraproject.org/quick-docs/en-US/creating-rpm-packages.html
-# * https://fedoraproject.org/wiki/Packaging:Guidelines?rd=Packaging/Guidelines
-# * https://fedoraproject.org/wiki/packaging:versioning
-# * https://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard
-# * https://developer.fedoraproject.org/deployment/rpm/about.html
-# * https://rpm-packaging-guide.github.io/
-# * http://rpm-guide.readthedocs.io/en/latest/
-# * http://backreference.org/2011/09/17/some-tips-on-rpm-conditional-macros/
-# * http://rpm5.org/docs/api/macros.html
-# * https://fedoraproject.org/wiki/Licensing:Main
-# * https://fedoraproject.org/wiki/Licensing:Main?rd=Licensing
-#
-# A note about specfile comments: commented out macros have to have their %'s
-# doubled up in comments in order to have them properly escaped.
-#
-# ---
-#
-# Package (RPM) name-version-release.
-# <name>-<vermajor.<verminor>-<pkgrel>[.<extraver>][.<snapinfo>].DIST[.<minorbump>]
-#
+
 
 
 Name: dash-masternode-tool
@@ -57,22 +35,24 @@ Summary: Manage and collateralize a Dash Masternode with a hardware wallet
 #BuildArch: noarch
 
 %define targetIsProduction 0
-%define includeSnapinfo 1
 %define includeMinorbump 1
+
+# Package (RPM) name-version-release.
+# <name>-<vermajor.<verminor>-<pkgrel>[.<extraver>][.<snapinfo>].DIST[.<minorbump>]
 
 # VERSION
 %define vermajor 0.9
-%define verminor 18
+%define verminor 19
 Version: %{vermajor}.%{verminor}
 
 # RELEASE
 # if production - "targetIsProduction 1"
-%define pkgrel_prod 4
+%define pkgrel_prod 1
 
 # if pre-production - "targetIsProduction 0"
 # eg. 3.1.testing -- pkgrel_preprod should always equal pkgrel_prod-1
-%define pkgrel_preprod 3
-%define extraver_preprod 2
+%define pkgrel_preprod 0
+%define extraver_preprod 1
 %define snapinfo testing
 
 # if includeMinorbump
@@ -80,19 +60,10 @@ Version: %{vermajor}.%{verminor}
 
 # Building the release string (don't edit this)...
 
-%if %{targetIsProduction}
-  %if %{includeSnapinfo}
-    %{warn:"Warning: target is production and yet you want snapinfo included. This is not typical."}
-  %endif
-%else
-  %if ! %{includeSnapinfo}
-    %{warn:"Warning: target is pre-production and yet you elected not to incude snapinfo (testing, beta, ...). This is not typical."}
-  %endif
-%endif
-
 # release numbers
 %undefine _relbuilder_pt1
 %if %{targetIsProduction}
+  %undefine snapinfo
   %define _pkgrel %{pkgrel_prod}
   %define _relbuilder_pt1 %{pkgrel_prod}
 %else
@@ -101,11 +72,8 @@ Version: %{vermajor}.%{verminor}
   %define _relbuilder_pt1 %{_pkgrel}.%{_extraver}
 %endif
 
-# snapinfo and repackage (pre-built) indicator
+# snapinfo and repackage (pre-built) qualifier
 %undefine _relbuilder_pt2
-%if ! %{includeSnapinfo}
-  %undefine snapinfo
-%endif
 %if 0%{?sourceIsPrebuilt:1}
   %if ! %{sourceIsPrebuilt}
     %undefine snapinfo_rp

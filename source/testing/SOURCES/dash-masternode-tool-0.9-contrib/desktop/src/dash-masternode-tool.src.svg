@@ -16,9 +16,9 @@
    width="2240"
    height="2240"
    viewBox="0 0 2240 2239.9999"
-   sodipodi:docname="dash-masternode-tool.hicolor.svg"
+   sodipodi:docname="dash-masternode-tool.src.svg"
    style="enable-background:new"
-   inkscape:export-filename="/home/todd/git/taw00/dashcore-rpm/source/testing/SOURCES/dash-masternode-tool-0.9-contrib/desktop/dash-masternode-tool.hicolor.512x512.png"
+   inkscape:export-filename="/home/todd/git/taw00/dashcore-rpm/source/testing/SOURCES/dash-masternode-tool-0.9-contrib/desktop/dash-masternode-tool.highcontrast.svg.png"
    inkscape:export-xdpi="21.940001"
    inkscape:export-ydpi="21.940001"
    enable-background="new">
@@ -78,11 +78,11 @@
      showgrid="false"
      inkscape:zoom="0.20865153"
      inkscape:cx="-982.0634"
-     inkscape:cy="1068.5625"
+     inkscape:cy="110.02647"
      inkscape:window-x="0"
      inkscape:window-y="34"
      inkscape:window-maximized="1"
-     inkscape:current-layer="layer3"
+     inkscape:current-layer="layer5"
      fit-margin-top="0"
      fit-margin-left="0"
      fit-margin-right="0"
@@ -109,7 +109,7 @@
      id="layer3"
      inkscape:label="dash circle hicolor"
      transform="translate(3.6847458e-5,2048.7891)"
-     style="display:inline;opacity:1"
+     style="display:none;opacity:1"
      sodipodi:insensitive="true">
     <image
        y="-2047.8981"
@@ -693,7 +693,7 @@ YII=
      id="layer5"
      inkscape:label="dash circle highcontrast"
      transform="translate(3.6847458e-5,2048.7891)"
-     style="display:none"
+     style="display:inline"
      sodipodi:insensitive="true">
     <circle
        style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:14.48179436;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
