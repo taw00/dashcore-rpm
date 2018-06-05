@@ -246,7 +246,7 @@ tDash if this is testnet) to that address. Important. It has to be precisely
 1000 Dash; fees must be accounted for.
 
 If you need tDash for testnet testing purposes, have it sent from
-https://test.faucet.dash.org/
+<!-- https://test.faucet.dash.org/ --> <http://test.faucet.masternode.io/mn/>
 
 
 ## [6] SAVE YOUR WALLET
