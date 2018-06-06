@@ -55,7 +55,7 @@ Version: %{vermajor}.%{verminor}
 %define snapinfo testing
 
 # if includeMinorbump
-%define minorbump taw1
+%define minorbump taw2
 
 # Building the release string (don't edit this)...
 
@@ -170,8 +170,8 @@ URL: https://github.com/taw00/dashcore-rpm
 # Group is deprecated. Don't use it. Left here as a reminder...
 # https://fedoraproject.org/wiki/RPMGroups
 #Group: Unspecified
-# Note, for example, this will not build on ppc64le or i386
-ExclusiveArch: x86_64 i686
+# Note, for example, this will not build on ppc64le or any 32bit machines or...
+ExclusiveArch: x86_64
 
 
 # If you comment out "debug_package" RPM will create additional RPMs that can

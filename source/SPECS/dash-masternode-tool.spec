@@ -18,37 +18,14 @@
 # Read more here:
 # https://github.com/Bertrand256/dash-masternode-tool/blob/master/README.md
 #
-# Source - this SPEC file references source archives found here:
-# https://taw00.github.com/dash-rpm
+# Source - this SPEC file references source archives found here and here:
+# https://taw00.github.com/dashcore-rpm
 #  - dash-masternode-tool-<version>.tar.gz
 #  - dash-masternode-tool-<version-major>-contrib.tar.gz
-#
-# The originating dash-masternode-tool-<version>.tar.gz comes from the
-# Bertrand256 github repository listed above.
-#
-# ---
-#
-# Further reading (about building RPMs and whatnot):
-# * https://docs.fedoraproject.org/quick-docs/en-US/creating-rpm-packages.html
-# * https://fedoraproject.org/wiki/Packaging:Guidelines?rd=Packaging/Guidelines
-# * https://fedoraproject.org/wiki/packaging:versioning
-# * https://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard
-# * https://developer.fedoraproject.org/deployment/rpm/about.html
-# * https://rpm-packaging-guide.github.io/
-# * http://rpm-guide.readthedocs.io/en/latest/
-# * http://backreference.org/2011/09/17/some-tips-on-rpm-conditional-macros/
-# * http://rpm5.org/docs/api/macros.html
-# * https://fedoraproject.org/wiki/Licensing:Main
-# * https://fedoraproject.org/wiki/Licensing:Main?rd=Licensing
-#
-# A note about specfile comments: commented out macros have to have their %'s
-# doubled up in comments in order to have them properly escaped.
-#
-# ---
-#
-# Package (RPM) name-version-release.
-# <name>-<vermajor.<verminor>-<pkgrel>[.<extraver>][.<snapinfo>].DIST[.<minorbump>]
-#
+# ...and here:
+# https://github.com/Bertrand256/dash-masternode-tool
+#  - dash-masternode-tool-<version>.tar.gz
+
 
 
 Name: dash-masternode-tool
@@ -57,22 +34,24 @@ Summary: Manage and collateralize a Dash Masternode with a hardware wallet
 #BuildArch: noarch
 
 %define targetIsProduction 1
-%define includeSnapinfo 0
 %define includeMinorbump 1
+
+# Package (RPM) name-version-release.
+# <name>-<vermajor.<verminor>-<pkgrel>[.<extraver>][.<snapinfo>].DIST[.<minorbump>]
 
 # VERSION
 %define vermajor 0.9
-%define verminor 18
+%define verminor 19
 Version: %{vermajor}.%{verminor}
 
 # RELEASE
 # if production - "targetIsProduction 1"
-%define pkgrel_prod 4
+%define pkgrel_prod 1
 
 # if pre-production - "targetIsProduction 0"
-# eg. 3.1.testing -- pkgrel_preprod should always = pkgrel_prod-1
-%define pkgrel_preprod 3
-%define extraver_preprod 2
+# eg. 3.1.testing -- pkgrel_preprod should always equal pkgrel_prod-1
+%define pkgrel_preprod 0
+%define extraver_preprod 1
 %define snapinfo testing
 
 # if includeMinorbump
@@ -80,19 +59,10 @@ Version: %{vermajor}.%{verminor}
 
 # Building the release string (don't edit this)...
 
-%if %{targetIsProduction}
-  %if %{includeSnapinfo}
-    %{warn:"Warning: target is production and yet you want snapinfo included. This is not typical."}
-  %endif
-%else
-  %if ! %{includeSnapinfo}
-    %{warn:"Warning: target is pre-production and yet you elected not to incude snapinfo (testing, beta, ...). This is not typical."}
-  %endif
-%endif
-
 # release numbers
 %undefine _relbuilder_pt1
 %if %{targetIsProduction}
+  %undefine snapinfo
   %define _pkgrel %{pkgrel_prod}
   %define _relbuilder_pt1 %{pkgrel_prod}
 %else
@@ -101,11 +71,8 @@ Version: %{vermajor}.%{verminor}
   %define _relbuilder_pt1 %{_pkgrel}.%{_extraver}
 %endif
 
-# snapinfo and repackage (pre-built) indicator
+# snapinfo and repackage (pre-built) qualifier
 %undefine _relbuilder_pt2
-%if ! %{includeSnapinfo}
-  %undefine snapinfo
-%endif
 %if 0%{?sourceIsPrebuilt:1}
   %if ! %{sourceIsPrebuilt}
     %undefine snapinfo_rp
@@ -156,19 +123,22 @@ Release: %{_release}
 #      \_srccontribtree     \_dash-masternode-tool-0.9-contrib
 %define srcroot %{name}-%{vermajor}
 %define srccodetree %{name}-%{version}
-%define srccodetree2 btchip-python-0.1.26
+%define btchip_python_version 0.1.26
+%define srccodetree2 btchip-python-%{btchip_python_version}
 %define srccontribtree %{name}-%{vermajor}-contrib
 
 # You should use URLs for sources.
 # https://fedoraproject.org/wiki/Packaging:SourceURL
-# dash-masternode-tool-0.9.18
-Source0: %{srccodetree}.tar.gz
-#Source0: https://github.com/Bertrand256/dash-masternode-tool/archive/v0.9.18.tar.gz
+# dash-masternode-tool-0.9.z
+Source0: https://github.com/Bertrand256/dash-masternode-tool/archive/v%{version}/%{srccodetree}.tar.gz
 # dash-masternode-tool-0.9-contrib
-Source1: %{srccontribtree}.tar.gz
-# btchip-python-0.1.21
-Source2: %{srccodetree2}.tar.gz
-#Source2: https://github.com/Bertrand256/btchip-python/archive/v0.1.21.tar.gz
+%if %{targetIsProduction}
+Source1: https://github.com/taw00/dashcore-rpm/blob/master/source/SOURCES/%{srccontribtree}.tar.gz
+%else
+Source1: https://github.com/taw00/dashcore-rpm/blob/master/source/testing/SOURCES/%{srccontribtree}.tar.gz
+%endif
+# btchip-python-0.1.z
+Source2: https://github.com/Bertrand256/btchip-python/archive/v%{btchip_python_version}/%{srccodetree2}.tar.gz
 
 # Most of the time, the build system can figure out the requires.
 # But if you need something specific...
@@ -187,6 +157,9 @@ BuildRequires: desktop-file-utils libappstream-glib
 %if 0%{?fedora:1}
 #Suggests:
 %endif
+%if 0%{?rhel:1}
+  %{error:"CENTOS and RHEL are not supported."}
+%endif
 
 # obsolete fictitious previous version of package after a rename
 #Provides: spec-pattern = 0.9
@@ -197,6 +170,8 @@ URL: https://github.com/taw00/dashcore-rpm
 # Group is deprecated. Don't use it. Left here as a reminder...
 # https://fedoraproject.org/wiki/RPMGroups
 #Group: Unspecified
+# Note, for example, this will not build on ppc64le or any 32bit machines or...
+ExclusiveArch: x86_64
 
 
 # If you comment out "debug_package" RPM will create additional RPMs that can
@@ -298,10 +273,11 @@ cd ..
 #   _sharedstatedir is /var/lib
 #   _prefix = /usr
 #   _libdir = /usr/lib or /usr/lib64 (depending on system)
+%define _usr_lib /usr/lib
 #   https://fedoraproject.org/wiki/Packaging:RPMMacros
 # These three are defined in newer versions of RPM (Fedora not el7)
-%define _tmpfilesdir /usr/lib/tmpfiles.d
-%define _unitdir /usr/lib/systemd/system
+%define _tmpfilesdir %{_usr_lib}/tmpfiles.d
+%define _unitdir %{_usr_lib}/systemd/system
 %define _metainfodir %{_datadir}/metainfo
 
 # Create directories
@@ -421,48 +397,47 @@ cd ../../
 #test -f %%{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 
 
-#%clean
-## Once needed if you are building on old RHEL/CentOS.
-## No longer used.
-#rm -rf %{buildroot}
-
-
 %changelog
-* Sun Apr 29 2018 Todd Warner <t0dd@protonmail.com> 0.9.18-4.taw[n]
-- Updated stable build.
+* Tue Jun 5 2018 Todd Warner <todd_at_protonmail.com> 0.9.19-1.taw
+* Tue Jun 5 2018 Todd Warner <todd_at_protonmail.com> 0.9.19-0.1.testing.taw
+  - Updated upstream source: v0.9.19
+  - Updated branding for desktop icons.
+  - Fixed SourceN URLs to be more RPM standards compliant.
+  - Removed some spec file cruft.
 
-* Sun Apr 29 2018 Todd Warner <t0dd@protonmail.com> 0.9.18-3.2.testing.taw[n]
-- Using zenity for the dialogue box.
-- Will choose between ~/.config/dmt or ~/.dmt
-- Logic all fixed. Finally.
+* Sun Apr 29 2018 Todd Warner <t0dd@protonmail.com> 0.9.18-4.taw
+* Sun Apr 29 2018 Todd Warner <t0dd@protonmail.com> 0.9.18-3.2.testing.taw
+  - Using zenity for the dialogue box.
+  - Will choose between ~/.config/dmt or ~/.dmt
+  - Logic all fixed. Finally.
 
-* Sat Apr 28 2018 Todd Warner <t0dd@protonmail.com> 0.9.18-3.1.testing.taw[n]
-- I broke things with the data-dir... fixing!
-- Added missing .appdata.xml file (required for desktop applications in linux)
+* Sat Apr 28 2018 Todd Warner <t0dd@protonmail.com> 0.9.18-3.1.testing.taw
+  - I broke things with the data-dir... fixing!
+  - Added missing .appdata.xml file (required for desktop applications in linux)
 
-* Sat Apr 28 2018 Todd Warner <t0dd@protonmail.com> 0.9.18-3.taw[n]
-- Updated stable build.
+* Sat Apr 28 2018 Todd Warner <t0dd@protonmail.com> 0.9.18-3.taw
+  - Updated stable build.
 
-* Sat Apr 28 2018 Todd Warner <t0dd@protonmail.com> 0.9.18-2.1.testing.taw[n]
-- Default --data-dir is now ~/.config/dmt  
-- Upstream default is moving to ~/.dmt, so I am more closely mirroring this.
+* Sat Apr 28 2018 Todd Warner <t0dd@protonmail.com> 0.9.18-2.1.testing.taw
+  - Default --data-dir is now ~/.config/dmt  
+  - Upstream default is moving to ~/.dmt, so I am more closely mirroring this.
 
-* Thu Apr 26 2018 Todd Warner <t0dd@protonmail.com> 0.9.18-2.taw[n]
-- Updated stable build.
+* Thu Apr 26 2018 Todd Warner <t0dd@protonmail.com> 0.9.18-2.taw
+  - Updated stable build.
 
-* Thu Apr 26 2018 Todd Warner <t0dd@protonmail.com> 0.9.18-1.1.testing.taw[n]
-- specfile: cleaned up the version and release building logic
-- code: updated btchip-python source
-- Pushed the desktop script into /usr/share/ and added a symlink to the actual  
-  binary so that a user can call dmt from the commandline and change the  
-  default data dir.
+* Thu Apr 26 2018 Todd Warner <t0dd@protonmail.com> 0.9.18-1.1.testing.taw
+  - specfile: cleaned up the version and release building logic
+  - code: updated btchip-python source
+  - Pushed the desktop script into /usr/share/ and added a symlink to the actual  
+    binary so that a user can call dmt from the commandline and change the  
+    default data dir.
 
-* Wed Apr 25 2018 Todd Warner <t0dd@protonmail.com> 0.9.18-1.taw[n]
-- Initial stable build.
+* Wed Apr 25 2018 Todd Warner <t0dd@protonmail.com> 0.9.18-1.taw
+  - Initial stable build.
 
-* Wed Apr 25 2018 Todd Warner <t0dd@protonmail.com> 0.9.18-0.2.testing.taw[n]
-- Fix the default config file issues of non-existence and permissions.
+* Wed Apr 25 2018 Todd Warner <t0dd@protonmail.com> 0.9.18-0.2.testing.taw
+  - Fix the default config file issues of non-existence and permissions.
 
-* Tue Apr 24 2018 Todd Warner <t0dd@protonmail.com> 0.9.18-0.1.testing.taw[n]
-- Initial test package.
+* Tue Apr 24 2018 Todd Warner <t0dd@protonmail.com> 0.9.18-0.1.testing.taw
+  - Initial test package.
 
