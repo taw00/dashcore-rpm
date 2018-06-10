@@ -44,7 +44,7 @@ Version: %{vermajor}.%{verminor}
 # - github convention - v0.12.3.0 or dash-0.12.3.0 - e.g. dash-0.12.3.0.tar.gz
 # - bamboo - dashcore-0.12.3 - e.g. dashcore-0.12.3.tar.gz (not used at moment)
 %undefine archive_qualifier
-%define archive_qualifier rc2
+%define archive_qualifier rc3
 %define _archivename_github1 v%{version}
 %define _archivename_github2 %{_name_d}-%{version}
 %define _archivename_alt1 %{_name_dc}-%{vermajor}
@@ -63,7 +63,7 @@ Version: %{vermajor}.%{verminor}
 # if pre-production - "targetIsProduction 0"
 # eg. 0.3.testing.201804 -- pkgrel_preprod should always equal pkgrel_prod-1
 %define pkgrel_preprod 0
-%define extraver_preprod 6
+%define extraver_preprod 7
 
 %define _snapinfo testing
 %define snapinfo %{_snapinfo}
@@ -72,7 +72,7 @@ Version: %{vermajor}.%{verminor}
 %endif
 
 # if includeMinorbump
-%define minorbump taw1
+%define minorbump taw0
 
 #
 # Build the release string (don't edit this)
@@ -921,6 +921,9 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
+* Sun Jun 10 2018 Todd Warner <t0dd_at_protonmail.com> 0.12.3.0-0.7.rc3.taw
+  - v12.3-rc3 - https://github.com/dashpay/dash/releases/tag/v0.12.3.0-rc3
+
 * Sun Jun 3 2018 Todd Warner <t0dd_at_protonmail.com> 0.12.3.0-0.6.rc2.taw
   - v12.3-rc2 - https://github.com/dashpay/dash/releases/tag/v0.12.3.0-rc2
   - /etc/dashcore/dash.conf now has testnet=1 on by default if installing the  
