@@ -44,7 +44,7 @@ Version: %{vermajor}.%{verminor}
 # - github convention - v0.12.3.0 or dash-0.12.3.0 - e.g. dash-0.12.3.0.tar.gz
 # - bamboo - dashcore-0.12.3 - e.g. dashcore-0.12.3.tar.gz (not used at moment)
 %undefine archive_qualifier
-%define archive_qualifier rc3
+%define archive_qualifier rc4
 %define _archivename_github1 v%{version}
 %define _archivename_github2 %{_name_d}-%{version}
 %define _archivename_alt1 %{_name_dc}-%{vermajor}
@@ -63,7 +63,7 @@ Version: %{vermajor}.%{verminor}
 # if pre-production - "targetIsProduction 0"
 # eg. 0.3.testing.201804 -- pkgrel_preprod should always equal pkgrel_prod-1
 %define pkgrel_preprod 0
-%define extraver_preprod 7
+%define extraver_preprod 8
 
 %define _snapinfo testing
 %define snapinfo %{_snapinfo}
@@ -921,6 +921,9 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
+* Wed Jun 13 2018 Todd Warner <t0dd_at_protonmail.com> 0.12.3.0-0.8.rc4.taw
+  - v12.3-rc4 - https://github.com/dashpay/dash/releases/tag/v0.12.3.0-rc4
+
 * Sun Jun 10 2018 Todd Warner <t0dd_at_protonmail.com> 0.12.3.0-0.7.rc3.taw
   - v12.3-rc3 - https://github.com/dashpay/dash/releases/tag/v0.12.3.0-rc3
 
