@@ -33,6 +33,10 @@ Summary: Peer-to-peer, privacy-centric, digital currency
 %define targetIsProduction 0
 %define includeMinorbump 1
 
+# ie. if the dev team includes things like rc3 in the filename
+%define archiveQualifier rc5
+%define includeArchiveQualifier 0
+
 # VERSION
 %define vermajor 0.12.3
 %define verminor 0
@@ -42,16 +46,13 @@ Version: %{vermajor}.%{verminor}
 # the archive name and directory tree can have some variances
 # (dashcore, dash, somename-vvvv-rc2, etc)
 # - github convention - v0.12.3.0 or dash-0.12.3.0 - e.g. dash-0.12.3.0.tar.gz
-%define archive_qualifier rc5
-%undefine archive_qualifier
-
 %define _archivename_github1 v%{version}
 %define _archivename_github2 %{_name_d}-%{version}
 %define _archivename_alt1 %{_name_dc}-%{vermajor}
-%if 0%{?archive_qualifier:1}
-%define _archivename_github1 v%{version}-%{archive_qualifier}
-%define _archivename_github2 %{_name_d}-%{version}-%{archive_qualifier}
-%define _archivename_alt1 %{_name_dc}-%{vermajor}-%{archive_qualifier}
+%if %{includeArchiveQualifier}
+  %define _archivename_github1 v%{version}-%{archiveQualifier}
+  %define _archivename_github2 %{_name_d}-%{version}-%{archiveQualifier}
+  %define _archivename_alt1 %{_name_dc}-%{vermajor}-%{archiveQualifier}
 %endif
 %define archivename %{_archivename_github2}
 %define srccodetree %{_archivename_github2}
@@ -67,12 +68,12 @@ Version: %{vermajor}.%{verminor}
 
 %define _snapinfo testing
 %define snapinfo %{_snapinfo}
-%if 0%{?archive_qualifier:1}
-%define snapinfo %{archive_qualifier}
+%if %{includeArchiveQualifier}
+  %define snapinfo %{archiveQualifier}
 %endif
 
 # if includeMinorbump
-%define minorbump taw0
+%define minorbump taw1
 
 #
 # Build the release string (don't edit this)
@@ -148,8 +149,8 @@ Release: %{_release}
 # https://github.com/dashpay/dash/archive/v0.12.3.0-rc2.tar.gz
 # ...is the same as...
 # https://github.com/dashpay/dash/archive/v0.12.3.0-rc2/dash-0.12.3.0-rc2.tar.gz
-%if 0%{?archive_qualifier:1}
-Source0: https://github.com/dashpay/dash/archive/v%{version}-%{archive_qualifier}/%{archivename}.tar.gz
+%if %{includeArchiveQualifier}
+Source0: https://github.com/dashpay/dash/archive/v%{version}-%{archiveQualifier}/%{archivename}.tar.gz
 %else
 Source0: https://github.com/dashpay/dash/archive/v%{version}/%{archivename}.tar.gz
 %endif
