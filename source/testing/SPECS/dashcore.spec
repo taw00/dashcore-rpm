@@ -39,12 +39,12 @@ Summary: Peer-to-peer, privacy-centric, digital currency
 Version: %{vermajor}.%{verminor}
 
 # dashcore source tarball file basename
-# the archive name and directory tree can have some seriously annoying variances
+# the archive name and directory tree can have some variances
 # (dashcore, dash, somename-vvvv-rc2, etc)
 # - github convention - v0.12.3.0 or dash-0.12.3.0 - e.g. dash-0.12.3.0.tar.gz
-# - bamboo - dashcore-0.12.3 - e.g. dashcore-0.12.3.tar.gz (not used at moment)
-%undefine archive_qualifier
 %define archive_qualifier rc5
+%undefine archive_qualifier
+
 %define _archivename_github1 v%{version}
 %define _archivename_github2 %{_name_d}-%{version}
 %define _archivename_alt1 %{_name_dc}-%{vermajor}
@@ -63,7 +63,7 @@ Version: %{vermajor}.%{verminor}
 # if pre-production - "targetIsProduction 0"
 # eg. 0.3.testing.201804 -- pkgrel_preprod should always equal pkgrel_prod-1
 %define pkgrel_preprod 0
-%define extraver_preprod 9
+%define extraver_preprod 10
 
 %define _snapinfo testing
 %define snapinfo %{_snapinfo}
@@ -906,21 +906,19 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Documentation: https://dashpay.atlassian.net/wiki/display/DOC/Testnet
 #
 # Source snapshots...
-#   * Release builds...
 #     https://github.com/dashpay/dash/tags
 #     https://github.com/dashpay/dash/releases
-#     example: dash-0.12.3.0.tar.gz
-#   * Test builds...
-#     https://bamboo.dash.org/browse/DASHL-DEV/latestSuccessful ...or...
-#     https://bamboo.dash.org/browse/DASHL-REL/latestSuccessful
-#     Then > Artifacts > gitian-linux-dash-src > [download the tar.gz file]
-#     example: dashcore-0.12.3.tar.gz
+#     test example: dash-0.12.3.0-rc5.tar.gz
+#     release example: dash-0.12.3.0.tar.gz
 #
 # Dash Core git repos...
 #   * Dash: https://github.com/dashpay/dash
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
+* Thu Jun 21 2018 Todd Warner <t0dd_at_protonmail.com> 0.12.3.0-0.10.testing.taw
+  - v12.3 - https://github.com/dashpay/dash/releases/tag/v0.12.3.0
+
 * Thu Jun 21 2018 Todd Warner <t0dd_at_protonmail.com> 0.12.3.0-0.9.rc5.taw
   - v12.3-rc5 - https://github.com/dashpay/dash/releases/tag/v0.12.3.0-rc5
 
