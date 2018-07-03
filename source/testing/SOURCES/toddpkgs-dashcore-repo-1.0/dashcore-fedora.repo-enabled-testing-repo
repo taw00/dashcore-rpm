@@ -39,19 +39,6 @@ repo_gpgcheck=0
 metadata_expire=1d
 enabled_metadata=1
 
-[dashcore-stable-12.2]
-enabled=0
-name=Dash Core 12.2 - stable - fedora-$releasever-$basearch
-baseurl=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.2/fedora-$releasever-$basearch/
-type=rpm-md
-skip_if_unavailable=True
-gpgcheck=1
-gpgkey=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.2/pubkey.gpg
-# GnuPG fingerprint should be: C007F5C5B0827208031C8D6251A9F10DA3DF1F94
-repo_gpgcheck=0
-metadata_expire=1d
-enabled_metadata=1
-
 [dashcore-testing]
 enabled=1
 name=Dash Core Test packages - fedora-$releasever-$basearch
@@ -73,6 +60,19 @@ enabled_metadata=1
 ##
 ## DEPRECATED or DECOMMISSIONED - don't use these anymore
 ##
+
+[dashcore-stable-12.2]
+enabled=0
+name=Dash Core 12.2 - stable-deprecated - fedora-$releasever-$basearch
+baseurl=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.2/fedora-$releasever-$basearch/
+type=rpm-md
+skip_if_unavailable=True
+gpgcheck=1
+gpgkey=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.2/pubkey.gpg
+# GnuPG fingerprint should be: C007F5C5B0827208031C8D6251A9F10DA3DF1F94
+repo_gpgcheck=0
+metadata_expire=1d
+enabled_metadata=1
 
 #[dashcore-stable-12.1]
 #name=Dash Core 12.1 - deprecated - fedora-$releasever-$basearch

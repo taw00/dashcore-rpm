@@ -41,7 +41,7 @@ Summary: Manage and collateralize a Dash Masternode with a hardware wallet
 
 # VERSION
 %define vermajor 0.9
-%define verminor 19
+%define verminor 20
 Version: %{vermajor}.%{verminor}
 
 # RELEASE
@@ -55,7 +55,7 @@ Version: %{vermajor}.%{verminor}
 %define snapinfo testing
 
 # if includeMinorbump
-%define minorbump taw2
+%define minorbump taw0
 
 # Building the release string (don't edit this)...
 
@@ -398,45 +398,48 @@ cd ../../
 
 
 %changelog
+* Tue Jul 03 2018 Todd Warner <todd_at_protonmail.com> 0.9.20-0.1.testing.taw
+  - dashcore v12.3 support (protocol 70210)
+
 * Tue Jun 5 2018 Todd Warner <todd_at_protonmail.com> 0.9.19-0.1.testing.taw
   - Updated upstream source: v0.9.19
   - Updated branding for desktop icons.
   - Fixed SourceN URLs to be more RPM standards compliant.
   - Removed some spec file cruft.
 
-* Sun Apr 29 2018 Todd Warner <t0dd@protonmail.com> 0.9.18-4.taw
-* Sun Apr 29 2018 Todd Warner <t0dd@protonmail.com> 0.9.18-3.2.testing.taw
+* Sun Apr 29 2018 Todd Warner <t0dd_at_protonmail.com> 0.9.18-4.taw
+* Sun Apr 29 2018 Todd Warner <t0dd_at_protonmail.com> 0.9.18-3.2.testing.taw
   - Using zenity for the dialogue box.
   - Will choose between ~/.config/dmt or ~/.dmt
   - Logic all fixed. Finally.
 
-* Sat Apr 28 2018 Todd Warner <t0dd@protonmail.com> 0.9.18-3.1.testing.taw
+* Sat Apr 28 2018 Todd Warner <t0dd_at_protonmail.com> 0.9.18-3.1.testing.taw
   - I broke things with the data-dir... fixing!
   - Added missing .appdata.xml file (required for desktop applications in linux)
 
-* Sat Apr 28 2018 Todd Warner <t0dd@protonmail.com> 0.9.18-3.taw
+* Sat Apr 28 2018 Todd Warner <t0dd_at_protonmail.com> 0.9.18-3.taw
   - Updated stable build.
 
-* Sat Apr 28 2018 Todd Warner <t0dd@protonmail.com> 0.9.18-2.1.testing.taw
+* Sat Apr 28 2018 Todd Warner <t0dd_at_protonmail.com> 0.9.18-2.1.testing.taw
   - Default --data-dir is now ~/.config/dmt  
   - Upstream default is moving to ~/.dmt, so I am more closely mirroring this.
 
-* Thu Apr 26 2018 Todd Warner <t0dd@protonmail.com> 0.9.18-2.taw
+* Thu Apr 26 2018 Todd Warner <t0dd_at_protonmail.com> 0.9.18-2.taw
   - Updated stable build.
 
-* Thu Apr 26 2018 Todd Warner <t0dd@protonmail.com> 0.9.18-1.1.testing.taw
+* Thu Apr 26 2018 Todd Warner <t0dd_at_protonmail.com> 0.9.18-1.1.testing.taw
   - specfile: cleaned up the version and release building logic
   - code: updated btchip-python source
   - Pushed the desktop script into /usr/share/ and added a symlink to the actual  
     binary so that a user can call dmt from the commandline and change the  
     default data dir.
 
-* Wed Apr 25 2018 Todd Warner <t0dd@protonmail.com> 0.9.18-1.taw
+* Wed Apr 25 2018 Todd Warner <t0dd_at_protonmail.com> 0.9.18-1.taw
   - Initial stable build.
 
-* Wed Apr 25 2018 Todd Warner <t0dd@protonmail.com> 0.9.18-0.2.testing.taw
+* Wed Apr 25 2018 Todd Warner <t0dd_at_protonmail.com> 0.9.18-0.2.testing.taw
   - Fix the default config file issues of non-existence and permissions.
 
-* Tue Apr 24 2018 Todd Warner <t0dd@protonmail.com> 0.9.18-0.1.testing.taw
+* Tue Apr 24 2018 Todd Warner <t0dd_at_protonmail.com> 0.9.18-0.1.testing.taw
   - Initial test package.
 

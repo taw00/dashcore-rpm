@@ -1,9 +1,11 @@
-%define targetIsProduction 0
 Name:		toddpkgs-dashcore-repo
 Version:	1.0
 Summary:	Repository configuration to enable management of dashcore packages (Dash Cryptocurrency Core Wallet and Node)
+
+%define targetIsProduction 0
+
 # Release...
-%define _rel 2.1
+%define _rel 2.2
 %define _snapinfo testing
 %define _minorbump taw0
 %if %{targetIsProduction}
@@ -88,12 +90,13 @@ install -D -m644 todd-694673ED-public-2030-01-04.2016-11-07.asc %{buildroot}%{_s
 
 
 %changelog
-* Sun Jun 3 2018 Todd Warner <t0dd_at_protonmail.com> 1.0.2.1.testing.taw
+* Tue Jul 03 2018 Todd Warner <t0dd_at_protonmail.com> 1.0-2.2.testing.taw
+  - v12.3 repo flipped on
+
+* Sun Jun 03 2018 Todd Warner <t0dd_at_protonmail.com> 1.0-2.1.testing.taw
   - testing repo turned on by default for testing repos ;)
 
 * Tue May 1 2018 Todd Warner <t0dd_at_protonmail.com> 1.0-2.taw
-  - GA release
-
 * Tue May 1 2018 Todd Warner <t0dd_at_protonmail.com> 1.0-1.1.testing.taw
   - Commented out the old 12.1 repo. It kept polluting the journal with error  
     messages about missing metadata.

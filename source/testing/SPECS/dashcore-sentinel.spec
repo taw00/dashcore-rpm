@@ -38,9 +38,9 @@ Version: %{vermajor}.%{verminor}
 # if pre-production - "targetIsProduction 0"
 # eg. 0.5.testing -- pkgrel_preprod should always equal pkgrel_prod-1
 %define pkgrel_preprod 0
-%define extraver_preprod 3
+%define extraver_preprod 4
 #%%define snapinfo testing
-%define snapinfo testing.20180601
+%define snapinfo testing
 
 # if includeMinorbump
 %define minorbump taw0
@@ -106,9 +106,9 @@ Release: %{_release}
 # ----------- end of release building section
 
 # Unarchived source tree structure (extracted in .../BUILD)
-#   srcroot               dashcore-sentinel-1.1
-#      \_srccodetree        \_sentinel-1.1.0 (github tree example)
-#      \_srccontribtree     \_dashcore-sentinel-1.1-contrib
+#   srcroot               dashcore-sentinel-1.2
+#      \_srccodetree        \_sentinel-1.2.0 (github tree example)
+#      \_srccontribtree     \_dashcore-sentinel-1.2-contrib
 %define srcroot %{_name_dcs}-%{vermajor}
 %define srccodetree %{_name_s}-%{version}
 %define srccontribtree %{_name_dcs}-%{vermajor}-contrib
@@ -350,7 +350,10 @@ exit 0
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
-* Sun Jun 3 2018 Todd Warner <t0dd_at_protonmail.com> 1.2.0-0.3.testing.taw
+* Tue Jul 03 2018 Todd Warner <t0dd_at_protonmail.com> 1.2.0-0.4.testing.taw
+  - v1.2.0 - updated for v12.3
+
+* Sun Jun 03 2018 Todd Warner <t0dd_at_protonmail.com> 1.2.0-0.3.testing.taw
   - updated for v12.3-rc2
 
 * Wed May 23 2018 Todd Warner <t0dd_at_protonmail.com> 1.2.0-0.2.testing.taw

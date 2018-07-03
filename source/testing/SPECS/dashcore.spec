@@ -39,7 +39,7 @@ Summary: Peer-to-peer, privacy-centric, digital currency
 
 # VERSION
 %define vermajor 0.12.3
-%define verminor 0
+%define verminor 1
 Version: %{vermajor}.%{verminor}
 
 # dashcore source tarball file basename
@@ -64,7 +64,7 @@ Version: %{vermajor}.%{verminor}
 # if pre-production - "targetIsProduction 0"
 # eg. 0.3.testing.201804 -- pkgrel_preprod should always equal pkgrel_prod-1
 %define pkgrel_preprod 0
-%define extraver_preprod 10
+%define extraver_preprod 1
 
 %define _snapinfo testing
 %define snapinfo %{_snapinfo}
@@ -73,7 +73,7 @@ Version: %{vermajor}.%{verminor}
 %endif
 
 # if includeMinorbump
-%define minorbump taw1
+%define minorbump taw0
 
 #
 # Build the release string (don't edit this)
@@ -917,8 +917,11 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
+* Tue Jul 03 2018 Todd Warner <t0dd_at_protonmail.com> 0.12.3.1-0.1.testing.taw
+  - v12.3.1 - https://github.com/dashpay/dash/releases/tag/v0.12.3.1
+
 * Thu Jun 21 2018 Todd Warner <t0dd_at_protonmail.com> 0.12.3.0-0.10.testing.taw
-  - v12.3 - https://github.com/dashpay/dash/releases/tag/v0.12.3.0
+  - v12.3.0 - https://github.com/dashpay/dash/releases/tag/v0.12.3.0
 
 * Thu Jun 21 2018 Todd Warner <t0dd_at_protonmail.com> 0.12.3.0-0.9.rc5.taw
   - v12.3-rc5 - https://github.com/dashpay/dash/releases/tag/v0.12.3.0-rc5
