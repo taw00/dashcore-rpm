@@ -3,11 +3,11 @@
 If you have installed your Dash wallet, node, or masternode using the supplied
 RPM packages, updating is super super simple.
 
-_Note1: Major upgrades where there are protocol shifts (for example, the 12.2 to
-12.3 was an upgrade not an update). will have their own howto documents
-associated. This document only describes less-invasive updates and upgrades._
+_WARNING: Major upgrades where there are protocol shifts (for example, the 12.2 to
+12.3 is an upgrade not an update). will have their own howto documents
+associated. This document only describes less-invasive updates and upgrades. For that procedure, refer to this document instead: [How to Upgrade from Version 12.2 to 12.3](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.dashcore-upgrade-from-12.2-to-12.3.md)_
 
-_Note2: If you need to upgrade your operating system, read this document
+_Note: If you need to upgrade your operating system, read this document
 instead: [How to Upgrade Your Masternode's Operating System](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.upgrade-the-operating-system.md) 
 
 ## How do I know there is a new version available?
