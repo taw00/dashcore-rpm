@@ -3,8 +3,8 @@
 If you have installed your Dash wallet, node, or masternode using the supplied
 RPM packages, updating is super super simple.
 
-_Note1: Major upgrades where there are protocol shifts (for example, the 12.1 to
-12.2 was an upgrade not an update). will have their own howto documents
+_Note1: Major upgrades where there are protocol shifts (for example, the 12.2 to
+12.3 was an upgrade not an update). will have their own howto documents
 associated. This document only describes less-invasive updates and upgrades._
 
 _Note2: If you need to upgrade your operating system, read this document

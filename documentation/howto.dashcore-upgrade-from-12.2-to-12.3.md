@@ -1,6 +1,8 @@
 # HowTo: Upgrade from Dash Core version 12.2 to 12.3
 
-## NOTE: 12.3 is not out yet. This is written in preparation.
+**WARNING: If you are upgrading a Masternode, it will require a wallet-driven
+restart due to a protocol bump, so time your upgrade to happen soon after your
+normal Masternode payout.**
 
 > These instructions are specific to node, masternode, and wallet users running
 > the software on Fedora, CentOS, or RHEL plugged into the `yum` or `dnf`
@@ -9,18 +11,15 @@
 
 The process for upgrade is actually rather trivial.
 
-**WARNING: If you are upgrading a Masternode, it will require a wallet-driven
-restart due to a protocol bump, so time your upgrade to happen soon after your
-normal Masternode payout.**
-
 ## The process
 
 #### _...summary..._
 * Shut everything down
 * Back everything up
+* Update your repo configuration
 * Upgrade Dash Core binary packages from 12.2 to 12.3
 * Start everything back up
-<!--* Send start command from wallet to Masternode (Masternodes only)-->
+* Send start command from wallet to Masternode (Masternodes only)
 * Monitor the configuration over time and adjust
 
 ### [0] Shut everything down
@@ -72,7 +71,11 @@ rm -rf x
 * Repeat to yourself: _"I should have been doing this anyway!"_
 
 
-### [2] Update your dnf/yum repo file - switch to the new "stable" repo
+### [2] Update your dnf/yum repo configuration - switch to the new "stable" repo
+
+If are already have the repository RPM installed, after July 14th the
+repository switch to 12.3 will be automated for you. July 14th is when all
+masternodes should have already switched over (11 days after July 3rd).
 
 #### If you have not already installed the `toddpkgs-dashcore-repo` RPM...
 
@@ -90,7 +93,24 @@ sudo yum clean expire-cache
 sudo yum list | grep dashcore
 ```
 
-#### You have...
+#### Are you upgrading before July 14th and you already installed `toddpkgs-dashcore-repo`?...
+
+```
+# Fedora...
+sudo rpm --import https://keybase.io/toddwarner/key.asc
+sudo dnf upgrade -y https://raw.githubusercontent.com/taw00/dashcore-rpm/master/toddpkgs-dashcore-repo.fedora.rpm
+sudo dnf list --refresh | grep dashcore
+```
+
+```
+# CentOS/RHEL...
+sudo rpm --import https://keybase.io/toddwarner/key.asc
+sudo yum update -y https://raw.githubusercontent.com/taw00/dashcore-rpm/master/toddpkgs-dashcore-repo.centos.rpm
+sudo yum clean expire-cache
+sudo yum list | grep dashcore
+```
+
+#### Are you upgrading on or after July 14th and you already installed `toddpkgs-dashcore-repo`? Do this instead...
 
 ```
 # Fedora...
@@ -168,26 +188,27 @@ If this is a masternode...
 sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf masternode mnsync reset
 ```
 
-<!--
 ### [5] Masternode upgrade only: Send start command from Wallet to Masternode
 
-***This may be unrequired -- INVESTIGATING***
+***This only has to happen for major releases, like 12.0 to 12.1 ..or in this
+case 12.2 to 12.3. You don't have send the restart command for minor releases
+(eg. 12.3.1 to 12.3.2). The protocol change was from `70209` to `70210`***
 
-***WARNING: Upgrade after a Masternode payout. You have to restart the
-Masternode from your collateralizing wallet. Here's how...***
+***You have to restart the Masternode from your collateralizing wallet. Here's
+how...***
 
 1. Ensure you have upgraded your wallet as well.
 2. Open your wallet, you can either...
    * Masternode tab > right click on masternode > Start alias
    * Tools menu > Debug console > _masternode start <MN Alias>_
    * From command line: _dash-cli masternode start <MN Alias>_  ---TODO: Need to test this. 
--->
+
 
 ### Masternode upgrade in particular: Monitor your status
 
 ```
-# For systemd run masternodes...
-sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf -datadir=/var/lib/dashcore getinfo
+# For systemd-run masternodes...
+sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf -datadir=/var/lib/dashcore getnetworkinfo
 sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf -datadir=/var/lib/dashcore mnsync status
 sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf -datadir=/var/lib/dashcore masternode debug
 ```

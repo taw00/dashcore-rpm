@@ -245,13 +245,14 @@ sudo yum update -y
 ```
 
 And then after the refreshed packages were updated, restart the wallet or
-`dashd`. Please note that for major upgrades, more actions may have to be
-taken.
+`dashd`. Please note that for major upgrades, more actions may have to be taken
+for example, a masternode going from 12.2 to 12.3 requires a masternode
+restart.
 
 
 #### Good luck!
 
-Send commentes or feedback to <t0dd@protonmail.com>
+Send comments or feedback to <t0dd@protonmail.com>
 
 &nbsp;
 

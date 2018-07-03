@@ -4,7 +4,7 @@ The most current source packages can be found in this directory:
 <https://github.com/taw00/dashcore-rpm/tree/master/source/SRPMS>
 
 From these source packages, we have successfully built Dash Core for Fedora
-versions 26, 27, 28, and CentOS 7 (and therefore RHEL7). Dash Masternode Tool
+versions 27, 28, and CentOS 7 (and therefore RHEL7). Dash Masternode Tool
 has been successfully built for Fedora versions 27 and 28  x86\_64 (it's a
 desktop application).
 
@@ -167,15 +167,15 @@ config_opts['chroot_additional_packages'] = ['tree', 'vim-enhanced', 'less']
 #### [2] Download a source RPM of your choosing
 
 For example, at the time of this writing the latest Dash src.rpm of version
-`0.12.2`, is considered "stable". For the purposes of this document, we are
-going use version-release `0.12.2.3-2.taw` as our example. Download the lastest
+`0.12.3`, is considered "stable". For the purposes of this document, we are
+going use version-release `0.12.3.1-1.taw0` as our example. Download the lastest
 version that is specific to your linux distribution Fedora, CentOS, or RHEL. If
 you are attempting to build in a different environment, download the source RPM
 that as closely matches your platform and experiment away.
 
 Note: Future builds (12.3) are going to move towards a more "correct"
 convention for version-release nomenclature. They will look something like
-`0.12.3.0-0.1.testing.fc27.taw0` and `0.12.3.0-1.fc27.taw0`
+`0.12.3.1-0.1.testing.fc28.taw0` and `0.12.3.1-1.fc28.taw0`
 
 #### [3] Verify the RPM has not been tampered with
 
@@ -193,10 +193,10 @@ sudo rpm --import https://keybase.io/toddwarner/key.asc
 
 (2) Check the signature
 
-`$ rpm --checksig -v dashcore-0.12.2.*.src.rpm` ...or...
-`$ rpm -Kv dashcore-0.12.2.*.src.rpm`
+`$ rpm --checksig -v dashcore-0.12.3.*.src.rpm` ...or...
+`$ rpm -Kv dashcore-0.12.3.*.src.rpm`
 
-You should see something like: `dashcore-0.12.2.3-2.taw.fc27.src.rpm: rsa sha1 (md5) pgp md5 OK`<br />
+You should see something like: `dashcore-0.12.3.1-1.taw0.fc28.src.rpm: rsa sha1 (md5) pgp md5 OK`<br />
 *Notice the "pgp" and the "OK"*
 
 And if you used the verbose flag, `-v`, then you should see my key ID: `694673ed`
@@ -207,7 +207,7 @@ you did not successfully import my key in step 1.
 
 Another way to look at this information is via...
 
-`$ rpm -qpi dashcore-0.12.2.3-2.taw.*.src.rpm | grep 'Name\|\|Version\|Release\|Signature'`
+`$ rpm -qpi dashcore-0.12.3.1-1.taw0.*.src.rpm | grep 'Name\|\|Version\|Release\|Signature'`
 
 
 #### [4] Install the source RPM
@@ -218,7 +218,7 @@ Again, from the command line as a normal user... First, move that source RPM int
 # As a normal user (not root)
 mv dashcore-*.src.rpm ~/rpmbuild/SRPMS/
 # Install the sucker (do not use sudo here!):
-rpm -ivh ~/rpmbuild/SRPMS/dashcore-0.12.2.3-2.taw.fc27.src.rpm #Or whatever version you are installing.
+rpm -ivh ~/rpmbuild/SRPMS/dashcore-0.12.3.1-1.taw0.fc28.src.rpm #Or whatever version you are installing.
 ```
 
 That should explode source code and patch instruction into
@@ -226,11 +226,9 @@ That should explode source code and patch instruction into
 Something like this...
 
 ```bash
-~/rpmbuild/SPECS/dashcore-0.12.2.3.spec
-~/rpmbuild/SOURCES/dash-0.12.2.3.tar.gz
-~/rpmbuild/SOURCES/dashcore-0.12.2.3-contrib-fedora.tar.gz
-~/rpmbuild/SOURCES/dashcore-0.12.2.3-dashify.tar.gz
-~/rpmbuild/SOURCES/dashcore-0.12.2.3-fedora.patch
+~/rpmbuild/SPECS/dashcore.spec
+~/rpmbuild/SOURCES/dash-0.12.3.1.tar.gz
+~/rpmbuild/SOURCES/dashcore-0.12.3-contrib.tar.gz
 ```
 
 #### [5] Build the binaries
@@ -254,11 +252,11 @@ Reconstruct the source rpm.
 
 ```bash
 # As a normal user (not root)
-mock --buildsrpm --spec ~/rpmbuild/SPECS/dashcore-0.12.2.spec --sources ~/rpmbuild/SOURCES/ --resultdir ~/rpmbuild/SRPMS/
+mock --buildsrpm --spec ~/rpmbuild/SPECS/dashcore.spec --sources ~/rpmbuild/SOURCES/ --resultdir ~/rpmbuild/SRPMS/
 ```
 
 This will create a source package and place it in `~/rpmbuild/SRPMS/`. For
-example `~/rpmbuild/SRPMS/dashcore-0.12.2.3-2.taw.fc27.src.rpm`
+example `~/rpmbuild/SRPMS/dashcore-0.12.3.1-1.taw0.fc28.src.rpm`
 
 Now build it...
 
@@ -266,12 +264,12 @@ Now build it...
 # As a normal user (not root)
 # Hint hint: With mock you can build for targets that are not your OS version
 #            and architecture!
-mock -r fedora-27-x86_64 ~/rpmbuild/SRPMS/dashcore-0.12.2.3-2.taw.fc27.src.rpm --resultdir ~/rpmbuild/RPMS/
+mock -r fedora-28-x86_64 ~/rpmbuild/SRPMS/dashcore-0.12.3.1-1.taw0.fc28.src.rpm --resultdir ~/rpmbuild/RPMS/
 ```
 
 This will build packages in `~/rpmbuild/RPMS/` Note, if you did not add
 `--resultdir`, mock would build the packages in the mock chroot tree, like
-perhaps `/var/lib/mock/fedora-27-x86_64/root/builddir/build/RPMS/`. That chroot
+perhaps `/var/lib/mock/fedora-28-x86_64/root/builddir/build/RPMS/`. That chroot
 tree gets blown away by default nearly every time you use mock (a good thing),
 so... just fair warning.
 
@@ -299,7 +297,7 @@ With this method, you use `rpmbuild` to execute the process. For example:
 ```bash
 # As a normal user (not root)
 cd ~/rpmbuild/SPECS
-rpmbuild -ba dashcore-0.12.2.spec
+rpmbuild -ba dashcore.spec
 ```
 
 Note, you may run into a failed build. Look at the BuildRequires in the .spec
@@ -362,17 +360,15 @@ of this document.
 If you are feeling a bit froggy, build and compile the binary RPM packages
 specifically tagged with your name/initials.
 
-Let's say your name is Barney Miller (initials "bm").
+Let's say your name is Barney Miller (initials "bm0").
 
 ```bash
 # As a normal user (not root)
-cp dashcore-0.12.2.spec dashcore-0.12.2.bm.spec
+cp dashcore.spec dashcore.bm0.spec
 ```
 
-* Edit `dashcore-0.12.2.bm.spec`
-* Change the _bumptag_ value in that file from 'taw' to 'bm'  
-  _Note: In newer specfiles, this may be renamed to minorbump and you should
-  also add an integer afterwards: bm0_
+* Edit `dashcore.bm0.spec`
+* Change the _minorbump_ value in that file from 'taw0' to 'bm0'  
 * Add a stanza in the changelog at the bottom reflective of what you did (copy
   the format)...
 
@@ -382,28 +378,28 @@ cp dashcore-0.12.2.spec dashcore-0.12.2.bm.spec
 ```bash
 # versions are just examples...
 # As a normal user (not root) -- rpmbuild method
-#rpmbuild -ba dashcore-0.12.2.bm.spec
+#rpmbuild -ba dashcore.bm0.spec
 # As a normal user (not root) -- mock method (recommended)
-rpmbuild -bs dashcore-0.12.2.bm.spec
-mock -r fedora-27-x86_64 ~/rpmbuild/SRPMS/dashcore-0.12.2.3-0.bm.fc27.src.rpm
+rpmbuild -bs dashcore.bm0.spec
+mock -r fedora-28-x86_64 ~/rpmbuild/SRPMS/dashcore-0.12.3.1-1.bm0.fc28.src.rpm
 ```
 
 If all goes to plan, in 30 or 40 minutes you should have a set of binary
-packages, specifically built to your system with a release of '7.bm'.
+packages, specifically built to your system with a release of '1.bm0'.
 
 If there is a significant problem where you have to, for example, fix the
-`configure.ac` file in the `dash-0.12.2.3.tar.gz` archive (common issue)... you
+`configure.ac` file in the `dash-0.12.3.1.tar.gz` archive (common issue)... you
 will have to do something like this:
 
 * Copy the archive to some working director and then extract it...
 
-      tar xvzf dash-0.12.2.3.tar.gz
+      tar xvzf dash-0.12.3.1.tar.gz
 
 * Copy the resultant (the original pristine) folder…
 
-      cp -a dash-0.12.2.3 dash-0.12.2.3.orig --
+      cp -a dash-0.12.3.1 dash-0.12.3.1.orig --
 
-* Work on the `dash-0.12.2.3/configure.ac` file, build a new patch, and try to
+* Work on the `dash-0.12.3.1/configure.ac` file, build a new patch, and try to
   rebuild things (iterate iterate iterate). All that is a bit beyond this
   document, but this is a good place to start to understand RPMs:
   <https://fedoraproject.org/wiki/How_to_create_an_RPM_package>

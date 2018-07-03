@@ -35,7 +35,7 @@ sudo tail -f /var/lib/dashcore/testnet3/debug.log
 Watch these..
 ```
 # General info
-watch -n10 "sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf getinfo"
+watch -n10 "sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf getnetworkinfo"
 ```
 
 ```
@@ -81,7 +81,7 @@ tail -f ~/.dashcore/testnet3/debug.log
 Watch these..
 ```
 # General info
-watch dash-cli getinfo
+watch dash-cli getnetworkinfo
 ```
 
 ```
