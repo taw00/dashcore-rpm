@@ -1,5 +1,12 @@
 # HowTo: Upgrade from Dash Core version 12.2 to 12.3
 
+These instructions are specific to node, masternode, and wallet users running
+the software on Fedora, CentOS, or RHEL plugged into the `yum` or `dnf`
+install and update process described in other documentation found at
+<https://github.com/taw00/dashcore-rpm>.
+
+The process for upgrade is actually rather trivial, but it does require attention to detail. Read on...
+
 **WARNING1: If you are upgrading a Masternode, it will require a wallet-driven
 restart due to a protocol bump, so time your upgrade to happen soon after your
 normal Masternode payout.**
@@ -9,13 +16,6 @@ only) and Fedora 28 (x86_64 and i386). If you are using Fedora 27 or even
 Fedora 26, you will have to upgrade your operating system FIRST before
 upgrading the Dash reference client or node. Read about upgrading the OS
 [here](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.upgrade-the-operating-system.md).**
-
-> These instructions are specific to node, masternode, and wallet users running
-> the software on Fedora, CentOS, or RHEL plugged into the `yum` or `dnf`
-> install and update process described in other documentation found at
-> <https://github.com/taw00/dashcore-rpm>.
-
-The process for upgrade is actually rather trivial.
 
 ## The process
 
