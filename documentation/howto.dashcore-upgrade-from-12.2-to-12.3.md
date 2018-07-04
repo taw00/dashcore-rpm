@@ -63,7 +63,11 @@ Scenario: If you run dashd or dash-qt directly and configuration is stored in yo
 tar cvzf dashcore-backup-$(date +%F).tar.gz $(find ~/.dashcore  -name '*.conf' -or -name 'wallet.dat*')
 ```
 
-* Verify the integrity of your backup
+&nbsp;
+
+
+Verify the integrity of your backup
+
 ```
 mkdir x
 cd x
