@@ -49,11 +49,14 @@ This is the general scheme...
 ```
 sudo tar cvzf dash-backup-$(date +%F).tar.gz /path/to/dash.conf $(find /path/to/dash-data-directory -name '*.conf' -or -name 'wallet.dat*')
 ```
+&nbsp;
 
 Scenario: If you run dashd as a `systemd` service...
 ```
 sudo tar cvzf dashcore-backup-$(date +%F).tar.gz /etc/dashcore/dash.conf $(find /var/lib/dashcore -name '*.conf' -or -name 'wallet.dat*')
 ```
+
+&nbsp;
 
 Scenario: If you run dashd or dash-qt directly and configuration is stored in your home directory...
 ```
