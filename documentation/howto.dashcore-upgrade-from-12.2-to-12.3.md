@@ -45,20 +45,20 @@ The easiest way to back up your wallet is to shut it down and then copy any conf
 * Create a tar-archive of your configuration and wallet data files<br />
   _Note: If these are overly complicated for you, just be sure to copy `wallet.dat` and any `.conf` files somewhere and you will be fine._
 
-This is the general scheme...
+This is the general pattern...
 ```
-sudo tar cvzf dash-backup-$(date +%F).tar.gz /path/to/dash.conf $(find /path/to/dash-data-directory -name '*.conf' -or -name 'wallet.dat*')
+sudo tar cvzf dash-backup-$(date +%F).tar.gz /path/to/dash.conf $(sudo find /path/to/dash-data-directory -name '*.conf' -or -name 'wallet.dat*')
 ```
 &nbsp;
 
-Scenario: If you run dashd as a `systemd` service...
+Scenario1: If you run dashd as a `systemd` service...
 ```
-sudo tar cvzf dashcore-backup-$(date +%F).tar.gz /etc/dashcore/dash.conf $(find /var/lib/dashcore -name '*.conf' -or -name 'wallet.dat*')
+sudo tar cvzf dashcore-backup-$(date +%F).tar.gz /etc/dashcore/dash.conf $(sudo find /var/lib/dashcore -name '*.conf' -or -name 'wallet.dat*')
 ```
 
 &nbsp;
 
-Scenario: If you run dashd or dash-qt directly and configuration is stored in your home directory...
+Scenario2: If you run dashd or dash-qt directly and configuration is stored in your home directory...
 ```
 tar cvzf dashcore-backup-$(date +%F).tar.gz $(find ~/.dashcore  -name '*.conf' -or -name 'wallet.dat*')
 ```
