@@ -94,11 +94,6 @@ That takes some explanation. Start here:
 
 ## Additional detail...
 
-To automate installation, update, all you have do to do is download and copy
-the appropriate `dashcore-*.repo` file into your package manager configuration
-directory `/etc/yum.repos.d` and you will be ready to rock-and-roll with the
-Dash software as demonstrated with the instruction above.
-
 If you are interested in building your own RPM packages from source, those can
 be found here: <https://github.com/taw00/dashcore-rpm/blob/master/README.source.md>
 
