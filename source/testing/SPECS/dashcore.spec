@@ -541,7 +541,7 @@ install -D -m644 %{srccontribtree}/linux/man/man5/* %{buildroot}%{_mandir}/man5/
 cd %{srccontribtree}/linux/desktop/
 install -D -m644 dash-qt.desktop %{buildroot}%{_datadir}/applications/dash-qt.desktop
 desktop-file-validate %{buildroot}%{_datadir}/applications/dash-qt.desktop
-# specpattern.appdata.xml
+# dash-qt.appdata.xml
 # https://fedoraproject.org/wiki/Packaging:AppData
 install -D -m644 -p dash-qt.appdata.xml %{buildroot}%{_metainfodir}/dash-qt.appdata.xml
 appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/*.appdata.xml
