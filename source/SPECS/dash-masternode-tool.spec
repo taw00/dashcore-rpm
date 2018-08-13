@@ -34,6 +34,7 @@ Summary: Manage and collateralize a Dash Masternode with a hardware wallet
 #BuildArch: noarch
 
 %define targetIsProduction 1
+%define sourceIsPrebuilt 0
 %define includeMinorbump 1
 
 # Package (RPM) name-version-release.
@@ -46,16 +47,20 @@ Version: %{vermajor}.%{verminor}
 
 # RELEASE
 # if production - "targetIsProduction 1"
-%define pkgrel_prod 1
+%define pkgrel_prod 3
 
 # if pre-production - "targetIsProduction 0"
 # eg. 3.1.testing -- pkgrel_preprod should always equal pkgrel_prod-1
-%define pkgrel_preprod 0
+%define pkgrel_preprod 2
 %define extraver_preprod 1
 %define snapinfo testing
 
 # if includeMinorbump
 %define minorbump taw0
+
+# if sourceIsPrebuilt (rp=repackaged)
+# eg. 1.rp (prod) or 0.6.testing.rp (pre-prod)
+%define snapinfo_rp rp
 
 # Building the release string (don't edit this)...
 
@@ -119,18 +124,22 @@ Release: %{_release}
 # Extracted source tree structure (extracted in .../BUILD)
 #   srcroot               dash-masternode-tool-0.9
 #      \_srccodetree        \_dash-masternode-tool-0.9.18
+#      \_binarytree         \_DashMasternodeTool (file)
 #      \_srccodetree2       \_btchip-python-0.1.21
 #      \_srccontribtree     \_dash-masternode-tool-0.9-contrib
 %define srcroot %{name}-%{vermajor}
 %define srccodetree %{name}-%{version}
+%define binarytree %{_name2}_%{version}.linux
 %define btchip_python_version 0.1.26
 %define srccodetree2 btchip-python-%{btchip_python_version}
 %define srccontribtree %{name}-%{vermajor}-contrib
 
-# You should use URLs for sources.
-# https://fedoraproject.org/wiki/Packaging:SourceURL
 # dash-masternode-tool-0.9.z
+%if ! %{sourceIsPrebuilt}
 Source0: https://github.com/Bertrand256/dash-masternode-tool/archive/v%{version}/%{srccodetree}.tar.gz
+%else
+Source0: https://github.com/Bertrand256/dash-masternode-tool/archive/v%{version}/%{binarytree}.tar.gz
+%endif
 # dash-masternode-tool-0.9-contrib
 %if %{targetIsProduction}
 Source1: https://github.com/taw00/dashcore-rpm/blob/master/source/SOURCES/%{srccontribtree}.tar.gz
@@ -140,12 +149,14 @@ Source1: https://github.com/taw00/dashcore-rpm/blob/master/source/testing/SOURCE
 # btchip-python-0.1.z
 Source2: https://github.com/Bertrand256/btchip-python/archive/v%{btchip_python_version}/%{srccodetree2}.tar.gz
 
+%if ! %{sourceIsPrebuilt}
 # Most of the time, the build system can figure out the requires.
 # But if you need something specific...
 Requires: zenity
-
 # BuildRequires indicates everything you need to build the RPM
 BuildRequires: python3-devel python3-virtualenv libusbx-devel libudev-devel
+%endif
+
 # For debugging purposes...
 BuildRequires: tree
 # So I can introspect the mock build environment...
@@ -221,23 +232,29 @@ Supported hardware wallets: Trezor (model One and T), KeepKey, Ledger Nano S
 #      \_srccontribtree     \_dash-masternode-tool-0.9-contrib
 
 mkdir %{srcroot}
-# sourcecode
+# sourcecode or DashMasternodeTool (binary)
 %setup -q -T -D -a 0 -n %{srcroot}
 # contrib
 %setup -q -T -D -a 1 -n %{srcroot}
 # btchip-python
 %setup -q -T -D -a 2 -n %{srcroot}
 
-cp %{srccontribtree}/build/requirements.txt %{srccodetree}/
+%if ! %{sourceIsPrebuilt}
+  cp %{srccontribtree}/build/requirements.txt %{srccodetree}/
+  
+  /usr/bin/virtualenv-3 -p python3 venv \
+   && . venv/bin/activate \
+   && pip3 install --upgrade setuptools \
+   && pip3 install ./%{srccodetree2}
+  
+  cd %{srccodetree}
+  pip3 install -r requirements.txt
+  cd ..
+%else
+  mkdir %{srccodetree}
+  mv DashMasternodeTool %{srccodetree}
+%endif
 
-/usr/bin/virtualenv-3 -p python3 venv \
- && . venv/bin/activate \
- && pip3 install --upgrade setuptools \
- && pip3 install ./%{srccodetree2}
-
-cd %{srccodetree}
-pip3 install -r requirements.txt
-cd ..
 # For debugging purposes...
 cd ../.. ; /usr/bin/tree -df -L 2 BUILD ; cd -
 
@@ -249,9 +266,11 @@ cd ../.. ; /usr/bin/tree -df -L 2 BUILD ; cd -
 ## Man Pages - not used as of yet
 #gzip %%{buildroot}%%{_mandir}/man1/*.1
 
-cd %{srccodetree}
-../venv/bin/pyinstaller --distpath=../dist/linux --workpath=../dist/linux/build dash_masternode_tool.spec
-cd ..
+%if ! %{sourceIsPrebuilt}
+  cd %{srccodetree}
+  ../venv/bin/pyinstaller --distpath=../dist/linux --workpath=../dist/linux/build dash_masternode_tool.spec
+  cd ..
+%endif
 
 
 %install
@@ -288,11 +307,16 @@ install -d %{buildroot}%{_datadir}/%{name}
 
 # Binaries
 install -D -m755 -p %{srccontribtree}/desktop/%{name}-desktop-script.sh %{buildroot}%{_datadir}/%{name}/
+%if ! %{sourceIsPrebuilt}
 install -D -m755 -p ./dist/linux/%{_name2} %{buildroot}%{_datadir}/%{name}/%{_name2}
+%else
+install -D -m755 -p %{srccodetree}/%{_name2} %{buildroot}%{_datadir}/%{name}/%{_name2}
+%endif
 ln -s %{_datadir}/%{name}/%{_name2} %{buildroot}%{_bindir}/%{name}
 
 # Most use LICENSE or COPYING... not LICENSE.txt
-install -D -p %{srccodetree}/LICENSE.txt %{srccodetree}/LICENSE
+# Now using the copy in srccontribtree
+#install -D -p %%{srccodetree}/LICENSE.txt %%{srccodetree}/LICENSE
 
 # Desktop
 cd %{srccontribtree}/desktop/
@@ -346,10 +370,15 @@ cd ../../
 #   but of final tweaking is often done in this section
 #
 %defattr(-,root,root,-)
-%license %{srccodetree}/LICENSE
+#%%license %%{srccodetree}/LICENSE
+%license %{srccontribtree}/LICENSE
 %doc %{srccontribtree}/README.about-this-rpm.md
 %doc %{srccontribtree}/README.changelog.md
+%if ! %{sourceIsPrebuilt}
 %doc %{srccodetree}/README.md
+%else
+%doc %{srccontribtree}/build/README.md
+%endif
 
 # Binaries
 %{_bindir}/%{name}
@@ -398,11 +427,21 @@ cd ../../
 
 
 %changelog
+* Sun Aug 12 2018 Todd Warner <todd_at_protonmail.com> 0.9.20-3.taw
+* Sun Aug 12 2018 Todd Warner <todd_at_protonmail.com> 0.9.20-2.1.testing.taw
+  - attempting build from source again
+  - added README.md back in
+
+* Sun Aug 12 2018 Todd Warner <todd_at_protonmail.com> 0.9.20-2.rp.taw
+* Sun Aug 12 2018 Todd Warner <todd_at_protonmail.com> 0.9.20-1.1.testing.rp.taw
+  - repackaging binary build from upstream until I figure out why I am  
+    getting a missing "coins.json" error.
+
 * Tue Jul 03 2018 Todd Warner <todd_at_protonmail.com> 0.9.20-1.taw
 * Tue Jul 03 2018 Todd Warner <todd_at_protonmail.com> 0.9.20-0.1.testing.taw
   - dashcore v12.3 support (protocol 70210)
 
-* Tue Jun 05 2018 Todd Warner <todd_at_protonmail.com> 0.9.19-0.1.testing.taw
+* Tue Jun 5 2018 Todd Warner <todd_at_protonmail.com> 0.9.19-0.1.testing.taw
   - Updated upstream source: v0.9.19
   - Updated branding for desktop icons.
   - Fixed SourceN URLs to be more RPM standards compliant.
