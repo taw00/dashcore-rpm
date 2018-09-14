@@ -29,6 +29,11 @@ dash-qt
 
 ...if using CentOS or RHEL
 
+Note: You have to first ensure you have the EPEL repositories configured: `sudo yum repolist enabled`  
+If you do not, browse to the [EPEL community page](https://fedoraproject.org/wiki/EPEL) and follow their installation instructions (it's easy).
+
+Then...
+
 ```bash
 # My system is CentOS or RHEL
 sudo rpm --import https://keybase.io/toddwarner/key.asc
@@ -119,6 +124,11 @@ sudo dnf install -y https://raw.githubusercontent.com/taw00/dashcore-rpm/master/
 ```
 
 *...if using CentOS or RHEL*
+
+Note: You have to first ensure you have the EPEL repositories configured: `sudo yum repolist enabled`  
+If you do not, browse to the [EPEL community page](https://fedoraproject.org/wiki/EPEL) and follow their installation instructions (it's easy).
+
+Then...
 
 ```bash
 # My system is CentOS or RHEL

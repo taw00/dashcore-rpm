@@ -85,6 +85,11 @@ sudo dnf install -y dashcore-client firewalld
 
 ...if using CentOS or RHEL
 
+Note: You have to first ensure you have the EPEL repositories configured: `sudo yum repolist enabled`  
+If you do not, browse to the [EPEL community page](https://fedoraproject.org/wiki/EPEL) and follow their installation instructions (it's easy).
+
+Then...
+
 ```bash
 sudo rpm --import https://keybase.io/toddwarner/key.asc
 sudo yum install -y https://raw.githubusercontent.com/taw00/dashcore-rpm/master/toddpkgs-dashcore-repo.centos.rpm
