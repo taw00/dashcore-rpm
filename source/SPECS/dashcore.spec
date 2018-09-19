@@ -39,7 +39,7 @@ Summary: Peer-to-peer, privacy-centric, digital currency
 
 # VERSION
 %define vermajor 0.12.3
-%define verminor 2
+%define verminor 3
 Version: %{vermajor}.%{verminor}
 
 # dashcore source tarball file basename
@@ -541,7 +541,7 @@ install -D -m644 %{srccontribtree}/linux/man/man5/* %{buildroot}%{_mandir}/man5/
 cd %{srccontribtree}/linux/desktop/
 install -D -m644 dash-qt.desktop %{buildroot}%{_datadir}/applications/dash-qt.desktop
 desktop-file-validate %{buildroot}%{_datadir}/applications/dash-qt.desktop
-# specpattern.appdata.xml
+# dash-qt.appdata.xml
 # https://fedoraproject.org/wiki/Packaging:AppData
 install -D -m644 -p dash-qt.appdata.xml %{buildroot}%{_metainfodir}/dash-qt.appdata.xml
 appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/*.appdata.xml
@@ -917,6 +917,10 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
+* Wed Sep 19 2018 Todd Warner <t0dd_at_protonmail.com> 0.12.3.3-1.taw
+* Wed Sep 19 2018 Todd Warner <t0dd_at_protonmail.com> 0.12.3.3-0.1.testing.taw
+  - v12.3.3 - https://github.com/dashpay/dash/releases/tag/v0.12.3.3
+
 * Wed Jul 11 2018 Todd Warner <t0dd_at_protonmail.com> 0.12.3.2-1.taw
 * Wed Jul 11 2018 Todd Warner <t0dd_at_protonmail.com> 0.12.3.2-0.1.testing.taw
   - v12.3.2 - https://github.com/dashpay/dash/releases/tag/v0.12.3.2

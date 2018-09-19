@@ -24,7 +24,7 @@
 # 3 = Both 1 and 2
 
 testnet=0
-ip=93.184.216.34 # Your masternode IP address
+ip=93.184.216.34_CHANGEME # Your masternode IP address
 
 email_me=0
 email_from="burner-address@yahoo.com"
@@ -99,6 +99,17 @@ mn_enablement=$(dash-cli -conf=$config -datadir=$datadir masternode list full | 
 mn_enablement=$(echo -e "${mn_enablement}" | tr -d [\"]|tr -s [:space:])
 # Trim off beginning and ending whitespace
 mn_enablement=$(echo -e "${mn_enablement}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
+# Snag IP address
+ip_address=$(echo -e "${mn_enablement}" | cut -d ' ' -f9 | cut -d ':' -f1 )
+msg_ip1="$_d IP address configured: $ip"
+msg_ip2="$_d IP address reported:   $ip_address"
+# Snag Protocol
+protocol=$(echo -e "${mn_enablement}" | cut -d ' ' -f3)
+msg_proto="$_d Protocol: $protocol"
+# Snag public key
+pubkey=$(echo -e "${mn_enablement}" | cut -d ' ' -f4)
+msg_pubkey="$_d pubkey: $pubkey"
+# Snag public key
 # Snag the actual enablement value
 mn_enablement=$(echo -e "${mn_enablement}" | cut -d ' ' -f2)
 msg2="$_d Masternode enablement status: $mn_enablement"
@@ -109,10 +120,20 @@ if [[ $mn_enablement -ne "ENABLED" && $mn_enablement -ne "PRE_ENABLED" ]] ; then
 fi
 
 if [[ $exit_code -gt 0 || $noise -gt 1 ]] ; then
+  if [[ $logfile ]] ; then
+    echo $msg1 >> $logfile
+    echo $msg_ip1 >> $logfile
+    echo $msg_ip2 >> $logfile
+    echo $msg_proto >> $logfile
+    echo $msg_pubkey >> $logfile
+    echo $msg2 >> $logfile
+  fi
   echo $msg1
-  if [[ $logfile ]] ; then echo $msg1 >> $logfile ; fi
+  echo $msg_ip1
+  echo $msg_ip2
+  echo $msg_proto
+  echo $msg_pubkey
   echo $msg2
-  if [[ $logfile ]] ; then echo $msg2 >> $logfile ; fi
 fi
 
 if [[ $email_me -ne 0 ]] ; then

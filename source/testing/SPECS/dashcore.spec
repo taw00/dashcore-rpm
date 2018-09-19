@@ -39,7 +39,7 @@ Summary: Peer-to-peer, privacy-centric, digital currency
 
 # VERSION
 %define vermajor 0.12.3
-%define verminor 2
+%define verminor 3
 Version: %{vermajor}.%{verminor}
 
 # dashcore source tarball file basename
@@ -917,6 +917,10 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
+* Wed Sep 19 2018 Todd Warner <t0dd_at_protonmail.com> 0.12.3.3-0.1.testing.taw
+  - v12.3.3 - https://github.com/dashpay/dash/releases/tag/v0.12.3.3
+
+* Wed Jul 11 2018 Todd Warner <t0dd_at_protonmail.com> 0.12.3.2-1.taw
 * Wed Jul 11 2018 Todd Warner <t0dd_at_protonmail.com> 0.12.3.2-0.1.testing.taw
   - v12.3.2 - https://github.com/dashpay/dash/releases/tag/v0.12.3.2
 
