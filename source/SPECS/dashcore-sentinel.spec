@@ -33,12 +33,12 @@ Version: %{vermajor}.%{verminor}
 
 # RELEASE
 # if production - "targetIsProduction 1"
-%define pkgrel_prod 1
+%define pkgrel_prod 2
 
 # if pre-production - "targetIsProduction 0"
 # eg. 0.5.testing -- pkgrel_preprod should always equal pkgrel_prod-1
-%define pkgrel_preprod 0
-%define extraver_preprod 4
+%define pkgrel_preprod 1
+%define extraver_preprod 1
 #%%define snapinfo testing
 %define snapinfo testing
 
@@ -131,7 +131,13 @@ Requires: dashcore-server >= 0.12.3
 
 # For mock environments I sometimes add vim and less so I can introspect
 #BuildRequires: tree vim-enhanced less
+%if 0%{?fedora}
+BuildRequires: python3-virtualenv
+%else
 BuildRequires: /usr/bin/virtualenv-3
+%endif
+
+
 # Nuke the auto-requires that rpmbuild will generate because of the
 # virtualenv things we do in the build section.
 %global __requires_exclude .*/BUILD/.*/venv/bin/python
@@ -194,7 +200,7 @@ mkdir %{srcroot}
 #   This is less than ideal for many reasons.
 #   TODO: Build from locally known and signed libraries -- a future endeavor.
 cd %{srccodetree}
-/usr/bin/virtualenv-3 ./venv
+[ -f /usr/bin/virtualenv-3 ] && /usr/bin/virtualenv-3 ./venv || /usr/bin/virtualenv ./venv
 ./venv/bin/pip3 install -r ./requirements.txt
 cd ..
 
@@ -350,6 +356,16 @@ exit 0
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
+* Wed Nov 14 2018 Todd Warner <t0dd_at_protonmail.com> 1.2.0-2.taw
+  - Had to updated virtualenv BuildRequires logic for Fedora 29, and thus...
+  - BuildRequires for virtualenv...  
+    RHEL/CentOS: /usr/bin/virtualenv-3  
+    Fedora: python3-virtualenv
+  - Executable used for virtualenv...  
+    RHEL/CentOS: /usr/bin/virtualenv-3  
+    Fedora < 29: /usr/bin/virtualenv-3  
+    Fedora 29+: /usr/bin/virtualenv  
+
 * Tue Jul 03 2018 Todd Warner <t0dd_at_protonmail.com> 1.2.0-1.taw
 * Tue Jul 03 2018 Todd Warner <t0dd_at_protonmail.com> 1.2.0-0.4.testing.taw
   - v1.2.0 - updated for v12.3
