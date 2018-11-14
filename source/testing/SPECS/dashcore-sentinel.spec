@@ -24,81 +24,47 @@ Summary: A required helper agent for Dash Core Masternodes
 %define includeMinorbump 1
 
 
-# VERSION
-# eg. 1.0.1
-%define vermajor 1.2
+# VERSION - edit this
+# eg. 1.3.0
+%define vermajor 1.3
 %define verminor 0
 Version: %{vermajor}.%{verminor}
 
-
-# RELEASE
-# if production - "targetIsProduction 1"
-%define pkgrel_prod 1
-
-# if pre-production - "targetIsProduction 0"
-# eg. 0.5.testing -- pkgrel_preprod should always equal pkgrel_prod-1
-%define pkgrel_preprod 0
-%define extraver_preprod 4
-#%%define snapinfo testing
-%define snapinfo testing
-
-# if includeMinorbump
-%define minorbump taw0
-
-# Building the release string (don't edit this)...
-
-# release numbers
-%undefine _relbuilder_pt1
+# RELEASE - edit this
 %if %{targetIsProduction}
-  %define _pkgrel %{pkgrel_prod}
-  %define _relbuilder_pt1 %{pkgrel_prod}
+  %define _pkgrel 1
 %else
-  %define _pkgrel %{pkgrel_preprod}
-  %define _extraver %{extraver_preprod}
-  %define _relbuilder_pt1 %{_pkgrel}.%{_extraver}
+  %define _pkgrel 0.2
 %endif
 
-# snapinfo and repackage (pre-built) indicator
-%undefine _relbuilder_pt2
+# MINORBUMP - edit this
+%define minorbump taw0
+
+#
+# Build the release string (don't edit this)
+#
+
+%define snapinfo testing
 %if %{targetIsProduction}
   %undefine snapinfo
 %endif
-%if 0%{?sourceIsPrebuilt:1}
-  %if ! %{sourceIsPrebuilt}
-    %undefine snapinfo_rp
-  %endif
-%else
-  %undefine snapinfo_rp
-%endif
-%if 0%{?snapinfo_rp:1}
-  %if 0%{?snapinfo:1}
-    %define _relbuilder_pt2 %{snapinfo}.%{snapinfo_rp}
-  %else
-    %define _relbuilder_pt2 %{snapinfo_rp}
-  %endif
-%else
-  %if 0%{?snapinfo:1}
-    %define _relbuilder_pt2 %{snapinfo}
-  %endif
-%endif
 
-# put it all together
-# pt1 will always be defined. pt2 and minorbump may not be
-%define _release %{_relbuilder_pt1}
+# pkgrel will also be defined, snapinfo and minorbump may not be
+%define _release %{_pkgrel}
 %if ! %{includeMinorbump}
   %undefine minorbump
 %endif
-%if 0%{?_relbuilder_pt2:1}
+%if 0%{?snapinfo:1}
   %if 0%{?minorbump:1}
-    %define _release %{_relbuilder_pt1}.%{_relbuilder_pt2}%{?dist}.%{minorbump}
+    %define _release %{_pkgrel}.%{snapinfo}%{?dist}.%{minorbump}
   %else
-    %define _release %{_relbuilder_pt1}.%{_relbuilder_pt2}%{?dist}
+    %define _release %{_pkgrel}.%{snapinfo}%{?dist}
   %endif
 %else
   %if 0%{?minorbump:1}
-    %define _release %{_relbuilder_pt1}%{?dist}.%{minorbump}
+    %define _release %{_pkgrel}%{?dist}.%{minorbump}
   %else
-    %define _release %{_relbuilder_pt1}%{?dist}
+    %define _release %{_pkgrel}%{?dist}
   %endif
 %endif
 
@@ -131,7 +97,12 @@ Requires: dashcore-server >= 0.12.3
 
 # For mock environments I sometimes add vim and less so I can introspect
 #BuildRequires: tree vim-enhanced less
+%if 0%{?fedora}
+BuildRequires: python3-virtualenv
+%else
 BuildRequires: /usr/bin/virtualenv-3
+%endif
+
 # Nuke the auto-requires that rpmbuild will generate because of the
 # virtualenv things we do in the build section.
 %global __requires_exclude .*/BUILD/.*/venv/bin/python
@@ -182,7 +153,7 @@ Learn more at www.dash.org.
 %prep
 # .../BUILD/dashcore-sentinel-X.Y/sentinel-x.y.z/
 # .../BUILD/dashcore-sentinel-X.Y/dashcore-sentinel-x.y/
-mkdir %{srcroot}
+mkdir -p %{srcroot}
 # sourcecode
 %setup -q -T -D -a 0 -n %{srcroot}
 # contrib
@@ -194,7 +165,7 @@ mkdir %{srcroot}
 #   This is less than ideal for many reasons.
 #   TODO: Build from locally known and signed libraries -- a future endeavor.
 cd %{srccodetree}
-/usr/bin/virtualenv-3 ./venv
+[ -f /usr/bin/virtualenv-3 ] && /usr/bin/virtualenv-3 ./venv || /usr/bin/virtualenv ./venv
 ./venv/bin/pip3 install -r ./requirements.txt
 cd ..
 
@@ -350,11 +321,24 @@ exit 0
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
+* Wed Nov 14 2018 Todd Warner <t0dd_at_protonmail.com> 1.3.0-0.2.testing.taw
+* Wed Nov 14 2018 Todd Warner <t0dd_at_protonmail.com> 1.3.0-0.1.testing.taw
+  - v1.3.0 - updated for dashcore v13.0
+  - BuildRequires for virtualenv...  
+    RHEL/CentOS: /usr/bin/virtualenv-3  
+    Fedora: python3-virtualenv
+  - Executable used for virtualenv...  
+    RHEL/CentOS: /usr/bin/virtualenv-3  
+    Fedora < 29: /usr/bin/virtualenv-3  
+    Fedora 29+: /usr/bin/virtualenv  
+  - SPEC file: simplified the NVRE building logic
+
+* Tue Jul 03 2018 Todd Warner <t0dd_at_protonmail.com> 1.2.0-1.taw
 * Tue Jul 03 2018 Todd Warner <t0dd_at_protonmail.com> 1.2.0-0.4.testing.taw
-  - v1.2.0 - updated for v12.3
+  - v1.2.0 - updated for dashcore v12.3
 
 * Sun Jun 03 2018 Todd Warner <t0dd_at_protonmail.com> 1.2.0-0.3.testing.taw
-  - updated for v12.3-rc2
+  - updated for dashcore v12.3-rc2
 
 * Wed May 23 2018 Todd Warner <t0dd_at_protonmail.com> 1.2.0-0.2.testing.taw
   - minor spec file changes

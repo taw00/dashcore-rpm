@@ -33,109 +33,83 @@ Summary: Peer-to-peer, privacy-centric, digital currency
 %define targetIsProduction 0
 %define includeMinorbump 1
 
+# ARCHIVE QUALIFIER - edit this if applies
 # ie. if the dev team includes things like rc3 in the filename
-%define archiveQualifier rc5
-%define includeArchiveQualifier 0
+%define archiveQualifier rc1
+%define includeArchiveQualifier 1
 
-# VERSION
-%define vermajor 0.12.3
-%define verminor 3
+# VERSION - edit this
+%define vermajor 0.13.0
+%define verminor 0
 Version: %{vermajor}.%{verminor}
 
-# dashcore source tarball file basename
-# the archive name and directory tree can have some variances
-# (dashcore, dash, somename-vvvv-rc2, etc)
-# - github convention - v0.12.3.0 or dash-0.12.3.0 - e.g. dash-0.12.3.0.tar.gz
-%define _archivename_github1 v%{version}
-%define _archivename_github2 %{_name_d}-%{version}
-%define _archivename_alt1 %{_name_dc}-%{vermajor}
-%if %{includeArchiveQualifier}
-  %define _archivename_github1 v%{version}-%{archiveQualifier}
-  %define _archivename_github2 %{_name_d}-%{version}-%{archiveQualifier}
-  %define _archivename_alt1 %{_name_dc}-%{vermajor}-%{archiveQualifier}
-%endif
-%define archivename %{_archivename_github2}
-%define srccodetree %{_archivename_github2}
-
-# RELEASE
-# if production - "targetIsProduction 1"
-%define pkgrel_prod 1
-
-# if pre-production - "targetIsProduction 0"
-# eg. 0.3.testing.201804 -- pkgrel_preprod should always equal pkgrel_prod-1
-%define pkgrel_preprod 0
-%define extraver_preprod 1
-
-%define _snapinfo testing
-%define snapinfo %{_snapinfo}
-%if %{includeArchiveQualifier}
-  %define snapinfo %{archiveQualifier}
+# RELEASE - edit this
+# package release, and potentially extrarel
+%if %{targetIsProduction}
+  %define _pkgrel 1
+%else
+  %define _pkgrel 0.2
 %endif
 
-# if includeMinorbump
+# MINORBUMP - edit this
 %define minorbump taw0
 
 #
-# Build the release string (don't edit this)
+# Build the release string - don't edit this
 #
 
-# release numbers
-%undefine _relbuilder_pt1
-%if %{targetIsProduction}
-  %define _pkgrel %{pkgrel_prod}
-  %define _relbuilder_pt1 %{pkgrel_prod}
-%else
-  %define _pkgrel %{pkgrel_preprod}
-  %define _extraver %{extraver_preprod}
-  %define _relbuilder_pt1 %{_pkgrel}.%{_extraver}
-%endif
-
-# snapinfo and repackage (pre-built) indicator
-%undefine _relbuilder_pt2
-%if %{targetIsProduction}
-  %undefine snapinfo
-%endif
-%if 0%{?sourceIsPrebuilt:1}
-  %if ! %{sourceIsPrebuilt}
-    %undefine snapinfo_rp
-  %endif
-%else
-  %undefine snapinfo_rp
-%endif
-%if 0%{?snapinfo_rp:1}
-  %if 0%{?snapinfo:1}
-    %define _relbuilder_pt2 %{snapinfo}.%{snapinfo_rp}
-  %else
-    %define _relbuilder_pt2 %{snapinfo_rp}
-  %endif
-%else
-  %if 0%{?snapinfo:1}
-    %define _relbuilder_pt2 %{snapinfo}
+%define snapinfo testing
+%if %{includeArchiveQualifier}
+  %define snapinfo %{archiveQualifier}
+  %if %{targetIsProduction}
+    %undefine snapinfo
   %endif
 %endif
 
-# put it all together
-# pt1 will always be defined. pt2 and minorbump may not be
-%define _release %{_relbuilder_pt1}
+# pkgrel will also be defined, snapinfo and minorbump may not be
+%define _release %{_pkgrel}
 %if ! %{includeMinorbump}
   %undefine minorbump
 %endif
-%if 0%{?_relbuilder_pt2:1}
+%if 0%{?snapinfo:1}
   %if 0%{?minorbump:1}
-    %define _release %{_relbuilder_pt1}.%{_relbuilder_pt2}%{?dist}.%{minorbump}
+    %define _release %{_pkgrel}.%{snapinfo}%{?dist}.%{minorbump}
   %else
-    %define _release %{_relbuilder_pt1}.%{_relbuilder_pt2}%{?dist}
+    %define _release %{_pkgrel}.%{snapinfo}%{?dist}
   %endif
 %else
   %if 0%{?minorbump:1}
-    %define _release %{_relbuilder_pt1}%{?dist}.%{minorbump}
+    %define _release %{_pkgrel}%{?dist}.%{minorbump}
   %else
-    %define _release %{_relbuilder_pt1}%{?dist}
+    %define _release %{_pkgrel}%{?dist}
   %endif
 %endif
 
 Release: %{_release}
 # ----------- end of release building section
+
+# dashcore source tarball file basename
+# the archive name and directory tree can have some variances
+# v0.13.0.0.tar.gz
+%define _archivename_alt1 v%{version}
+# dash-0.13.0.0.tar.gz
+%define _archivename_alt2 %{_name_d}-%{version}
+# dashcore-0.13.0.tar.gz
+%define _archivename_alt3 %{_name_dc}-%{vermajor}
+# dashcore-0.13.0.0.tar.gz
+%define _archivename_alt4 %{_name_dc}-%{version}
+
+# our selection for this build - edit this
+%define _archivename %{_archivename_alt2}
+%define _srccodetree %{_archivename_alt2}
+
+%if %{includeArchiveQualifier}
+  %define archivename %{_archivename}-%{archiveQualifier}
+  %define srccodetree %{_srccodetree}-%{archiveQualifier}
+%else
+  %define archivename %{_archivename}
+  %define srccodetree %{_srccodetree}
+%endif
 
 # Extracted source tree structure (extracted in .../BUILD)
 #   srcroot               dashcore-0.12.3
@@ -186,26 +160,44 @@ URL: http://dash.org/
 # Note, for example, this will not build on ppc64le
 ExclusiveArch: x86_64 i686 i386
 
-BuildRequires: gcc-c++ autoconf automake libtool
-BuildRequires: openssl-devel boost-devel libevent-devel
+# As recommended by...
+# https://github.com/dashpay/dash/blob/develop/doc/build-unix.md
+BuildRequires: gcc-c++ libtool make autoconf automake
+BuildRequires: cmake libstdc++-static patch
+%if 0%{?rhel}
+BuildRequires: python34
+#t0dd: experimental...
+BuildRequires: sed
+%else
+BuildRequires: python3 
+%endif
+# t0dd: added missing RPM from requires list (todo: I need to update the page)
 BuildRequires: libdb4-cxx-devel
-BuildRequires: miniupnpc-devel
+# t0dd: added to avoid unneccessary fetching of libraries from the internet
+#       which is a packaging no-no
+BuildRequires: openssl-devel boost-devel libevent-devel
+BuildRequires: miniupnpc-devel ccache
+# t0dd: added to satisfy chia_bls.
+#       (note chia_bls is currently downloaded from github at the moment,
+#       sadly. see dash-0.13.0.0-rc1/depends/packages/chia_bls.mk)
+BuildRequires: gmp-devel
+
 # Other BuildRequires listed per package below
 
+#t0dd: SELinux stuff that I just haven't addressed yet...
 #BuildRequires: checkpolicy selinux-policy-devel selinux-policy-doc
 
 #t0dd: I will often add tree, vim-enhanced, and less for mock environment
-# introspection
-#BuildRequires: tree vim-enhanced less
+#      introspection
+BuildRequires: tree vim-enhanced less findutils
 
-#t0dd: I don't think this check is needed anymore -comment out for now.
-## ZeroMQ not testable yet on RHEL due to lack of python3-zmq so
-## enable only for Fedora
-#%%if 0%%{?fedora}
-#BuildRequires: python3-zmq zeromq-devel
-#%%endif
+# ZeroMQ not testable yet on RHEL due to lack of python3-zmq so
+# enable only for Fedora
+%if 0%{?fedora}
+BuildRequires: python3-zmq zeromq-devel
+%endif
 
-#t0dd: Python tests still use OpenSSL for secp256k1, so we still need this to
+# Python tests still use OpenSSL for secp256k1, so we still need this to
 # run the testsuite on RHEL7, until Red Hat fixes OpenSSL on RHEL7. It has
 # already been fixed on Fedora. Bitcoin itself no longer needs OpenSSL for
 # secp256k1.
@@ -215,6 +207,7 @@ BuildRequires: miniupnpc-devel
 # ...aka: https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-openssl-compat/epel-$releasever-$basearch/
 %if %{testing_extras} && 0%{?rhel}
 BuildRequires: openssl-compat-dashcore-libs
+BuildRequires: python34
 %endif
 
 
@@ -222,10 +215,17 @@ BuildRequires: openssl-compat-dashcore-libs
 %package client
 Summary: Peer-to-peer; privacy-centric; digital currency, protocol, and platform for payments and dApps (dash-qt desktop reference client)
 Requires: dashcore-utils = %{version}-%{release}
-#BuildRequires: qt5-qtbase-devel qt5-linguist qt5-qttools-devel
+# Required for installing desktop applications on linux
+BuildRequires: libappstream-glib desktop-file-utils
+# t0dd: added to avoid unneccessary fetching of libraries from the internet
+#       which is a packaging no-no
+#BuildRequires: qt5-qtbase-devel qt5-linguist qt5-qttools-devel -- 3rd one likely unneeded
 BuildRequires: qrencode-devel protobuf-devel
 BuildRequires: qt5-qtbase-devel qt5-linguist
-BuildRequires: libappstream-glib desktop-file-utils
+%if 0%{?fedora}
+Requires:       qt5-qtwayland
+BuildRequires:  qt5-qtwayland-devel
+%endif
 
 
 # dashcore-server
@@ -394,6 +394,8 @@ Learn more at www.dash.org.
 # Prep section starts us in directory .../BUILD (aka {_builddir})
 # process dashcore - Source0 - untars in:
 # {_builddir}/dashcore-0.12.3/dashcore-0.12.3.0/
+# ..or something like..
+# {_builddir}/dash-0.13.0/dash-0.13.0.0-rc1/
 mkdir -p %{srcroot}
 %setup -q -T -D -a 0 -n %{srcroot}
 # contributions
@@ -406,22 +408,39 @@ mkdir -p %{srcroot}
 mkdir -p selinux-tmp
 cp -p %{srccontribtree}/linux/selinux/dash.{te,if,fc} selinux-tmp/
 
+# pixmap contributions
 cp -a %{srccontribtree}/extras/pixmaps/*.??? %{srccodetree}/share/pixmaps/
+# Swap out packages.mk makefile in order to force usage of OS native devel
+# libraries and tools. Swap out chia_bls.mk because it asks for a dependency to
+# gmp that is satisfied via the OS (via BuildRequires) instead.
+cp -a %{srccontribtree}/depends/packages/*.mk %{srccodetree}/depends/packages/
 
+#t0dd: experimental
+#t0dd: CMakeLists.txt forces a newer cmake than RHEL provides. Removing the check
+# and hoping for the best.
+%if 0%{?rhel}
+cd %{srccodetree}
+sed -i".orig" '/cmake_minimum_required/d' CMakeLists.txt
+rm CMakeLists.txt.orig
+cd ..
+%endif
 
 
 %build
 # This section starts us in directory {_builddir}/{srcroot}
 cd %{srccodetree}
-./autogen.sh
-%configure --enable-reduce-exports --enable-glibc-back-compat
-make %{?_smp_mflags}
+# build dependencies
+cd depends
+make HOST=%{_target_platform} -j4
 cd ..
-
-# Man Pages (from contrib)
-gzip %{srccontribtree}/linux/man/man1/*
-gzip %{srccontribtree}/linux/man/man5/*
-
+# build code
+./autogen.sh
+%define targettree %{_builddir}/%{srcroot}/%{srccodetree}/depends/%{_target_platform}
+CPPFLAGS="$CPPFLAGS -I%{_includedir} -I%{targettree}/include" \
+  LDFLAGS="$LDFLAGS -L%{_libdir} -L%{targettree}/lib" \
+  ./configure --prefix=%{targettree} --enable-reduce-exports
+make
+cd ..
 
 #t0dd Not using for now. Doubling up %%'s to stop macro expansion in comments.
 #t0dd # Build SELinux policy
@@ -458,14 +477,9 @@ cd %{srccodetree}
 # This section starts us in directory {_builddir}/{srcroot}
 
 cd %{srccodetree}
-make INSTALL="install -p" CP="cp -p" DESTDIR=%{buildroot} install
+#make INSTALL="install -p" CP="cp -p" DESTDIR=%{buildroot} install
+make install
 cd ..
-
-# Remove the test binaries if still floating around
-%if ! %{testing_extras}
-  rm -f %{buildroot}%{_bindir}/test_*
-  rm -f %{buildroot}%{_bindir}/bench_dash
-%endif
 
 # Cheatsheet for built-in RPM macros:
 # https://fedoraproject.org/wiki/Packaging:RPMMacros
@@ -503,6 +517,18 @@ install -d %{buildroot}%{_unitdir}
 install -d %{buildroot}%{_metainfodir}
 install -d -m755 -p %{buildroot}%{_bindir}
 install -d -m755 -p %{buildroot}%{_sbindir}
+install -d -m755 -p %{buildroot}%{_libdir}
+install -d -m755 -p %{buildroot}%{_includedir}
+
+# make install deploys to {targettree}/
+cp %{targettree}/bin/* %{buildroot}%{_bindir}/
+mv %{targettree}/lib/* %{buildroot}%{_libdir}/
+mv %{targettree}/include/* %{buildroot}%{_includedir}/
+# Remove the test binaries if still floating around
+%if ! %{testing_extras}
+  rm -f %{buildroot}%{_bindir}/test_*
+  rm -f %{buildroot}%{_bindir}/bench_dash
+%endif
 
 # Application as systemd service directory structure
 # /etc/dashcore/
@@ -534,8 +560,17 @@ ln -s %{_localstatedir}/log/dashcore/testnet3/debug.log %{buildroot}%{_sharedsta
 ln -s %{_sysconfdir}/dashcore/dash.conf %{buildroot}%{_sharedstatedir}/dashcore/.dashcore/dash.conf
 
 # Man Pages (from contrib)
-install -D -m644 %{srccontribtree}/linux/man/man1/* %{buildroot}%{_mandir}/man1/
+#install -D -m644 %{srccontribtree}/linux/man/man1/* %{buildroot}%{_mandir}/man1/
 install -D -m644 %{srccontribtree}/linux/man/man5/* %{buildroot}%{_mandir}/man5/
+# Man Pages (from upstream) - likely to overwrite ones from contrib
+install -D -m644 %{srccodetree}/doc/man/*.1* %{buildroot}%{_mandir}/man1/
+gzip -f %{buildroot}%{_mandir}/man1/*.1
+gzip -f %{buildroot}%{_mandir}/man5/*.5
+
+# Bash completion
+install -D -m644 %{srccodetree}/contrib/dash-cli.bash-completion %{buildroot}%{_datadir}/bash-completion/completions/dash-cli
+install -D -m644 %{srccodetree}/contrib/dash-tx.bash-completion %{buildroot}%{_datadir}/bash-completion/completions/dash-tx
+install -D -m644 %{srccodetree}/contrib/dashd.bash-completion %{buildroot}%{_datadir}/bash-completion/completions/dashd
 
 # Desktop elements - desktop file and kde protocol file (from contrib)
 cd %{srccontribtree}/linux/desktop/
@@ -853,6 +888,7 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 %doc selinux-tmp/*
 %{_sbindir}/dashd
 %{_tmpfilesdir}/dashd.conf
+%{_datadir}/bash-completion/completions/dashd
 %{_mandir}/man1/dashd.1.gz
 %{_mandir}/man5/dash.conf.5.gz
 %{_mandir}/man5/masternode.conf.5.gz
@@ -868,17 +904,15 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 %files libs
 %defattr(-,root,root,-)
 %license %{srccodetree}/COPYING
-%{_libdir}/libdashconsensus.so*
+%{_libdir}/*
 
 
 # dashcore-devel
 %files devel
 %defattr(-,root,root,-)
 %license %{srccodetree}/COPYING
-%{_includedir}/dashconsensus.h
-%{_libdir}/libdashconsensus.a
-%{_libdir}/libdashconsensus.la
-%{_libdir}/pkgconfig/libdashconsensus.pc
+%{_includedir}/*
+%{_libdir}/*
 
 
 # dashcore-utils
@@ -887,6 +921,8 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 %license %{srccodetree}/COPYING
 %{_bindir}/dash-cli
 %{_bindir}/dash-tx
+%{_datadir}/bash-completion/completions/dash-cli
+%{_datadir}/bash-completion/completions/dash-tx
 %{_mandir}/man1/dash-cli.1.gz
 %{_mandir}/man1/dash-tx.1.gz
 
@@ -917,6 +953,16 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
+* Wed Nov 14 2018 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-0.2.rc1.taw
+* Wed Nov 14 2018 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-0.1.rc1.taw
+  - v13.0.0 - https://github.com/dashpay/dash/releases/tag/v0.13.0.0-rc1
+  - simplified the spec-file release string building logic a bit
+  - include man pages from upstream source
+  - include bash-completion files from upstream source
+  - experimenting at removing cmake version-checking in CMakeLists.txt so that
+    we can build for RHEL
+
+* Wed Sep 19 2018 Todd Warner <t0dd_at_protonmail.com> 0.12.3.3-1.taw
 * Wed Sep 19 2018 Todd Warner <t0dd_at_protonmail.com> 0.12.3.3-0.1.testing.taw
   - v12.3.3 - https://github.com/dashpay/dash/releases/tag/v0.12.3.3
 
