@@ -1,37 +1,44 @@
 # HowTo: Upgrade from Dash Core version 0.12.3 to 0.13.0
 
 These instructions are specific to node, masternode, and wallet users running
-the software on Fedora, CentOS, or RHEL plugged into the `yum` or `dnf`
-install and update process described in other documentation found at
-<https://github.com/taw00/dashcore-rpm>.
+the software on Fedora, ~~CentOS, or RHEL~~ (i386 and x86_64) plugged into the
+`yum` or `dnf` install and update process described in other documentation
+found at <https://github.com/taw00/dashcore-rpm>. Fedora 27 will no longer be
+supported as of v0.13.0.
 
-The process for upgrade is actually rather trivial, but it does require attention to detail. Read on...
+The process for upgrade is actually rather trivial, ***but it does require attention to detail***. Read on...
 
-> **WARNING1:<br />If you are upgrading a Masternode, it will require a wallet-driven
-restart due to a protocol bump, so time your upgrade to happen soon after your
-normal Masternode payout.**
+> **BIG UGLY WARNING #1**<br />Because of the extremely dated version of cmake
+> in Red Hat Enterprise Linux 7 (and CentOS 7), these platforms will not be
+> supported. EL8 is in beta at the moment, but won't be released until
+> something like mid-May 2019. Until then, if you want to run a node or
+> masternode, you will have to switch to Fedora. Fedora 29 is as stable as a
+> rock though so... RECOMMEND!
 
-> **WARNING2:<br />These v0.13.0 RPMs are built for Fedora 28 and 29 (x86_64
-> and i386) - the EL7 versions (RHEL7 and CentOS) are still a work in progress.
-> If you are using Fedora 27 or earlier, you will have to upgrade your
-> operating system FIRST before upgrading the Dash reference client or node.
-> Read about upgrading the OS
-> [here](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.upgrade-the-operating-system.md).**
+> **WARNING #2:<br />**If you are upgrading a Masternode, 0.13.0 will require a
+> wallet-driven restart to a protocol bump *and additonal configuration*, so
+> time your upgrade to happen soon after your normal Masternode payout.
 
 ## The process
 
+*Assumption:<br />The OS has already been upgraded or installed to match a
+supported version: Fedora 28 or 29 (i386 or x86_64). OS upgrade process can be
+found
+[here](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.upgrade-the-operating-system.md).*
+
 #### _...summary..._
-* Shut everything down
-* Back everything up
-* Update your repo configuration
-* Upgrade Dash Core binary packages from 0.12.3 to 0.13.0
-* Start everything back up
-* Send start command from wallet to Masternode (Masternodes only)
+* [0] Shut everything down
+* [1] Back everything up
+* [2] Update your repo configuration
+* [3] Upgrade Dash Core binary packages from 0.12.3 to 0.13.0
+* [4] Start everything back up
+* [5] Masternodes only: Send start command from wallet to Masternode
+* [6] Masternodes only: Deploy new v0.13 configurations to support Deterministic Masternode Lists
 * Monitor the configuration over time and adjust
 
 ### [0] Shut everything down
 
-* If running `dash-qt`, in your menus choose "File" and then "Exit"
+* If running `dash-qt` (the graphical client program), in your menus choose "File" and then "Exit"
 * If running `dashd` manually (not as a systemd service), then issue a shutdown with `dash-cli stop`
 * If running `dashd` as a systemd service, then issue a shutdown command with `sudo systemctl stop dash`
 
@@ -45,27 +52,24 @@ with a wallet, a backup is critical for ensuring your funds are protected.
 The easiest way to back up your wallet is to shut it down and then copy any
 configuration and wallet data files.
 
-* Shut down your dash-qt or dashd -- You should have already done this
+* Shut down -- You should have already done this in step [0]
 * Open up a terminal
-* Create a tar-archive of your configuration and wallet data files<br />
+* Create a tar-archive (like zip, but better) of your configuration and wallet data files<br />
   _Note: If these are overly complicated for you, just be sure to copy `wallet.dat` and any `.conf` files somewhere and you will be fine._
 
-This is the general pattern...
-```
-sudo tar cvzf dash-backup-$(date +%F).tar.gz /path/to/dash.conf $(sudo find /path/to/dash-data-directory -name '*.conf' -or -name 'wallet.dat*')
-```
-&nbsp;
+*This is the general pattern of creating a backup tar-archive...*
 
-Scenario1: If you run dashd as a `systemd` service...
+Scenario1: The dashd server is run as a systemd service:
 ```
-sudo tar cvzf dashcore-backup-$(date +%F).tar.gz /etc/dashcore/dash.conf $(sudo find /var/lib/dashcore -name '*.conf' -or -name 'wallet.dat*')
+sudo tar cvzf dash-backup-$(date +%F).tar.gz /etc/dashcore/dash.conf $(sudo find /var/lib/dashcore -name '*.conf' -or -name 'wallet.dat*')
 ```
 
 &nbsp;
 
-Scenario2: If you run dashd or dash-qt directly and configuration is stored in your home directory...
+Scenario2: The graphical client or dashd is run from the user's home directory:
 ```
-tar cvzf dashcore-backup-$(date +%F).tar.gz $(find ~/.dashcore  -name '*.conf' -or -name 'wallet.dat*')
+cd ~
+tar cvzf dash-backup-$(date -%F).tar.gz .dashcore/dash.conf $(find .dashcore/ -name '*.conf' -or -name 'wallet.dat*')
 ```
 
 &nbsp;
@@ -86,14 +90,15 @@ rm -rf x
   one and just like in the test, extract the archive but this time replace
   all the new setup's files with the ones from the archive.
 * Store that "tarball" somewhere safe.
-* Repeat to yourself: _"I should have been doing this anyway!"_
+* Repeat to yourself: _"I should have been doing this all along!"_
 
 
 ### [2] Update your dnf/yum repo configuration - switch to the new "stable" repo
 
-If are already have the repository RPM installed, after DATE-TBD the repository
-switch to 0.13.0 will be automated for you. DATE-TBD is when all masternodes
-should have already switched over.
+After DATE-TBD: If are already have the repository RPM installed --
+toddpkgs-dashcore-repo.fedora.rpm -- the repository switch to 0.13.0 will be
+automated for you. That will be the date that all masternodes should have
+already been switched over.
 
 #### If you have not already installed the `toddpkgs-dashcore-repo` RPM...
 
@@ -104,14 +109,14 @@ sudo dnf install -y https://raw.githubusercontent.com/taw00/dashcore-rpm/master/
 sudo dnf list --refresh | grep dashcore
 ```
 ```
-# CentOS/RHEL...
-sudo rpm --import https://keybase.io/toddwarner/key.asc
-sudo yum install -y https://raw.githubusercontent.com/taw00/dashcore-rpm/master/toddpkgs-dashcore-repo.centos.rpm
-sudo yum clean expire-cache
-sudo yum list | grep dashcore
+## CentOS/RHEL (NO LONGER SUPPORTED AS OF v0.13.0!)...
+#sudo rpm --import https://keybase.io/toddwarner/key.asc
+#sudo yum install -y https://raw.githubusercontent.com/taw00/dashcore-rpm/master/toddpkgs-dashcore-repo.centos.rpm
+#sudo yum clean expire-cache
+#sudo yum list | grep dashcore
 ```
 
-#### Are you upgrading before July 14th and you already installed `toddpkgs-dashcore-repo`?...
+#### Are you upgrading before DATE-TBD and you already installed `toddpkgs-dashcore-repo`?...
 
 ```
 # Fedora...
@@ -121,14 +126,14 @@ sudo dnf list --refresh | grep dashcore
 ```
 
 ```
-# CentOS/RHEL...
-sudo rpm --import https://keybase.io/toddwarner/key.asc
-sudo yum update -y https://raw.githubusercontent.com/taw00/dashcore-rpm/master/toddpkgs-dashcore-repo.centos.rpm
-sudo yum clean expire-cache
-sudo yum list | grep dashcore
+## CentOS/RHEL (NO LONGER SUPPORTED AS OF v0.13.0!)...
+#sudo rpm --import https://keybase.io/toddwarner/key.asc
+#sudo yum update -y https://raw.githubusercontent.com/taw00/dashcore-rpm/master/toddpkgs-dashcore-repo.centos.rpm
+#sudo yum clean expire-cache
+#sudo yum list | grep dashcore
 ```
 
-#### Are you upgrading on or after July 14th and you already installed `toddpkgs-dashcore-repo`? Do this instead...
+#### Are you upgrading on or after DATE-TBD and you already installed `toddpkgs-dashcore-repo`? Do this instead...
 
 ```
 # Fedora...
@@ -136,7 +141,7 @@ sudo dnf upgrade toddpkgs-dashcore-repo --refresh -y
 sudo dnf list | grep dashcore
 ```
 ```
-# CentOS/RHEL...
+# CentOS/RHEL (NO LONGER SUPPORTED AS OF v0.13.0!)...
 sudo yum clean expire-cache
 sudo yum update toddpkgs-dashcore-repo -y
 sudo yum list | grep dashcore
@@ -157,9 +162,9 @@ sudo dnf upgrade -y
 ```
 
 ```
-# CentOS/RHEL...
-# Upgrade Dash Core and Sentinel
-sudo yum update -y
+## CentOS/RHEL (NO LONGER SUPPORTED AS OF v0.13.0!)...
+## Upgrade Dash Core and Sentinel
+#sudo yum update -y
 ```
 
 
@@ -175,7 +180,10 @@ balances.
 #### If this is a node (or masternode) - `dashd`
 
 Note: For the blockcount information below, it needs to match the current block
-height as listed at <https://explorer.dash.org>.
+height as listed at <https://explorer.dash.org/chain/Dash> (or one of the
+explorers listed at <https://www.dash.org/network/>. If you are using TESTNET,
+check out one of the explorers found
+[here](https://docs.dash.org/en/stable/developers/testnet.html?highlight=explorers#explorers).
 
 
 If running `dashd` as a normal user and not as a systemd managed service...
@@ -188,7 +196,7 @@ watch dash-cli getblockcount # CTRL-C to exit
 tail -f ~/.dashcore/debug.log
 ```
 
-If running node (or masternode) as a `systemd` service...
+If running node (or masternode) as a `systemd` managed service...
 ```
 # Start dashd.service...
 sudo systemctl start dashd
@@ -208,18 +216,18 @@ sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf -datadir=/var/lib/dashco
 
 ### [5] Masternode upgrade only: Send start command from Wallet to Masternode
 
-***This only has to happen for major releases, like 0.12.1 to 0.12.2 ..or in this
-case 0.12.3 to 0.13.0. You don't have send the restart command for minor releases
-(eg. 0.13.0 to 0.13.1). The protocol change was from `70210` to `70212`***
+*This only has to happen for major releases, like 0.12.3 to 0.13.0. You
+usually don't have send the restart command for minor releases (eg. 0.13.0 to
+0.13.1). The protocol change from 0.12.3 to 0.13.0 was `70210` to `70212`*
 
 ***You have to restart the Masternode from your collateralizing wallet. Here's
 how...***
 
-1. Ensure you have upgraded your wallet as well.
+1. Ensure you have upgraded your wallet as well (IMPORTANT).
 2. Open your wallet, you can either...
    * Masternode tab > right click on masternode > Start alias
-   * Tools menu > Debug console > _masternode start <MN Alias>_
-   * From command line: _dash-cli masternode start <MN Alias>_  ---TODO: Need to test this. 
+   * Tools menu > Debug console > _masternode start-alias <MN Alias>_
+   * From command line: _dash-cli masternode start-alias <MN Alias>_
 
 
 ### Masternode upgrade in particular: Monitor your status
@@ -231,7 +239,10 @@ sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf -datadir=/var/lib/dashco
 sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf -datadir=/var/lib/dashcore masternode debug
 ```
 
+### [6] Masternode upgrades only:<br />Deploy new v0.13 configurations to support Deterministic Masternode Lists
 
+Follow these instructions (step 1 is what you already just performed):
+<https://docs.dash.org/en/latest/masternodes/maintenance.html#dash-0-13-upgrade-procedure>
 
 ## Done.
 
