@@ -193,7 +193,7 @@ If running node (or masternode) as a `systemd` service...
 # Start dashd.service...
 sudo systemctl start dashd
 # Watch the blockcount (CRTL-C to exit this loop)...
-watch sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf getblockcount
+watch sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf -datadir=/var/lib/dashcore getblockcount
 # Watch the debug.log...
 sudo -u dashcore tail -f /var/lib/dashcore/debug.log
 ```
@@ -203,15 +203,14 @@ If this is a masternode...
 # Check the results of `mnsync status`. If the status never syncs fully, you
 # may have to perform a `mnsync reset`. Note that the syncing process can take 15
 # to 30 minutes.
-sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf masternode mnsync reset
+sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf -datadir=/var/lib/dashcore masternode mnsync reset
 ```
 
 ### [5] Masternode upgrade only: Send start command from Wallet to Masternode
 
 ***This only has to happen for major releases, like 0.12.1 to 0.12.2 ..or in this
 case 0.12.3 to 0.13.0. You don't have send the restart command for minor releases
-(eg. 0.13.1 to 0.13.1). The protocol change was from `70210` to `DATA
-FORTHCOMING***
+(eg. 0.13.0 to 0.13.1). The protocol change was from `70210` to `70212`***
 
 ***You have to restart the Masternode from your collateralizing wallet. Here's
 how...***
