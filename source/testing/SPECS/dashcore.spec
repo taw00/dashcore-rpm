@@ -35,7 +35,7 @@ Summary: Peer-to-peer, privacy-centric, digital currency
 
 # ARCHIVE QUALIFIER - edit this if applies
 # ie. if the dev team includes things like rc3 in the filename
-%define archiveQualifier rc1
+%define archiveQualifier rc4
 %define includeArchiveQualifier 1
 
 # VERSION - edit this
@@ -48,11 +48,11 @@ Version: %{vermajor}.%{verminor}
 %if %{targetIsProduction}
   %define _pkgrel 1
 %else
-  %define _pkgrel 0.2
+  %define _pkgrel 0.4
 %endif
 
-# MINORBUMP - edit this
-%define minorbump taw0
+# MINORBUMP - edit this (for very small or rapid iterations)
+%define minorbump taw1
 
 #
 # Build the release string - don't edit this
@@ -167,12 +167,12 @@ BuildRequires: cmake libstdc++-static patch
 %if 0%{?rhel}
 BuildRequires: python34
 #t0dd: experimental...
-BuildRequires: sed
+#BuildRequires: sed
 %else
 BuildRequires: python3 
 %endif
 # t0dd: added missing RPM from requires list (todo: I need to update the page)
-BuildRequires: libdb4-cxx-devel
+BuildRequires: libdb4-cxx-devel gettext
 # t0dd: added to avoid unneccessary fetching of libraries from the internet
 #       which is a packaging no-no
 BuildRequires: openssl-devel boost-devel libevent-devel
@@ -189,7 +189,9 @@ BuildRequires: gmp-devel
 
 #t0dd: I will often add tree, vim-enhanced, and less for mock environment
 #      introspection
+%if ! %{targetIsProduction}
 BuildRequires: tree vim-enhanced less findutils
+%endif
 
 # ZeroMQ not testable yet on RHEL due to lack of python3-zmq so
 # enable only for Fedora
@@ -413,33 +415,42 @@ cp -a %{srccontribtree}/extras/pixmaps/*.??? %{srccodetree}/share/pixmaps/
 # Swap out packages.mk makefile in order to force usage of OS native devel
 # libraries and tools. Swap out chia_bls.mk because it asks for a dependency to
 # gmp that is satisfied via the OS (via BuildRequires) instead.
-cp -a %{srccontribtree}/depends/packages/*.mk %{srccodetree}/depends/packages/
+cp -a %{srccontribtree}/build/depends/packages/*.mk %{srccodetree}/depends/packages/
 
-#t0dd: experimental
-#t0dd: CMakeLists.txt forces a newer cmake than RHEL provides. Removing the check
-# and hoping for the best.
-%if 0%{?rhel}
-cd %{srccodetree}
-sed -i".orig" '/cmake_minimum_required/d' CMakeLists.txt
-rm CMakeLists.txt.orig
-cd ..
-%endif
+##t0dd: experimental
+##t0dd: CMakeLists.txt forces a newer cmake than RHEL provides. Removing the check
+## and hoping for the best.
+#%if 0%%{?rhel}
+#cd %%{srccodetree}
+#sed -i".orig" '/cmake_minimum_required/d' CMakeLists.txt
+#rm CMakeLists.txt.orig
+#cd ..
+#%%endif
 
 
 %build
 # This section starts us in directory {_builddir}/{srcroot}
 cd %{srccodetree}
+
 # build dependencies
 cd depends
+# example: make HOST=x86_64-redhat-linux-gnu -j4
 make HOST=%{_target_platform} -j4
 cd ..
+
 # build code
+%define _targettree %{_builddir}/%{srcroot}/%{srccodetree}/depends/%{_target_platform}
+%define _CPPFLAGS_LDFLAGS CPPFLAGS="$CPPFLAGS -I%{_includedir} -I%{_targettree}/include" LDFLAGS="$LDFLAGS -L%{_libdir} -L%{_targettree}/lib"
+
+%define _disable_tests --disable-tests --disable-gui-tests
+%if %{testing_extras}
+  %define _disable_tests %{nil}
+%endif
+
 ./autogen.sh
-%define targettree %{_builddir}/%{srcroot}/%{srccodetree}/depends/%{_target_platform}
-CPPFLAGS="$CPPFLAGS -I%{_includedir} -I%{targettree}/include" \
-  LDFLAGS="$LDFLAGS -L%{_libdir} -L%{targettree}/lib" \
-  ./configure --prefix=%{targettree} --enable-reduce-exports
-make
+%{_CPPFLAGS_LDFLAGS} ./configure --prefix=%{_targettree} --enable-reduce-exports %{_disable_tests}
+make 
+
 cd ..
 
 #t0dd Not using for now. Doubling up %%'s to stop macro expansion in comments.
@@ -477,7 +488,7 @@ cd %{srccodetree}
 # This section starts us in directory {_builddir}/{srcroot}
 
 cd %{srccodetree}
-#make INSTALL="install -p" CP="cp -p" DESTDIR=%{buildroot} install
+#make INSTALL="install -p" CP="cp -p" DESTDIR=%%{buildroot} install
 make install
 cd ..
 
@@ -497,7 +508,8 @@ cd ..
 #   _libdir = /usr/lib or /usr/lib64 (depending on system)
 # This is used to quiet rpmlint who can't seem to understand that /usr/lib is
 # still used for certain things.
-%define _usr_lib /usr/lib
+%define _rawlib lib
+%define _usr_lib /usr/%{_rawlib}
 # These three are defined in newer versions of RPM (Fedora not el7)
 %define _tmpfilesdir %{_usr_lib}/tmpfiles.d
 %define _unitdir %{_usr_lib}/systemd/system
@@ -517,13 +529,14 @@ install -d %{buildroot}%{_unitdir}
 install -d %{buildroot}%{_metainfodir}
 install -d -m755 -p %{buildroot}%{_bindir}
 install -d -m755 -p %{buildroot}%{_sbindir}
-install -d -m755 -p %{buildroot}%{_libdir}
+install -d -m755 -p %{buildroot}%{_libdir}/pkgconfig
 install -d -m755 -p %{buildroot}%{_includedir}
 
-# make install deploys to {targettree}/
-cp %{targettree}/bin/* %{buildroot}%{_bindir}/
-mv %{targettree}/lib/* %{buildroot}%{_libdir}/
-mv %{targettree}/include/* %{buildroot}%{_includedir}/
+# make install deploys to {_targettree}/ (defined in %%build)
+cp %{_targettree}/bin/* %{buildroot}%{_bindir}/
+mv %{_targettree}/lib/libdash* %{buildroot}%{_libdir}/
+mv %{_targettree}/lib/pkgconfig/libdash* %{buildroot}%{_libdir}/pkgconfig/
+mv %{_targettree}/include/dash* %{buildroot}%{_includedir}/
 # Remove the test binaries if still floating around
 %if ! %{testing_extras}
   rm -f %{buildroot}%{_bindir}/test_*
@@ -560,7 +573,7 @@ ln -s %{_localstatedir}/log/dashcore/testnet3/debug.log %{buildroot}%{_sharedsta
 ln -s %{_sysconfdir}/dashcore/dash.conf %{buildroot}%{_sharedstatedir}/dashcore/.dashcore/dash.conf
 
 # Man Pages (from contrib)
-#install -D -m644 %{srccontribtree}/linux/man/man1/* %{buildroot}%{_mandir}/man1/
+#install -D -m644 %%{srccontribtree}/linux/man/man1/* %%{buildroot}%%{_mandir}/man1/
 install -D -m644 %{srccontribtree}/linux/man/man5/* %{buildroot}%{_mandir}/man5/
 # Man Pages (from upstream) - likely to overwrite ones from contrib
 install -D -m644 %{srccodetree}/doc/man/*.1* %{buildroot}%{_mandir}/man1/
@@ -953,9 +966,18 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
+* Sat Nov 17 2018 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-0.4.rc4.taw
+  - refined building of testing bits
+  - reduced cruft landing in the lib and include directory trees
+  - through trickery I got rid of the "don't hardcode /usr/lib" error  
+    (a warning really) that rpmlint of the specfile issues
+
+* Fri Nov 16 2018 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-0.3.rc4.taw
+  - v0.13.0.0 - https://github.com/dashpay/dash/releases/tag/v0.13.0.0-rc4
+
 * Wed Nov 14 2018 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-0.2.rc1.taw
 * Wed Nov 14 2018 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-0.1.rc1.taw
-  - v13.0.0 - https://github.com/dashpay/dash/releases/tag/v0.13.0.0-rc1
+  - v0.13.0.0 - https://github.com/dashpay/dash/releases/tag/v0.13.0.0-rc1
   - simplified the spec-file release string building logic a bit
   - include man pages from upstream source
   - include bash-completion files from upstream source
@@ -964,30 +986,30 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 
 * Wed Sep 19 2018 Todd Warner <t0dd_at_protonmail.com> 0.12.3.3-1.taw
 * Wed Sep 19 2018 Todd Warner <t0dd_at_protonmail.com> 0.12.3.3-0.1.testing.taw
-  - v12.3.3 - https://github.com/dashpay/dash/releases/tag/v0.12.3.3
+  - v0.12.3.3 - https://github.com/dashpay/dash/releases/tag/v0.12.3.3
 
 * Wed Jul 11 2018 Todd Warner <t0dd_at_protonmail.com> 0.12.3.2-1.taw
 * Wed Jul 11 2018 Todd Warner <t0dd_at_protonmail.com> 0.12.3.2-0.1.testing.taw
-  - v12.3.2 - https://github.com/dashpay/dash/releases/tag/v0.12.3.2
+  - v0.12.3.2 - https://github.com/dashpay/dash/releases/tag/v0.12.3.2
 
 * Tue Jul 03 2018 Todd Warner <t0dd_at_protonmail.com> 0.12.3.1-1.taw
 * Tue Jul 03 2018 Todd Warner <t0dd_at_protonmail.com> 0.12.3.1-0.1.testing.taw
-  - v12.3.1 - https://github.com/dashpay/dash/releases/tag/v0.12.3.1
+  - v0.12.3.1 - https://github.com/dashpay/dash/releases/tag/v0.12.3.1
 
 * Thu Jun 21 2018 Todd Warner <t0dd_at_protonmail.com> 0.12.3.0-0.10.testing.taw
-  - v12.3.0 - https://github.com/dashpay/dash/releases/tag/v0.12.3.0
+  - v0.12.3.0 - https://github.com/dashpay/dash/releases/tag/v0.12.3.0
 
 * Thu Jun 21 2018 Todd Warner <t0dd_at_protonmail.com> 0.12.3.0-0.9.rc5.taw
-  - v12.3-rc5 - https://github.com/dashpay/dash/releases/tag/v0.12.3.0-rc5
+  - v0.12.3-rc5 - https://github.com/dashpay/dash/releases/tag/v0.12.3.0-rc5
 
 * Wed Jun 13 2018 Todd Warner <t0dd_at_protonmail.com> 0.12.3.0-0.8.rc4.taw
-  - v12.3-rc4 - https://github.com/dashpay/dash/releases/tag/v0.12.3.0-rc4
+  - v0.12.3-rc4 - https://github.com/dashpay/dash/releases/tag/v0.12.3.0-rc4
 
 * Sun Jun 10 2018 Todd Warner <t0dd_at_protonmail.com> 0.12.3.0-0.7.rc3.taw
-  - v12.3-rc3 - https://github.com/dashpay/dash/releases/tag/v0.12.3.0-rc3
+  - v0.12.3-rc3 - https://github.com/dashpay/dash/releases/tag/v0.12.3.0-rc3
 
 * Sun Jun 3 2018 Todd Warner <t0dd_at_protonmail.com> 0.12.3.0-0.6.rc2.taw
-  - v12.3-rc2 - https://github.com/dashpay/dash/releases/tag/v0.12.3.0-rc2
+  - v0.12.3-rc2 - https://github.com/dashpay/dash/releases/tag/v0.12.3.0-rc2
   - /etc/dashcore/dash.conf now has testnet=1 on by default if installing the  
     test RPMs. Note that dash.conf will be in an .rpmnew file though.
 
@@ -1000,16 +1022,16 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 
 * Thu May 10 2018 Todd Warner <t0dd_at_protonmail.com> 0.12.3.0-0.4.testing.20180510.taw
   - spec file: mkdir -p not just mkdir
-  - Another 12.3 test build (from github.com origin/develop)
+  - Another 0.12.3 test build (from github.com origin/develop)
 
 * Sat Apr 28 2018 Todd Warner <t0dd_at_protonmail.com> 0.12.3.0-0.3.testing.20180428.taw
-  - Another 12.3 test build (from github.com origin/develop)
+  - Another 0.12.3 test build (from github.com origin/develop)
 
 * Wed Apr 25 2018 Todd Warner <t0dd_at_protonmail.com> 0.12.3.0-0.2.testing.taw
   - Major cleanup
 
 * Sun Apr 8 2018 Todd Warner <t0dd_at_protonmail.com> 0.12.3.0-0.1.testing.taw
-  - 12.3 test build
+  - 0.12.3 test build
   - name-version-release more closely matches industry guidelines:  
     https://fedoraproject.org/wiki/Packaging:Versioning
   - https://bamboo.dash.org/browse/DASHL-DEV-341
@@ -1038,7 +1060,7 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
   - Release Candidate - ec8178c
 
 * Fri Oct 20 2017 Todd Warner <t0dd_at_protonmail.com> 0.12.2.0-0.testing.taw
-  - Initial 12.2 test build
+  - Initial 0.12.2 test build
 
 * Tue Apr 11 2017 Todd Warner <t0dd_at_protonmail.com> 0.12.1.5-0.rc.taw
   - Fixes a watchdog propagation issue.
@@ -1094,5 +1116,5 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
     help troubleshoot.
 
 * Sun Feb 05 2017 Todd Warner <t0dd_at_protonmail.com> 0.12.1.0-0.taw
-  - Release 12.1.0 - 56971f8
+  - Release 0.12.1.0 - 56971f8
   - Announcement: https://github.com/dashpay/dash/releases/tag/v0.12.1.0
