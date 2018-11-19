@@ -1,5 +1,8 @@
 # HowTo: Upgrade from Dash Core version 0.12.3 to 0.13.0
 
+**IMPORTANT!**<br />Version 0.13.0 is currently in testing. Do not use for
+production (the mainnet).
+
 These instructions are specific to node, masternode, and wallet users running
 the software on Fedora, ~~CentOS, or RHEL~~ (i386 and x86_64) plugged into the
 `yum` or `dnf` install and update process described in other documentation
