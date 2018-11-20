@@ -12,21 +12,21 @@ supported as of v0.13.0.
 The process for upgrade is actually rather trivial, ***but it does require attention to detail***. Read on...
 
 > **BIG UGLY WARNING #1**<br />Because of the extremely dated version of cmake
-> in Red Hat Enterprise Linux 7 (and CentOS 7), these platforms will not be
-> supported. EL8 is in beta at the moment, but won't be released until
+> in Red Hat Enterprise Linux 7 (and CentOS 7), these platforms will no longer
+> be supported. EL8 is in beta at the moment, but won't be released until
 > something like mid-May 2019. Until then, if you want to run a node or
 > masternode, you will have to switch to Fedora. Fedora 29 is as stable as a
 > rock though so... RECOMMEND!
 
-> **WARNING #2:<br />**If you are upgrading a Masternode, 0.13.0 will require a
-> wallet-driven restart to a protocol bump *and additonal configuration*, so
-> time your upgrade to happen soon after your normal Masternode payout.
+> **WARNING #2**<br />If you are upgrading a Masternode, 0.13.0 will require a
+> wallet-driven restart *and additonal configuration*, so time your upgrade to
+> happen soon after your normal Masternode payout.
 
 ## The process
 
-*Assumption:<br />The OS has already been upgraded or installed to match a
-supported version: Fedora 28 or 29 (i386 or x86_64). OS upgrade process can be
-found
+*Assumption:<br />The operating system (OS) has already been upgraded or installed to match a
+supported version: Fedora 28 or 29 (i386 or x86_64).<br />The operating system
+upgrade process can be found
 [here](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.upgrade-the-operating-system.md).*
 
 #### _...summary..._
@@ -37,7 +37,7 @@ found
 * [4] Start everything back up
 * [5] Masternodes only: Send start command from wallet to Masternode
 * [6] Masternodes only: Deploy new v0.13 configurations to support Deterministic Masternode Lists
-* Monitor the configuration over time and adjust
+* [7] Monitor the configuration over time and adjust
 
 ### [0] Shut everything down
 
@@ -233,19 +233,33 @@ how...***
    * From command line: _dash-cli masternode start-alias <MN Alias>_
 
 
-### Masternode upgrade in particular: Monitor your status
+### [6] Masternode upgrades only:<br />Deploy new v0.13 configurations to support Deterministic Masternode Lists
+
+Follow these instructions (*"Software update"* is what you already just
+performed, so please skip to section *"Generate BLS key pair"*):
+<https://docs.dash.org/en/latest/masternodes/maintenance.html#generate-a-bls-key-pair>
+
+
+### [7] Masternode upgrade in particular: Monitor your status
 
 ```
-# For systemd-run masternodes...
+# On masternode (systemd managed in these examples)...
+sudo systemctl status dashd
 sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf -datadir=/var/lib/dashcore getnetworkinfo
 sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf -datadir=/var/lib/dashcore mnsync status
 sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf -datadir=/var/lib/dashcore masternode debug
+sudo tail -f /var/log/dashcore/sentinel.log
+sudo tail -f /var/log/dashcore/debug.log
 ```
 
-### [6] Masternode upgrades only:<br />Deploy new v0.13 configurations to support Deterministic Masternode Lists
+```
+# On collateralizing wallet (open Tools > Debug console)...
+protx list
+protx list valid
+protx info "<value of 'protx list'>"
+masternode list-conf
+```
 
-Follow these instructions (step 1 is what you already just performed):
-<https://docs.dash.org/en/latest/masternodes/maintenance.html#dash-0-13-upgrade-procedure>
 
 ## Done.
 
