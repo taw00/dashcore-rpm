@@ -263,12 +263,8 @@ masternode list-conf
 
 ## Done.
 
-It really isn't hard. If you read through this once or twice, you kinda get
-what we are doing: _Update the RPM packages, restart everything._ Easy peasy.
-If you foul everything up. Just try again.
-
-More configuration. At your convenient, you really should ensure your firewall
-rules are rechecked (see `howto.secure-your-dash-masternode.md`).
+It really isn't hard. It's all about attention to detail. If you mess up. Just
+try again.
 
 ---
 
