@@ -21,7 +21,7 @@
 * Discussion about security: [Configure FirewallD and Fail2Ban on a Dash Masternode](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.secure-your-dash-masternode.md)
 * Troubleshooting: [Dash Core Troubleshooting Guide](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.dashcore-troubleshooting.md)
 * Updating: [How to Update your Wallet, Node, or Masternode](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.update-a-wallet-node-or-masternode.md)
-* Upgrading Major Versions: [How to Upgrade from Version 0.12.3 to 0.13.0](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.dashcore-upgrade-from-0.12.3-to-0.13.0.md)
+* Upgrading Major Versions: [TESTING ONLY: How to Upgrade from Version 0.12.3 to 0.13.0](https://github.com/taw00/dashcore-rpm/blob/master/documentation/testing/howto.dashcore-upgrade-from-0.12.3-to-0.13.0.md)
 * Upgrading OS: [How to Upgrade Your Masternode's Operating System](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.upgrade-the-operating-system.md)
                                                                     
 
