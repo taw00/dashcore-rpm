@@ -31,7 +31,6 @@ Name: %{_name_dc}
 Summary: Peer-to-peer, privacy-centric, digital currency
 
 %define targetIsProduction 0
-%define includeMinorbump 1
 
 # ARCHIVE QUALIFIER - edit this if applies
 # ie. if the dev team includes things like rc3 in the filename
@@ -45,14 +44,14 @@ Version: %{vermajor}.%{verminor}
 
 # RELEASE - edit this
 # package release, and potentially extrarel
-%if %{targetIsProduction}
-  %define _pkgrel 1
-%else
-  %define _pkgrel 0.4
+%define _pkgrel 1
+%if ! %{targetIsProduction}
+  %define _pkgrel 0.5
 %endif
 
-# MINORBUMP - edit this (for very small or rapid iterations)
-%define minorbump taw1
+# MINORBUMP - edit this
+# (for very small or rapid iterations)
+%define minorbump taw3
 
 #
 # Build the release string - don't edit this
@@ -66,8 +65,9 @@ Version: %{vermajor}.%{verminor}
   %endif
 %endif
 
-# pkgrel will also be defined, snapinfo and minorbump may not be
+# pkgrel will be defined, snapinfo and minorbump may not be
 %define _release %{_pkgrel}
+%define includeMinorbump 1
 %if ! %{includeMinorbump}
   %undefine minorbump
 %endif
@@ -148,7 +148,9 @@ Source1: https://github.com/taw00/dashcore-rpm/blob/master/source/testing/SOURCE
 #
 # How debug info and build_ids managed (I only halfway understand this):
 # https://github.com/rpm-software-management/rpm/blob/master/macros.in
-#%%define debug_package %%{nil}
+# ...flip-flop next two lines in order to disable (nil) or enable (1) debuginfo package build
+%define debug_package %{nil}
+%define debug_package 1
 %define _unique_build_ids 1
 %define _build_id_links alldebug
 
@@ -162,16 +164,17 @@ ExclusiveArch: x86_64 i686 i386
 
 # As recommended by...
 # https://github.com/dashpay/dash/blob/develop/doc/build-unix.md
-BuildRequires: gcc-c++ libtool make autoconf automake
-BuildRequires: cmake libstdc++-static patch
-%if 0%{?rhel}
-BuildRequires: python34
-#t0dd: experimental...
-#BuildRequires: sed
-%else
-BuildRequires: python3 
-%endif
-# t0dd: added missing RPM from requires list (todo: I need to update the page)
+BuildRequires: libtool make autoconf automake patch
+##t0dd: failed attempts to support EL7
+#%%if 0%%{?rhel}
+#%%{?scl:Requires: %%scl_runtime}
+#BuildRequires: centos-release-scl
+#BuildRequires: devtoolset-7 devtoolset-7-gcc-c++ cmake3
+#BuildRequires: python34
+#%%else
+BuildRequires: gcc-c++ >= 4.9 cmake libstdc++-static
+BuildRequires: python3
+#%%endif
 BuildRequires: libdb4-cxx-devel gettext
 # t0dd: added to avoid unneccessary fetching of libraries from the internet
 #       which is a packaging no-no
@@ -208,7 +211,7 @@ BuildRequires: python3-zmq zeromq-devel
 # We bring it in-house, rebuild, and supply at https://copr.fedorainfracloud.org/coprs/taw/dashcore-openssl-compat/
 # ...aka: https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-openssl-compat/epel-$releasever-$basearch/
 %if %{testing_extras} && 0%{?rhel}
-BuildRequires: openssl-compat-dashcore-libs
+BuildRequires: openssl-compat-dashcore-libs cmake3
 BuildRequires: python34
 %endif
 
@@ -236,6 +239,8 @@ Summary: Peer-to-peer; privacy-centric; digital currency, protocol, and platform
 Requires(post): systemd
 Requires(preun): systemd
 Requires(postun): systemd
+# as per https://fedoraproject.org/wiki/Packaging:Scriptlets?rd=Packaging:ScriptletSnippets#Systemd
+%{?systemd_requires}
 BuildRequires: systemd
 Requires(pre): shadow-utils
 Requires(post): /usr/sbin/semodule, /sbin/restorecon, /sbin/fixfiles
@@ -394,6 +399,14 @@ Learn more at www.dash.org.
 
 %prep
 # Prep section starts us in directory .../BUILD (aka {_builddir})
+
+# Message if EL7 found (probably should check for other unsupported OSes as well)
+%if 0%{?rhel} && 0%{?rhel} <= 7
+  %{error: "EL7 builds no longer supported due to outdated build tools (c++ dynamic and static libraries, etc)"}
+  # exit doesn't do anything during build phase?
+  exit 1
+%endif
+
 # process dashcore - Source0 - untars in:
 # {_builddir}/dashcore-0.12.3/dashcore-0.12.3.0/
 # ..or something like..
@@ -412,35 +425,40 @@ cp -p %{srccontribtree}/linux/selinux/dash.{te,if,fc} selinux-tmp/
 
 # pixmap contributions
 cp -a %{srccontribtree}/extras/pixmaps/*.??? %{srccodetree}/share/pixmaps/
+
 # Swap out packages.mk makefile in order to force usage of OS native devel
 # libraries and tools. Swap out chia_bls.mk because it asks for a dependency to
 # gmp that is satisfied via the OS (via BuildRequires) instead.
 cp -a %{srccontribtree}/build/depends/packages/*.mk %{srccodetree}/depends/packages/
 
-##t0dd: experimental
-##t0dd: CMakeLists.txt forces a newer cmake than RHEL provides. Removing the check
-## and hoping for the best.
-#%if 0%%{?rhel}
-#cd %%{srccodetree}
-#sed -i".orig" '/cmake_minimum_required/d' CMakeLists.txt
-#rm CMakeLists.txt.orig
-#cd ..
+##t0dd: failed attempts to support EL7
+##t0dd: EL7 demands direct usage of cmake3 (and you can't do "alternatives"
+##      from an RPM specfile).
+#%%if 0%%{?rhel}
+#  cp -a %%{srccontribtree}/build/depends/packages/chia_bls.mk-cmake3 %%{srccodetree}/depends/packages/chia_bls.mk
+#  cp -a %%{srccontribtree}/build/depends/packages/native_cdrkit.mk-cmake3 %%{srccodetree}/depends/packages/native_cdrkit.mk
+#  cp -a %%{srccontribtree}/build/depends/packages/native_libdmg-hfsplus.mk-cmake3 %%{srccodetree}/depends/packages/native_libdmg-hfsplus.mk
 #%%endif
 
 
 %build
 # This section starts us in directory {_builddir}/{srcroot}
+##t0dd: failed attempts to support EL7
+#%%if 0%%{?rhel}
+#/usr/bin/scl enable devtoolset-7 bash
+#%%endif
+
 cd %{srccodetree}
 
 # build dependencies
 cd depends
 # example: make HOST=x86_64-redhat-linux-gnu -j4
-make HOST=%{_target_platform} -j4
+make HOST=%{_target_platform} -j$(nproc)
 cd ..
 
 # build code
 %define _targettree %{_builddir}/%{srcroot}/%{srccodetree}/depends/%{_target_platform}
-%define _CPPFLAGS_LDFLAGS CPPFLAGS="$CPPFLAGS -I%{_includedir} -I%{_targettree}/include" LDFLAGS="$LDFLAGS -L%{_libdir} -L%{_targettree}/lib"
+%define _FLAGS CPPFLAGS="$CPPFLAGS -I%{_targettree}/include -I%{_includedir}" LDFLAGS="$LDFLAGS -L%{_targettree}/lib -L%{_libdir}"
 
 %define _disable_tests --disable-tests --disable-gui-tests
 %if %{testing_extras}
@@ -448,12 +466,17 @@ cd ..
 %endif
 
 ./autogen.sh
-%{_CPPFLAGS_LDFLAGS} ./configure --prefix=%{_targettree} --enable-reduce-exports %{_disable_tests}
+##t0dd: failed attempts to support EL7
+#%%if 0%%{?rhel}
+#  mkdir -p %%{_targettree}/lib %%{_targettree}/include
+#  ln -s /opt/rh/devtoolset-7/root/usr/lib/gcc/x86_64-redhat-linux/7/* %%{_targettree}/lib/
+#%%endif
+%{_FLAGS} ./configure --prefix=%{_targettree} --enable-reduce-exports %{_disable_tests}
 make 
 
 cd ..
 
-#t0dd Not using for now. Doubling up %%'s to stop macro expansion in comments.
+#t0dd Not using for now.
 #t0dd # Build SELinux policy
 #t0dd pushd selinux-tmp
 #t0dd for selinuxvariant in %%{selinux_variants}
@@ -703,7 +726,7 @@ install -D -m644 -p %{srccontribtree}/linux/firewalld/usr-lib-firewalld-services
 install -D -m644 -p %{srccontribtree}/linux/firewalld/usr-lib-firewalld-services_dashcore-rpc.xml %{buildroot}%{_usr_lib}/firewalld/services/dashcore-rpc.xml
 install -D -m644 -p %{srccontribtree}/linux/firewalld/usr-lib-firewalld-services_dashcore-testnet-rpc.xml %{buildroot}%{_usr_lib}/firewalld/services/dashcore-testnet-rpc.xml
 
-# Not using for now. Doubling up %%'s to stop macro expansion in comments.
+# Not using for now.
 #t0dd # Install SELinux policy
 #t0dd for selinuxvariant in %%{selinux_variants}
 #t0dd do
@@ -771,7 +794,7 @@ exit 0
 # firewalld only partially picks up changes to its services files without this
 test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 
-# Not using for now. Doubling up %%'s to stop macro expansion in comments.
+# Not using for now.
 #t0dd for selinuxvariant in %%{selinux_variants}
 #t0dd do
 #t0dd   /usr/sbin/semodule -s ${selinuxvariant} -i \
@@ -800,7 +823,7 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 # dashcore-server
 %postun server
 %systemd_postun dashd.service
-# Not using for now. Doubling up %%'s to stop macro expansion in comments.
+# Not using for now.
 #t0dd# Do this upon uninstall (not upgrades)
 #t0dd if [ $1 -eq 0 ] ; then
 #t0dd   # FIXME This is less than ideal, but until dwalsh gives me a better way...
@@ -966,6 +989,17 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
+* Fri Nov 23 2018 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-0.5.rc4.taw3
+* Fri Nov 23 2018 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-0.5.rc4.taw2
+* Fri Nov 23 2018 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-0.5.rc4.taw1
+* Tue Nov 20 2018 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-0.5.rc4.taw0
+  - made desktop configuration more compatible to KDA Plasma's dock  
+    `Exec=env XDG_CURRENT_DESKTOP=Unity /usr/bin/dash-qt %u` instead of just  
+    `Exec=dash-qt %u`
+  - abandoning attempts to build EL7 rpms. CentOS7/RHEL7 libraries are just  
+    too dated.
+    
+
 * Sat Nov 17 2018 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-0.4.rc4.taw
   - refined building of testing bits
   - reduced cruft landing in the lib and include directory trees
@@ -981,8 +1015,6 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
   - simplified the spec-file release string building logic a bit
   - include man pages from upstream source
   - include bash-completion files from upstream source
-  - experimenting at removing cmake version-checking in CMakeLists.txt so that
-    we can build for RHEL
 
 * Wed Sep 19 2018 Todd Warner <t0dd_at_protonmail.com> 0.12.3.3-1.taw
 * Wed Sep 19 2018 Todd Warner <t0dd_at_protonmail.com> 0.12.3.3-0.1.testing.taw
