@@ -149,8 +149,8 @@ Source1: https://github.com/taw00/dashcore-rpm/blob/master/source/testing/SOURCE
 # How debug info and build_ids managed (I only halfway understand this):
 # https://github.com/rpm-software-management/rpm/blob/master/macros.in
 # ...flip-flop next two lines in order to disable (nil) or enable (1) debuginfo package build
-%define debug_package %{nil}
 %define debug_package 1
+%define debug_package %{nil}
 %define _unique_build_ids 1
 %define _build_id_links alldebug
 
