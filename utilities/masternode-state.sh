@@ -55,6 +55,7 @@ _network_string='[mainnet]'
 #_height_url_old="https://explorer.dash.org/chain/Dash/q/getblockcount"
 _height_url="https://insight.dashevo.org/insight-api/status"
 exit_code=0
+_d=$(date --utc +"%b %d %T UTC $_network_string")
 
 if [[ testnet -eq 1 ]] ; then
   protocol=$protocol_testnet
@@ -63,9 +64,7 @@ if [[ testnet -eq 1 ]] ; then
   _height_url="https://testnet-insight.dashevo.org/insight-api/status"
 fi
 
-msg_proto="$_d Protocol: $protocol $_network_string"
-
-_d=$(date --utc +"%b %d %T UTC $_network_string")
+msg_proto="$_d Protocol: $protocol"
 
 if [[ $noise -gt 0 ]] ; then
   m="$_d ---"
@@ -75,7 +74,7 @@ fi
 
 loopflag=0
 #true_height_old=$(curl --silent -o - $_height_url)
-_json=curl --silent -o - $_height_url
+_json=$(curl --silent -o - $_height_url)
 true_height=$(echo $_json | python3 -c "import sys, json; print(json.load(sys.stdin)['info']['blocks'])")
 while [[ $true_height -lt 1 ]] ; do
   if [[ $(( ++loopflag )) -gt 5 ]] ; then exit -1 ; fi
@@ -84,6 +83,7 @@ while [[ $true_height -lt 1 ]] ; do
   if [[ $logfile ]] ; then echo $m >> $logfile ; fi
   sleep 5
   #true_height_old=$(curl --silent -o - $_height_url)
+  _json=$(curl --silent -o - $_height_url)
   true_height=$(echo $_json | python3 -c "import sys, json; print(json.load(sys.stdin)['info']['blocks'])")
 done
 
@@ -130,8 +130,7 @@ _mn_list_status=$(dash-cli -conf=/etc/dashcore/dash.conf masternode list full | 
 _tokens=($_mn_list_status)
 mn_enablement=${_tokens[1]}
 mn_pubkey=${_tokens[3]}
-msg_pubkey="$_d pubkey: $pubkey"
-
+msg_pubkey="$_d pubkey: $mn_pubkey"
 
 
 msg2="$_d Masternode enablement status: $mn_enablement"
