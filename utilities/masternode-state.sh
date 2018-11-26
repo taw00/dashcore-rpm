@@ -25,6 +25,8 @@
 
 testnet=0
 ip=93.184.216.34_CHANGEME # Your masternode IP address
+protocol_mainnet=70210
+protocol_testnet=70212
 
 email_me=0
 email_from="burner-address@yahoo.com"
@@ -48,14 +50,20 @@ datadir=/var/lib/dashcore
 true_height=
 my_height=
 mn_enablement="ENABLED"
+protocol=$protocol_mainnet
 _network_string='[mainnet]'
-_height_url="https://explorer.dash.org/chain/Dash/q/getblockcount"
+#_height_url_old="https://explorer.dash.org/chain/Dash/q/getblockcount"
+_height_url="https://insight.dashevo.org/insight-api/status"
 exit_code=0
 
 if [[ testnet -eq 1 ]] ; then
+  protocol=$protocol_testnet
   _network_string='[testnet]'
-  _height_url="https://test.explorer.dash.org/chain/tDash/q/getblockcount"
+  #_height_url_old="https://test.explorer.dash.org/chain/tDash/q/getblockcount"
+  _height_url="https://testnet-insight.dashevo.org/insight-api/status"
 fi
+
+msg_proto="$_d Protocol: $protocol $_network_string"
 
 _d=$(date --utc +"%b %d %T UTC $_network_string")
 
@@ -66,14 +74,17 @@ if [[ $noise -gt 0 ]] ; then
 fi
 
 loopflag=0
-true_height=$(curl --silent -o - $_height_url)
+#true_height_old=$(curl --silent -o - $_height_url)
+_json=curl --silent -o - $_height_url
+true_height=$(echo $_json | python3 -c "import sys, json; print(json.load(sys.stdin)['info']['blocks'])")
 while [[ $true_height -lt 1 ]] ; do
   if [[ $(( ++loopflag )) -gt 5 ]] ; then exit -1 ; fi
   m="$_d --- No results from $_height_url Trying again."
   echo $m
   if [[ $logfile ]] ; then echo $m >> $logfile ; fi
   sleep 5
-  true_height=$(curl --silent -o - $_height_url)
+  #true_height_old=$(curl --silent -o - $_height_url)
+  true_height=$(echo $_json | python3 -c "import sys, json; print(json.load(sys.stdin)['info']['blocks'])")
 done
 
 loopflag=0
@@ -94,24 +105,35 @@ if [[ $true_height -ne $my_height ]] ; then
 fi
 
 # Get masternode status string
-mn_enablement=$(dash-cli -conf=$config -datadir=$datadir masternode list full | grep $ip)
-# Convert all double-quotes to spaces -- and then squash all the spaces into 1 each
-mn_enablement=$(echo -e "${mn_enablement}" | tr -d [\"]|tr -s [:space:])
-# Trim off beginning and ending whitespace
-mn_enablement=$(echo -e "${mn_enablement}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
-# Snag IP address
-ip_address=$(echo -e "${mn_enablement}" | cut -d ' ' -f9 | cut -d ':' -f1 )
-msg_ip1="$_d IP address configured: $ip"
-msg_ip2="$_d IP address reported:   $ip_address"
-# Snag Protocol
-protocol=$(echo -e "${mn_enablement}" | cut -d ' ' -f3)
-msg_proto="$_d Protocol: $protocol"
-# Snag public key
-pubkey=$(echo -e "${mn_enablement}" | cut -d ' ' -f4)
+_mn_list_status=$(dash-cli -conf=$config -datadir=$datadir masternode list full | grep $ip)
+
+#OLD# Convert all double-quotes to spaces -- and then squash all the spaces into 1 each
+#OLD_mn_list_status=$(echo -e "${_mn_list_status}" | tr -d [\"]|tr -s [:space:])
+#OLD# Trim off beginning and ending whitespace
+#OLD_mn_list_status=$(echo -e "${_mn_list_status}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
+#OLD# Snag IP address
+#OLDip_address=$(echo -e "${_mn_list_status}" | cut -d ' ' -f9 | cut -d ':' -f1 )
+#OLDmsg_ip1="$_d IP address configured: $ip"
+#OLDmsg_ip2="$_d IP address reported:   $ip_address"
+#OLD# Snag Protocol
+#OLDprotocol=$(echo -e "${_mn_list_status}" | cut -d ' ' -f3)
+#OLDmsg_proto="$_d Protocol: $protocol"
+#OLD# Snag public key
+#OLDpubkey=$(echo -e "${_mn_list_status}" | cut -d ' ' -f4)
+#OLDmsg_pubkey="$_d pubkey: $pubkey"
+#OLD# Snag public key
+#OLD# Snag the actual enablement value
+#OLDmn_enablement=$(echo -e "${_mn_list_status}" | cut -d ' ' -f2)
+
+# Better, cleaner method to get that enablement status.
+_mn_list_status=$(dash-cli -conf=/etc/dashcore/dash.conf masternode list full | grep $ip | grep $protocol |  tr -d '[="=]')
+_tokens=($_mn_list_status)
+mn_enablement=${_tokens[1]}
+mn_pubkey=${_tokens[3]}
 msg_pubkey="$_d pubkey: $pubkey"
-# Snag public key
-# Snag the actual enablement value
-mn_enablement=$(echo -e "${mn_enablement}" | cut -d ' ' -f2)
+
+
+
 msg2="$_d Masternode enablement status: $mn_enablement"
 
 if [[ $mn_enablement -ne "ENABLED" && $mn_enablement -ne "PRE_ENABLED" ]] ; then
@@ -122,15 +144,15 @@ fi
 if [[ $exit_code -gt 0 || $noise -gt 1 ]] ; then
   if [[ $logfile ]] ; then
     echo $msg1 >> $logfile
-    echo $msg_ip1 >> $logfile
-    echo $msg_ip2 >> $logfile
+    #echo $msg_ip1 >> $logfile
+    #echo $msg_ip2 >> $logfile
     echo $msg_proto >> $logfile
     echo $msg_pubkey >> $logfile
     echo $msg2 >> $logfile
   fi
   echo $msg1
-  echo $msg_ip1
-  echo $msg_ip2
+  #echo $msg_ip1
+  #echo $msg_ip2
   echo $msg_proto
   echo $msg_pubkey
   echo $msg2
