@@ -1,15 +1,16 @@
 # HowTo: Upgrade from Dash Core version 0.12.3 to 0.13.0
 
-**IMPORTANT!**<br />Version 0.13.0 is currently in testing. Do not use for
-production (the mainnet).
+**IMPORTANT!**<br />Version 0.13.0 is currently in testing (testnet). Do not
+use for production (mainnet).
 
 These instructions are specific to node, masternode, and wallet users running
 the software on Fedora, ~~CentOS, or RHEL~~ (i386 and x86_64) plugged into the
-`yum` or `dnf` install and update process described in other documentation
-found at <https://github.com/taw00/dashcore-rpm>. Fedora 27 will no longer be
-supported as of v0.13.0.
+~~`yum`~~ or `dnf` install and update process described in other documentation
+found at <https://github.com/taw00/dashcore-rpm>. Dash Core builds for Fedora
+27, RHEL7, or CentOS7 will no longer be available as of v0.13.0.
 
-The process for upgrade is actually rather trivial, ***but it does require attention to detail***. Read on...
+The process for upgrade of Dash Core is actually rather trivial, ***but it does
+require attention to detail***. Read on...
 
 > **BIG UGLY WARNING #1**<br />Because of the extremely dated version of cmake
 > in Red Hat Enterprise Linux 7 (and CentOS 7), these platforms will no longer
@@ -24,9 +25,9 @@ The process for upgrade is actually rather trivial, ***but it does require atten
 
 ## The process
 
-*Assumption:<br />The operating system (OS) has already been upgraded or installed to match a
-supported version: Fedora 28 or 29 (i386 or x86_64).<br />The operating system
-upgrade process can be found
+*Assumption:<br />The operating system (OS) has already been upgraded or
+installed to match an available version: Fedora 28 or 29 (i386 or x86_64).<br
+/>The operating system upgrade process can be found
 [here](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.upgrade-the-operating-system.md).*
 
 #### _...summary..._
