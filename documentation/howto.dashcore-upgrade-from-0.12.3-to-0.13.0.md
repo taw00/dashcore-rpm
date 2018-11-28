@@ -14,10 +14,10 @@ require attention to detail***. Read on...
 
 > **BIG UGLY WARNING #1**<br />Because of the extremely dated version of cmake
 > in Red Hat Enterprise Linux 7 (and CentOS 7), these platforms will no longer
-> be supported. EL8 is in beta at the moment, but won't be released until
-> something like mid-May 2019. Until then, if you want to run a node or
-> masternode, you will have to switch to Fedora. Fedora 29 is as stable as a
-> rock though so... RECOMMEND!
+> be supplied functional builds. EL8 is in beta at the moment, but won't be
+> released until something like mid-May 2019. Until then, if you want to run a
+> node or masternode, you will have to switch to Fedora. Fedora 29 is as stable
+> as a rock though so... RECOMMEND!
 
 > **WARNING #2**<br />If you are upgrading a Masternode, 0.13.0 will require a
 > wallet-driven restart *and additonal configuration*, so time your upgrade to
