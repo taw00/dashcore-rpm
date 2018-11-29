@@ -34,7 +34,7 @@ Summary: Peer-to-peer, privacy-centric, digital currency
 
 # ARCHIVE QUALIFIER - edit this if applies
 # ie. if the dev team includes things like rc3 in the filename
-%define archiveQualifier rc4
+%define archiveQualifier rc5
 %define includeArchiveQualifier 1
 
 # VERSION - edit this
@@ -46,12 +46,12 @@ Version: %{vermajor}.%{verminor}
 # package release, and potentially extrarel
 %define _pkgrel 1
 %if ! %{targetIsProduction}
-  %define _pkgrel 0.5
+  %define _pkgrel 0.6
 %endif
 
 # MINORBUMP - edit this
 # (for very small or rapid iterations)
-%define minorbump taw3
+%define minorbump taw0
 
 #
 # Build the release string - don't edit this
@@ -989,6 +989,9 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
+* Tue Nov 29 2018 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-0.6.rc5.taw
+  - v0.13.0.0 RC5
+
 * Fri Nov 23 2018 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-0.5.rc4.taw3
 * Fri Nov 23 2018 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-0.5.rc4.taw2
 * Fri Nov 23 2018 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-0.5.rc4.taw1
