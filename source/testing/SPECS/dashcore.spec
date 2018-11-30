@@ -34,7 +34,7 @@ Summary: Peer-to-peer, privacy-centric, digital currency
 
 # ARCHIVE QUALIFIER - edit this if applies
 # ie. if the dev team includes things like rc3 in the filename
-%define archiveQualifier rc5
+%define archiveQualifier rc6
 %define includeArchiveQualifier 1
 
 # VERSION - edit this
@@ -46,7 +46,7 @@ Version: %{vermajor}.%{verminor}
 # package release, and potentially extrarel
 %define _pkgrel 1
 %if ! %{targetIsProduction}
-  %define _pkgrel 0.6
+  %define _pkgrel 0.7
 %endif
 
 # MINORBUMP - edit this
@@ -975,21 +975,24 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Documentation: https://github.com/taw00/dashcore-rpm/tree/master/documentation
 #
 # The last major testnet effort...
-#   * Announcement: https://www.dash.org/forum/threads/12-1-testnet-testing-phase-two-ignition.10818/
-#   * Documentation: https://dashpay.atlassian.net/wiki/display/DOC/Testnet
+#   * Announcement: https://www.dash.org/forum/threads/v13-0-testing.41945/
+#   * Documentation: https://docs.dash.org/en/latest/developers/testnet.html
 #
 # Source snapshots...
 #     https://github.com/dashpay/dash/tags
 #     https://github.com/dashpay/dash/releases
-#     test example: dash-0.12.3.0-rc5.tar.gz
-#     release example: dash-0.12.3.0.tar.gz
+#     test example: dash-0.13.0.0-rc6.tar.gz
+#     release example: dash-0.13.0.0.tar.gz
 #
 # Dash Core git repos...
 #   * Dash: https://github.com/dashpay/dash
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
-* Tue Nov 29 2018 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-0.6.rc5.taw
+* Fri Nov 30 2018 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-0.7.rc6.taw
+  - v0.13.0.0 RC6 - Spork 15 related
+
+* Thu Nov 29 2018 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-0.6.rc5.taw
   - v0.13.0.0 RC5
 
 * Fri Nov 23 2018 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-0.5.rc4.taw3
