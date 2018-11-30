@@ -51,7 +51,7 @@ Version: %{vermajor}.%{verminor}
 
 # MINORBUMP - edit this
 # (for very small or rapid iterations)
-%define minorbump taw0
+%define minorbump taw1
 
 #
 # Build the release string - don't edit this
@@ -976,7 +976,9 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #
 # The last major testnet effort...
 #   * Announcement: https://www.dash.org/forum/threads/v13-0-testing.41945/
-#   * Documentation: https://docs.dash.org/en/latest/developers/testnet.html
+#   * Documentation:  
+#     https://docs.dash.org/en/latest/developers/testnet.html
+#     https://docs.dash.org/en/latest/masternodes/dip3-upgrade.html
 #
 # Source snapshots...
 #     https://github.com/dashpay/dash/tags
