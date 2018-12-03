@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- This metadata copyright 2018 Todd Warner <t0dd_at_protonmail.com> -->
 <!-- https://fedoraproject.org/wiki/Packaging:AppData -->
-<!-- https://www.freedesktop.org/software/appstream/docs/chap-Metadata.htmla -->
+<!-- https://www.freedesktop.org/software/appstream/docs/chap-Metadata.html -->
 <component type="desktop-application">
   <id>dash-qt.desktop</id>
   <metadata_license>MIT</metadata_license>
@@ -25,21 +25,29 @@
        innovative decentralized crypto-tech.</p>
   </description>
 
+
   <!-- <launchable type="desktop-id">dash-qt.desktop</launchable> not used for this type -->
 
-<!--
   <screenshots>
     <screenshot type="default">
       <caption>Dashboard</caption>
-      <image>https://example.com/example/example1.png</image>
+      <image>https://docs.dash.org/en/stable/_images/106329009.png</image>
     </screenshot>
     <screenshot>
-      <caption>Configuration</caption>
-      <image>https://example.com/example/example2.png</image>
+      <caption>A received transaction</caption>
+      <image>https://docs.dash.org/en/stable/_images/received.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>A received transaction notification</caption>
+      <image>https://docs.dash.org/en/stable/_images/received-notification.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>The Send tab filled out for a transaction</caption>
+      <image>https://docs.dash.org/en/stable/_images/sendready.png</image>
     </screenshot>
   </screenshots>
--->
-  <url type="homepage">https://dash.org</url>
+
+  <url type="homepage">https://dash.org/</url>
   <update_contact>t0dd_at_protonmail.com</update_contact>
 
   <provides>
