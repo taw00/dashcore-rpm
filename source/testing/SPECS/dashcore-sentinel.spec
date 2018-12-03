@@ -232,8 +232,9 @@ touch %{buildroot}%{_localstatedir}/log/dashcore/sentinel.log
 #
 # Should this program live in /var/lib? Or should it live elsewhere? Good
 # questions. The executable is /var/lib/dashcore/sentinel/bin/sentinel.py It's
-# an oddity. It probably should live in /usr/sbin. But it doesn't. The rest of
-# the program should probably live in /var/lib.
+# an oddity. It probably should live in /usr/sbin (only a
+# sysadmin/masternode-admin would run it). But it doesn't. The rest of the
+# program should probably live in /var/lib.
 #
 
 
