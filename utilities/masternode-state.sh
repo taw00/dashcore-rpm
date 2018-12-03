@@ -55,7 +55,6 @@ _network_string='[mainnet]'
 #_height_url_old="https://explorer.dash.org/chain/Dash/q/getblockcount"
 _height_url="https://insight.dashevo.org/insight-api/status"
 exit_code=0
-_d=$(date --utc +"%b %d %T UTC $_network_string")
 
 if [[ testnet -eq 1 ]] ; then
   protocol=$protocol_testnet
@@ -63,7 +62,7 @@ if [[ testnet -eq 1 ]] ; then
   #_height_url_old="https://test.explorer.dash.org/chain/tDash/q/getblockcount"
   _height_url="https://testnet-insight.dashevo.org/insight-api/status"
 fi
-
+_d=$(date --utc +"%b %d %T UTC $_network_string")
 msg_proto="$_d Protocol: $protocol"
 
 if [[ $noise -gt 0 ]] ; then
