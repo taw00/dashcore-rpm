@@ -32,9 +32,9 @@ Version: %{vermajor}.%{verminor}
 
 # RELEASE - edit this
 %if %{targetIsProduction}
-  %define _pkgrel 1
+  %define _pkgrel 2
 %else
-  %define _pkgrel 0.5
+  %define _pkgrel 1.1
 %endif
 
 # MINORBUMP - edit this
@@ -80,11 +80,11 @@ Release: %{_release}
 %define srccontribtree %{_name_dcs}-%{vermajor}-contrib
 
 %if %{targetIsProduction}
-Source0: https://github.com/taw00/dashcore-rpm/source/SOURCES/%{srccodetree}.tar.gz
-Source1: https://github.com/taw00/dashcore-rpm/source/SOURCES/%{srccontribtree}.tar.gz
+Source0: https://github.com/taw00/dashcore-rpm/blob/master/source/SOURCES/%{srccodetree}.tar.gz
+Source1: https://github.com/taw00/dashcore-rpm/blob/master/source/SOURCES/%{srccontribtree}.tar.gz
 %else
-Source0: https://github.com/taw00/dashcore-rpm/source/testing/SOURCES/%{srccodetree}.tar.gz
-Source1: https://github.com/taw00/dashcore-rpm/source/testing/SOURCES/%{srccontribtree}.tar.gz
+Source0: https://github.com/taw00/dashcore-rpm/blob/master/source/testing/SOURCES/%{srccodetree}.tar.gz
+Source1: https://github.com/taw00/dashcore-rpm/blob/master/source/testing/SOURCES/%{srccontribtree}.tar.gz
 %endif
 
 # Most of the time, the build system can figure out the requires.
@@ -192,9 +192,13 @@ cd ..
 #   _libdir = /usr/lib or /usr/lib64 (depending on system)
 # This is used to quiet rpmlint who can't seem to understand that /usr/lib is
 # still used for certain things.
-%define _usr_lib /usr/lib
+%define _rawlib lib
+%define _usr_lib /usr/%{_rawlib}
+# These two are defined in newer versions of RPM (Fedora not el7)
 %define _tmpfilesdir %{_usr_lib}/tmpfiles.d
 %define _unitdir %{_usr_lib}/systemd/system
+
+# Create directories
 install -d %{buildroot}%{_sysconfdir}
 install -d %{buildroot}%{_sysconfdir}/dashcore
 install -d %{buildroot}%{_localstatedir}
@@ -329,6 +333,11 @@ exit 0
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
+* Mon Dec 03 2018 Todd Warner <t0dd_at_protonmail.com> 1.3.0-1.1.testing.taw
+  - specfile: fixed the source URLs
+  - specfile: employed trickery to mute rpmlint's griping about /usr/lib
+
+* Sun Nov 18 2018 Todd Warner <t0dd_at_protonmail.com> 1.3.0-1.taw
 * Sun Nov 18 2018 Todd Warner <t0dd_at_protonmail.com> 1.3.0-0.5.testing.taw
   - Nuke all the __pycache__ directories as they will create errors once moved
 
