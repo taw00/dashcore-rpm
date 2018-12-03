@@ -35,7 +35,7 @@
 # Source function library.
 . /etc/rc.d/init.d/functions
 
-exec="/usr/sbin/dashd"
+exec="/usr/bin/dashd"
 prog="dashd"
 config="/etc/dashcore/dash.conf"
 

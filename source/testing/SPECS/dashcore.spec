@@ -46,12 +46,12 @@ Version: %{vermajor}.%{verminor}
 # package release, and potentially extrarel
 %define _pkgrel 1
 %if ! %{targetIsProduction}
-  %define _pkgrel 0.7
+  %define _pkgrel 0.8
 %endif
 
 # MINORBUMP - edit this
 # (for very small or rapid iterations)
-%define minorbump taw1
+%define minorbump taw0
 
 #
 # Build the release string - don't edit this
@@ -551,7 +551,6 @@ install -d %{buildroot}%{_tmpfilesdir}
 install -d %{buildroot}%{_unitdir}
 install -d %{buildroot}%{_metainfodir}
 install -d -m755 -p %{buildroot}%{_bindir}
-install -d -m755 -p %{buildroot}%{_sbindir}
 install -d -m755 -p %{buildroot}%{_libdir}/pkgconfig
 install -d -m755 -p %{buildroot}%{_includedir}
 
@@ -578,10 +577,6 @@ install -d -m700 %{buildroot}%{_localstatedir}/log/dashcore
 install -d -m700 %{buildroot}%{_localstatedir}/log/dashcore/testnet3
 # /etc/sysconfig/dashd-scripts/
 install -d %{buildroot}%{_sysconfdir}/sysconfig/dashd-scripts
-
-# Binaries - stick dashd into sbin instead of bin
-install -D -m755 -p %{buildroot}%{_bindir}/dashd %{buildroot}%{_sbindir}/dashd
-rm -f %{buildroot}%{_bindir}/dashd
 
 # Symlinks
 # debug.log: /var/lib/dashcore/debug.log -> /var/log/dashcore/debug.log
@@ -610,7 +605,9 @@ install -D -m644 %{srccodetree}/contrib/dashd.bash-completion %{buildroot}%{_dat
 
 # Desktop elements - desktop file and kde protocol file (from contrib)
 cd %{srccontribtree}/linux/desktop/
-install -D -m644 dash-qt.desktop %{buildroot}%{_datadir}/applications/dash-qt.desktop
+# dash-qt.desktop
+# https://fedoraproject.org/wiki/Packaging:Guidelines?rd=PackagingGuidelines#Desktop_files
+desktop-file-install --dir=${buildroot}%{_datadir}/applications dash-qt.desktop
 desktop-file-validate %{buildroot}%{_datadir}/applications/dash-qt.desktop
 # dash-qt.appdata.xml
 # https://fedoraproject.org/wiki/Packaging:AppData
@@ -922,7 +919,7 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 %{_usr_lib}/firewalld/services/dashcore-rpc.xml
 %{_usr_lib}/firewalld/services/dashcore-testnet-rpc.xml
 %doc selinux-tmp/*
-%{_sbindir}/dashd
+%{_bindir}/dashd
 %{_tmpfilesdir}/dashd.conf
 %{_datadir}/bash-completion/completions/dashd
 %{_mandir}/man1/dashd.1.gz
@@ -991,6 +988,13 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
+* Mon Dec 03 2018 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-0.8.rc6.taw
+  - moved dashd from /usr/sbin to /usr/bin since it is user run as well as  
+    run by a node admin. This goes against the convention of some other  
+    cryptocurrency packagers (notably bitcoin), but it is "more correct"  
+    IMHO and in the HO, according to my interpretation, of the good folks of  
+    the Filesystem Hierarchical Standard
+
 * Fri Nov 30 2018 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-0.7.rc6.taw
   - v0.13.0.0 RC6 - Spork 15 related
 

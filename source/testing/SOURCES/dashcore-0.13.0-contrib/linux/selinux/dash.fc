@@ -1,5 +1,5 @@
 /usr/bin/dash-cli		--	gen_context(system_u:object_r:dash_exec_t,s0)
-/usr/sbin/dashd		--	gen_context(system_u:object_r:dash_exec_t,s0)
+/usr/bin/dashd		--	gen_context(system_u:object_r:dash_exec_t,s0)
 /usr/lib(64)?/dash/dashd		--	gen_context(system_u:object_r:dash_exec_t,s0)
 
 /etc/dash(/.*)?		gen_context(system_u:object_r:dash_conf_t,s0)
