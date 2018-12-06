@@ -4,21 +4,23 @@
 
 RHEL/CentOS: If you are using Red Hat Enterprise Linux, or CentOS as your base
 operating system, I recommend you switch to Fedora Linux. RHEL and CentOS are
-less bleeding edge, but, they are also significantly dated. Dash is a leading
-edge technology and Fedora is plenty stable and bullet proof. In order to
-migrate from RHEL or CentOS to Fedora, I would recommend backing up your
-masternode configuration and then just rebuilding the system from the ground
-up. Trying to do any kind of fancy automation may lead to mixed results.
+less bleeding edge, but, they are also significantly dated. **(UPDATE: CentOS7
+and RHEL7 are soon to be dropped as target platforms for v0.13)** Dash is a
+leading edge technology and Fedora is plenty stable and reasonably bullet
+proof. In order to migrate from RHEL or CentOS to Fedora, I would recommend
+backing up your masternode configuration and then just rebuilding the system
+from the ground up. Trying to do any kind of fancy automation may lead to mixed
+results.
 
 Fedora: Fedora releases a new version roughly every 6 months. That means you
 need to upgrade it periodically. If you are running a Fedora Linux machine two
 versions behind the latest, you need to upgrade pronto, otherwise, the next
 discovered security vulnerability will leave you at risk. Plus, I will stop
-building for those old platforms not long after. For example, Fedora 28 is the
-lastest version, Fedora 25 is now out of service, and Fedora 26 soon will be. If you are running a
-Masternode on a Fedora Linux 26 system... upgrade. If you are running a
-Masternode on top of a Fedora Linux 27 system, you have some time, but consider
-keeping up with the latest.
+building for those old platforms not long after. For example, Fedora 29 is the
+lastest version, Fedora 25, 26, 27 are all out of service. If you are running a
+Masternode on a dated Fedora Linux system... upgrade. If you are running a
+Masternode on top of a version one step back, you may have some time, but
+schedule time to upgrade keeping up with the latest.
 
 ***Assumptions:***
 
@@ -32,7 +34,7 @@ keeping up with the latest.
 
 Upgrading the operating system takes me roughly 5 minutes to perform (speed of
 internet connection dependent). And the instructions can't be much simpler.
-This example uses Fedora 28 as the target version of the upgrade.
+This example uses Fedora 29 as the target version of the upgrade.
 
 1. Update your current version of Fedora to all its latest packages.
 
@@ -49,8 +51,8 @@ sudo dnf clean packages
 ```
 # Download upgrade package.
 sudo dnf install dnf-plugin-system-upgrade -y
-# Download upgraded packages (using F28 as the example target OS version)
-sudo dnf system-upgrade download --refresh -y --releasever=28
+# Download upgraded packages (using F29 as the example target OS version)
+sudo dnf system-upgrade download --refresh -y --releasever=29
 # Upgrade!
 sudo dnf system-upgrade reboot
 ```
@@ -58,8 +60,8 @@ sudo dnf system-upgrade reboot
 ```
 # Download upgrade package.
 sudo dnf install dnf-plugin-system-upgrade -y
-# Download upgraded packages (using F28 as the example target OS version)
-sudo dnf system-upgrade download --refresh -y --releasever=28
+# Download upgraded packages (using F29 as the example target OS version)
+sudo dnf system-upgrade download --refresh -y --releasever=29
 # Stop the masternode -- not really needed, but we are being pedantic
 sudo systemctl stop dashcore
 # Upgrade!
@@ -70,7 +72,7 @@ sudo dnf system-upgrade reboot
 3. Log back in and check the status.
 
 ```
-# We should be on Fedora 28 for this example...
+# We should be on Fedora 29 for this example...
 sudo rpm -qa | grep release
 sudo rpm -qa | grep dashcore
 ```

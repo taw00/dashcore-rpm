@@ -23,12 +23,15 @@ as fresh installs.
 
 ---
 
-**Dash (Digital Cash)** is an open source peer-to-peer cryptocurrency that
-offers instant transactions _**(InstantSend)**_, private transactions
-***(PrivateSend)*** and token fungibility. Dash operates a decentralized
-governance and budgeting system, making it the first decentralized autonomous
-organization (DAO). Dash is also a platform for innovative decentralized
-crypto-tech.
+**Dash (Digital Cash)** is an open source peer-to-peer cryptocurrency with a
+strong focus on serving as a superior means of payment. Dash offers a form of
+money that is portable, inexpensive, divisible and incredibly fast. It can be
+spent securely both online and in person with minimal transaction fees. Dash
+offers instant transactions **(InstantSend)**, fungible transactions
+**(PrivateSend)**, and, as a network, is self-governing and self-funding. This
+decentralized governance and budgeting system makes is the first ever
+successful decentralized autonomous organization (DAO). Dash is also a platform
+for innovative decentralized crypto-tech.
 
 Dash is open source and the name of the overarching project. Learn more
 at https://www.dash.org/
@@ -71,12 +74,11 @@ lose of funds or damages associated to this software.
 
 ### Send comment and feedback - <https://keybase.io/toddwarner>
 
-_Come say hello to me. I am **t0dd**, **taw**, or **taw00** in various forums:
-[Dash Nation on Discord](https://dashchat.org/),
+_Come say hello to me. I am **t0dd** or **taw** in various forums:
+[Dash Nation on Discord](https://dashchat.org/), [Dash Talk on Discord](http://staydashy.com/),
 [dash.org's forum](https://www.dash.org/forum/),
-[#dash:chat.cryptochat.io (matrix network)](https://riot.im/app/#/room/#dash:chat.cryptochat.io),
 [#dashpay on freenode IRC](http://freenode.net/),
-[Dash Knights 2.0 on Telegram](https://web.telegram.org/#/im?p=@DashDigitalCash), and
+[Official Dash Chat on Telegram](https://web.telegram.org/#/im?p=@dash_chat), and
 [/r/dashpay/](https://www.reddit.com/r/dashpay) on Reddit._
 
 _If you like my Dash stuff, also check out my Zcash builds which I maintain for
