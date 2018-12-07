@@ -46,12 +46,12 @@ Version: %{vermajor}.%{verminor}
 # package release, and potentially extrarel
 %define _pkgrel 1
 %if ! %{targetIsProduction}
-  %define _pkgrel 0.9
+  %define _pkgrel 0.10
 %endif
 
 # MINORBUMP - edit this
 # (for very small or rapid iterations)
-%define minorbump taw0
+%define minorbump taw
 
 #
 # Build the release string - don't edit this
@@ -154,7 +154,7 @@ Source1: https://github.com/taw00/dashcore-rpm/blob/master/source/testing/SOURCE
 %define _unique_build_ids 1
 %define _build_id_links alldebug
 
-# https://fedoraproject.org/wiki/Changes/Harden_All_Packages
+# https://docs.fedoraproject.org/en-US/packaging-guidelines/#_pie
 %define _hardened_build 1
 
 License: MIT
@@ -239,9 +239,9 @@ Summary: Peer-to-peer, payments-focused, fungible digital currency, protocol, an
 Requires(post): systemd
 Requires(preun): systemd
 Requires(postun): systemd
-# as per https://fedoraproject.org/wiki/Packaging:Scriptlets?rd=Packaging:ScriptletSnippets#Systemd
+# As per https://docs.fedoraproject.org/en-US/packaging-guidelines/Systemd/
 %{?systemd_requires}
-BuildRequires: systemd
+BuildRequires: systemd systemd-rpm-macros
 Requires(pre): shadow-utils
 Requires(post): /usr/sbin/semodule, /sbin/restorecon, /sbin/fixfiles
 Requires(postun): /usr/sbin/semodule, /sbin/restorecon, /sbin/fixfiles
@@ -401,7 +401,7 @@ Learn more at www.dash.org.
 # Prep section starts us in directory .../BUILD (aka {_builddir})
 
 # Message if EL7 found (probably should check for other unsupported OSes as well)
-%if 0%{?rhel} && 0%{?rhel} <= 7
+%if 0%{?rhel} && 0%{?rhel} < 8
   %{error: "EL7 builds no longer supported due to outdated build tools (c++ dynamic and static libraries, etc)"}
   # exit doesn't do anything during build phase?
   exit 1
@@ -516,7 +516,7 @@ make install
 cd ..
 
 # Cheatsheet for built-in RPM macros:
-# https://fedoraproject.org/wiki/Packaging:RPMMacros
+# https://docs.fedoraproject.org/en-US/packaging-guidelines/RPMMacros/
 #   _builddir = {_topdir}/BUILD
 #   _buildrootdir = {_topdir}/BUILDROOT
 #   buildroot = {_buildrootdir}/{name}-{version}-{release}.{_arch}
@@ -533,10 +533,12 @@ cd ..
 # still used for certain things.
 %define _rawlib lib
 %define _usr_lib /usr/%{_rawlib}
-# These three are defined in newer versions of RPM (Fedora not el7)
-%define _tmpfilesdir %{_usr_lib}/tmpfiles.d
-%define _unitdir %{_usr_lib}/systemd/system
-%define _metainfodir %{_datadir}/metainfo
+# These three are already defined in newer versions of RPM, but not in el7
+%if 0%{?rhel} && 0%{?rhel} < 8
+  %define _tmpfilesdir %{_usr_lib}/tmpfiles.d
+  %define _unitdir %{_usr_lib}/systemd/system
+  %define _metainfodir %{_datadir}/metainfo
+%endif
 
 # Create directories
 install -d %{buildroot}%{_datadir}
@@ -606,11 +608,11 @@ install -D -m644 %{srccodetree}/contrib/dashd.bash-completion %{buildroot}%{_dat
 # Desktop elements - desktop file and kde protocol file (from contrib)
 cd %{srccontribtree}/linux/desktop/
 # dash-qt.desktop
-# https://fedoraproject.org/wiki/Packaging:Guidelines?rd=PackagingGuidelines#Desktop_files
+# https://docs.fedoraproject.org/en-US/packaging-guidelines/#_desktop_files
 desktop-file-install --dir=%{buildroot}%{_datadir}/applications dash-qt.desktop
 desktop-file-validate %{buildroot}%{_datadir}/applications/dash-qt.desktop
 # dash-qt.appdata.xml
-# https://fedoraproject.org/wiki/Packaging:AppData
+# https://docs.fedoraproject.org/en-US/packaging-guidelines/AppData/
 install -D -m644 -p dash-qt.appdata.xml %{buildroot}%{_metainfodir}/dash-qt.appdata.xml
 appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/*.appdata.xml
 
@@ -737,7 +739,17 @@ install -D -m644 -p %{srccontribtree}/linux/firewalld/usr-lib-firewalld-services
 # dashcore-client
 %post client
 # firewalld only partially picks up changes to its services files without this
-test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
+#test -f %%{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
+%{firewalld_reload}
+
+# Update the desktop database
+# https://fedoraproject.org/wiki/NewMIMESystem
+/usr/bin/update-desktop-database &> /dev/null || :
+
+%postun client
+# Update the desktop database
+# https://fedoraproject.org/wiki/NewMIMESystem
+/usr/bin/update-desktop-database &> /dev/null || :
 
 # dashcore-server
 %pre server
@@ -789,7 +801,8 @@ exit 0
 %post server
 %systemd_post dashd.service
 # firewalld only partially picks up changes to its services files without this
-test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
+#test -f %%{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
+%{firewalld_reload}
 
 # Not using for now.
 #t0dd for selinuxvariant in %%{selinux_variants}
@@ -988,6 +1001,13 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
+* Fri Dec 07 2018 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-0.10.rc7.taw
+  - cleaned up a lot of links
+  - call desktop file refresh after install and uninstall
+  - firewalld_reload rpm macro used
+  - _tmpfilesdir, _unitdir, _metainfodir only need to be defined if the build  
+    is EL7 (very old rpm)
+
 * Thu Dec 06 2018 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-0.9.rc7.taw
   - 0.13.0-rc7
   - Updated a lot of text as well.
@@ -1081,7 +1101,7 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 * Sun Apr 8 2018 Todd Warner <t0dd_at_protonmail.com> 0.12.3.0-0.1.testing.taw
   - 0.12.3 test build
   - name-version-release more closely matches industry guidelines:  
-    https://fedoraproject.org/wiki/Packaging:Versioning
+    https://docs.fedoraproject.org/en-US/packaging-guidelines/Versioning/
   - https://bamboo.dash.org/browse/DASHL-DEV-341
 
 * Fri Apr 06 2018 Todd Warner <t0dd_at_protonmail.com> 0.12.2.3-2.taw
