@@ -34,7 +34,7 @@ Summary: Peer-to-peer, payments-focused, fungible digital currency, protocol, an
 
 # ARCHIVE QUALIFIER - edit this if applies
 # ie. if the dev team includes things like rc3 in the filename
-%define archiveQualifier rc7
+%define archiveQualifier rc8
 %define includeArchiveQualifier 1
 
 # VERSION - edit this
@@ -241,7 +241,7 @@ Requires(preun): systemd
 Requires(postun): systemd
 # As per https://docs.fedoraproject.org/en-US/packaging-guidelines/Systemd/
 %{?systemd_requires}
-BuildRequires: systemd systemd-rpm-macros
+BuildRequires: systemd
 Requires(pre): shadow-utils
 Requires(post): /usr/sbin/semodule, /sbin/restorecon, /sbin/fixfiles
 Requires(postun): /usr/sbin/semodule, /sbin/restorecon, /sbin/fixfiles
@@ -1001,6 +1001,9 @@ exit 0
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
+* Mon Dec 10 2018 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-0.10.rc8.taw
+  - 0.13.0.0-rc8
+
 * Fri Dec 07 2018 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-0.10.rc7.taw
   - cleaned up a lot of links
   - call desktop file refresh after install and uninstall
