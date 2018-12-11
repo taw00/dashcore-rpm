@@ -51,7 +51,7 @@ Version: %{vermajor}.%{verminor}
 
 # MINORBUMP - edit this
 # (for very small or rapid iterations)
-%define minorbump taw1
+%define minorbump taw3
 
 #
 # Build the release string - don't edit this
@@ -748,8 +748,9 @@ install -D -m644 -p %{srccontribtree}/linux/firewalld/usr-lib-firewalld-services
 %post client
 # firewalld only partially picks up changes to its services files without this
 # https://fedoraproject.org/wiki/PackagingDrafts/ScriptletSnippets/Firewalld
-#test -f %%{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
-%firewalld_reload
+# the macro'ed reload is not working for some reason
+#%%firewalld_reload
+test -f %%{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 
 # Update the desktop database
 # https://fedoraproject.org/wiki/NewMIMESystem
@@ -759,7 +760,10 @@ install -D -m644 -p %{srccontribtree}/linux/firewalld/usr-lib-firewalld-services
 # Update the desktop database
 # https://fedoraproject.org/wiki/NewMIMESystem
 /usr/bin/update-desktop-database &> /dev/null || :
-%firewalld_reload
+# the macro'ed reload is not working for some reason
+#%%firewalld_reload
+test -f %%{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
+
 
 # dashcore-server
 %pre server
@@ -812,8 +816,9 @@ exit 0
 %systemd_post dashd.service
 # firewalld only partially picks up changes to its services files without this
 # https://fedoraproject.org/wiki/PackagingDrafts/ScriptletSnippets/Firewalld
-#test -f %%{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
-%firewalld_reload
+# the macro'ed reload is not working for some reason
+#%%firewalld_reload
+test -f %%{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 
 # Not using for now.
 #t0dd for selinuxvariant in %%{selinux_variants}
@@ -846,7 +851,10 @@ exit 0
 # dashcore-server
 %postun server
 %systemd_postun dashd.service
-%firewalld_reload
+# the macro'ed reload is not working for some reason
+#%%firewalld_reload
+test -f %%{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
+
 # Not using for now.
 #t0dd# Do this upon uninstall (not upgrades)
 #t0dd if [ $1 -eq 0 ] ; then
@@ -1015,12 +1023,14 @@ exit 0
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
+* Mon Dec 10 2018 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-0.10.rc8.taw3
+* Mon Dec 10 2018 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-0.10.rc8.taw2
 * Mon Dec 10 2018 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-0.10.rc8.taw1
-  - fixed firewalld scriptlet calls
-  - fixed some systemd scriplet calls
-
 * Mon Dec 10 2018 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-0.10.rc8.taw
   - 0.13.0.0-rc8
+  - fixed firewalld scriptlet calls
+    - firewalld_reload macro is mysteriously not working - yanked!
+  - fixed some systemd scriplet calls
 
 * Fri Dec 07 2018 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-0.10.rc7.taw
   - cleaned up a lot of links
