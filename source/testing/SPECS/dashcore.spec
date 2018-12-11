@@ -51,7 +51,7 @@ Version: %{vermajor}.%{verminor}
 
 # MINORBUMP - edit this
 # (for very small or rapid iterations)
-%define minorbump taw
+%define minorbump taw1
 
 #
 # Build the release string - don't edit this
@@ -220,6 +220,10 @@ BuildRequires: python34
 %package client
 Summary: Peer-to-peer, payments-focused, fungible digital currency, protocol, and platform for payments and decentralized applications (desktop reference client)
 Requires: dashcore-utils = %{version}-%{release}
+# https://fedoraproject.org/wiki/PackagingDrafts/ScriptletSnippets/Firewalld
+Requires: firewalld-filesystem
+Requires(post): firewalld-filesystem
+Requires(postun): firewalld-filesystem
 # Required for installing desktop applications on linux
 BuildRequires: libappstream-glib desktop-file-utils
 # t0dd: added to avoid unneccessary fetching of libraries from the internet
@@ -236,12 +240,16 @@ BuildRequires:  qt5-qtwayland-devel
 # dashcore-server
 %package server
 Summary: Peer-to-peer, payments-focused, fungible digital currency, protocol, and platform for payments and decentralized applications (reference server)
-Requires(post): systemd
-Requires(preun): systemd
-Requires(postun): systemd
+# https://fedoraproject.org/wiki/PackagingDrafts/ScriptletSnippets/Firewalld
+Requires: firewalld-filesystem
+Requires(post): firewalld-filesystem
+Requires(postun): firewalld-filesystem
 # As per https://docs.fedoraproject.org/en-US/packaging-guidelines/Systemd/
-%{?systemd_requires}
+#Requires(post): systemd
+#Requires(preun): systemd
+#Requires(postun): systemd
 BuildRequires: systemd
+%{?systemd_requires}
 Requires(pre): shadow-utils
 Requires(post): /usr/sbin/semodule, /sbin/restorecon, /sbin/fixfiles
 Requires(postun): /usr/sbin/semodule, /sbin/restorecon, /sbin/fixfiles
@@ -739,8 +747,9 @@ install -D -m644 -p %{srccontribtree}/linux/firewalld/usr-lib-firewalld-services
 # dashcore-client
 %post client
 # firewalld only partially picks up changes to its services files without this
+# https://fedoraproject.org/wiki/PackagingDrafts/ScriptletSnippets/Firewalld
 #test -f %%{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
-%{firewalld_reload}
+%firewalld_reload
 
 # Update the desktop database
 # https://fedoraproject.org/wiki/NewMIMESystem
@@ -750,6 +759,7 @@ install -D -m644 -p %{srccontribtree}/linux/firewalld/usr-lib-firewalld-services
 # Update the desktop database
 # https://fedoraproject.org/wiki/NewMIMESystem
 /usr/bin/update-desktop-database &> /dev/null || :
+%firewalld_reload
 
 # dashcore-server
 %pre server
@@ -801,8 +811,9 @@ exit 0
 %post server
 %systemd_post dashd.service
 # firewalld only partially picks up changes to its services files without this
+# https://fedoraproject.org/wiki/PackagingDrafts/ScriptletSnippets/Firewalld
 #test -f %%{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
-%{firewalld_reload}
+%firewalld_reload
 
 # Not using for now.
 #t0dd for selinuxvariant in %%{selinux_variants}
@@ -823,6 +834,8 @@ exit 0
 # dashcore-server
 %posttrans server
 /usr/bin/systemd-tmpfiles --create
+#TODO: Replace above with %%tmpfiles_create_package macro
+#TODO: https://github.com/systemd/systemd/blob/master/src/core/macros.systemd.in
 
 
 # dashcore-server
@@ -833,6 +846,7 @@ exit 0
 # dashcore-server
 %postun server
 %systemd_postun dashd.service
+%firewalld_reload
 # Not using for now.
 #t0dd# Do this upon uninstall (not upgrades)
 #t0dd if [ $1 -eq 0 ] ; then
@@ -1001,6 +1015,10 @@ exit 0
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
+* Mon Dec 10 2018 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-0.10.rc8.taw1
+  - fixed firewalld scriptlet calls
+  - fixed some systemd scriplet calls
+
 * Mon Dec 10 2018 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-0.10.rc8.taw
   - 0.13.0.0-rc8
 
