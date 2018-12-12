@@ -1,5 +1,5 @@
 [Protocol]
-exec=dash-qt '%u'
+exec=dash-qt.wrapper.sh
 protocol=dash
 input=none
 output=none

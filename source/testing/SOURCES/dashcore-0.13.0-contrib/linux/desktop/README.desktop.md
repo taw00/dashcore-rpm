@@ -57,13 +57,19 @@ application.
 To properly install the metadata files, linux distributions come with a
 validation script that will lint-check these files for glaring errors.
 
-For the dash.desktop file (it may be called dash-qt.desktop) you do this...
+For the dash-qt.desktop file you do this...
 ```
-cp dash.desktop /usr/share/applications/
-desktop-file-validate /usr/share/applications/dash.desktop
+cp dash-qt.desktop /usr/share/applications/
+cp dash-qt.wrapper.sh /usr/bin/ ; chmod +x /usr/bin/dash-qt.wrapper.sh
+desktop-file-install --dir=/usr/share/applications dash-qt.desktop
+desktop-file-validate /usr/share/applications/dash-qt.desktop
 ```
 
-For the dash.appdata.xml file (it may be called dash-qt.appdata.xml) you do this...
+Note: The `dash-qt.desktop` file directs the desktop to call a wrapper script
+that sets some needed environment variables instead of just calling the raw
+`dash-qt` executable. It is called `dash-qt.wrapper.sh`
+
+For the dash-qt.appdata.xml file you do this...
 ```
 cp dash.appdata.xml /usr/share/metainfo/
 appstream-util validate-relax --nonet /usr/share/metainfo/dash.appdata.xml

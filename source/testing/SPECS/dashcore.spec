@@ -46,12 +46,12 @@ Version: %{vermajor}.%{verminor}
 # package release, and potentially extrarel
 %define _pkgrel 1
 %if ! %{targetIsProduction}
-  %define _pkgrel 0.10
+  %define _pkgrel 0.11
 %endif
 
 # MINORBUMP - edit this
 # (for very small or rapid iterations)
-%define minorbump taw3
+%define minorbump taw
 
 #
 # Build the release string - don't edit this
@@ -617,6 +617,7 @@ install -D -m644 %{srccodetree}/contrib/dashd.bash-completion %{buildroot}%{_dat
 cd %{srccontribtree}/linux/desktop/
 # dash-qt.desktop
 # https://docs.fedoraproject.org/en-US/packaging-guidelines/#_desktop_files
+install -m755  dash-qt.wrapper.sh %{buildroot}%{_bindir}/
 desktop-file-install --dir=%{buildroot}%{_datadir}/applications dash-qt.desktop
 desktop-file-validate %{buildroot}%{_datadir}/applications/dash-qt.desktop
 # dash-qt.appdata.xml
@@ -882,6 +883,7 @@ test -f %%{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 %license %{srccodetree}/COPYING
 %doc %{srccodetree}/doc/*.md %{srccontribtree}/extras/dash.conf.example
 %{_bindir}/dash-qt
+%{_bindir}/dash-qt.wrapper.sh
 %{_datadir}/applications/dash-qt.desktop
 %{_metainfodir}/dash-qt.appdata.xml
 %{_datadir}/kde4/services/dash-qt.protocol
@@ -1023,6 +1025,11 @@ test -f %%{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
+* Wed Dec 12 2018 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-0.11.rc8.taw
+  - Added a wrapper script around dash-qt in order to work around  
+    QT5+GNOME+Wayland issues. The wrapper sets environment variables.  
+    Reference dashcore-0.13.0-contrib/linux/desktop/dash-qt.wrapper.sh
+
 * Mon Dec 10 2018 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-0.10.rc8.taw3
 * Mon Dec 10 2018 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-0.10.rc8.taw2
 * Mon Dec 10 2018 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-0.10.rc8.taw1
