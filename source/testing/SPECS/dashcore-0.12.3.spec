@@ -31,59 +31,39 @@ Name: %{_name_dc}
 Summary: Peer-to-peer, privacy-centric, digital currency
 
 %define targetIsProduction 0
-%define includeMinorbump 1
 
 # ie. if the dev team includes things like rc3 in the filename
-%define archiveQualifier rc1
-%define includeArchiveQualifier 1
+%define archiveQualifier rc5
+%define includeArchiveQualifier 0
 
-# VERSION
-%define vermajor 0.13.0
-%define verminor 0
+# VERSION - edit this
+%define vermajor 0.12.3
+%define verminor 4
 Version: %{vermajor}.%{verminor}
 
-# dashcore source tarball file basename
-# the archive name and directory tree can have some variances
-# dashcore, dash, or v...
-# v0.13.0.0.tar.gz
-%define _archivename_alt1 v%{version}
-# dash-0.13.0.0.tar.gz
-%define _archivename_alt2 %{_name_d}-%{version}
-# dashcore-0.13.0.tar.gz
-%define _archivename_alt3 %{_name_dc}-%{vermajor}
-# dashcore-0.13.0.0.tar.gz
-%define _archivename_alt4 %{_name_dc}-%{version}
-
-# our selection for this build...
-%define _archivename %{_archivename_alt4}
-%define _srccodetree %{_archivename_alt3}
-
-%if %{includeArchiveQualifier}
-  %define archivename %{_archivename}-%{archiveQualifier}
-%endif
-%define srccodetree %{_srccodetree}
-
-# RELEASE
-# if production - "targetIsProduction 1"
+# RELEASE - edit this
+# package release, and potentially extrarel
 %define pkgrel_prod 1
-
-# if pre-production - "targetIsProduction 0"
+# if pre-production, i.e. "targetIsProduction 0"
 # eg. 0.3.testing.201804 -- pkgrel_preprod should always equal pkgrel_prod-1
 %define pkgrel_preprod 0
 %define extraver_preprod 1
 
-%define _snapinfo testing
-%define snapinfo %{_snapinfo}
-%if %{includeArchiveQualifier}
-  %define snapinfo %{archiveQualifier}
-%endif
-
-# if includeMinorbump
+# MINORBUMP - edit this
+# (for very small or rapid iterations)
 %define minorbump taw0
 
 #
 # Build the release string (don't edit this)
 #
+
+%define snapinfo testing
+%if %{includeArchiveQualifier}
+  %define snapinfo %{archiveQualifier}
+  %if %{targetIsProduction}
+    %undefine snapinfo
+  %endif
+%endif
 
 # release numbers
 %undefine _relbuilder_pt1
@@ -123,6 +103,7 @@ Version: %{vermajor}.%{verminor}
 # put it all together
 # pt1 will always be defined. pt2 and minorbump may not be
 %define _release %{_relbuilder_pt1}
+%define includeMinorbump 1
 %if ! %{includeMinorbump}
   %undefine minorbump
 %endif
@@ -142,6 +123,29 @@ Version: %{vermajor}.%{verminor}
 
 Release: %{_release}
 # ----------- end of release building section
+
+# dashcore source tarball file basename
+# the archive name and directory tree can have some variances
+# v0.12.3.4.tar.gz
+%define _archivename_alt1 v%{version}
+# dash-0.12.3.4.tar.gz
+%define _archivename_alt2 %{_name_d}-%{version}
+# dashcore-0.12.3.tar.gz
+%define _archivename_alt3 %{_name_dc}-%{vermajor}
+# dashcore-0.12.3.4.tar.gz
+%define _archivename_alt4 %{_name_dc}-%{version}
+
+# our selection for this build - edit this
+%define _archivename %{_archivename_alt2}
+%define _srccodetree %{_archivename_alt2}
+
+%if %{includeArchiveQualifier}
+  %define archivename %{_archivename}-%{archiveQualifier}
+  %define srccodetree %{_srccodetree}-%{archiveQualifier}
+%else
+  %define archivename %{_archivename}
+  %define srccodetree %{_srccodetree}
+%endif
 
 # Extracted source tree structure (extracted in .../BUILD)
 #   srcroot               dashcore-0.12.3
@@ -923,8 +927,9 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
-* Sat Nov 10 2018 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-0.1.rc1.taw
-  - v13.0.0 - https://github.com/dashpay/dash/releases/tag/v0.13.0.0-rc1
+* Fri Dec 14 2018 Todd Warner <t0dd_at_protonmail.com> 0.12.3.4-0.1.testing.taw
+  - v12.3.4 - not intended for release, only for testnet
+  - rpm building: some merging of 0.13.0 spec file semantics
 
 * Wed Sep 19 2018 Todd Warner <t0dd_at_protonmail.com> 0.12.3.3-1.taw
 * Wed Sep 19 2018 Todd Warner <t0dd_at_protonmail.com> 0.12.3.3-0.1.testing.taw
