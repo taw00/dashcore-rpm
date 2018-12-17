@@ -33,7 +33,9 @@ gpgcheck=1
 gpgkey=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.3/pubkey.gpg
 repo_gpgcheck=0
 metadata_expire=1d
-enabled_metadata=1
+# leave this off, see
+# https://srvfail.com/packagekit-cant-find-file-in-var-cache-packagekit/
+enabled_metadata=0
 
 [dashcore-testing]
 enabled=1
@@ -49,7 +51,9 @@ gpgkey=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-testing/pubk
 repo_gpgcheck=0
 # Default metadata_expire is typically 2d (2 days)
 metadata_expire=60
-enabled_metadata=1
+# leave this off, see
+# https://srvfail.com/packagekit-cant-find-file-in-var-cache-packagekit/
+enabled_metadata=0
 
 
 ##
@@ -67,7 +71,9 @@ gpgkey=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.2/pubkey.
 # GnuPG fingerprint should be: C007F5C5B0827208031C8D6251A9F10DA3DF1F94
 repo_gpgcheck=0
 metadata_expire=1d
-enabled_metadata=1
+# leave this off, see
+# https://srvfail.com/packagekit-cant-find-file-in-var-cache-packagekit/
+enabled_metadata=0
 
 #[dashcore-stable-12.1]
 #name=Dash Core 12.1 - deprecated - epel-$releasever-$basearch
@@ -81,6 +87,8 @@ enabled_metadata=1
 ## Default metadata_expire is typically 2d (2 days)
 #metadata_expire=1d
 #enabled=0
+# leave this off, see
+# https://srvfail.com/packagekit-cant-find-file-in-var-cache-packagekit/
 #enabled_metadata=0
 
 #[dashcore-testing-old]

@@ -1,29 +1,30 @@
-Name:		toddpkgs-dashcore-repo
-Version:	1.0
-Summary:	Repository configuration to enable management of dashcore packages (Dash Cryptocurrency Core Wallet and Node)
+Name:       toddpkgs-dashcore-repo
+Version:    1.0
+Summary:    Repository configuration to enable management of dashcore packages (Dash Cryptocurrency Core Wallet and Node)
 
 %define targetIsProduction 0
 
-# Release...
-%define _rel 2.2
+# RELEASE
+%define _rel 3.1
 %define _snapinfo testing
-%define _minorbump taw0
+%define _minorbump taw
 %if %{targetIsProduction}
-Release:	%{_rel}%{?dist}.%{_minorbump}
+Release:    %{_rel}%{?dist}.%{_minorbump}
 %else
-Release:	%{_rel}.%{_snapinfo}%{?dist}.%{_minorbump}
+Release:    %{_rel}.%{_snapinfo}%{?dist}.%{_minorbump}
 %endif
 
-License:	MIT
-URL:		https://github.com/taw00/dashcore-rpm
-Source0:	https://raw.githubusercontent.com/taw00/dashcore-rpm/master/source/SOURCES/toddpkgs-dashcore-repo-1.0.tar.gz
-BuildArch:	noarch
+License:    MIT
+URL:        https://github.com/taw00/dashcore-rpm
+Source0:    https://github.com/taw00/dashcore-rpm/raw/master/source/testing/SOURCES/toddpkgs-dashcore-repo-1.0.tar.gz
+BuildArch:  noarch
 #BuildRequires:  tree
 
 # CentOS/RHEL/EPEL can't do "Suggests:"
-%if 0%{?fedora:1}
-Suggests:	distribution-gpg-keys-copr
-%endif
+# Update: Don't use suggests. Ever.
+#%%if 0%%{?fedora:1}
+#Suggests: distribution-gpg-keys-copr
+#%%endif
 
 
 %description
@@ -90,6 +91,12 @@ install -D -m644 todd-694673ED-public-2030-01-04.2016-11-07.asc %{buildroot}%{_s
 
 
 %changelog
+* Mon Dec 17 2018 Todd Warner <t0dd_at_protonmail.com> 1.0-3.1.testing.taw
+  - enabled_metadata needs to be set to 0 because COPR repos do not managed  
+    appstream metadata correctly  
+    <https://srvfail.com/packagekit-cant-find-file-in-var-cache-packagekit/>
+
+* Tue Jul 03 2018 Todd Warner <t0dd_at_protonmail.com> 1.0-3.taw
 * Tue Jul 03 2018 Todd Warner <t0dd_at_protonmail.com> 1.0-2.2.testing.taw
   - v12.3 repo flipped on
 
