@@ -265,7 +265,7 @@ Then...
 
 ```bash
 sudo rpm --import https://keybase.io/toddwarner/key.asc
-sudo yum install -y https://raw.githubusercontent.com/taw00/dashcore-rpm/master/toddpkgs-dashcore-repo.centos.rpm
+sudo yum install -y https://raw.githubusercontent.com/taw00/dashcore-rpm/master/toddpkgs-dashcore-repo.el7.rpm
 ```
 
 <!--

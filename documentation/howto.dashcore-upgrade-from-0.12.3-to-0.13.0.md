@@ -115,7 +115,7 @@ sudo dnf list --refresh | grep dashcore
 ```
 ## CentOS/RHEL (NO LONGER SUPPORTED AS OF v0.13.0!)...
 #sudo rpm --import https://keybase.io/toddwarner/key.asc
-#sudo yum install -y https://raw.githubusercontent.com/taw00/dashcore-rpm/master/toddpkgs-dashcore-repo.centos.rpm
+#sudo yum install -y https://raw.githubusercontent.com/taw00/dashcore-rpm/master/toddpkgs-dashcore-repo.el7.rpm
 #sudo yum clean expire-cache
 #sudo yum list | grep dashcore
 ```
@@ -132,7 +132,7 @@ sudo dnf list --refresh | grep dashcore
 ```
 ## CentOS/RHEL (NO LONGER SUPPORTED AS OF v0.13.0!)...
 #sudo rpm --import https://keybase.io/toddwarner/key.asc
-#sudo yum update -y https://raw.githubusercontent.com/taw00/dashcore-rpm/master/toddpkgs-dashcore-repo.centos.rpm
+#sudo yum update -y https://raw.githubusercontent.com/taw00/dashcore-rpm/master/toddpkgs-dashcore-repo.el7.rpm
 #sudo yum clean expire-cache
 #sudo yum list | grep dashcore
 ```

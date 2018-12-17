@@ -133,7 +133,7 @@ Then...
 ```bash
 # My system is CentOS or RHEL
 sudo rpm --import https://keybase.io/toddwarner/key.asc
-sudo yum install -y https://raw.githubusercontent.com/taw00/dashcore-rpm/master/toddpkgs-dashcore-repo.centos.rpm
+sudo yum install -y https://raw.githubusercontent.com/taw00/dashcore-rpm/master/toddpkgs-dashcore-repo.el7.rpm
 ```
 
 That's it! You are now configured to install Dash Core through your package
