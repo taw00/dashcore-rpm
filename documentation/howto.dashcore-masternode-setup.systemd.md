@@ -26,7 +26,7 @@ _aka I want to run a Dash Masternode like a SysAdmin!_
   - [[1] Install Dash (and FirewallD)](#1-install-dash-and-firewalld)
   - [[2] Configure Dash Server to be a Full Node](#2-configure-dash-server-to-be-a-full-node)
   - [[3] Edit `/etc/dashcore/dash.conf` and finish](#3-edit-etcdashcoredashconf-and-finish)
-  - [[4] Restart the `dash` systemd service and enable it for restart upon boot](#4-restart-the-dash-systemd-service-and-enable-it-for-restart-upon-boot)
+  - [[4] Restart the `dashd` systemd service and enable it for restart upon boot](#4-restart-the-dash-systemd-service-and-enable-it-for-restart-upon-boot)
   - [[5] Configure firewall rules](#5-configure-firewall-rules)
   - [[6] ON WALLET: Add masternode IP address](#6-on-wallet-add-masternode-ip-address)
   - [[7] ON WALLET: Trigger a start of your masternode](#7-on-wallet-trigger-a-start-of-your-masternode)
@@ -451,7 +451,7 @@ masternodeprivkey=92yZY5b8bYD5G2Qh1C7Un6Tf3TG3mH4LUZha2rdj3QUDGHNg4W9
 externalip=93.184.216.34
 ```
 
-## [4] Restart the `dash` systemd service and enable it for restart upon boot
+## [4] Restart the `dashd` systemd service and enable it for restart upon boot
 
 ```
 sudo systemctl restart dashd
