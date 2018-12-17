@@ -37,7 +37,7 @@ Then...
 ```bash
 # My system is CentOS or RHEL
 sudo rpm --import https://keybase.io/toddwarner/key.asc
-sudo yum install -y https://raw.githubusercontent.com/taw00/dashcore-rpm/master/toddpkgs-dashcore-repo.centos.rpm
+sudo yum install -y https://raw.githubusercontent.com/taw00/dashcore-rpm/master/toddpkgs-dashcore-repo.el7.rpm
 sudo yum clean expire-cache
 sudo yum install -y dashcore-client
 dash-qt # Or browse your menuing system and look for "Dash"
