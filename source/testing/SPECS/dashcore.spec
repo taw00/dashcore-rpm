@@ -34,7 +34,7 @@ Summary: Peer-to-peer, payments-focused, fungible digital currency, protocol, an
 
 # ARCHIVE QUALIFIER - edit this if applies
 # ie. if the dev team includes things like rc3 in the filename
-%define archiveQualifier rc8
+%define archiveQualifier rc9
 %define includeArchiveQualifier 1
 
 # VERSION - edit this
@@ -46,7 +46,7 @@ Version: %{vermajor}.%{verminor}
 # package release, and potentially extrarel
 %define _pkgrel 1
 %if ! %{targetIsProduction}
-  %define _pkgrel 0.11
+  %define _pkgrel 0.12
 %endif
 
 # MINORBUMP - edit this
@@ -129,13 +129,8 @@ Source0: https://github.com/dashpay/dash/archive/v%{version}-%{archiveQualifier}
 Source0: https://github.com/dashpay/dash/archive/v%{version}/%{archivename}.tar.gz
 %endif
 
-%if %{targetIsProduction}
-#Source0: https://github.com/taw00/dashcore-rpm/blob/master/source/SOURCES/%%{archivename}.tar.gz
-Source1: https://github.com/taw00/dashcore-rpm/blob/master/source/SOURCES/%{srccontribtree}.tar.gz
-%else
-#Source0: https://github.com/taw00/dashcore-rpm/blob/master/source/testing/SOURCES/%%{archivename}.tar.gz
 Source1: https://github.com/taw00/dashcore-rpm/blob/master/source/testing/SOURCES/%{srccontribtree}.tar.gz
-%endif
+Patch0: https://github.com/taw00/dashcore-rpm/blob/master/source/testing/SOURCES/dash-0.13.0-remove-about-qt-menu-item.patch
 
 %global selinux_variants mls strict targeted
 %define testing_extras 0
@@ -415,15 +410,19 @@ Learn more at www.dash.org.
   exit 1
 %endif
 
-# process dashcore - Source0 - untars in:
+mkdir -p %{srcroot}
+# dashcore
 # {_builddir}/dashcore-0.12.3/dashcore-0.12.3.0/
 # ..or something like..
 # {_builddir}/dash-0.13.0/dash-0.13.0.0-rc1/
-mkdir -p %{srcroot}
 %setup -q -T -D -a 0 -n %{srcroot}
 # contributions
 # {_builddir}/dashcore-0.12.3/dashcore-0.12.3-contrib/
 %setup -q -T -D -a 1 -n %{srcroot}
+# patches
+%if %{targetIsProduction}
+%patch0 -p0
+%endif
 
 #t0dd: Prep SELinux policy -- NOT USED YET
 # Done here to prep for action taken in the %%build step
@@ -1025,6 +1024,13 @@ test -f %%{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
+* Tue Dec 18 2018 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-0.12.rc9.taw
+  - comment out About QT menu item in GUI client (for "production" builds)  
+    It's an implementation detail and shouldn't be there.
+
+* Mon Dec 17 2018 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-0.11.rc9.taw
+  - 0.13.0.0-rc9
+
 * Wed Dec 12 2018 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-0.11.rc8.taw
   - Added a wrapper script around dash-qt in order to work around  
     QT5+GNOME+Wayland issues. The wrapper sets environment variables.  
