@@ -218,32 +218,7 @@ If this is a masternode...
 sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf -datadir=/var/lib/dashcore masternode mnsync reset
 ```
 
-### [5] Masternode upgrades only:<br />Deploy new v0.13 configurations to support Deterministic Masternode Lists
-
-Be aware that your masternode's `dash.conf` file will include both a
-`masternodeprivkey` (same as previous masternodes) and a `masternodeblsprivkey`
-(new for 0.13 masternodes). For example, the masternode identifying settings
-for your masternode might look something like this...
-
-```
-masternode=1
-externalip=33.44.211.155
-# dashd v0.12 and v0.13...
-masternodeprivkey=91yqcjjd29KhmxP5hUwYdW82fY9GZ7LHPbXjtTWVxhSQNLZENKT
-# dashd v0.13...
-masternodeblsprivkey=3b1f82c0091eb7db1e2a6b74f8c2880ad594086893e32e53338e4b027fdb385e
-```
-
-Follow these instructions (it will determine your `masternodeblsprivkey` setting)...
-
-If your wallet is a Dash Core full node:
-<https://docs.dash.org/en/latest/masternodes/dip3-upgrade.html#masternode-registration-from-dash-core>
-
-If your wallet is managed by the Dash Masternode Tool (your collateral is in a hardware wallet):
-<https://docs.dash.org/en/latest/masternodes/dip3-upgrade.html#masternode-registration-from-dmt>
-
-
-### [6] Masternode upgrade only: Send start command from Wallet to Masternode
+### [5] Masternode upgrade only: Send start command from Wallet to Masternode
 
 *This only has to happen for major releases, like 0.12.3 to 0.13.0. You
 usually don't have send the restart command for minor releases (eg. 0.13.0 to
@@ -257,6 +232,13 @@ how...***
    * Masternode tab > right click on masternode > Start alias
    * Tools menu > Debug console > _masternode start-alias <MN Alias>_
    * From command line: _dash-cli masternode start-alias <MN Alias>_
+
+
+### [6] Masternode upgrades only:<br />Deploy new v0.13 configurations to support Deterministic Masternode Lists
+
+Follow these instructions (*"Software update"* is what you already just
+performed, so please skip to section *"Generate BLS key pair"*):
+<https://docs.dash.org/en/latest/masternodes/maintenance.html#generate-a-bls-key-pair>
 
 
 ### [7] Masternode upgrade in particular: Monitor your status
