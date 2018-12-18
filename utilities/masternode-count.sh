@@ -1,5 +1,8 @@
 #!/usr/bin/bash
 
+echo "DON'T USE THIS - VERY DATED"
+return
+
 # run this with 'watch -n15 . ./masternode-count.sh'
 
 # If systemd-managed...

@@ -26,7 +26,7 @@
 testnet=0
 ip=93.184.216.34_CHANGEME # Your masternode IP address
 protocol_mainnet=70210
-protocol_testnet=70212
+protocol_testnet=70213
 
 email_me=0
 email_from="burner-address@yahoo.com"
