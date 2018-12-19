@@ -222,7 +222,7 @@ sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf -datadir=/var/lib/dashco
 
 *This only has to happen for major releases, like 0.12.3 to 0.13.0. You
 usually don't have send the restart command for minor releases (eg. 0.13.0 to
-0.13.1). The protocol change from 0.12.3 to 0.13.0 was `70210` to `70212`*
+0.13.1). The protocol change from 0.12.3 to 0.13.0 was `70210` to `70213`*
 
 ***You have to restart the Masternode from your collateralizing wallet. Here's
 how...***
