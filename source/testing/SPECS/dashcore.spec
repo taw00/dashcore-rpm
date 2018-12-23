@@ -34,7 +34,7 @@ Summary: Peer-to-peer, payments-focused, fungible digital currency, protocol, an
 
 # ARCHIVE QUALIFIER - edit this if applies
 # ie. if the dev team includes things like rc3 in the filename
-%define archiveQualifier rc9
+%define archiveQualifier rc10
 %define includeArchiveQualifier 1
 
 # VERSION - edit this
@@ -1024,6 +1024,9 @@ test -f %%{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
+* Sat Dec 22 2018 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-0.12.rc10.taw
+  - 0.13.0.0-rc10
+
 * Tue Dec 18 2018 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-0.12.rc9.taw
   - comment out About QT menu item in GUI client (for "production" builds)  
     It's an implementation detail and shouldn't be there.
