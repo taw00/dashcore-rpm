@@ -34,7 +34,7 @@ Summary: Peer-to-peer, payments-focused, fungible digital currency, protocol, an
 
 # ARCHIVE QUALIFIER - edit this if applies
 # ie. if the dev team includes things like rc3 in the filename
-%define archiveQualifier rc10
+%define archiveQualifier rc11
 %define includeArchiveQualifier 1
 
 # VERSION - edit this
@@ -152,6 +152,7 @@ Patch0: https://github.com/taw00/dashcore-rpm/blob/master/source/testing/SOURCES
 # https://docs.fedoraproject.org/en-US/packaging-guidelines/#_pie
 %define _hardened_build 1
 
+# https://fedoraproject.org/wiki/Licensing:Main?rd=Licensing
 License: MIT
 URL: http://dash.org/
 # Note, for example, this will not build on ppc64le
@@ -160,54 +161,26 @@ ExclusiveArch: x86_64 i686 i386
 # As recommended by...
 # https://github.com/dashpay/dash/blob/develop/doc/build-unix.md
 BuildRequires: libtool make autoconf automake patch
-##t0dd: failed attempts to support EL7
-#%%if 0%%{?rhel}
-#%%{?scl:Requires: %%scl_runtime}
-#BuildRequires: centos-release-scl
-#BuildRequires: devtoolset-7 devtoolset-7-gcc-c++ cmake3
-#BuildRequires: python34
-#%%else
 BuildRequires: gcc-c++ >= 4.9 cmake libstdc++-static
 BuildRequires: python3
-#%%endif
 BuildRequires: libdb4-cxx-devel gettext
 # t0dd: added to avoid unneccessary fetching of libraries from the internet
 #       which is a packaging no-no
 BuildRequires: openssl-devel boost-devel libevent-devel
 BuildRequires: miniupnpc-devel ccache
+BuildRequires: python3-zmq zeromq-devel
 # t0dd: added to satisfy chia_bls.
 #       (note chia_bls is currently downloaded from github at the moment,
 #       sadly. see dash-0.13.0.0-rc1/depends/packages/chia_bls.mk)
 BuildRequires: gmp-devel
-
 # Other BuildRequires listed per package below
 
 #t0dd: SELinux stuff that I just haven't addressed yet...
 #BuildRequires: checkpolicy selinux-policy-devel selinux-policy-doc
 
-#t0dd: I will often add tree, vim-enhanced, and less for mock environment
-#      introspection
+# tree, vim-enhanced, and less for mock build environment introspection
 %if ! %{targetIsProduction}
 BuildRequires: tree vim-enhanced less findutils
-%endif
-
-# ZeroMQ not testable yet on RHEL due to lack of python3-zmq so
-# enable only for Fedora
-%if 0%{?fedora}
-BuildRequires: python3-zmq zeromq-devel
-%endif
-
-# Python tests still use OpenSSL for secp256k1, so we still need this to
-# run the testsuite on RHEL7, until Red Hat fixes OpenSSL on RHEL7. It has
-# already been fixed on Fedora. Bitcoin itself no longer needs OpenSSL for
-# secp256k1.
-# To support this, we are tracking https://linux.ringingliberty.com/bitcoin/el7/SRPMS/
-# ...aka: https://linux.ringingliberty.com/bitcoin/el$releasever/$basearch
-# We bring it in-house, rebuild, and supply at https://copr.fedorainfracloud.org/coprs/taw/dashcore-openssl-compat/
-# ...aka: https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-openssl-compat/epel-$releasever-$basearch/
-%if %{testing_extras} && 0%{?rhel}
-BuildRequires: openssl-compat-dashcore-libs cmake3
-BuildRequires: python34
 %endif
 
 
@@ -223,7 +196,6 @@ Requires(postun): firewalld-filesystem
 BuildRequires: libappstream-glib desktop-file-utils
 # t0dd: added to avoid unneccessary fetching of libraries from the internet
 #       which is a packaging no-no
-#BuildRequires: qt5-qtbase-devel qt5-linguist qt5-qttools-devel -- 3rd one likely unneeded
 BuildRequires: qrencode-devel protobuf-devel
 BuildRequires: qt5-qtbase-devel qt5-linguist
 %if 0%{?fedora}
@@ -750,7 +722,7 @@ install -D -m644 -p %{srccontribtree}/linux/firewalld/usr-lib-firewalld-services
 # https://fedoraproject.org/wiki/PackagingDrafts/ScriptletSnippets/Firewalld
 # the macro'ed reload is not working for some reason
 #%%firewalld_reload
-test -f %%{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
+test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 
 # Update the desktop database
 # https://fedoraproject.org/wiki/NewMIMESystem
@@ -762,12 +734,12 @@ test -f %%{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 /usr/bin/update-desktop-database &> /dev/null || :
 # the macro'ed reload is not working for some reason
 #%%firewalld_reload
-test -f %%{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
+test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 
 
 # dashcore-server
 %pre server
-# This is for the case that you run dash core as a service (systemctl start dash)
+# This is for the case that you run dash core as a service (systemctl start dashd)
 # _sharedstatedir is /var/lib
 getent group dashcore >/dev/null || groupadd -r dashcore
 getent passwd dashcore >/dev/null || useradd -r -g dashcore -d %{_sharedstatedir}/dashcore -s /sbin/nologin -c "System user 'dashcore' to isolate Dash Core execution" dashcore
@@ -818,7 +790,7 @@ exit 0
 # https://fedoraproject.org/wiki/PackagingDrafts/ScriptletSnippets/Firewalld
 # the macro'ed reload is not working for some reason
 #%%firewalld_reload
-test -f %%{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
+test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 
 # Not using for now.
 #t0dd for selinuxvariant in %%{selinux_variants}
@@ -853,7 +825,7 @@ test -f %%{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 %systemd_postun dashd.service
 # the macro'ed reload is not working for some reason
 #%%firewalld_reload
-test -f %%{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
+test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 
 # Not using for now.
 #t0dd# Do this upon uninstall (not upgrades)
@@ -1024,6 +996,9 @@ test -f %%{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
+* Sat Dec 22 2018 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-0.12.rc11.taw
+  - 0.13.0.0-rc11
+
 * Sat Dec 22 2018 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-0.12.rc10.taw
   - 0.13.0.0-rc10
 
