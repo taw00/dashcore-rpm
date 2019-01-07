@@ -70,7 +70,7 @@ These packages have been used by myself and others for years at this point, but
 in the end, users must assume the risks associated to both community built and
 deployed packages and, of course, any cryptocurrency funds managed by this
 software. I.e., These will probably work for you, but I can't be liable for any
-lose of funds or damages associated to this software.
+loss of funds or damages associated to this software.
 
 ### Send comment and feedback - <https://keybase.io/toddwarner>
 
@@ -82,6 +82,6 @@ _Come say hello to me. I am **t0dd** or **taw** in various forums:
 [/r/dashpay/](https://www.reddit.com/r/dashpay) on Reddit._
 
 _If you like my Dash stuff, also check out my Zcash builds which I maintain for
-the [Zcash](https://z.cash) Project: <https://github.com/taw00/zcash-rpms>. I
+the [Zcash](https://z.cash) Project: <https://github.com/taw00/zcash-rpm>. I
 am a huge fan of both endeavors; don't troll me. :)_
 
