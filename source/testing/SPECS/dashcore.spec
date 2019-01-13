@@ -153,6 +153,7 @@ Patch0: https://github.com/taw00/dashcore-rpm/blob/master/source/testing/SOURCES
 %define _hardened_build 1
 
 # https://fedoraproject.org/wiki/Licensing:Main?rd=Licensing
+# https://spdx.org/licenses/
 License: MIT
 URL: http://dash.org/
 # Note, for example, this will not build on ppc64le
