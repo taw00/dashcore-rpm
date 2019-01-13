@@ -11,22 +11,17 @@ _aka I want to run a Dash Masternode like a SysAdmin!_
 > to run it as a container. But that is beyond the scope of this document.
 >
 > These instructions are specific to the Red Hat-family of linuxes.
->
-> These instructions should work for all supported linuxes found at the link
-> above. As of this writing that is Fedora Linux 24 and 25, CentOS 7, and RHEL 7.
-> I did most of my testing on Fedora 24. I tested with the masternode running on a
-> local virtual instance as well as a VPS cloud instance.
 
 **Table of Content**
 
 <!-- TOC START min:1 max:3 link:true update:true -->
-- [HowTo: Dash Masternode as SystemD Service<br />_...on Fedora, CentOS or Red Hat Enterprise Linux_](#howto-dash-masternode-as-systemd-servicebr-_on-fedora-centos-or-red-hat-enterprise-linux_)
+- [HowTo: Dash Masternode as SystemD Service<br />_...on Fedora, CentOS or Red Hat Enterprise Linux_](#howto-dash-masternode-as-systemd-service_on-fedora-centos-or-red-hat-enterprise-linux_)
   - [FIRST: Set up your collateral-bearing wallet](#first-set-up-your-collateral-bearing-wallet)
   - [[0] Install the operating system](#0-install-the-operating-system)
   - [[1] Install Dash (and FirewallD)](#1-install-dash-and-firewalld)
   - [[2] Configure Dash Server to be a Full Node](#2-configure-dash-server-to-be-a-full-node)
   - [[3] Edit `/etc/dashcore/dash.conf` and finish](#3-edit-etcdashcoredashconf-and-finish)
-  - [[4] Restart the `dashd` systemd service and enable it for restart upon boot](#4-restart-the-dash-systemd-service-and-enable-it-for-restart-upon-boot)
+  - [[4] Restart the `dashd` systemd service and enable it for restart upon boot](#4-restart-the-dashd-systemd-service-and-enable-it-for-restart-upon-boot)
   - [[5] Configure firewall rules](#5-configure-firewall-rules)
   - [[6] ON WALLET: Add masternode IP address](#6-on-wallet-add-masternode-ip-address)
   - [[7] ON WALLET: Trigger a start of your masternode](#7-on-wallet-trigger-a-start-of-your-masternode)
@@ -38,6 +33,7 @@ _aka I want to run a Dash Masternode like a SysAdmin!_
   - [Email me when my Masternode goes from "ENABLED" state to something else](#email-me-when-my-masternode-goes-from-enabled-state-to-something-else)
   - [Super fancy crontab settings](#super-fancy-crontab-settings)
   - [Improve SSD Write & Delete Performance for Linux Systems by Enabling ATA TRIM](#improve-ssd-write--delete-performance-for-linux-systems-by-enabling-ata-trim)
+    - [Good luck! Comments and Feedback...](#good-luck-comments-and-feedback)
 
 <!-- TOC END -->
 
@@ -83,8 +79,7 @@ The objectives are straight-forward:
   - Create an account and login.
   - Click the ( + ) button.
   - Choose: 64 bit OS and Fedora
-  - Choose: 2048MB RAM, 2CPU 45GB SSD (you may be able to have a cheaper
-    offering limp along, but I don't recommend it.
+  - Choose: 2048MB RAM, 2CPU 45GB SSD (consider a beefier system)
   - Set up SSH keys. It will make your life more pleasant.
     [Vultr.com provides pretty solid instruction](https://www.vultr.com/docs/how-do-i-generate-ssh-keys)
     on this process.
@@ -128,12 +123,14 @@ though.
 # As root...
 sudo su -
 
+# Each "bs" setting below corresponds to a swapfile size based on a multiple.
+# I.e., If you want a swapfile 2-times the size of your RAM, choose 2048:
 #bs=512  # 1/2 times the size of RAM
 #bs=1024 # One times the size of RAM
-bs=2048 # Twice the size of RAM -- recommended if you are in doubt
+bs=2048  # Twice the size of RAM -- recommended if you are in doubt
 #bs=1536 # 1.5 times the size of RAM
 
-# Create a swap file 2x size as your existing RAM (TOTAL_MEM * 1024 * 2)
+# Create the swapfile
 TOTAL_MEM=$(free -k|grep Mem|awk '{print $2}')
 dd if=/dev/zero of=/swapfile bs=$bs count=$TOTAL_MEM
 chmod 0600 /swapfile
@@ -208,7 +205,7 @@ you can ssh into the system without a password from your desktop system.
 > Choose a difficult scrambled password for both `root` and your `mnuser` user.
 > Then ensure ssh keys are set up so you can ssh to the instance without having
 > to type passwords. And finally, edit the `/etc/sudoers` configuration file
-> and uncomment the `%/` line that includes the `NOPASSWD` qualifier. This
+> and uncomment the `%wheel` line that includes the `NOPASSWD` qualifier. This
 > will allow you to `sudo` as the `mnuser` user without having to cut-n-paste a
 > password all the time.
 
@@ -316,7 +313,7 @@ explicitly include them on the commandline when we perform actions.
 
 Log in as the normal user, `mnuser` in this example.
 
-With your favorited editor &mdash; some use `nano`, I use `vim` &mdash; open up
+With your favorite editor &mdash; some use `nano`, I use `vim` &mdash; open up
 `/etc/dashcore/dash.conf` and add the starting template shown below....
 
 ```
@@ -697,7 +694,7 @@ those emails a couple minutes to get to you (email is slow).
 That's it. Not so hard, right?
 
 
-## Email me when my Masternode goes from "ENABLED" state to something else
+## Email the admin when the Masternode's status changes from "ENABLED"
 
 Not written yet. Stay tuned.
 
@@ -737,10 +734,3 @@ Because of the way SSDs (Solid State Drives) work, saving new data can impact pe
 If, on the other hand, you can alert the operating system that it needs to wipe deleted data in the background, writes (and deletes) can improve in performance.
 
 To learn more, follow this link: <https://github.com/taw00/howto/blob/master/howto-enable-ssd-trim-for-linux.md>
-
-
----
-
-### Good luck! Comments and Feedback...
-
-Got a dash of feedback? Send it my way: <https://keybase.io/toddwarner>
