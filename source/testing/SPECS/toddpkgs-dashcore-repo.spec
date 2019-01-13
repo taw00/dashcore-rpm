@@ -5,7 +5,7 @@ Summary:    Repository configuration to enable management of dashcore packages (
 %define targetIsProduction 0
 
 # RELEASE
-%define _rel 3.1
+%define _rel 4.1
 %define _snapinfo testing
 %define _minorbump taw
 %if %{targetIsProduction}
@@ -37,10 +37,15 @@ Fedora Linux and CentOS and RHEL.
 Install this, then...
 
 * For fedora:
-  sudo dnf install dashcore -y --refresh
+  sudo dnf list | dashcore
+  sudo dnf install dashcore-client -y --refresh
+  ...or...
+  sudo dnf install dashcore-server -y --refresh
 * For CentOS or RHEL:
   sudo yum clean expire-cache
-  sudo yum install dashcore -y
+  sudo yum install dashcore-client -y
+  ...or...
+  sudo yum install dashcore-server -y
 
 You can edit /etc/yum.repos.d/dashcore.repo (as root) and 'enable=1' or '0'
 whether you want the stable or the testing repositories.
@@ -91,6 +96,10 @@ install -D -m644 todd-694673ED-public-2030-01-04.2016-11-07.asc %{buildroot}%{_s
 
 
 %changelog
+* Mon Jan 7 2019 Todd Warner <t0dd_at_protonmail.com> 1.0-4.1.testing.taw
+  - typo in the instructions in the specfile - doh!
+
+* Mon Dec 17 2018 Todd Warner <t0dd_at_protonmail.com> 1.0-4.taw
 * Mon Dec 17 2018 Todd Warner <t0dd_at_protonmail.com> 1.0-3.1.testing.taw
   - enabled_metadata needs to be set to 0 because COPR repos do not managed  
     appstream metadata correctly  
