@@ -21,24 +21,22 @@ Name: %{_name_dcs}
 Summary: A required helper agent for Dash Core Masternodes
 
 %define targetIsProduction 0
-%define includeMinorbump 1
 
 
-# VERSION - edit this
+# VERSION
 # eg. 1.3.0
 %define vermajor 1.3
 %define verminor 0
 Version: %{vermajor}.%{verminor}
 
-# RELEASE - edit this
-%if %{targetIsProduction}
-  %define _pkgrel 2
-%else
-  %define _pkgrel 1.1
+# RELEASE
+%define _pkgrel 3
+%if ! %{targetIsProduction}
+  %define _pkgrel 2.1
 %endif
 
-# MINORBUMP - edit this
-%define minorbump taw0
+# MINORBUMP
+%define minorbump taw
 
 #
 # Build the release string (don't edit this)
@@ -51,6 +49,7 @@ Version: %{vermajor}.%{verminor}
 
 # pkgrel will also be defined, snapinfo and minorbump may not be
 %define _release %{_pkgrel}
+%define includeMinorbump 1
 %if ! %{includeMinorbump}
   %undefine minorbump
 %endif
@@ -333,6 +332,10 @@ exit 0
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
+* Mon Jan 14 2018 Todd Warner <t0dd_at_protonmail.com> 1.3.0-2.1.testing.taw
+  - some minor-ish specfile cleanup
+
+* Mon Dec 03 2018 Todd Warner <t0dd_at_protonmail.com> 1.3.0-2.taw
 * Mon Dec 03 2018 Todd Warner <t0dd_at_protonmail.com> 1.3.0-1.1.testing.taw
   - specfile: fixed the source URLs
   - specfile: employed trickery to mute rpmlint's griping about /usr/lib
