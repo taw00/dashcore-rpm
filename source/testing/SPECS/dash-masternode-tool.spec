@@ -35,85 +35,60 @@ Summary: Manage and collateralize a Dash Masternode with a hardware wallet
 
 %define targetIsProduction 0
 %define sourceIsPrebuilt 0
-%define includeMinorbump 1
 
 # Package (RPM) name-version-release.
 # <name>-<vermajor.<verminor>-<pkgrel>[.<extraver>][.<snapinfo>].DIST[.<minorbump>]
 
 # VERSION
 %define vermajor 0.9
-%define verminor 20
+%define verminor 21
 Version: %{vermajor}.%{verminor}
 
 # RELEASE
 # if production - "targetIsProduction 1"
-%define pkgrel_prod 3
+%define pkgrel_prod 1
+%if ! %{targetIsProduction}
+  %define _pkgrel 0.1
+%endif
 
-# if pre-production - "targetIsProduction 0"
-# eg. 3.1.testing -- pkgrel_preprod should always equal pkgrel_prod-1
-%define pkgrel_preprod 2
-%define extraver_preprod 1
+# MINORBUMP
+# (for very small or rapid iterations)
+%define minorbump taw
+
+#
+# Build the release string - don't edit this
+#
+
 %define snapinfo testing
-
-# if includeMinorbump
-%define minorbump taw0
-
-# if sourceIsPrebuilt (rp=repackaged)
-# eg. 1.rp (prod) or 0.6.testing.rp (pre-prod)
-%define snapinfo_rp rp
-
-# Building the release string (don't edit this)...
-
-# release numbers
-%undefine _relbuilder_pt1
 %if %{targetIsProduction}
-  %undefine snapinfo
-  %define _pkgrel %{pkgrel_prod}
-  %define _relbuilder_pt1 %{pkgrel_prod}
-%else
-  %define _pkgrel %{pkgrel_preprod}
-  %define _extraver %{extraver_preprod}
-  %define _relbuilder_pt1 %{_pkgrel}.%{_extraver}
-%endif
-
-# snapinfo and repackage (pre-built) qualifier
-%undefine _relbuilder_pt2
-%if 0%{?sourceIsPrebuilt:1}
-  %if ! %{sourceIsPrebuilt}
-    %undefine snapinfo_rp
-  %endif
-%else
-  %undefine snapinfo_rp
-%endif
-%if 0%{?snapinfo_rp:1}
-  %if 0%{?snapinfo:1}
-    %define _relbuilder_pt2 %{snapinfo}.%{snapinfo_rp}
+  %if %{sourceIsPrebuilt}
+    %define snapinfo rp
   %else
-    %define _relbuilder_pt2 %{snapinfo_rp}
+    %undefine snapinfo
   %endif
 %else
-  %if 0%{?snapinfo:1}
-    %define _relbuilder_pt2 %{snapinfo}
+  %if %{sourceIsPrebuilt}
+    %define snapinfo testing.rp
   %endif
 %endif
 
-# put it all together
-# pt1 will always be defined. pt2 and minorbump may not be
-%define _release %{_relbuilder_pt1}
+# pkgrel will be defined, snapinfo and minorbump may not be
+%define _release %{_pkgrel}
+%define includeMinorbump 1
 %if ! %{includeMinorbump}
   %undefine minorbump
 %endif
-%if 0%{?_relbuilder_pt2:1}
+%if 0%{?snapinfo:1}
   %if 0%{?minorbump:1}
-    %define _release %{_relbuilder_pt1}.%{_relbuilder_pt2}%{?dist}.%{minorbump}
+    %define _release %{_pkgrel}.%{snapinfo}%{?dist}.%{minorbump}
   %else
-    %define _release %{_relbuilder_pt1}.%{_relbuilder_pt2}%{?dist}
+    %define _release %{_pkgrel}.%{snapinfo}%{?dist}
   %endif
 %else
   %if 0%{?minorbump:1}
-    %define _release %{_relbuilder_pt1}%{?dist}.%{minorbump}
+    %define _release %{_pkgrel}%{?dist}.%{minorbump}
   %else
-    %define _release %{_relbuilder_pt1}%{?dist}
+    %define _release %{_pkgrel}%{?dist}
   %endif
 %endif
 
@@ -132,6 +107,8 @@ Release: %{_release}
 %define binarytree %{_name2}_%{version}.linux
 %define btchip_python_version 0.1.26
 %define srccodetree2 btchip-python-%{btchip_python_version}
+%define bls_signature_version 20181116
+%define srccodetree3 bls-signatures-%{bls_signature_version}
 %define srccontribtree %{name}-%{vermajor}-contrib
 
 # dash-masternode-tool-0.9.z
@@ -146,53 +123,42 @@ Source1: https://github.com/taw00/dashcore-rpm/blob/master/source/SOURCES/%{srcc
 %else
 Source1: https://github.com/taw00/dashcore-rpm/blob/master/source/testing/SOURCES/%{srccontribtree}.tar.gz
 %endif
-# btchip-python-0.1.z
+# btchip-python-...
 Source2: https://github.com/Bertrand256/btchip-python/archive/v%{btchip_python_version}/%{srccodetree2}.tar.gz
+# bls-signatures-...
+Source3: https://github.com/Bertrand256/bls-signatures/archive/master/%{srccodetree3}.tar.gz
 
 %if ! %{sourceIsPrebuilt}
-# Most of the time, the build system can figure out the requires.
-# But if you need something specific...
 Requires: zenity
-# BuildRequires indicates everything you need to build the RPM
-BuildRequires: python3-devel python3-virtualenv libusbx-devel libudev-devel
+BuildRequires: python3-devel python3-virtualenv
+BuildRequires: libusbx-devel libudev-devel
+BuildRequires: gcc-c++ cmake
+BuildRequires: python3-qt5-base
+BuildRequires: git
 %endif
 
-# For debugging purposes...
-BuildRequires: tree
-# So I can introspect the mock build environment...
-#BuildRequires: tree vim-enhanced less
+# tree, vim-enhanced, and less for mock build environment introspection
+%if ! %{targetIsProduction}
+BuildRequires: tree vim-enhanced less findutils
+%endif
+
 # Required for desktop applications (validation of .desktop and .xml files)
 BuildRequires: desktop-file-utils libappstream-glib
 
-# CentOS/RHEL/EPEL can't do "Suggests:"
-%if 0%{?fedora:1}
-#Suggests:
-%endif
-%if 0%{?rhel:1}
-  %{error:"CENTOS and RHEL are not supported."}
+%if 0%{?rhel} && 0%{?rhel} < 8
+  %{error: "EL7-based platforms (CentOS7/RHEL7) are not supportable build targets."}
 %endif
 
-# obsolete fictitious previous version of package after a rename
-#Provides: spec-pattern = 0.9
-#Obsoletes: spec-pattern < 0.9
 
 License: MIT
 URL: https://github.com/taw00/dashcore-rpm
-# Group is deprecated. Don't use it. Left here as a reminder...
-# https://fedoraproject.org/wiki/RPMGroups
-#Group: Unspecified
-# Note, for example, this will not build on ppc64le or any 32bit machines or...
 ExclusiveArch: x86_64
 
 
-# If you comment out "debug_package" RPM will create additional RPMs that can
-# be used for debugging purposes. I am not an expert at this, BUT ".build_ids"
-# are associated to debug packages, and I have lately run into packaging
-# conflicts because of them. This is a topic I can't share a whole lot of
-# wisdom about, but for now... I turn all that off.
-#
 # How debug info and build_ids managed (I only halfway understand this):
 # https://github.com/rpm-software-management/rpm/blob/master/macros.in
+# I turn everything off by default avoid any packaging conflicts. This
+# is not correct packaging, but... it's what I do for now.
 %define debug_package %{nil}
 %define _unique_build_ids 1
 %define _build_id_links alldebug
@@ -227,31 +193,44 @@ Supported hardware wallets: Trezor (model One and T), KeepKey, Ledger Nano S
 # I create a root dir and place the source and contribution trees under it.
 # Extracted source tree structure (extracted in .../BUILD)
 #   srcroot               dash-masternode-tool-0.9
-#      \_srccodetree        \_dash-masternode-tool-0.9.18
-#      \_srccodetree2       \_btchip-python-0.1.21
+#      \_srccodetree        \_dash-masternode-tool-0.9.21
+#      \_srccodetree2       \_btchip-python-SOME_VERSION
+#      \_srccodetree3       \_bls-signatures-SOME_VERSION
 #      \_srccontribtree     \_dash-masternode-tool-0.9-contrib
 
-mkdir %{srcroot}
+mkdir -p %{srcroot}
 # sourcecode or DashMasternodeTool (binary)
 %setup -q -T -D -a 0 -n %{srcroot}
 # contrib
 %setup -q -T -D -a 1 -n %{srcroot}
 # btchip-python
 %setup -q -T -D -a 2 -n %{srcroot}
+# bls-signatures
+%setup -q -T -D -a 3 -n %{srcroot}
+
+# For debugging purposes...
+cd ../.. ; /usr/bin/tree -df -L 2 BUILD ; cd -
 
 %if ! %{sourceIsPrebuilt}
+  # My modified requirements a tad since we use the native QT libraries
+  # and include btchip-python and bls-signatures (blspy)
   cp %{srccontribtree}/build/requirements.txt %{srccodetree}/
-  
-  /usr/bin/virtualenv-3 -p python3 venv \
-   && . venv/bin/activate \
-   && pip3 install --upgrade setuptools \
-   && pip3 install ./%{srccodetree2}
+
+  [ -f /usr/bin/virtualenv-3 ] && /usr/bin/virtualenv-3 -p python3 ./venv || /usr/bin/virtualenv -p python3 ./venv
+  . ./venv/bin/activate
+
+  # Is it pip3? or pip? and does Fedora version matter?
+  ./venv/bin/pip3 install --upgrade setuptools
+  ./venv/bin/pip3 install ./%{srccodetree2}
+  # Won't build my cached version of bls-signatures for some reason.
+  # Will troubleshoot later -t0dd
+  #./venv/bin/pip3 install ./%{srccodetree3}
   
   cd %{srccodetree}
-  pip3 install -r requirements.txt
+  ../venv/bin/pip3 install -r requirements.txt
   cd ..
 %else
-  mkdir %{srccodetree}
+  mkdir -p %{srccodetree}
   mv DashMasternodeTool %{srccodetree}
 %endif
 
@@ -262,9 +241,6 @@ cd ../.. ; /usr/bin/tree -df -L 2 BUILD ; cd -
 
 %build
 # This section starts us in directory {_builddir}/{srcroot}
-
-## Man Pages - not used as of yet
-#gzip %%{buildroot}%%{_mandir}/man1/*.1
 
 %if ! %{sourceIsPrebuilt}
   cd %{srccodetree}
@@ -427,20 +403,34 @@ cd ../../
 
 
 %changelog
-* Sun Aug 12 2018 Todd Warner <todd_at_protonmail.com> 0.9.20-2.1.testing.taw
+* Sun Jan 13 2019 Todd Warner <t0dd_at_protonmail.com> 0.9.21-0.1.testing.taw
+  - update in support of dashcore 0.13
+
+* Wed Nov 14 2018 Todd Warner <t0dd_at_protonmail.com> 0.9.20-3.1.testing.taw
+  - updated for Fedora 29...
+  - BuildRequires for virtualenv:  
+    RHEL/CentOS: /usr/bin/virtualenv-3  (EL7 not supported anyway)  
+    Fedora: python3-virtualenv
+  - Executable used for virtualenv:
+    RHEL/CentOS: /usr/bin/virtualenv-3  (EL7 not supported anyway)  
+    Fedora < 29: /usr/bin/virtualenv-3  
+    Fedora 29+: /usr/bin/virtualenv  
+
+* Sun Aug 12 2018 Todd Warner <t0dd_at_protonmail.com> 0.9.20-3.taw
+* Sun Aug 12 2018 Todd Warner <t0dd_at_protonmail.com> 0.9.20-2.1.testing.taw
   - attempting build from source again
   - added README.md back in
 
-* Sun Aug 12 2018 Todd Warner <todd_at_protonmail.com> 0.9.20-2.rp.taw
-* Sun Aug 12 2018 Todd Warner <todd_at_protonmail.com> 0.9.20-1.1.testing.rp.taw
+* Sun Aug 12 2018 Todd Warner <t0dd_at_protonmail.com> 0.9.20-2.rp.taw
+* Sun Aug 12 2018 Todd Warner <t0dd_at_protonmail.com> 0.9.20-1.1.testing.rp.taw
   - repackaging binary build from upstream until I figure out why I am  
     getting a missing "coins.json" error.
 
-* Tue Jul 03 2018 Todd Warner <todd_at_protonmail.com> 0.9.20-1.taw
-* Tue Jul 03 2018 Todd Warner <todd_at_protonmail.com> 0.9.20-0.1.testing.taw
+* Tue Jul 03 2018 Todd Warner <t0dd_at_protonmail.com> 0.9.20-1.taw
+* Tue Jul 03 2018 Todd Warner <t0dd_at_protonmail.com> 0.9.20-0.1.testing.taw
   - dashcore v12.3 support (protocol 70210)
 
-* Tue Jun 5 2018 Todd Warner <todd_at_protonmail.com> 0.9.19-0.1.testing.taw
+* Tue Jun 5 2018 Todd Warner <t0dd_at_protonmail.com> 0.9.19-0.1.testing.taw
   - Updated upstream source: v0.9.19
   - Updated branding for desktop icons.
   - Fixed SourceN URLs to be more RPM standards compliant.
