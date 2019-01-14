@@ -1,3 +1,9 @@
+**NOTE:** version 0.13.0 [has been
+released](https://blog.dash.org/dash-core-v0-13-on-mainnet-dc9609b0f6f9). RPM
+builds are available from the appropriate repositories, but the documentation
+here is a bit behind. If you know what you are doing, carry on. If not... wait
+for this note to disappear for the documentation to be updated.
+
 # Overview: Dash Masternode<br />_...on Fedora, CentOS or Red Hat Enterprise Linux_
 
 ***Manage a Dash Masternode like a systems administrator.***

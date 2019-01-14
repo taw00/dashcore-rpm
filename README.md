@@ -1,5 +1,11 @@
 # Dash for Fedora, CentOS, and Red Hat Enterprise Linux<br />_...wallet, node, and masternode_
 
+**NOTE:** version 0.13.0 [has been
+released](https://blog.dash.org/dash-core-v0-13-on-mainnet-dc9609b0f6f9). RPM
+builds are available from the appropriate repositories, but the documentation
+here is a bit behind. If you know what you are doing, carry on. If not... wait
+for this note to disappear for the documentation to be updated.
+
 ---
 
 **Important notice (as of 2018-11-28):<br />EL7 and Fedora Linux 27 users need
