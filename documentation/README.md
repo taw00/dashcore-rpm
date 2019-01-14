@@ -1,7 +1,7 @@
 # Overview: Dash Masternode<br />_...on Fedora, CentOS or Red Hat Enterprise Linux_
 
 ***Manage a Dash Masternode like a systems administrator.***
- 
+
 > The objective of this set of documents is to illustrate how you can operate a
 > Dash Masternode. This requires setting up a collateral-bearing wallet on one
 > system and a full node configured to be a masternode on a another. Using this
@@ -23,7 +23,7 @@
 * Updating: [How to Update your Wallet, Node, or Masternode](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.update-a-wallet-node-or-masternode.md)
 * Upgrading Major Versions: [TESTING ONLY: How to Upgrade from Version 0.12.3 to 0.13.0](https://github.com/taw00/dashcore-rpm/blob/master/documentation/testing/howto.dashcore-upgrade-from-0.12.3-to-0.13.0.md)
 * Upgrading OS: [How to Upgrade Your Masternode's Operating System](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.upgrade-the-operating-system.md)
-                                                                    
+
 
 
 &nbsp;
@@ -79,8 +79,10 @@ There are two Dash networks. Two blockchains, separate sets of miners, wallets,
 nodes, and masternodes. Testnet exists to as a proving grounds for new code and
 new ideas. You too can use it to get familiar with Dash and how all these
 pieces fit together. It uses freely available testnet Dash (tDash) which can be
-acquired [here](https://test.explorer.dash.org). Mainnet is the network that
-secures, mines, and transacts real Dash of real value.
+acquired
+[here](https://docs.dash.org/en/stable/developers/testnet.html#faucets).
+Mainnet is the network that secures, mines, and transacts real Dash of real
+value.
 
 You can actually switch freely between Mainnet and Testnet. It's almost like a
 shadow network. Always there... just beyond our ability to see clearly... ;)
