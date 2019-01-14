@@ -28,114 +28,88 @@
 %define _name_d dash
 %define _name_dc dashcore
 Name: %{_name_dc}
-Summary: Peer-to-peer, privacy-centric, digital currency
+Summary: Peer-to-peer, payments-focused, fungible digital currency, protocol, and platform for payments and decentralized applications
 
 %define targetIsProduction 1
-%define includeMinorbump 1
 
+# ARCHIVE QUALIFIER - edit this if applies
 # ie. if the dev team includes things like rc3 in the filename
-%define archiveQualifier rc5
+%define archiveQualifier rc11
 %define includeArchiveQualifier 0
 
 # VERSION
-%define vermajor 0.12.3
-%define verminor 3
+%define vermajor 0.13.0
+%define verminor 0
 Version: %{vermajor}.%{verminor}
 
-# dashcore source tarball file basename
-# the archive name and directory tree can have some variances
-# (dashcore, dash, somename-vvvv-rc2, etc)
-# - github convention - v0.12.3.0 or dash-0.12.3.0 - e.g. dash-0.12.3.0.tar.gz
-%define _archivename_github1 v%{version}
-%define _archivename_github2 %{_name_d}-%{version}
-%define _archivename_alt1 %{_name_dc}-%{vermajor}
-%if %{includeArchiveQualifier}
-  %define _archivename_github1 v%{version}-%{archiveQualifier}
-  %define _archivename_github2 %{_name_d}-%{version}-%{archiveQualifier}
-  %define _archivename_alt1 %{_name_dc}-%{vermajor}-%{archiveQualifier}
-%endif
-%define archivename %{_archivename_github2}
-%define srccodetree %{_archivename_github2}
-
 # RELEASE
-# if production - "targetIsProduction 1"
-%define pkgrel_prod 1
+# package release, and potentially extrarel
+%define _pkgrel 1
+%if ! %{targetIsProduction}
+  %define _pkgrel 0.14
+%endif
 
-# if pre-production - "targetIsProduction 0"
-# eg. 0.3.testing.201804 -- pkgrel_preprod should always equal pkgrel_prod-1
-%define pkgrel_preprod 0
-%define extraver_preprod 1
+# MINORBUMP
+# (for very small or rapid iterations)
+%define minorbump taw
 
-%define _snapinfo testing
-%define snapinfo %{_snapinfo}
+#
+# Build the release string - don't edit this
+#
+
+%define snapinfo testing
+%if %{targetIsProduction}
+  %undefine snapinfo
+%endif
 %if %{includeArchiveQualifier}
   %define snapinfo %{archiveQualifier}
 %endif
 
-# if includeMinorbump
-%define minorbump taw0
-
-#
-# Build the release string (don't edit this)
-#
-
-# release numbers
-%undefine _relbuilder_pt1
-%if %{targetIsProduction}
-  %define _pkgrel %{pkgrel_prod}
-  %define _relbuilder_pt1 %{pkgrel_prod}
-%else
-  %define _pkgrel %{pkgrel_preprod}
-  %define _extraver %{extraver_preprod}
-  %define _relbuilder_pt1 %{_pkgrel}.%{_extraver}
-%endif
-
-# snapinfo and repackage (pre-built) indicator
-%undefine _relbuilder_pt2
-%if %{targetIsProduction}
-  %undefine snapinfo
-%endif
-%if 0%{?sourceIsPrebuilt:1}
-  %if ! %{sourceIsPrebuilt}
-    %undefine snapinfo_rp
-  %endif
-%else
-  %undefine snapinfo_rp
-%endif
-%if 0%{?snapinfo_rp:1}
-  %if 0%{?snapinfo:1}
-    %define _relbuilder_pt2 %{snapinfo}.%{snapinfo_rp}
-  %else
-    %define _relbuilder_pt2 %{snapinfo_rp}
-  %endif
-%else
-  %if 0%{?snapinfo:1}
-    %define _relbuilder_pt2 %{snapinfo}
-  %endif
-%endif
-
-# put it all together
-# pt1 will always be defined. pt2 and minorbump may not be
-%define _release %{_relbuilder_pt1}
+# pkgrel will be defined, snapinfo and minorbump may not be
+%define _release %{_pkgrel}
+%define includeMinorbump 1
 %if ! %{includeMinorbump}
   %undefine minorbump
 %endif
-%if 0%{?_relbuilder_pt2:1}
+%if 0%{?snapinfo:1}
   %if 0%{?minorbump:1}
-    %define _release %{_relbuilder_pt1}.%{_relbuilder_pt2}%{?dist}.%{minorbump}
+    %define _release %{_pkgrel}.%{snapinfo}%{?dist}.%{minorbump}
   %else
-    %define _release %{_relbuilder_pt1}.%{_relbuilder_pt2}%{?dist}
+    %define _release %{_pkgrel}.%{snapinfo}%{?dist}
   %endif
 %else
   %if 0%{?minorbump:1}
-    %define _release %{_relbuilder_pt1}%{?dist}.%{minorbump}
+    %define _release %{_pkgrel}%{?dist}.%{minorbump}
   %else
-    %define _release %{_relbuilder_pt1}%{?dist}
+    %define _release %{_pkgrel}%{?dist}
   %endif
 %endif
 
 Release: %{_release}
 # ----------- end of release building section
+
+# dashcore source tarball file basename
+# the archive name and directory tree can have some variances
+# v0.13.0.0.tar.gz
+%define _archivename_alt1 v%{version}
+# dash-0.13.0.0.tar.gz
+%define _archivename_alt2 %{_name_d}-%{version}
+# dashcore-0.13.0.tar.gz
+%define _archivename_alt3 %{_name_dc}-%{vermajor}
+# dashcore-0.13.0.0.tar.gz
+%define _archivename_alt4 %{_name_dc}-%{version}
+
+# our selection for this build - edit this
+%define _archivename %{_archivename_alt2}
+%define _srccodetree %{_archivename_alt2}
+
+%if %{includeArchiveQualifier}
+  %define archivename %{_archivename}-%{archiveQualifier}
+  %define srccodetree %{_srccodetree}-%{archiveQualifier}
+%else
+  %define archivename %{_archivename}
+  %define srccodetree %{_srccodetree}
+%endif
 
 # Extracted source tree structure (extracted in .../BUILD)
 #   srcroot               dashcore-0.12.3
@@ -155,12 +129,10 @@ Source0: https://github.com/dashpay/dash/archive/v%{version}-%{archiveQualifier}
 Source0: https://github.com/dashpay/dash/archive/v%{version}/%{archivename}.tar.gz
 %endif
 
-%if %{targetIsProduction}
-#Source0: https://github.com/taw00/dashcore-rpm/blob/master/source/SOURCES/%%{archivename}.tar.gz
-Source1: https://github.com/taw00/dashcore-rpm/blob/master/source/SOURCES/%{srccontribtree}.tar.gz
-%else
-#Source0: https://github.com/taw00/dashcore-rpm/blob/master/source/testing/SOURCES/%%{archivename}.tar.gz
 Source1: https://github.com/taw00/dashcore-rpm/blob/master/source/testing/SOURCES/%{srccontribtree}.tar.gz
+# patches
+%if %{targetIsProduction}
+Patch0: https://github.com/taw00/dashcore-rpm/blob/master/source/testing/SOURCES/dash-0.13.0-remove-about-qt-menu-item.patch
 %endif
 
 %global selinux_variants mls strict targeted
@@ -174,67 +146,81 @@ Source1: https://github.com/taw00/dashcore-rpm/blob/master/source/testing/SOURCE
 #
 # How debug info and build_ids managed (I only halfway understand this):
 # https://github.com/rpm-software-management/rpm/blob/master/macros.in
-#%%define debug_package %%{nil}
+# ...flip-flop next two lines in order to disable (nil) or enable (1) debuginfo package build
+%define debug_package 1
+%define debug_package %{nil}
 %define _unique_build_ids 1
 %define _build_id_links alldebug
 
-# https://fedoraproject.org/wiki/Changes/Harden_All_Packages
+# https://docs.fedoraproject.org/en-US/packaging-guidelines/#_pie
 %define _hardened_build 1
 
+# https://fedoraproject.org/wiki/Licensing:Main?rd=Licensing
+# https://spdx.org/licenses/
 License: MIT
 URL: http://dash.org/
 # Note, for example, this will not build on ppc64le
 ExclusiveArch: x86_64 i686 i386
 
-BuildRequires: gcc-c++ autoconf automake libtool
+# As recommended by...
+# https://github.com/dashpay/dash/blob/develop/doc/build-unix.md
+BuildRequires: libtool make autoconf automake patch
+BuildRequires: gcc-c++ >= 4.9 cmake libstdc++-static
+BuildRequires: python3
+BuildRequires: libdb4-cxx-devel gettext
+# t0dd: added to avoid unneccessary fetching of libraries from the internet
+#       which is a packaging no-no
 BuildRequires: openssl-devel boost-devel libevent-devel
-BuildRequires: libdb4-cxx-devel
-BuildRequires: miniupnpc-devel
+BuildRequires: miniupnpc-devel ccache
+BuildRequires: python3-zmq zeromq-devel
+# t0dd: added to satisfy chia_bls.
+#       (note chia_bls is currently downloaded from github at the moment,
+#       sadly. see dash-0.13.0.0-rc1/depends/packages/chia_bls.mk)
+BuildRequires: gmp-devel
 # Other BuildRequires listed per package below
 
+#t0dd: SELinux stuff that I just haven't addressed yet...
 #BuildRequires: checkpolicy selinux-policy-devel selinux-policy-doc
 
-#t0dd: I will often add tree, vim-enhanced, and less for mock environment
-# introspection
-#BuildRequires: tree vim-enhanced less
-
-#t0dd: I don't think this check is needed anymore -comment out for now.
-## ZeroMQ not testable yet on RHEL due to lack of python3-zmq so
-## enable only for Fedora
-#%%if 0%%{?fedora}
-#BuildRequires: python3-zmq zeromq-devel
-#%%endif
-
-#t0dd: Python tests still use OpenSSL for secp256k1, so we still need this to
-# run the testsuite on RHEL7, until Red Hat fixes OpenSSL on RHEL7. It has
-# already been fixed on Fedora. Bitcoin itself no longer needs OpenSSL for
-# secp256k1.
-# To support this, we are tracking https://linux.ringingliberty.com/bitcoin/el7/SRPMS/
-# ...aka: https://linux.ringingliberty.com/bitcoin/el$releasever/$basearch
-# We bring it in-house, rebuild, and supply at https://copr.fedorainfracloud.org/coprs/taw/dashcore-openssl-compat/
-# ...aka: https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-openssl-compat/epel-$releasever-$basearch/
-%if %{testing_extras} && 0%{?rhel}
-BuildRequires: openssl-compat-dashcore-libs
+# tree, vim-enhanced, and less for mock build environment introspection
+%if ! %{targetIsProduction}
+BuildRequires: tree vim-enhanced less findutils
 %endif
 
 
 # dashcore-client
 %package client
-Summary: Peer-to-peer; privacy-centric; digital currency, protocol, and platform for payments and dApps (dash-qt desktop reference client)
+Summary: Peer-to-peer, payments-focused, fungible digital currency, protocol, and platform for payments and decentralized applications (desktop reference client)
 Requires: dashcore-utils = %{version}-%{release}
-#BuildRequires: qt5-qtbase-devel qt5-linguist qt5-qttools-devel
+# https://fedoraproject.org/wiki/PackagingDrafts/ScriptletSnippets/Firewalld
+Requires: firewalld-filesystem
+Requires(post): firewalld-filesystem
+Requires(postun): firewalld-filesystem
+# Required for installing desktop applications on linux
+BuildRequires: libappstream-glib desktop-file-utils
+# t0dd: added to avoid unneccessary fetching of libraries from the internet
+#       which is a packaging no-no
 BuildRequires: qrencode-devel protobuf-devel
 BuildRequires: qt5-qtbase-devel qt5-linguist
-BuildRequires: libappstream-glib desktop-file-utils
+%if 0%{?fedora}
+Requires:       qt5-qtwayland
+BuildRequires:  qt5-qtwayland-devel
+%endif
 
 
 # dashcore-server
 %package server
-Summary: Peer-to-peer; privacy-centric; digital currency, protocol, and platform for payments and dApps (dashd reference server)
-Requires(post): systemd
-Requires(preun): systemd
-Requires(postun): systemd
+Summary: Peer-to-peer, payments-focused, fungible digital currency, protocol, and platform for payments and decentralized applications (reference server)
+# https://fedoraproject.org/wiki/PackagingDrafts/ScriptletSnippets/Firewalld
+Requires: firewalld-filesystem
+Requires(post): firewalld-filesystem
+Requires(postun): firewalld-filesystem
+# As per https://docs.fedoraproject.org/en-US/packaging-guidelines/Systemd/
+#Requires(post): systemd
+#Requires(preun): systemd
+#Requires(postun): systemd
 BuildRequires: systemd
+%{?systemd_requires}
 Requires(pre): shadow-utils
 Requires(post): /usr/sbin/semodule, /sbin/restorecon, /sbin/fixfiles
 Requires(postun): /usr/sbin/semodule, /sbin/restorecon, /sbin/fixfiles
@@ -247,18 +233,18 @@ Requires: dashcore-sentinel
 
 # dashcore-libs
 %package libs
-Summary: Peer-to-peer; privacy-centric; digital currency, protocol, and platform for payments and dApps (consensus libraries)
+Summary: Peer-to-peer, payments-focused, fungible digital currency, protocol, and platform for payments and decentralized applications (consensus libraries)
 
 
 # dashcore-devel
 %package devel
-Summary: Peer-to-peer; privacy-centric; digital currency, protocol, and platform for payments and dApps (dev libraries and headers)
+Summary: Peer-to-peer, payments-focused, fungible digital currency, protocol, and platform for payments and decentralized applications (dev libraries and headers)
 Requires: dashcore-libs = %{version}-%{release}
 
 
 # dashcore-utils
 %package utils
-Summary: Peer-to-peer; privacy-centric; digital currency, protocol, and platform for payments and dApps (commandline utils)
+Summary: Peer-to-peer, payments-focused, fungible digital currency, protocol, and platform for payments and decentralized applications (commandline utilities)
 
 
 # dashcore src.rpm
@@ -282,18 +268,18 @@ Learn more at www.dash.org.
 
 # dashcore-client
 %description client
-Dash Core reference implementation. This package provides dash-qt, a
-user-friendly-er graphical wallet manager for personal use. This package
-requires the dashcore-utils RPM package to be installed as well.
+Dash Core reference implementation. This package provides a user-friendly(er)
+graphical wallet manager (dash-qt) for personal use. This package requires the
+dashcore-utils RPM package to be installed as well.
 
-Dash (Digital Cash) is an open source peer-to-peer cryptocurrency with a
-strong focus on serving the payments industry. Dash offers a form of money
-that is portable, inexpensive, divisible and fast. It can be spent securely
-both online and in person with minimal transaction fees. Dash offers instant
-transactions (InstantSend), private transactions (PrivateSend), and operates
-a self-governing and self-funding model. This decentralized governance and
-budgeting system makes it one of the first ever successful decentralized
-autonomous organizations (DAO). Dash is also a platform for innovative
+Dash (Digital Cash) is an open source peer-to-peer cryptocurrency with a strong
+focus on serving as a superior means of payment. Dash offers a form of money
+that is portable, inexpensive, divisible and incredibly fast. It can be spent
+securely both online and in person with minimal transaction fees. Dash offers
+instant transactions (InstantSend), fungible transactions (PrivateSend), and,
+as a network, is self-governing and self-funding. This decentralized governance
+and budgeting system makes is the first ever successful decentralized
+autonomous organization (DAO). Dash is also a platform for innovative
 decentralized crypto-tech.
 
 Learn more at www.dash.org.
@@ -304,7 +290,7 @@ Learn more at www.dash.org.
 Dash Core reference implementation. This package provides dashd, a
 peer-to-peer node and wallet server. It is the command line installation
 without a graphical user interface. It can be used as a commandline wallet
-but is typically used to run a Dash Full Node or Masternode. This package
+but is typically used to run a full node or masternode. This package
 requires the dashcore-utils and dashcore-sentinel RPM packages to be
 installed.
 
@@ -318,14 +304,14 @@ servers that validate transactions and blocks. A Dash Masternode is a member
 of a network of incentivized servers that perform expanded critical services
 for the Dash cryptocurrency protocol.
 
-Dash (Digital Cash) is an open source peer-to-peer cryptocurrency with a
-strong focus on serving the payments industry. Dash offers a form of money
-that is portable, inexpensive, divisible and fast. It can be spent securely
-both online and in person with minimal transaction fees. Dash offers instant
-transactions (InstantSend), private transactions (PrivateSend), and operates
-a self-governing and self-funding model. This decentralized governance and
-budgeting system makes it one of the first ever successful decentralized
-autonomous organizations (DAO). Dash is also a platform for innovative
+Dash (Digital Cash) is an open source peer-to-peer cryptocurrency with a strong
+focus on serving as a superior means of payment. Dash offers a form of money
+that is portable, inexpensive, divisible and incredibly fast. It can be spent
+securely both online and in person with minimal transaction fees. Dash offers
+instant transactions (InstantSend), fungible transactions (PrivateSend), and,
+as a network, is self-governing and self-funding. This decentralized governance
+and budgeting system makes is the first ever successful decentralized
+autonomous organization (DAO). Dash is also a platform for innovative
 decentralized crypto-tech.
 
 Learn more at www.dash.org.
@@ -337,14 +323,14 @@ Learn more at www.dash.org.
 This package provides libdashconsensus, which is used by third party
 applications to verify scripts (and other functionality in the future).
 
-Dash (Digital Cash) is an open source peer-to-peer cryptocurrency with a
-strong focus on serving the payments industry. Dash offers a form of money
-that is portable, inexpensive, divisible and fast. It can be spent securely
-both online and in person with minimal transaction fees. Dash offers instant
-transactions (InstantSend), private transactions (PrivateSend), and operates
-a self-governing and self-funding model. This decentralized governance and
-budgeting system makes it one of the first ever successful decentralized
-autonomous organizations (DAO). Dash is also a platform for innovative
+Dash (Digital Cash) is an open source peer-to-peer cryptocurrency with a strong
+focus on serving as a superior means of payment. Dash offers a form of money
+that is portable, inexpensive, divisible and incredibly fast. It can be spent
+securely both online and in person with minimal transaction fees. Dash offers
+instant transactions (InstantSend), fungible transactions (PrivateSend), and,
+as a network, is self-governing and self-funding. This decentralized governance
+and budgeting system makes is the first ever successful decentralized
+autonomous organization (DAO). Dash is also a platform for innovative
 decentralized crypto-tech.
 
 Learn more at www.dash.org.
@@ -355,14 +341,14 @@ Learn more at www.dash.org.
 This package provides the libraries and header files necessary to compile
 programs which use libdashconsensus.
 
-Dash (Digital Cash) is an open source peer-to-peer cryptocurrency with a
-strong focus on serving the payments industry. Dash offers a form of money
-that is portable, inexpensive, divisible and fast. It can be spent securely
-both online and in person with minimal transaction fees. Dash offers instant
-transactions (InstantSend), private transactions (PrivateSend), and operates
-a self-governing and self-funding model. This decentralized governance and
-budgeting system makes it one of the first ever successful decentralized
-autonomous organizations (DAO). Dash is also a platform for innovative
+Dash (Digital Cash) is an open source peer-to-peer cryptocurrency with a strong
+focus on serving as a superior means of payment. Dash offers a form of money
+that is portable, inexpensive, divisible and incredibly fast. It can be spent
+securely both online and in person with minimal transaction fees. Dash offers
+instant transactions (InstantSend), fungible transactions (PrivateSend), and,
+as a network, is self-governing and self-funding. This decentralized governance
+and budgeting system makes is the first ever successful decentralized
+autonomous organization (DAO). Dash is also a platform for innovative
 decentralized crypto-tech.
 
 Learn more at www.dash.org.
@@ -376,14 +362,14 @@ This package provides dash-cli, a utility to communicate with and control a
 Dash server via its RPC protocol, and dash-tx, a utility to create custom
 Dash transactions.
 
-Dash (Digital Cash) is an open source peer-to-peer cryptocurrency with a
-strong focus on serving the payments industry. Dash offers a form of money
-that is portable, inexpensive, divisible and fast. It can be spent securely
-both online and in person with minimal transaction fees. Dash offers instant
-transactions (InstantSend), private transactions (PrivateSend), and operates
-a self-governing and self-funding model. This decentralized governance and
-budgeting system makes it one of the first ever successful decentralized
-autonomous organizations (DAO). Dash is also a platform for innovative
+Dash (Digital Cash) is an open source peer-to-peer cryptocurrency with a strong
+focus on serving as a superior means of payment. Dash offers a form of money
+that is portable, inexpensive, divisible and incredibly fast. It can be spent
+securely both online and in person with minimal transaction fees. Dash offers
+instant transactions (InstantSend), fungible transactions (PrivateSend), and,
+as a network, is self-governing and self-funding. This decentralized governance
+and budgeting system makes is the first ever successful decentralized
+autonomous organization (DAO). Dash is also a platform for innovative
 decentralized crypto-tech.
 
 Learn more at www.dash.org.
@@ -392,13 +378,27 @@ Learn more at www.dash.org.
 
 %prep
 # Prep section starts us in directory .../BUILD (aka {_builddir})
-# process dashcore - Source0 - untars in:
-# {_builddir}/dashcore-0.12.3/dashcore-0.12.3.0/
+
+# Message if EL7 found (probably should check for other unsupported OSes as well)
+%if 0%{?rhel} && 0%{?rhel} < 8
+  %{error: "EL7-based platforms (CentOS7/RHEL7) are not supportable build targets."}
+%endif
+
 mkdir -p %{srcroot}
+# dashcore
+# {_builddir}/dashcore-0.12.3/dashcore-0.12.3.0/
+# ..or something like..
+# {_builddir}/dash-0.13.0/dash-0.13.0.0-rc1/
 %setup -q -T -D -a 0 -n %{srcroot}
 # contributions
 # {_builddir}/dashcore-0.12.3/dashcore-0.12.3-contrib/
 %setup -q -T -D -a 1 -n %{srcroot}
+# patches
+%if %{targetIsProduction}
+cd %{srccodetree}
+%patch0 -p1
+cd ..
+%endif
 
 #t0dd: Prep SELinux policy -- NOT USED YET
 # Done here to prep for action taken in the %%build step
@@ -406,24 +406,60 @@ mkdir -p %{srcroot}
 mkdir -p selinux-tmp
 cp -p %{srccontribtree}/linux/selinux/dash.{te,if,fc} selinux-tmp/
 
+# pixmap contributions
 cp -a %{srccontribtree}/extras/pixmaps/*.??? %{srccodetree}/share/pixmaps/
 
+# Swap out packages.mk makefile in order to force usage of OS native devel
+# libraries and tools. Swap out chia_bls.mk because it asks for a dependency to
+# gmp that is satisfied via the OS (via BuildRequires) instead.
+cp -a %{srccontribtree}/build/depends/packages/*.mk %{srccodetree}/depends/packages/
+
+##t0dd: failed attempts to support EL7
+##t0dd: EL7 demands direct usage of cmake3 (and you can't do "alternatives"
+##      from an RPM specfile).
+#%%if 0%%{?rhel}
+#  cp -a %%{srccontribtree}/build/depends/packages/chia_bls.mk-cmake3 %%{srccodetree}/depends/packages/chia_bls.mk
+#  cp -a %%{srccontribtree}/build/depends/packages/native_cdrkit.mk-cmake3 %%{srccodetree}/depends/packages/native_cdrkit.mk
+#  cp -a %%{srccontribtree}/build/depends/packages/native_libdmg-hfsplus.mk-cmake3 %%{srccodetree}/depends/packages/native_libdmg-hfsplus.mk
+#%%endif
 
 
 %build
 # This section starts us in directory {_builddir}/{srcroot}
+##t0dd: failed attempts to support EL7
+#%%if 0%%{?rhel}
+#/usr/bin/scl enable devtoolset-7 bash
+#%%endif
+
 cd %{srccodetree}
-./autogen.sh
-%configure --enable-reduce-exports --enable-glibc-back-compat
-make %{?_smp_mflags}
+
+# build dependencies
+cd depends
+# example: make HOST=x86_64-redhat-linux-gnu -j4
+make HOST=%{_target_platform} -j$(nproc)
 cd ..
 
-# Man Pages (from contrib)
-gzip %{srccontribtree}/linux/man/man1/*
-gzip %{srccontribtree}/linux/man/man5/*
+# build code
+%define _targettree %{_builddir}/%{srcroot}/%{srccodetree}/depends/%{_target_platform}
+%define _FLAGS CPPFLAGS="$CPPFLAGS -I%{_targettree}/include -I%{_includedir}" LDFLAGS="$LDFLAGS -L%{_targettree}/lib -L%{_libdir}"
 
+%define _disable_tests --disable-tests --disable-gui-tests
+%if %{testing_extras}
+  %define _disable_tests %{nil}
+%endif
 
-#t0dd Not using for now. Doubling up %%'s to stop macro expansion in comments.
+./autogen.sh
+##t0dd: failed attempts to support EL7
+#%%if 0%%{?rhel}
+#  mkdir -p %%{_targettree}/lib %%{_targettree}/include
+#  ln -s /opt/rh/devtoolset-7/root/usr/lib/gcc/x86_64-redhat-linux/7/* %%{_targettree}/lib/
+#%%endif
+%{_FLAGS} ./configure --prefix=%{_targettree} --enable-reduce-exports %{_disable_tests}
+make 
+
+cd ..
+
+#t0dd Not using for now.
 #t0dd # Build SELinux policy
 #t0dd pushd selinux-tmp
 #t0dd for selinuxvariant in %%{selinux_variants}
@@ -458,17 +494,12 @@ cd %{srccodetree}
 # This section starts us in directory {_builddir}/{srcroot}
 
 cd %{srccodetree}
-make INSTALL="install -p" CP="cp -p" DESTDIR=%{buildroot} install
+#make INSTALL="install -p" CP="cp -p" DESTDIR=%%{buildroot} install
+make install
 cd ..
 
-# Remove the test binaries if still floating around
-%if ! %{testing_extras}
-  rm -f %{buildroot}%{_bindir}/test_*
-  rm -f %{buildroot}%{_bindir}/bench_dash
-%endif
-
 # Cheatsheet for built-in RPM macros:
-# https://fedoraproject.org/wiki/Packaging:RPMMacros
+# https://docs.fedoraproject.org/en-US/packaging-guidelines/RPMMacros/
 #   _builddir = {_topdir}/BUILD
 #   _buildrootdir = {_topdir}/BUILDROOT
 #   buildroot = {_buildrootdir}/{name}-{version}-{release}.{_arch}
@@ -483,11 +514,14 @@ cd ..
 #   _libdir = /usr/lib or /usr/lib64 (depending on system)
 # This is used to quiet rpmlint who can't seem to understand that /usr/lib is
 # still used for certain things.
-%define _usr_lib /usr/lib
-# These three are defined in newer versions of RPM (Fedora not el7)
-%define _tmpfilesdir %{_usr_lib}/tmpfiles.d
-%define _unitdir %{_usr_lib}/systemd/system
-%define _metainfodir %{_datadir}/metainfo
+%define _rawlib lib
+%define _usr_lib /usr/%{_rawlib}
+# These three are already defined in newer versions of RPM, but not in el7
+%if 0%{?rhel} && 0%{?rhel} < 8
+  %define _tmpfilesdir %{_usr_lib}/tmpfiles.d
+  %define _unitdir %{_usr_lib}/systemd/system
+  %define _metainfodir %{_datadir}/metainfo
+%endif
 
 # Create directories
 install -d %{buildroot}%{_datadir}
@@ -502,7 +536,19 @@ install -d %{buildroot}%{_tmpfilesdir}
 install -d %{buildroot}%{_unitdir}
 install -d %{buildroot}%{_metainfodir}
 install -d -m755 -p %{buildroot}%{_bindir}
-install -d -m755 -p %{buildroot}%{_sbindir}
+install -d -m755 -p %{buildroot}%{_libdir}/pkgconfig
+install -d -m755 -p %{buildroot}%{_includedir}
+
+# make install deploys to {_targettree}/ (defined in %%build)
+cp %{_targettree}/bin/* %{buildroot}%{_bindir}/
+mv %{_targettree}/lib/libdash* %{buildroot}%{_libdir}/
+mv %{_targettree}/lib/pkgconfig/libdash* %{buildroot}%{_libdir}/pkgconfig/
+mv %{_targettree}/include/dash* %{buildroot}%{_includedir}/
+# Remove the test binaries if still floating around
+%if ! %{testing_extras}
+  rm -f %{buildroot}%{_bindir}/test_*
+  rm -f %{buildroot}%{_bindir}/bench_dash
+%endif
 
 # Application as systemd service directory structure
 # /etc/dashcore/
@@ -517,10 +563,6 @@ install -d -m700 %{buildroot}%{_localstatedir}/log/dashcore/testnet3
 # /etc/sysconfig/dashd-scripts/
 install -d %{buildroot}%{_sysconfdir}/sysconfig/dashd-scripts
 
-# Binaries - stick dashd into sbin instead of bin
-install -D -m755 -p %{buildroot}%{_bindir}/dashd %{buildroot}%{_sbindir}/dashd
-rm -f %{buildroot}%{_bindir}/dashd
-
 # Symlinks
 # debug.log: /var/lib/dashcore/debug.log -> /var/log/dashcore/debug.log
 ln -s %{_localstatedir}/log/dashcore/debug.log %{buildroot}%{_sharedstatedir}/dashcore/debug.log
@@ -534,15 +576,27 @@ ln -s %{_localstatedir}/log/dashcore/testnet3/debug.log %{buildroot}%{_sharedsta
 ln -s %{_sysconfdir}/dashcore/dash.conf %{buildroot}%{_sharedstatedir}/dashcore/.dashcore/dash.conf
 
 # Man Pages (from contrib)
-install -D -m644 %{srccontribtree}/linux/man/man1/* %{buildroot}%{_mandir}/man1/
+#install -D -m644 %%{srccontribtree}/linux/man/man1/* %%{buildroot}%%{_mandir}/man1/
 install -D -m644 %{srccontribtree}/linux/man/man5/* %{buildroot}%{_mandir}/man5/
+# Man Pages (from upstream) - likely to overwrite ones from contrib
+install -D -m644 %{srccodetree}/doc/man/*.1* %{buildroot}%{_mandir}/man1/
+gzip -f %{buildroot}%{_mandir}/man1/*.1
+gzip -f %{buildroot}%{_mandir}/man5/*.5
+
+# Bash completion
+install -D -m644 %{srccodetree}/contrib/dash-cli.bash-completion %{buildroot}%{_datadir}/bash-completion/completions/dash-cli
+install -D -m644 %{srccodetree}/contrib/dash-tx.bash-completion %{buildroot}%{_datadir}/bash-completion/completions/dash-tx
+install -D -m644 %{srccodetree}/contrib/dashd.bash-completion %{buildroot}%{_datadir}/bash-completion/completions/dashd
 
 # Desktop elements - desktop file and kde protocol file (from contrib)
 cd %{srccontribtree}/linux/desktop/
-install -D -m644 dash-qt.desktop %{buildroot}%{_datadir}/applications/dash-qt.desktop
+# dash-qt.desktop
+# https://docs.fedoraproject.org/en-US/packaging-guidelines/#_desktop_files
+install -m755  dash-qt.wrapper.sh %{buildroot}%{_bindir}/
+desktop-file-install --dir=%{buildroot}%{_datadir}/applications dash-qt.desktop
 desktop-file-validate %{buildroot}%{_datadir}/applications/dash-qt.desktop
 # dash-qt.appdata.xml
-# https://fedoraproject.org/wiki/Packaging:AppData
+# https://docs.fedoraproject.org/en-US/packaging-guidelines/AppData/
 install -D -m644 -p dash-qt.appdata.xml %{buildroot}%{_metainfodir}/dash-qt.appdata.xml
 appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/*.appdata.xml
 
@@ -655,7 +709,7 @@ install -D -m644 -p %{srccontribtree}/linux/firewalld/usr-lib-firewalld-services
 install -D -m644 -p %{srccontribtree}/linux/firewalld/usr-lib-firewalld-services_dashcore-rpc.xml %{buildroot}%{_usr_lib}/firewalld/services/dashcore-rpc.xml
 install -D -m644 -p %{srccontribtree}/linux/firewalld/usr-lib-firewalld-services_dashcore-testnet-rpc.xml %{buildroot}%{_usr_lib}/firewalld/services/dashcore-testnet-rpc.xml
 
-# Not using for now. Doubling up %%'s to stop macro expansion in comments.
+# Not using for now.
 #t0dd # Install SELinux policy
 #t0dd for selinuxvariant in %%{selinux_variants}
 #t0dd do
@@ -669,11 +723,27 @@ install -D -m644 -p %{srccontribtree}/linux/firewalld/usr-lib-firewalld-services
 # dashcore-client
 %post client
 # firewalld only partially picks up changes to its services files without this
+# https://fedoraproject.org/wiki/PackagingDrafts/ScriptletSnippets/Firewalld
+# the macro'ed reload is not working for some reason
+#%%firewalld_reload
 test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
+
+# Update the desktop database
+# https://fedoraproject.org/wiki/NewMIMESystem
+/usr/bin/update-desktop-database &> /dev/null || :
+
+%postun client
+# Update the desktop database
+# https://fedoraproject.org/wiki/NewMIMESystem
+/usr/bin/update-desktop-database &> /dev/null || :
+# the macro'ed reload is not working for some reason
+#%%firewalld_reload
+test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
+
 
 # dashcore-server
 %pre server
-# This is for the case that you run dash core as a service (systemctl start dash)
+# This is for the case that you run dash core as a service (systemctl start dashd)
 # _sharedstatedir is /var/lib
 getent group dashcore >/dev/null || groupadd -r dashcore
 getent passwd dashcore >/dev/null || useradd -r -g dashcore -d %{_sharedstatedir}/dashcore -s /sbin/nologin -c "System user 'dashcore' to isolate Dash Core execution" dashcore
@@ -721,9 +791,12 @@ exit 0
 %post server
 %systemd_post dashd.service
 # firewalld only partially picks up changes to its services files without this
+# https://fedoraproject.org/wiki/PackagingDrafts/ScriptletSnippets/Firewalld
+# the macro'ed reload is not working for some reason
+#%%firewalld_reload
 test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 
-# Not using for now. Doubling up %%'s to stop macro expansion in comments.
+# Not using for now.
 #t0dd for selinuxvariant in %%{selinux_variants}
 #t0dd do
 #t0dd   /usr/sbin/semodule -s ${selinuxvariant} -i \
@@ -742,6 +815,8 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 # dashcore-server
 %posttrans server
 /usr/bin/systemd-tmpfiles --create
+#TODO: Replace above with %%tmpfiles_create_package macro
+#TODO: https://github.com/systemd/systemd/blob/master/src/core/macros.systemd.in
 
 
 # dashcore-server
@@ -752,7 +827,11 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 # dashcore-server
 %postun server
 %systemd_postun dashd.service
-# Not using for now. Doubling up %%'s to stop macro expansion in comments.
+# the macro'ed reload is not working for some reason
+#%%firewalld_reload
+test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
+
+# Not using for now.
 #t0dd# Do this upon uninstall (not upgrades)
 #t0dd if [ $1 -eq 0 ] ; then
 #t0dd   # FIXME This is less than ideal, but until dwalsh gives me a better way...
@@ -779,6 +858,7 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 %license %{srccodetree}/COPYING
 %doc %{srccodetree}/doc/*.md %{srccontribtree}/extras/dash.conf.example
 %{_bindir}/dash-qt
+%{_bindir}/dash-qt.wrapper.sh
 %{_datadir}/applications/dash-qt.desktop
 %{_metainfodir}/dash-qt.appdata.xml
 %{_datadir}/kde4/services/dash-qt.protocol
@@ -851,8 +931,9 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 %{_usr_lib}/firewalld/services/dashcore-rpc.xml
 %{_usr_lib}/firewalld/services/dashcore-testnet-rpc.xml
 %doc selinux-tmp/*
-%{_sbindir}/dashd
+%{_bindir}/dashd
 %{_tmpfilesdir}/dashd.conf
+%{_datadir}/bash-completion/completions/dashd
 %{_mandir}/man1/dashd.1.gz
 %{_mandir}/man5/dash.conf.5.gz
 %{_mandir}/man5/masternode.conf.5.gz
@@ -868,17 +949,15 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 %files libs
 %defattr(-,root,root,-)
 %license %{srccodetree}/COPYING
-%{_libdir}/libdashconsensus.so*
+%{_libdir}/*
 
 
 # dashcore-devel
 %files devel
 %defattr(-,root,root,-)
 %license %{srccodetree}/COPYING
-%{_includedir}/dashconsensus.h
-%{_libdir}/libdashconsensus.a
-%{_libdir}/libdashconsensus.la
-%{_libdir}/pkgconfig/libdashconsensus.pc
+%{_includedir}/*
+%{_libdir}/*
 
 
 # dashcore-utils
@@ -887,6 +966,8 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 %license %{srccodetree}/COPYING
 %{_bindir}/dash-cli
 %{_bindir}/dash-tx
+%{_datadir}/bash-completion/completions/dash-cli
+%{_datadir}/bash-completion/completions/dash-tx
 %{_mandir}/man1/dash-cli.1.gz
 %{_mandir}/man1/dash-tx.1.gz
 
@@ -903,46 +984,131 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Documentation: https://github.com/taw00/dashcore-rpm/tree/master/documentation
 #
 # The last major testnet effort...
-#   * Announcement: https://www.dash.org/forum/threads/12-1-testnet-testing-phase-two-ignition.10818/
-#   * Documentation: https://dashpay.atlassian.net/wiki/display/DOC/Testnet
+#   * Announcement: https://www.dash.org/forum/threads/v13-0-testing.41945/
+#   * Documentation:  
+#     https://docs.dash.org/en/latest/developers/testnet.html
+#     https://docs.dash.org/en/latest/masternodes/dip3-upgrade.html
 #
 # Source snapshots...
 #     https://github.com/dashpay/dash/tags
 #     https://github.com/dashpay/dash/releases
-#     test example: dash-0.12.3.0-rc5.tar.gz
-#     release example: dash-0.12.3.0.tar.gz
+#     test example: dash-0.13.0.0-rc6.tar.gz
+#     release example: dash-0.13.0.0.tar.gz
 #
 # Dash Core git repos...
 #   * Dash: https://github.com/dashpay/dash
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
+* Mon Jan 14 2019 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-1.taw
+* Mon Jan 14 2019 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-0.14.testing.taw
+* Mon Jan 14 2019 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-0.13.testing.taw
+  - 0.13.0.0
+
+* Sat Dec 22 2018 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-0.12.rc11.taw
+  - 0.13.0.0-rc11
+
+* Sat Dec 22 2018 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-0.12.rc10.taw
+  - 0.13.0.0-rc10
+
+* Tue Dec 18 2018 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-0.12.rc9.taw
+  - comment out About QT menu item in GUI client (for "production" builds)  
+    It's an implementation detail and shouldn't be there.
+
+* Mon Dec 17 2018 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-0.11.rc9.taw
+  - 0.13.0.0-rc9
+
+* Wed Dec 12 2018 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-0.11.rc8.taw
+  - Added a wrapper script around dash-qt in order to work around  
+    QT5+GNOME+Wayland issues. The wrapper sets environment variables.  
+    Reference dashcore-0.13.0-contrib/linux/desktop/dash-qt.wrapper.sh
+
+* Mon Dec 10 2018 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-0.10.rc8.taw3
+* Mon Dec 10 2018 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-0.10.rc8.taw2
+* Mon Dec 10 2018 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-0.10.rc8.taw1
+* Mon Dec 10 2018 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-0.10.rc8.taw
+  - 0.13.0.0-rc8
+  - fixed firewalld scriptlet calls
+    - firewalld_reload macro is mysteriously not working - yanked!
+  - fixed some systemd scriplet calls
+
+* Fri Dec 07 2018 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-0.10.rc7.taw
+  - cleaned up a lot of links
+  - call desktop file refresh after install and uninstall
+  - firewalld_reload rpm macro used
+  - _tmpfilesdir, _unitdir, _metainfodir only need to be defined if the build  
+    is EL7 (very old rpm)
+
+* Thu Dec 06 2018 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-0.9.rc7.taw
+  - 0.13.0-rc7
+  - Updated a lot of text as well.
+
+* Mon Dec 03 2018 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-0.8.rc6.taw
+  - moved dashd from /usr/sbin to /usr/bin since it is user run as well as  
+    run by a node admin. This goes against the convention of some other  
+    cryptocurrency packagers (notably bitcoin), but it is "more correct"  
+    IMHO and in the HO, according to my interpretation, of the good folks of  
+    the Filesystem Hierarchical Standard
+
+* Fri Nov 30 2018 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-0.7.rc6.taw
+  - v0.13.0.0 RC6 - Spork 15 related
+
+* Thu Nov 29 2018 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-0.6.rc5.taw
+  - v0.13.0.0 RC5
+
+* Fri Nov 23 2018 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-0.5.rc4.taw3
+* Fri Nov 23 2018 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-0.5.rc4.taw2
+* Fri Nov 23 2018 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-0.5.rc4.taw1
+* Tue Nov 20 2018 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-0.5.rc4.taw0
+  - made desktop configuration more compatible to KDA Plasma's dock  
+    `Exec=env XDG_CURRENT_DESKTOP=Unity /usr/bin/dash-qt %u` instead of just  
+    `Exec=dash-qt %u`
+  - abandoning attempts to build EL7 rpms. CentOS7/RHEL7 libraries are just  
+    too dated.
+    
+
+* Sat Nov 17 2018 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-0.4.rc4.taw
+  - refined building of testing bits
+  - reduced cruft landing in the lib and include directory trees
+  - through trickery I got rid of the "don't hardcode /usr/lib" error  
+    (a warning really) that rpmlint of the specfile issues
+
+* Fri Nov 16 2018 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-0.3.rc4.taw
+  - v0.13.0.0 - https://github.com/dashpay/dash/releases/tag/v0.13.0.0-rc4
+
+* Wed Nov 14 2018 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-0.2.rc1.taw
+* Wed Nov 14 2018 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-0.1.rc1.taw
+  - v0.13.0.0 - https://github.com/dashpay/dash/releases/tag/v0.13.0.0-rc1
+  - simplified the spec-file release string building logic a bit
+  - include man pages from upstream source
+  - include bash-completion files from upstream source
+
 * Wed Sep 19 2018 Todd Warner <t0dd_at_protonmail.com> 0.12.3.3-1.taw
 * Wed Sep 19 2018 Todd Warner <t0dd_at_protonmail.com> 0.12.3.3-0.1.testing.taw
-  - v12.3.3 - https://github.com/dashpay/dash/releases/tag/v0.12.3.3
+  - v0.12.3.3 - https://github.com/dashpay/dash/releases/tag/v0.12.3.3
 
 * Wed Jul 11 2018 Todd Warner <t0dd_at_protonmail.com> 0.12.3.2-1.taw
 * Wed Jul 11 2018 Todd Warner <t0dd_at_protonmail.com> 0.12.3.2-0.1.testing.taw
-  - v12.3.2 - https://github.com/dashpay/dash/releases/tag/v0.12.3.2
+  - v0.12.3.2 - https://github.com/dashpay/dash/releases/tag/v0.12.3.2
 
 * Tue Jul 03 2018 Todd Warner <t0dd_at_protonmail.com> 0.12.3.1-1.taw
 * Tue Jul 03 2018 Todd Warner <t0dd_at_protonmail.com> 0.12.3.1-0.1.testing.taw
-  - v12.3.1 - https://github.com/dashpay/dash/releases/tag/v0.12.3.1
+  - v0.12.3.1 - https://github.com/dashpay/dash/releases/tag/v0.12.3.1
 
 * Thu Jun 21 2018 Todd Warner <t0dd_at_protonmail.com> 0.12.3.0-0.10.testing.taw
-  - v12.3.0 - https://github.com/dashpay/dash/releases/tag/v0.12.3.0
+  - v0.12.3.0 - https://github.com/dashpay/dash/releases/tag/v0.12.3.0
 
 * Thu Jun 21 2018 Todd Warner <t0dd_at_protonmail.com> 0.12.3.0-0.9.rc5.taw
-  - v12.3-rc5 - https://github.com/dashpay/dash/releases/tag/v0.12.3.0-rc5
+  - v0.12.3-rc5 - https://github.com/dashpay/dash/releases/tag/v0.12.3.0-rc5
 
 * Wed Jun 13 2018 Todd Warner <t0dd_at_protonmail.com> 0.12.3.0-0.8.rc4.taw
-  - v12.3-rc4 - https://github.com/dashpay/dash/releases/tag/v0.12.3.0-rc4
+  - v0.12.3-rc4 - https://github.com/dashpay/dash/releases/tag/v0.12.3.0-rc4
 
 * Sun Jun 10 2018 Todd Warner <t0dd_at_protonmail.com> 0.12.3.0-0.7.rc3.taw
-  - v12.3-rc3 - https://github.com/dashpay/dash/releases/tag/v0.12.3.0-rc3
+  - v0.12.3-rc3 - https://github.com/dashpay/dash/releases/tag/v0.12.3.0-rc3
 
 * Sun Jun 3 2018 Todd Warner <t0dd_at_protonmail.com> 0.12.3.0-0.6.rc2.taw
-  - v12.3-rc2 - https://github.com/dashpay/dash/releases/tag/v0.12.3.0-rc2
+  - v0.12.3-rc2 - https://github.com/dashpay/dash/releases/tag/v0.12.3.0-rc2
   - /etc/dashcore/dash.conf now has testnet=1 on by default if installing the  
     test RPMs. Note that dash.conf will be in an .rpmnew file though.
 
@@ -955,18 +1121,18 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 
 * Thu May 10 2018 Todd Warner <t0dd_at_protonmail.com> 0.12.3.0-0.4.testing.20180510.taw
   - spec file: mkdir -p not just mkdir
-  - Another 12.3 test build (from github.com origin/develop)
+  - Another 0.12.3 test build (from github.com origin/develop)
 
 * Sat Apr 28 2018 Todd Warner <t0dd_at_protonmail.com> 0.12.3.0-0.3.testing.20180428.taw
-  - Another 12.3 test build (from github.com origin/develop)
+  - Another 0.12.3 test build (from github.com origin/develop)
 
 * Wed Apr 25 2018 Todd Warner <t0dd_at_protonmail.com> 0.12.3.0-0.2.testing.taw
   - Major cleanup
 
 * Sun Apr 8 2018 Todd Warner <t0dd_at_protonmail.com> 0.12.3.0-0.1.testing.taw
-  - 12.3 test build
+  - 0.12.3 test build
   - name-version-release more closely matches industry guidelines:  
-    https://fedoraproject.org/wiki/Packaging:Versioning
+    https://docs.fedoraproject.org/en-US/packaging-guidelines/Versioning/
   - https://bamboo.dash.org/browse/DASHL-DEV-341
 
 * Fri Apr 06 2018 Todd Warner <t0dd_at_protonmail.com> 0.12.2.3-2.taw
@@ -993,7 +1159,7 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
   - Release Candidate - ec8178c
 
 * Fri Oct 20 2017 Todd Warner <t0dd_at_protonmail.com> 0.12.2.0-0.testing.taw
-  - Initial 12.2 test build
+  - Initial 0.12.2 test build
 
 * Tue Apr 11 2017 Todd Warner <t0dd_at_protonmail.com> 0.12.1.5-0.rc.taw
   - Fixes a watchdog propagation issue.
@@ -1049,5 +1215,5 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
     help troubleshoot.
 
 * Sun Feb 05 2017 Todd Warner <t0dd_at_protonmail.com> 0.12.1.0-0.taw
-  - Release 12.1.0 - 56971f8
+  - Release 0.12.1.0 - 56971f8
   - Announcement: https://github.com/dashpay/dash/releases/tag/v0.12.1.0

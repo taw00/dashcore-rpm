@@ -35,21 +35,21 @@ Summary: Peer-to-peer, payments-focused, fungible digital currency, protocol, an
 # ARCHIVE QUALIFIER - edit this if applies
 # ie. if the dev team includes things like rc3 in the filename
 %define archiveQualifier rc11
-%define includeArchiveQualifier 1
+%define includeArchiveQualifier 0
 
-# VERSION - edit this
+# VERSION
 %define vermajor 0.13.0
 %define verminor 0
 Version: %{vermajor}.%{verminor}
 
-# RELEASE - edit this
+# RELEASE
 # package release, and potentially extrarel
 %define _pkgrel 1
 %if ! %{targetIsProduction}
-  %define _pkgrel 0.12
+  %define _pkgrel 0.14
 %endif
 
-# MINORBUMP - edit this
+# MINORBUMP
 # (for very small or rapid iterations)
 %define minorbump taw
 
@@ -58,11 +58,11 @@ Version: %{vermajor}.%{verminor}
 #
 
 %define snapinfo testing
+%if %{targetIsProduction}
+  %undefine snapinfo
+%endif
 %if %{includeArchiveQualifier}
   %define snapinfo %{archiveQualifier}
-  %if %{targetIsProduction}
-    %undefine snapinfo
-  %endif
 %endif
 
 # pkgrel will be defined, snapinfo and minorbump may not be
@@ -130,7 +130,10 @@ Source0: https://github.com/dashpay/dash/archive/v%{version}/%{archivename}.tar.
 %endif
 
 Source1: https://github.com/taw00/dashcore-rpm/blob/master/source/testing/SOURCES/%{srccontribtree}.tar.gz
+# patches
+%if %{targetIsProduction}
 Patch0: https://github.com/taw00/dashcore-rpm/blob/master/source/testing/SOURCES/dash-0.13.0-remove-about-qt-menu-item.patch
+%endif
 
 %global selinux_variants mls strict targeted
 %define testing_extras 0
@@ -378,9 +381,7 @@ Learn more at www.dash.org.
 
 # Message if EL7 found (probably should check for other unsupported OSes as well)
 %if 0%{?rhel} && 0%{?rhel} < 8
-  %{error: "EL7 builds no longer supported due to outdated build tools (c++ dynamic and static libraries, etc)"}
-  # exit doesn't do anything during build phase?
-  exit 1
+  %{error: "EL7-based platforms (CentOS7/RHEL7) are not supportable build targets."}
 %endif
 
 mkdir -p %{srcroot}
@@ -394,7 +395,9 @@ mkdir -p %{srcroot}
 %setup -q -T -D -a 1 -n %{srcroot}
 # patches
 %if %{targetIsProduction}
-%patch0 -p0
+cd %{srccodetree}
+%patch0 -p1
+cd ..
 %endif
 
 #t0dd: Prep SELinux policy -- NOT USED YET
@@ -997,6 +1000,10 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
+* Mon Jan 14 2019 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-0.14.testing.taw
+* Mon Jan 14 2019 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-0.13.testing.taw
+  - 0.13.0.0
+
 * Sat Dec 22 2018 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-0.12.rc11.taw
   - 0.13.0.0-rc11
 
