@@ -5,7 +5,11 @@ Summary:    Repository configuration to enable management of dashcore packages (
 %define targetIsProduction 0
 
 # RELEASE
-%define _rel 4.1
+%define _rel 6
+%if ! %{targetIsProduction}
+%define _rel 5.1
+%endif
+
 %define _snapinfo testing
 %define _minorbump taw
 %if %{targetIsProduction}
@@ -96,6 +100,10 @@ install -D -m644 todd-694673ED-public-2030-01-04.2016-11-07.asc %{buildroot}%{_s
 
 
 %changelog
+* Mon Jan 14 2019 Todd Warner <t0dd_at_protonmail.com> 1.0-5.1.testing.taw
+  - updating the repos to include 0.13.0
+
+* Mon Jan 7 2019 Todd Warner <t0dd_at_protonmail.com> 1.0-5.taw
 * Mon Jan 7 2019 Todd Warner <t0dd_at_protonmail.com> 1.0-4.1.testing.taw
   - typo in the instructions in the specfile - doh!
 

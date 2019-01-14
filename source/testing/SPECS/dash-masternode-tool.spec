@@ -46,9 +46,9 @@ Version: %{vermajor}.%{verminor}
 
 # RELEASE
 # if production - "targetIsProduction 1"
-%define pkgrel_prod 1
+%define _pkgrel 1
 %if ! %{targetIsProduction}
-  %define _pkgrel 0.1
+  %define _pkgrel 0.4
 %endif
 
 # MINORBUMP
@@ -133,7 +133,7 @@ Requires: zenity
 BuildRequires: python3-devel python3-virtualenv
 BuildRequires: libusbx-devel libudev-devel
 BuildRequires: gcc-c++ cmake
-BuildRequires: python3-qt5-base
+#BuildRequires: python3-qt5-base
 BuildRequires: git
 %endif
 
@@ -209,7 +209,9 @@ mkdir -p %{srcroot}
 %setup -q -T -D -a 3 -n %{srcroot}
 
 # For debugging purposes...
+%if ! %{targetIsProduction}
 cd ../.. ; /usr/bin/tree -df -L 2 BUILD ; cd -
+%endif
 
 %if ! %{sourceIsPrebuilt}
   # My modified requirements a tad since we use the native QT libraries
@@ -235,7 +237,9 @@ cd ../.. ; /usr/bin/tree -df -L 2 BUILD ; cd -
 %endif
 
 # For debugging purposes...
+%if ! %{targetIsProduction}
 cd ../.. ; /usr/bin/tree -df -L 2 BUILD ; cd -
+%endif
 
 
 
@@ -403,11 +407,15 @@ cd ../../
 
 
 %changelog
+* Mon Jan 14 2019 Todd Warner <t0dd_at_protonmail.com> 0.9.21-0.4.testing.taw
+* Mon Jan 14 2019 Todd Warner <t0dd_at_protonmail.com> 0.9.21-0.3.testing.taw
+* Sun Jan 13 2019 Todd Warner <t0dd_at_protonmail.com> 0.9.21-0.2.testing.taw
 * Sun Jan 13 2019 Todd Warner <t0dd_at_protonmail.com> 0.9.21-0.1.testing.taw
   - update in support of dashcore 0.13
+  - spec file cleanup
 
 * Wed Nov 14 2018 Todd Warner <t0dd_at_protonmail.com> 0.9.20-3.1.testing.taw
-  - updated for Fedora 29...
+  - updated for Fedora 29... -- this version never worked.
   - BuildRequires for virtualenv:  
     RHEL/CentOS: /usr/bin/virtualenv-3  (EL7 not supported anyway)  
     Fedora: python3-virtualenv
