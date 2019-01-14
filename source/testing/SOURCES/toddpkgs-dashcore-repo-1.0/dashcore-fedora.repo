@@ -21,20 +21,20 @@
 # Note: check dash.org to see if there are special upgrade steps that need to be taken.
 #   sudo dnf upgrade
 #
-# To switch from one repository version to the next (example, stable-12.2 to stable (latest))...
-#   sudo dnf config-manager --set-disabled dashcore-stable-12.2
+# To switch from one repository version to the next (example, stable-12.3 to stable (latest))...
+#   sudo dnf config-manager --set-disabled dashcore-stable-12.3
 #   sudo dnf config-manager --set-enabled dashcore-stable
 #
 # Feedback: t0dd_at_protonmail.com
 
 [dashcore-stable]
-enabled=1
-name=Dash Core 12.3 - stable - fedora-$releasever-$basearch
-baseurl=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.3/fedora-$releasever-$basearch/
+enabled=0
+name=Dash Core 0.13.0 - stable - fedora-$releasever-$basearch
+baseurl=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-0.13.0/fedora-$releasever-$basearch/
 type=rpm-md
 skip_if_unavailable=True
 gpgcheck=1
-gpgkey=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.3/pubkey.gpg
+gpgkey=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-0.13.0/pubkey.gpg
 repo_gpgcheck=0
 metadata_expire=1d
 # leave this off, see
@@ -65,20 +65,34 @@ enabled_metadata=0
 ## DEPRECATED or DECOMMISSIONED - don't use these anymore
 ##
 
-[dashcore-stable-12.2]
-enabled=0
-name=Dash Core 12.2 - stable-deprecated - fedora-$releasever-$basearch
-baseurl=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.2/fedora-$releasever-$basearch/
+[dashcore-stable-12.3]
+enabled=1
+name=Dash Core 12.3 - stable - fedora-$releasever-$basearch
+baseurl=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.3/fedora-$releasever-$basearch/
 type=rpm-md
 skip_if_unavailable=True
 gpgcheck=1
-gpgkey=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.2/pubkey.gpg
-# GnuPG fingerprint should be: C007F5C5B0827208031C8D6251A9F10DA3DF1F94
+gpgkey=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.3/pubkey.gpg
 repo_gpgcheck=0
 metadata_expire=1d
 # leave this off, see
 # https://srvfail.com/packagekit-cant-find-file-in-var-cache-packagekit/
 enabled_metadata=0
+
+#[dashcore-stable-12.2]
+#enabled=0
+#name=Dash Core 12.2 - stable-deprecated - fedora-$releasever-$basearch
+#baseurl=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.2/fedora-$releasever-$basearch/
+#type=rpm-md
+#skip_if_unavailable=True
+#gpgcheck=1
+#gpgkey=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.2/pubkey.gpg
+## GnuPG fingerprint should be: C007F5C5B0827208031C8D6251A9F10DA3DF1F94
+#repo_gpgcheck=0
+#metadata_expire=1d
+## leave this off, see
+## https://srvfail.com/packagekit-cant-find-file-in-var-cache-packagekit/
+#enabled_metadata=0
 
 #[dashcore-stable-12.1]
 #name=Dash Core 12.1 - deprecated - fedora-$releasever-$basearch
