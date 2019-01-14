@@ -99,7 +99,7 @@ rm -rf x
 
 ### [2] Update your dnf/yum repo configuration - switch to the new "stable" repo
 
-After DATE-TBD: If are already have the repository RPM installed --
+After January 14, 2019: If are already have the repository RPM installed --
 toddpkgs-dashcore-repo.fedora.rpm -- the repository switch to 0.13.0 will be
 automated for you. That will be the date that all masternodes should have
 already been switched over.
@@ -112,6 +112,7 @@ sudo rpm --import https://keybase.io/toddwarner/key.asc
 sudo dnf install -y https://raw.githubusercontent.com/taw00/dashcore-rpm/master/toddpkgs-dashcore-repo.fedora.rpm
 sudo dnf list --refresh | grep dashcore
 ```
+<!--
 ```
 ## CentOS/RHEL (NO LONGER SUPPORTED AS OF v0.13.0!)...
 #sudo rpm --import https://keybase.io/toddwarner/key.asc
@@ -119,8 +120,9 @@ sudo dnf list --refresh | grep dashcore
 #sudo yum clean expire-cache
 #sudo yum list | grep dashcore
 ```
+-->
 
-#### Are you upgrading before DATE-TBD and you already installed `toddpkgs-dashcore-repo`?...
+#### Are you upgrading before January 14, 2019 and you already installed `toddpkgs-dashcore-repo`?...
 
 ```
 # Fedora...
@@ -129,6 +131,7 @@ sudo dnf upgrade -y https://raw.githubusercontent.com/taw00/dashcore-rpm/master/
 sudo dnf list --refresh | grep dashcore
 ```
 
+<!--
 ```
 ## CentOS/RHEL (NO LONGER SUPPORTED AS OF v0.13.0!)...
 #sudo rpm --import https://keybase.io/toddwarner/key.asc
@@ -136,20 +139,23 @@ sudo dnf list --refresh | grep dashcore
 #sudo yum clean expire-cache
 #sudo yum list | grep dashcore
 ```
+-->
 
-#### Are you upgrading on or after DATE-TBD and you already installed `toddpkgs-dashcore-repo`? Do this instead...
+#### Are you upgrading on or after January 14, 2019 and you already installed `toddpkgs-dashcore-repo`? Do this instead...
 
 ```
 # Fedora...
 sudo dnf upgrade toddpkgs-dashcore-repo --refresh -y
 sudo dnf list | grep dashcore
 ```
+<!--
 ```
 # CentOS/RHEL (NO LONGER SUPPORTED AS OF v0.13.0!)...
 sudo yum clean expire-cache
 sudo yum update toddpkgs-dashcore-repo -y
 sudo yum list | grep dashcore
 ```
+-->
 
 Updating that RPM will automatically enable the 0.13.0 stable repository. If the
 above commands did not show 0.13.0 packages listed, investigate your
@@ -184,10 +190,11 @@ balances.
 #### If this is a node (or masternode) - `dashd`
 
 Note: For the blockcount information below, it needs to match the current block
-height as listed at <https://explorer.dash.org/chain/Dash> (or one of the
-explorers listed at <https://www.dash.org/network/>. If you are using TESTNET,
-check out one of the explorers found
-[here](https://docs.dash.org/en/stable/developers/testnet.html?highlight=explorers#explorers).
+height as listed at <https://insight.dashevo.org/insight/> (or one of the
+explorers listed at
+<https://docs.dash.org/en/stable/introduction/information.html?highlight=explorers#tools>.
+If you are using TESTNET, check out one of the explorers found
+[here](https://docs.dash.org/en/stable/developers/testnet.html#explorers).
 
 
 If running `dashd` as a normal user and not as a systemd managed service...
@@ -213,8 +220,8 @@ sudo -u dashcore tail -f /var/lib/dashcore/debug.log
 If this is a masternode...
 ```
 # Check the results of `mnsync status`. If the status never syncs fully, you
-# may have to perform a `mnsync reset`. Note that the syncing process can take 15
-# to 30 minutes.
+# may have to perform a `mnsync reset`. Note that the syncing process can take
+# 15 to 30 minutes.
 sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf -datadir=/var/lib/dashcore masternode mnsync reset
 ```
 
