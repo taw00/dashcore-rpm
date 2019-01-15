@@ -45,7 +45,7 @@ If you have already done this, skip this step. Obviously. Otherwise, read this d
 
 ### [2] Set up a Dash Core node
 
-If you have one already set up, skip this step, or see [these instructions](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.dashcore-node-deploy.md).
+If you have one already set up, skip this step, or see [these instructions](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.dashcore-node-setup.systemd.md).
 
 ---
 
