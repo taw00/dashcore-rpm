@@ -269,7 +269,7 @@ feel free to remove it following the pattern we demonstrated above._
 
 ## Further secure the operating system
 
-Review [Configure FirewallD and Fail2Ban on a Dash Masternode](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.secure-your-dashcore-node.md). From experience, I can tell you that your node will be under regular attack. Make it more difficult for people.
+Review [Configure FirewallD and Fail2Ban on a Dash Node or Masternode](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.dashcore-security.md). From experience, I can tell you that your node will be under regular attack. Make it more difficult for people.
 
 
 &nbsp;
