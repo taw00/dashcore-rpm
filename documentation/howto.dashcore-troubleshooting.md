@@ -1,5 +1,8 @@
 # Dash Core Troubleshooting Guide
 
+**NOTE:** 0.13.0 has been released. This troubleshooting guide has not
+reflected this just yet. Thank you for your patience. -t0dd
+
 There are a zillion ways your wallet or masternode can get in a state that is
 non-operational. Often what is truly wrong is difficult to determine and/or
 poorly messages. This guide will help you examine and correct some of the most
