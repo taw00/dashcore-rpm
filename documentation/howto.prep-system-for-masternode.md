@@ -272,8 +272,9 @@ feel free to remove it following the pattern we demonstrated above._
 
 ## ALL DONE!
 
-If all went well, you have an efficiant, working, and secure system prepared to
-run a Dash Masternode, or really any workload. I hope this was helpful.
+If all went well, you have an efficient, working, and secure system prepared to
+run a Dash Core Node or Masternode, or really any workload. I hope this was
+helpful.
 
 Got a dash of feedback? *...har har...* Send it my way <https://keybase.io/toddwarner>    
 
