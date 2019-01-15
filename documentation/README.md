@@ -1,40 +1,49 @@
-# Overview: Dash Core Wallet, Node or Masternode<br />_...on Fedora, CentOS or Red Hat Enterprise Linux_
+# Overview: Installation and Management of a Dash Core Wallet, Node or Masternode on Fedora Linux
 
-***Manage a Dash Node or Masternode like a systems administrator.***
+_**Run a Dash Core desktop wallet on one of the world's most secure and stable operating systems.**_
 
-Though the complete objective of this set of documents is to illustrate how you can operate a Dash Core Masternode, they also provide valuable information if
-you merely want to install and manage a Wallet or Node.
+_**Deploy and manage a Dash Core node or masternode like a systems administrator.**_
 
-Setting up a Masternode requires setting up a collateral-bearing wallet on one
-system and a full node configured to be a masternode on a another. Using this
-guidance, you can manage a robust Node or Masternode deployment (or wallet for
-that matter) that once set up, requires little maintenance except the occasional
-update or upgrade. These instructions are specific to the Red Hat-family of
-linuxes.
+Though the focus of this set of documents is to illustrate how you can operate
+a Dash Core masternode, they also provide valuable information if you merely
+want to install and manage a wallet or node. These instructions are specific to
+the Red Hat-family of linuxes.
+
+---
+
+## Upstream documentation
+
+- Dash Core documentation: <https://docs.dash.org/>
+- Dash Core developer documentation: <https://dash-docs.github.io/>
+- Dash Masternode Tool: <https://github.com/Bertrand256/dash-masternode-tool/blob/master/README.md>
+
+---
 
 
-## The Documents
+## The documents
 
 - All documents:<br /><https://github.com/taw00/dashcore-rpm/tree/master/documentation>
 - The overview (this document):<br /><https://github.com/taw00/dashcore-rpm/edit/master/documentation/README.md>
 
 ---
 
-### The Masternode Deployment Process
+### The masternode deployment process
+
+Setting up a masternode requires (1) setting up a collateral-bearing wallet on
+one system and (2) a full node configured to be a masternode on a another.
+
+Using this guidance, you can manage a robust node or masternode deployment (or
+wallet for that matter) that once set up, requires little maintenance except
+the occasional update or upgrade.
 
 - [Install a Dash Core Wallet](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.dashcore-wallet-setup.gui.md)
 - [Deploy a VPS System to be Used as a Dash Core Node/Masternode](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.deploy-and-configure-operating-system.md)
 - [Deploy a Dash Masternode as SystemD Service](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.dashcore-node-setup.systemd.md)
 - [Configure and Register Node as a Masternode](https://github.com/taw02/dashcore-rpm/blob/master/documentation/howto.dashcore-masternode-registration.md) - ie. turn a node into a masternode 
 
-<!---
-- Advanced topics:
-  - Configure alert emails for Dash Core Node starts and stops
-  - Switch on debug-mode for Dash Core Sentinel
--->
 ---
 
-### Advanced and Followon Topics
+### Advanced and follow-on topics
 
 - Discussion about security: [Configure FirewallD and Fail2Ban on a Dash Masternode](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.dashcore-node-security.md)
 - Troubleshooting: [Dash Core Troubleshooting Guide](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.dashcore-troubleshooting.md)
@@ -47,7 +56,7 @@ linuxes.
 
 ---
 
-## What is Dash and what is a Dash Core Node and Masternode?
+## What is Dash and what is a Dash Core node and masternode?
 
 Dash (Digital Cash) is an open source peer-to-peer cryptocurrency with an
 emphasis on serving as an efficient platform for payments. Dash offers a form of
