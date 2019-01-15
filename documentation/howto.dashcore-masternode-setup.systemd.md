@@ -1,39 +1,39 @@
-# HowTo: Dash Masternode as SystemD Service<br />_...on Fedora, CentOS or Red Hat Enterprise Linux_
+# HowTo: Dash Masternode as SystemD Service
 
 _aka I want to run a Dash Masternode like a SysAdmin!_
 
-> This edition of these instructions is for those who wish to install and
-> configure a Dash Masternode running as a traditional `systemd` service.
->
-> A Dash Masternode is a server service, therefore it lends itself to the
-> improved security and robustness that `systemd` offers. I.e., It really is
-> the "right way" of running your masternode. Another "right way" would be
-> to run it as a container. But that is beyond the scope of this document.
->
-> These instructions are specific to the Red Hat-family of linuxes.
+This edition of these instructions is for those who wish to install and
+configure a Dash Masternode running as a traditional `systemd` service.
+
+A Dash Masternode is a server service, therefore it lends itself to the
+improved security and robustness that `systemd` offers. I.e., It really is
+the "right way" of running your masternode. Another "right way" would be
+to run it as a container. But that is beyond the scope of this document.
+
+These instructions are specific to the Red Hat-family of linuxes. As of DASH
+Core 0.13, EL7 systems (CentOS/RHEL) are not supportable platforms. This will
+undoubtedly change with RHEL8, but until then, please plan to deploy to
+Fedora Linux.
 
 **Table of Content**
 
-<!-- TOC START min:1 max:3 link:true update:true -->
-- [HowTo: Dash Masternode as SystemD Service<br />_...on Fedora, CentOS or Red Hat Enterprise Linux_](#howto-dash-masternode-as-systemd-service_on-fedora-centos-or-red-hat-enterprise-linux_)
-  - [FIRST: Set up your collateral-bearing wallet](#first-set-up-your-collateral-bearing-wallet)
-  - [[0] Install the operating system](#0-install-the-operating-system)
-  - [[1] Install Dash (and FirewallD)](#1-install-dash-and-firewalld)
-  - [[2] Configure Dash Server to be a Full Node](#2-configure-dash-server-to-be-a-full-node)
-  - [[3] Edit `/etc/dashcore/dash.conf` and finish](#3-edit-etcdashcoredashconf-and-finish)
-  - [[4] Restart the `dashd` systemd service and enable it for restart upon boot](#4-restart-the-dashd-systemd-service-and-enable-it-for-restart-upon-boot)
-  - [[5] Configure firewall rules](#5-configure-firewall-rules)
-  - [[6] ON WALLET: Add masternode IP address](#6-on-wallet-add-masternode-ip-address)
-  - [[7] ON WALLET: Trigger a start of your masternode](#7-on-wallet-trigger-a-start-of-your-masternode)
-  - [[8] ON MASTERNODE: Monitor masternode enablement status](#8-on-masternode-monitor-masternode-enablement-status)
-  - [[9] Set up Dash Sentinel](#9-set-up-dash-sentinel)
-  - [ALL DONE!](#all-done)
-- [Appendix - Advanced Topics](#appendix---advanced-topics)
-  - [Email me when `dashd` starts or stops](#email-me-when-dashd-starts-or-stops)
-  - [Email me when my Masternode goes from "ENABLED" state to something else](#email-me-when-my-masternode-goes-from-enabled-state-to-something-else)
-  - [Super fancy crontab settings](#super-fancy-crontab-settings)
-  - [Improve SSD Write & Delete Performance for Linux Systems by Enabling ATA TRIM](#improve-ssd-write--delete-performance-for-linux-systems-by-enabling-ata-trim)
-    - [Good luck! Comments and Feedback...](#good-luck-comments-and-feedback)
+<!-- TOC START min:2 max:3 link:true update:true -->
+- [FIRST: Set up your collateral-bearing wallet](#first-set-up-your-collateral-bearing-wallet)
+- [SECOND: Install the operating systems](#second-install-the-operating-systems)
+- [[1] Install Dash (and FirewallD)](#1-install-dash-and-firewalld)
+- [[2] Configure Dash Server to be a Full Node](#2-configure-dash-server-to-be-a-full-node)
+- [[3] Edit `/etc/dashcore/dash.conf` and finish](#3-edit-etcdashcoredashconf-and-finish)
+- [[4] Restart the `dashd` systemd service and enable it for restart upon boot](#4-restart-the-dashd-systemd-service-and-enable-it-for-restart-upon-boot)
+- [[5] Configure firewall rules](#5-configure-firewall-rules)
+- [[6] ON WALLET: Add masternode IP address](#6-on-wallet-add-masternode-ip-address)
+- [[7] ON WALLET: Trigger a start of your masternode](#7-on-wallet-trigger-a-start-of-your-masternode)
+- [[8] ON MASTERNODE: Monitor masternode enablement status](#8-on-masternode-monitor-masternode-enablement-status)
+- [[9] Set up Dash Sentinel](#9-set-up-dash-sentinel)
+- [ALL DONE!](#all-done)
+- [Email me when `dashd` starts or stops](#email-me-when-dashd-starts-or-stops)
+- [Email the admin when the Masternode's status changes from "ENABLED"](#email-the-admin-when-the-masternodes-status-changes-from-enabled)
+- [Super fancy crontab settings](#super-fancy-crontab-settings)
+- [Improve SSD Write & Delete Performance for Linux Systems by Enabling ATA TRIM](#improve-ssd-write--delete-performance-for-linux-systems-by-enabling-ata-trim)
 
 <!-- TOC END -->
 
@@ -52,185 +52,11 @@ set that up here:
 
 Once completed, you may continue.
 
-## [0] Install the operating system
+## SECOND: Install the operating systems
 
-There are two primary means to install the operating system that will covered
-here. (1) Via a cloud service, like Vultr.com, or (2) via a traditional
-bare-metal blade, server, white-box, whatever.
+Instruction for setting up, configuring, and securing a Fedora Linux system in preparation for deploying a Dash Masternode can be found here: <https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.prep-system-for-masternode.md>
 
-The objectives are straight-forward:
-
-1. Install a minimal OS
-2. Ensure there is enough swap-space configured
-3. Configure SSH so you can log in without a password into root and a normal
-   user who has sudo'ers rights
-4. Fully update and reboot
-
-> A note about minimum requirements. Masternodes are no longer "glorified full
-> nodes". They are doing more and more things and they will need beefier specs
-> over time. The old, 1G RAM and 1G Swap shorthand may not cut it anymore. I
-> recommend at least 2G RAM and 4G swap (twice ram-size) today. This will
-> increase over time.
-
-***A cloud service installation, for example Vultr***
-
-**Install to Vultr**
-  - Browse to https://my.vultr.com/
-  - Create an account and login.
-  - Click the ( + ) button.
-  - Choose: 64 bit OS and Fedora
-  - Choose: 2048MB RAM, 2CPU 45GB SSD (consider a beefier system)
-  - Set up SSH keys. It will make your life more pleasant.
-    [Vultr.com provides pretty solid instruction](https://www.vultr.com/docs/how-do-i-generate-ssh-keys)
-    on this process.
-  - Pick a hostname, `master00`, or whatever.
-  - Deploy!
-
-**Post install on Vultr**
-
-  - **Test and troubleshoot your SSH settings** &mdash; ssh into your Vultr
-    instance: `ssh root@<IP ADDRESS OF YOUR INSTANCE>` If you set up ssh keys
-    right, it should just log you right in. If not, log in using your root
-    password and troubleshoot why your ssh key setup is not working right and get
-    it working (see above) so that you don't need a password to ssh into your
-    system.
-  - **Change your root password** &mdash; `passwd` &mdash; to something longer
-    and ideally random. I use Lastpass to generate passwords.
-  - **[optional] Change your timezone settings** &mdash; The default is set to
-    UTC. If you prefer times listed in your local timezone, change it. FYI:
-    Some time-date stamps are always listed in UTC, like many log files.
-
-```
-# As root user
-# Find and cut-n-paste your timezone...
-timedatectl list-timezones # arrow keys to navigate, "q" to quit
-# Change it (example, eastern time, USA)...
-timedatectl set-timezone 'America/New_York'
-# Don't like that? Change it back...
-timedatectl set-timezone 'UTC'
-# Test it...
-date
-```
-
-  - **Add swap space** to give your system memory some elbow room...
-
-Vulr mysteriously starts you with no swap. A reasonable
-[rule of thumb](https://github.com/taw00/howto/blob/master/howto-configure-swap-file-on-linux.md)
-is to configure swap to be twice the size of your RAM. This is not an absolute
-though.
-
-```
-# As root...
-sudo su -
-
-# Each "bs" setting below corresponds to a swapfile size based on a multiple.
-# I.e., If you want a swapfile 2-times the size of your RAM, choose 2048:
-#bs=512  # 1/2 times the size of RAM
-#bs=1024 # One times the size of RAM
-bs=2048  # Twice the size of RAM -- recommended if you are in doubt
-#bs=1536 # 1.5 times the size of RAM
-
-# Create the swapfile
-TOTAL_MEM=$(free -k|grep Mem|awk '{print $2}')
-dd if=/dev/zero of=/swapfile bs=$bs count=$TOTAL_MEM
-chmod 0600 /swapfile
-mkswap /swapfile
-
-# Turn it on
-swapon /swapfile
-
-# You can see it running with a "swapon -s" or "free" command
-free -h
-
-# Enable even after reboot
-cp -a /etc/fstab /etc/fstab.mybackup # backup your fstab file
-echo '/swapfile swap swap defaults 0 0' >> /etc/fstab
-cat /etc/fstab # double check your fstab file looks fine
-```
-
-  - Log out and log back in using your new _ssh_ credentials
-
-Finally, try logging back in with ssh (see above). If you had to use a
-password, the ssh key setup isn't right. Troubleshoot and fix it. If you can't
-log in at all... destroy the instance and start over.
-
-
-***A traditional bare-metal server installation***
-
-I leave it as an exercise for the reader to perform a bare-metal installation
-of  Fedora, CentOS, or even RHEL. For Fedora, go here - https://getfedora.org/
-For CentOS, go here - https://www.centos.org/download/ For Fedora, I recommend
-the "Server" install. You need only a minimum configuration. Dependency
-resolution of installed RPM packages per these instructions will bring in
-anything you need.
-
-Ensure that your bare-metal server meets at least these requirements:
-
-* 2GB RAM
-* 40 GB disk
-
-As you walk through the installation process, choose to enable swap, it needs
-to be at least equal to the size of RAM, 2GB and ideally twice that, 4GB.
-
-Once installed, follow similar process as the Vultr VPS example for SSH configuration.
-
-
-***Post OS installation: create user...***
-
-During the installation process using the wizard you will likely be asked to
-create a user. Do that if you like. Additionally, you can choose to give this
-user administration rights (they will be able to `sudo`).
-
-While you can do that during the set up process, included here is the
-post-installation instruction for doing the same thing. The username in this
-example is `mnuser`...
-
-```
-# Log into the system as root user.
-# If the user does not exist, do this...
-useradd -G wheel mnuser
-passwd mnuser
-
-# If the user already exists, do this...
-usermod -a -G wheel mnuser
-
-# If you are using ubuntu instead of a Red Hat derivative, replace 'wheel' with 'sudoers'
-```
-
-Again, work through the SSH instructions (see Vultr example) and set it up so
-you can ssh into the system without a password from your desktop system.
-
-
-> ***Recommendation:***
-> Choose a difficult scrambled password for both `root` and your `mnuser` user.
-> Then ensure ssh keys are set up so you can ssh to the instance without having
-> to type passwords. And finally, edit the `/etc/sudoers` configuration file
-> and uncomment the `%wheel` line that includes the `NOPASSWD` qualifier. This
-> will allow you to `sudo` as the `mnuser` user without having to cut-n-paste a
-> password all the time.
-
-
-
-***Post OS installation: fully update the system and reboot***
-
-Log in as `mnuser` and...
-
-...if this is Fedora
-
-```
-sudo dnf upgrade -y
-sudo reboot
-```
-
-...if this is CentOS or Red Hat Enterprise Linux
-
-```
-sudo yum install -y epel-release
-sudo yum update -y
-sudo reboot
-```
-
-
+Once completed, you may continue.
 
 ## [1] Install Dash (and FirewallD)
 
@@ -239,53 +65,16 @@ trivial. This is how easy it is.
 
 ***Configure the Dash repositories (you only do this once)***
 
-...if this is Fedora
-
 ```bash
 sudo rpm --import https://keybase.io/toddwarner/key.asc
 sudo dnf install -y https://raw.githubusercontent.com/taw00/dashcore-rpm/master/toddpkgs-dashcore-repo.fedora.rpm
 ```
-<!--
-```
-#sudo dnf config-manager --set-disabled dashcore-stable
-#sudo dnf config-manager --set-enabled dashcore-testing
-```
--->
-
-
-...if this is CentOS or Red Hat Enterprise Linux
-
-Note: You have to first ensure you have the EPEL repositories configured: `sudo yum repolist enabled`  
-If you do not, browse to the [EPEL community page](https://fedoraproject.org/wiki/EPEL) and follow their installation instructions (it's easy).
-
-Then...
-
-```bash
-sudo rpm --import https://keybase.io/toddwarner/key.asc
-sudo yum install -y https://raw.githubusercontent.com/taw00/dashcore-rpm/master/toddpkgs-dashcore-repo.el7.rpm
-```
-
-<!--
-```
-#sudo yum-config-manager --disable dashcore-stable
-#sudo yum-config-manager --enable dashcore-testing
-```
--->
 
 ***Install Dash server (and FirewallD)***
-
-...if this is Fedora
 
 ```
 sudo dnf install -y dashcore-server firewalld
 ```
-
-...if this is CentOS or Red Hat Enterprise Linux
-
-```
-sudo yum install -y dashcore-server firewalld
-```
-
 
 ## [2] Configure Dash Server to be a Full Node
 
@@ -310,6 +99,9 @@ explicitly include them on the commandline when we perform actions.
 
 
 ***Edit `/etc/dashcore/dash.conf`***
+
+In this example, we are going to get the dashcore server running as a node, but
+not a masternode yet.
 
 Log in as the normal user, `mnuser` in this example.
 
@@ -350,8 +142,9 @@ rpcport=9998
 rpcallowip=127.0.0.1
 
 #masternode=1
-#masternodeprivkey=<results of "dash-cli masternode genkey" in wallet>
 #externalip=<results of "dig +short myip.opendns.com @resolver1.opendns.com">
+#masternodeprivkey=<results of "dash-cli masternode genkey" in wallet>
+#masternodeblsprivkey=<NEW 0.13 PROCESS THAT WE'LL GET TO SHORTLY>
 ```
 
 Please take special note of `"testnet=1"` and `"testnet=0"`.
@@ -401,8 +194,8 @@ watch -n10 sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf getblockcount
 
 You will know you have sync'ed the entire blockchain when it matches the current block-heigth:
 
-* <https://explorer.dash.org/> &mdash; for mainnet
-* <https://test.explorer.dash.org/> &mdash; for testnet
+* <https://insight.dashevo.org/insight/> &mdash; for mainnet
+* <https://testnet-insight.dashevo.org/insight/> &mdash; for testnet
 
 ...or if you are comfortable on the commandline, these are helpful...
 ```
@@ -422,7 +215,7 @@ sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf getchaintips |grep -m1 h
 ## [3] Edit `/etc/dashcore/dash.conf` and finish
 
 First, write down the value of `dig +short myip.opendns.com @resolver1.opendns.com` that you get at the
-commandline of this masternode server. For this example, we are going to use
+commandline of this server. For this example, we are going to use
 `93.184.216.34` (yours will be different, of course).
 
 Then take the data you gathered from setting up your wallet in
@@ -437,15 +230,17 @@ sudo -u dashcore nano /etc/dashcore/dash.conf
 Convert these lines from...
 ```
 #masternode=1
-#masternodeprivkey=<results of "dash-cli masternode genkey" in wallet>
 #externalip=<results of "dig +short myip.opendns.com @resolver1.opendns.com">
+#masternodeprivkey=<process addressed in separate document>
+#masternodeblsprivkey=<new v0.13 process addressed in separate document>
 ```
 
 ...to (and this is example data from the prior wallet exercise)...
 ```
 masternode=1
-masternodeprivkey=92yZY5b8bYD5G2Qh1C7Un6Tf3TG3mH4LUZha2rdj3QUDGHNg4W9
 externalip=93.184.216.34
+masternodeprivkey=92yZY5b8bYD5G2Qh1C7Un6Tf3TG3mH4LUZha2rdj3QUDGHNg4W9
+#masternodeblsprivkey=<new v0.13 process addressed in separate document>
 ```
 
 ## [4] Restart the `dashd` systemd service and enable it for restart upon boot
@@ -602,7 +397,7 @@ user so that it executes every five minutes...
 Edit the /var/lib/dashcore/sentinel/sentinel.conf file and comment out
 `network=testnet` and `network=mainnet` if one of them is set in there. Your
 `dash.conf` file properly sets that and the Sentinel default configuration file
-may wronging override your `dash.conf` file. At least it does in the earlier
+may wrongly override your `dash.conf` file. At least it does in the earlier
 versions of Sentinel.
 -->
 
