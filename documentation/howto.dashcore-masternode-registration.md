@@ -35,6 +35,9 @@ The new model: proof of 1000 dash, identification of dash addresses for reward p
 
 <!-- TOC END -->
 
+*Credit: Much of this documentation was inspired by the [good
+work](<https://docs.dash.org/en/latest/masternodes/maintenance.html#generate-a-bls-key-pair>
+) of the Dash Core documentation team.*
 ---
 
 ## PART 1: Install the software
@@ -422,6 +425,7 @@ DIP003 masternode. Note again that all functions related to *DIP003* will only
 take effect once *Spork 15* is enabled on the network. You can view the spork
 status using the spork active command and the ENABLED status using the monitoring techniques as described in PART 2.
 
+
 &nbsp;
 
 ## WHEW!!! ALL DONE!
@@ -432,3 +436,7 @@ If all went well, you have a working Dash Masternode! Congratulations. I hope
 this was helpful.
 
 Got a dash of feedback? *...har har...* Send it my way <https://keybase.io/toddwarner>    
+
+***Credit:** Much of this documentation was inspired by the [good
+work](<https://docs.dash.org/en/latest/masternodes/maintenance.html#generate-a-bls-key-pair>
+) of the Dash Core documentation team.*

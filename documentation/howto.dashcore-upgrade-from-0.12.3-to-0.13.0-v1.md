@@ -36,26 +36,7 @@ sudo dnf install -y https://raw.githubusercontent.com/taw00/dashcore-rpm/master/
 sudo dnf list --refresh | grep dashcore
 ```
 
-<!--
-```
-## CentOS/RHEL (NO LONGER SUPPORTED AS OF v0.13.0!)...
-#sudo rpm --import https://keybase.io/toddwarner/key.asc
-#sudo yum install -y https://raw.githubusercontent.com/taw00/dashcore-rpm/master/toddpkgs-dashcore-repo.el7.rpm
-#sudo yum clean expire-cache
-#sudo yum list | grep dashcore
-```
--->
-
 #### _...summary..._
-* [0] Shut everything down
-* [1] Back everything up
-* [2] Update your repo configuration
-* [3] Upgrade Dash Core binary packages from 0.12.3 to 0.13.0
-* [4] Start everything back up
-* [5] Masternodes only: Send start command from wallet to Masternode
-* [6] Masternodes only: Deploy new v0.13 configurations to support Deterministic Masternode Lists
-* [7] Monitor the configuration over time and adjust
-
 <!-- TOC START min:3 max:3 link:true update:true -->
 - [[0] Shut everything down](#0-shut-everything-down)
 - [[1] Back everything up](#1-back-everything-up)
@@ -234,72 +215,11 @@ sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf -datadir=/var/lib/dashco
 #sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf -datadir=/var/lib/dashcore masternode mnsync reset
 ```
 
-### [5] Generate NEW (as of 0.13) "BLS" public/private key-pair
-
-Much of these instructions were taken from the excellent documentation found at dash.org: <https://docs.dash.org/en/stable/masternodes/dip3-upgrade.html#masternode-registration-from-dash-core>
-
-As of version 0.13.0, a new signature mechanism is used to manage masternodes. It uses a cryptographic scheme we are calling [BLS signatures](https://en.wikipedia.org/wiki/Boneh%E2%80%93Lynn%E2%80%93Shacham).
-
-Note: Both your wallet (if you installed the Dash Core wallet) and your Dash node (soon to be a masternode) include the ability to generate BLS keys. The keys are generated independently. I.e., it doesn't matter on which system you generate them.
-
-For each of these examples, they are either executed in the debug console in the graphical Dash Core wallet software as shown or from the commandline and proceeded with the `dash-cli` command.
-
-**Generate a BLS key-pair (example in wallet debug console)**
-```
-bls generate
-{
-  "secret": "565950700d7bdc6a9dbc9963920bc756551b02de6e4711eff9ba6d4af59c0101",
-  "public": "01d2c43f022eeceaaf09532d84350feb49d7e72c183e56737c816076d0e803d4f86036bd4151160f5732ab4a461bd127"
-}
-```
-
-Example using `dash-cli` on the commandline on a masternode (systemd configuration)...
-```
-sudo -u dashcore dash-cli bls generate
-{
-  "secret": "565950700d7bdc6a9dbc9963920bc756551b02de6e4711eff9ba6d4af59c0101",
-  "public": "01d2c43f022eeceaaf09532d84350feb49d7e72c183e56737c816076d0e803d4f86036bd4151160f5732ab4a461bd127"
-}
-```
-
-Example using `dash-cli` on the commandline on a masternode (dashd run as normal user configuration)...
-```
-dash-cli bls generate
-{
-  "secret": "565950700d7bdc6a9dbc9963920bc756551b02de6e4711eff9ba6d4af59c0101",
-  "public": "01d2c43f022eeceaaf09532d84350feb49d7e72c183e56737c816076d0e803d4f86036bd4151160f5732ab4a461bd127"
-}
-```
-
-**Store those keys somewhere safe**
-These keys are not stored for you, per ce. Secure them in a safe place.
-
-The "secret" key is used in the next step.
-
-**Edit your Masternode's `dash.conf` and configure the `masternodeblsprivkey` setting**
-
-If running your Masternode (dashd) as a normal user:
-```
-nano ~/.dashcore/dash.conf
-```
-
-If running your Masternode (dashd) configured as a systemd service:
-```
-sudo nano /etc/dashcore/dash.conf
-```
-
-Set the `masternodeblsprivkey` value in that file to the secret key as such:
-```
-masternodeblsprivkey=565950700d7bdc6a9dbc9963920bc756551b02de6e4711eff9ba6d4af59c0101
-```
-
-
-
-### [6] Masternode upgrade only: Send start command from Wallet to Masternode
+### [5] Send start command from Wallet to Masternode (MASTERNODES ONLY)
 
 *This only has to happen for major releases, like 0.12.3 to 0.13.0. You
 usually don't have send the restart command for minor releases (eg. 0.13.0 to
-0.13.1). The protocol change from 0.12.3 to 0.13.0 was `70210` to `70213`*
+0.13.1). The protocol change from 0.12.3 to 0.13.0 is `70210` to `70213`*
 
 ***You have to restart the Masternode from your collateralizing wallet. Here's
 how...***
@@ -310,13 +230,12 @@ how...***
    * Tools menu > Debug console > _masternode start-alias <MN Alias>_
    * From command line: _dash-cli masternode start-alias <MN Alias>_
 
+If you are using a hardware wallet, please follow Bertrand's instruction: <https://github.com/Bertrand256/dash-masternode-tool/blob/master/README.md>
 
-### [6] Masternode upgrades only:<br />Deploy new v0.13 configurations to support Deterministic Masternode Lists
 
-Follow these instructions (*"Software update"* is what you already just
-performed, so please skip to section *"Generate BLS key pair"*):
-<https://docs.dash.org/en/latest/masternodes/maintenance.html#generate-a-bls-key-pair>
+### [7] Deploy new v0.13 configurations to support Deterministic Masternode Lists (MASTERNODES ONLY)
 
+Follow these instructions: <https://github.com/Bertrand256/dash-masternode-tool/blob/master/howto.dashcore-masternode-registration.md>
 
 ### [7] Masternode upgrade in particular: Monitor your status
 
