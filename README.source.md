@@ -1,12 +1,10 @@
-# Dash for Fedora, CentOS, and Red Hat Enterprise Linux
+# Dash Core for Fedora Linux<br />_...wallet, node, and masternode_
 
 The most current source packages can be found in this directory:
 <https://github.com/taw00/dashcore-rpm/tree/master/source/SRPMS>
 
 From these source packages, we have successfully built Dash Core for Fedora
-versions 27, 28, and 29 (but not yet CentOS 7 / RHEL7 yet for v0.13.0!). Dash
-Masternode Tool has been successfully built for Fedora versions 27 and 28 (NOT
-YET 29!) x86\_64 (it's a desktop application).
+for years (starting with Fedora 23 or 24). CentOS and RHEL package have been built in the past, but as of late, they cannot be developed due to how dated EL7 packages are. Build on the latest versions of Fedora please.
 
 The original components used to build these packages come from:
 
@@ -419,4 +417,3 @@ more information about yum and dnf).
 ### That should get you started! Good luck!
 
 Got a dash of feedback? Send it my way: <https://keybase.io/toddwarner>
-

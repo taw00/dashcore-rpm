@@ -1,18 +1,10 @@
-# Dash for Fedora, CentOS, and Red Hat Enterprise Linux<br />_...wallet, node, and masternode_
-
-**NOTE:** version 0.13.0 [has been
-released](https://blog.dash.org/dash-core-v0-13-on-mainnet-dc9609b0f6f9). RPM
-builds are available from the appropriate repositories, but the documentation
-here is a bit behind. If you know what you are doing, carry on. If not... wait
-for this note to disappear for the documentation to be updated.
-
----
+# Dash Core for Fedora Linux<br />_...wallet, node, and masternode_
 
 **Important notice (as of 2018-11-28):<br />EL7 and Fedora Linux 27 users need
 to migrate to Fedora Linux 29:**
 
-Dash Core 0.13.0 is coming out soon. As of that version, I will not be building
-Dash Core for EL7-based linuxes (CentOS7 and RHEL7) nor for Fedora Linux 27.
+Dash Core 0.13.0 was released on January 14, 2019. As of that release, I will not be building Dash Core for EL7-based linuxes (CentOS7 and RHEL7) nor
+for Fedora Linux 27.
 
 * EL7 is being dropped because the OS supplied libraries are simply far too
   dated. Once EL8 comes out (May-ish 2019), Dash Core builds should be
@@ -29,15 +21,15 @@ as fresh installs.
 
 ---
 
-**Dash (Digital Cash)** is an open source peer-to-peer cryptocurrency with a
-strong focus on serving as a superior means of payment. Dash offers a form of
-money that is portable, inexpensive, divisible and incredibly fast. It can be
-spent securely both online and in person with minimal transaction fees. Dash
-offers instant transactions **(InstantSend)**, fungible transactions
-**(PrivateSend)**, and, as a network, is self-governing and self-funding. This
-decentralized governance and budgeting system makes is the first ever
-successful decentralized autonomous organization (DAO). Dash is also a platform
-for innovative decentralized crypto-tech.
+**Dash (Digital Cash)** is an open source peer-to-peer cryptocurrency with an
+emphasis on serving as an efficient platform for payments. Dash offers a form of
+money that is portable, inexpensive, divisible and fast. It can be spent
+securely both online and in person with minimal transaction fees. Dash offers
+instant transactions **(InstantSend)**, private / more-fungible transactions
+**(PrivateSend)**, and operates a self-governing and self-funding model. This
+decentralized governance and budgeting system makes it the first ever successful
+decentralized autonomous organization (DAO). Dash is also a platform for
+innovative decentralized crypto-tech.
 
 Dash is open source and the name of the overarching project. Learn more
 at https://www.dash.org/
@@ -47,7 +39,7 @@ Dash on github can be found here: https://github.com/dashpay
 ---
 
 This github repository is used to develop and maintain Dash natively built
-and packaged for Fedora, CentOS, and Red Hat Enterprise Linux.
+and packaged for Fedora Linux.
 
 The source packages are housed directly within this repository. For more about
 the source packages and build instructions, please visit this link:
@@ -80,14 +72,15 @@ loss of funds or damages associated to this software.
 
 ### Send comment and feedback - <https://keybase.io/toddwarner>
 
-_Come say hello to me. I am **t0dd** or **taw** in various forums:
-[Dash Nation on Discord](https://dashchat.org/), [Dash Talk on Discord](http://staydashy.com/),
-[dash.org's forum](https://www.dash.org/forum/),
-[#dashpay on freenode IRC](http://freenode.net/),
-[Official Dash Chat on Telegram](https://web.telegram.org/#/im?p=@dash_chat), and
+_Come say hello to me. I am **t0dd** or **taw** in various forums: [Dash Nation
+on Discord](https://dashchat.org/), [Dash Talk on
+Discord](http://staydashy.com/), [dash.org's
+forum](https://www.dash.org/forum/), [#dashpay on freenode
+IRC](http://freenode.net/), [Official Dash Chat on
+Telegram](https://web.telegram.org/#/im?p=@dash_chat), and
 [/r/dashpay/](https://www.reddit.com/r/dashpay) on Reddit._
 
-_If you like my Dash stuff, also check out my Zcash builds which I maintain for
-the [Zcash](https://z.cash) Project: <https://github.com/taw00/zcash-rpm>. I
-am a huge fan of both endeavors; don't troll me. :)_
-
+_If you like my Dash stuff, also check out the packages I maintain for a couple
+other projects. Namely [ZCash](https://github.com/taw00/zcash-rpm) and
+[BEAM](https://github.com/taw00/beam-rpm). I'm a fan of these projects; don't
+troll me. :)_

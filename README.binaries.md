@@ -1,16 +1,18 @@
-# Dash for Fedora, CentOS, and Red Hat Enterprise Linux<br />_...wallet, node, and masternode_
+# Dash Core for Fedora Linux<br />_...wallet, node, and masternode_
 
-This document describes what is available to Fedora, CentOS, and Red Hat
-Enterprise Linux (RHEL) users seeking natively compiled Dash Core software. This
-document will also guide those users through the process of configuring their
-systems to easily install, verify, and update that software. Once configured,
-updating Dash Core software will be just as trivial as updating the rest of
-their system.
+**Important notice (as of 2018-11-28):<br />EL7 and Fedora Linux 27 users need
+to migrate to Fedora Linux 29:**
+
+This document describes what is available to Fedora Linux users seeking natively
+compiled Dash Core software. This document will also guide those users through
+the process of configuring their systems to easily install, verify, and update
+that software. Once configured, updating Dash Core software will be just as
+trivial as updating the rest of their system.
 
 > What is Dash? [dash.org](https://dash.org/), [official documentation](https://docs.dash.org)<br />
 > What is a Masternode? <https://docs.dash.org/en/latest/masternodes/index.html><br />
-> What are these Linuxes? [Fedora](https://getfedora.org/), [CentOS](https://www.centos.org/), [RHEL](https://www.redhat.com/en/technologies/linux-platforms/enterprise-linux)
- 
+> What is Fedora Linux? <https://getfedora.org/>
+
 ## *"TL;DR ...I just want to install the Dash Core GUI Wallet!"*
 
 Proper packaging and repositories make installation and future upgrades
@@ -27,6 +29,7 @@ sudo dnf install -y dashcore-client --refresh
 dash-qt
 ```
 
+<!--
 ...if using CentOS or RHEL
 
 Note: You have to first ensure you have the EPEL repositories configured: `sudo yum repolist enabled`  
@@ -42,6 +45,7 @@ sudo yum clean expire-cache
 sudo yum install -y dashcore-client
 dash-qt # Or browse your menuing system and look for "Dash"
 ```
+-->
 
 **Boom! Done!** You should now see a Dash Core Wallet graphical application
 open up on your screen and a reference to it in your desktop menus.
@@ -54,9 +58,8 @@ _Note that all configuration/data for the wallet will populate the `~/.dashcore/
 
 ### Install the _Dash Masternode Tool_ on your Fedora Linux workstation
 
-Assumption: Your workstation is a Fedora Linux system (only supported for
-Fedora 27 and Fedora 28 at the moment). The commands below also assume you are
-logging in as a normal user who has `sudo` priviledges.
+Assumption: The commands below also assume you are logging in as a normal user
+who has `sudo` priviledges.
 
 At the terminal command line...
 
@@ -66,7 +69,6 @@ sudo dnf install -y https://raw.githubusercontent.com/taw00/dashcore-rpm/master/
 sudo dnf install -y dash-masternode-tool --refresh
 ```
 
-Now browse your menuing system and select the "Dash Masternode Tool" icon.
 **Boom!** You should now see the Dash Masternode Tool graphical application
 open up on your screen. For more information on how to actually USE the tool,
 please visit
@@ -106,16 +108,14 @@ If you are looking for Dash wallets for other platforms, those can be found here
 <https://www.dash.org/downloads/>
 
 **Masternode Documentation:** <https://github.com/taw00/dashcore-rpm/tree/master/documentation><br />   
-**Other Documentation:** <https://dashpay.atlassian.net/wiki/pages/><br />
-**Other Masternode Documentation:** <https://dashpay.atlassian.net/wiki/display/DOC/Masternode>
+**Dash Core Documentation:** <https://docs.dash.org/><br />
+**Dash Developer Documentation:** <>
 
 
-## Configuring your system to have access to the Dash RPM package repositories
+## Configuring your system to have access to the Dash Core RPM package repositories
 
 We are going to do this at the command line from an account that has `sudo`ers
 access. Log into a terminal and do this...
-
-*...if using Fedora:*
 
 ```bash
 # My system is Fedora...
@@ -123,63 +123,31 @@ sudo rpm --import https://keybase.io/toddwarner/key.asc
 sudo dnf install -y https://raw.githubusercontent.com/taw00/dashcore-rpm/master/toddpkgs-dashcore-repo.fedora.rpm
 ```
 
-*...if using CentOS or RHEL*
-
-Note: You have to first ensure you have the EPEL repositories configured: `sudo yum repolist enabled`  
-If you do not, browse to the [EPEL community page](https://fedoraproject.org/wiki/EPEL) and follow their installation instructions (it's easy).
-
-Then...
-
-```bash
-# My system is CentOS or RHEL
-sudo rpm --import https://keybase.io/toddwarner/key.asc
-sudo yum install -y https://raw.githubusercontent.com/taw00/dashcore-rpm/master/toddpkgs-dashcore-repo.el7.rpm
-```
-
 That's it! You are now configured to install Dash Core through your package
 manager.
 
-## List what's available
+### List what's available
 
 Want to see what packages are available? Do this...<br />
 
 ```
-# Fedora
 sudo dnf list|grep dashcore
-```
-
-...or...
-
-```
-# CentOS or RHEL
-sudo yum list|grep dashcore
 ```
 
 You should get a nice listing of all the packages available to your linux
 system.
 
-## Stable versus the not-so-stable testing repos
+### Stable versus the not-so-stable testing repos
 
 By default, those `*.repo` files configure your system to only pull from the
 "stable" repository.
 
-NOT RECOMMENDED: If you want to install the "testing" software instead, do this:<br />
-
-*...fedora:*
+NOT RECOMMENDED: If you want to install the "testing" software instead, do this:
 
 ```
 sudo dnf config-manager --set-disabled dashcore-stable
 sudo dnf config-manager --set-enabled dashcore-testing
 sudo dnf list --refresh|grep dashcore
-```
-
-*...centos or rhel:*
-
-```
-sudo yum-config-manager --disable dashcore-stable
-sudo yum-config-manager --enable dashcore-testing
-sudo yum clean expire-cache
-sudo yum list|grep dashcore
 ```
 
 The listing command at the end isn't required, but it is helpful to show that
@@ -195,28 +163,15 @@ command line switches above and re-run those commands.
 
 If you have configured things appropriately. Installation is truly this easy...
 
-***To install the non-graphical, command-line-only, version of the software:
-`dashd`***
-
-*...fedora:*
-
-```
-sudo dnf install dashcore-server
-```
-
-*...centos or RHEL:*
-
-```
-sudo yum install dashcore-server
-```
+**To install the non-graphical, command-line-only, version of the software:
+`dashd`:** `sudo dnf install dashcore-server`
 
 The operating system's package manager will automagically pull in any
 dependencies, give you a list, and ask you if you are sure. You will see that
 for `dashcore-server`, `dashcore-utils` will also be installed. It's a needed
 dependency because it contains the `dash-cli` command line utility.
 
-**You want the GUI wallet instead?** Say "N"o to that installation request, run the
-same command as above, but choose `dashcore-client` instead.
+**You want the GUI wallet instead?**  `sudo dnf install dashcore-client`
 
 Have you set up a masternode and **manage your wallet via a hardware wallet
 (Trezor, Ledger, or Keepkey)?** Say "N"o to that installation request, run the
@@ -233,26 +188,18 @@ packages for Ubuntu.
 
 **Future upgrades...**
 
-Let's say you see in the [Dash Forums](https://dash.org/forum) that a new version of Dash
-Core was released. You want your system updated as soon as possible. It's now
-trivial. Just do this...
-
-*...fedora:*
+Let's say you see in the [Dash Forums](https://dash.org/forum) that a new
+version of Dash Core was released. You want your system updated as soon as
+possible. It's now trivial. Just do this...
 
 ```
 sudo dnf upgrade
 ```
 
-*...centos or RHEL:*
-
-```
-sudo yum update -y
-```
-
 And then after the refreshed packages were updated, restart the wallet or
 `dashd`. Please note that for major upgrades, more actions may have to be taken
-for example, a masternode going from 12.2 to 12.3 requires a masternode
-restart.
+for example, a masternode going from 0.12.3 to 0.13.0 requires a masternode
+restart (protocol change from 70210 to 70213).
 
 
 #### Good luck!
@@ -268,10 +215,6 @@ Send comments or feedback to <t0dd@protonmail.com>
 ---
 
 ## Appendix: QnA and other information
-
-#### Q: I see CentOS packages but nothing *specific* to RHEL, why is that?
-
-A: Because CentOS packages will run just fine on RHEL.
 
 #### Q: Sentinel? What's this Sentinel thing?
 
@@ -341,4 +284,3 @@ you know what you are doing, I do not recommend you enable that repository.
 #### Good luck!
 
 Got a dash of feedback? Send it my way: <https://keybase.io/toddwarner>
-
