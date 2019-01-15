@@ -29,9 +29,9 @@ linuxes.
 ### The Masternode Deployment Process
 
 - [Install a Dash Core Wallet](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.dashcore-wallet-setup.gui.md)
-- [Deploy a VPS System to be Used as a Dash Core Node/Masternode](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.prep-system-for-node.md)
+- [Deploy a VPS System to be Used as a Dash Core Node/Masternode](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.deploy-and-configure-operating-system.md)
 - [Deploy a Dash Masternode as SystemD Service](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.dashcore-node-setup.systemd.md)
-- Turn a Node into a Masternode: [Configure and Register Node as a Masternode](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.register-a-masternode.md)
+- Turn a Node into a Masternode: [Configure and Register Node as a Masternode](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.dashcore-masternode-registration.md)
 
 <!---
 - Advanced topics:
@@ -42,7 +42,7 @@ linuxes.
 
 ### Advanced and Followon Topics
 
-- Discussion about security: [Configure FirewallD and Fail2Ban on a Dash Masternode](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.secure-your-dash-masternode.md)
+- Discussion about security: [Configure FirewallD and Fail2Ban on a Dash Masternode](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.dashcore-node-security.md)
 - Troubleshooting: [Dash Core Troubleshooting Guide](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.dashcore-troubleshooting.md)
 - Updating: [How to Update your Wallet, Node, or Masternode](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.update-a-wallet-node-or-masternode.md)
 - Upgrading Major Versions: [How to Upgrade from Version 0.12.3 to 0.13.0](https://github.com/taw00/dashcore-rpm/blob/master/documentation/testing/howto.dashcore-upgrade-from-0.12.3-to-0.13.0.md)

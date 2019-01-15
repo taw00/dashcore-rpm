@@ -30,7 +30,7 @@ _aka I want to run a Dash Core Node (or Masternode) like a SysAdmin!_
 
 ## FIRST: Install the operating systems
 
-Instruction for setting up, configuring, and securing a Fedora Linux system in preparation for deploying a Dash Core Node or Masternode can be found here: <https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.prep-system-for-masternode.md>
+Instruction for setting up, configuring, and securing a Fedora Linux system in preparation for deploying a Dash Core Node or Masternode can be found here: <https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.deploy-and-configure-operating-system.md>
 
 Once completed, you may continue.
 
@@ -256,7 +256,7 @@ sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf -conf=/etc/dashcore/dash
 ## [5] Configure firewall rules
 
 You can follow the instruction in
-[howto.secure-your-dash-masternode.md](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.secure-your-dash-masternode.md),
+[howto.dashcore-node-security.md](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.dashcore-node-security.md),
 or just take these steps here. It's recommended that you review that document
 though and perhaps implement some of the additional suggestions it may provide.
 
