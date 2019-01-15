@@ -46,9 +46,13 @@ the occasional update or upgrade.
 
 &nbsp;
 
+&nbsp;
+
 ---
 
-## What is Dash and what is a Dash Core node and masternode?
+## Other comments and guidance
+
+### What is Dash and what is a Dash Core node and masternode?
 
 Dash (Digital Cash) is an open source peer-to-peer cryptocurrency with an
 emphasis on serving as an efficient platform for payments. Dash offers a form of
@@ -71,24 +75,30 @@ Dash is open source and the name of the overarching project. Learn more
 at www.dash.org.
 
 
-## "I'm not tech savvy! Help!"
+### "I'm not tech savvy! Help!"
 
-There are a number of services that will remove the headaches of managing a  masternode yourself, host a masternode for you, and walk you through the process of  getting set up. [Here is a listing](https://docs.dash.org/en/latest/masternodes/hosting.html) of the current providers recommended by the Dash community.*
+There are a number of services that will remove the headaches of managing a
+masternode yourself, host a masternode for you, and walk you through the
+process of  getting set up. [Here is a
+listing](https://docs.dash.org/en/latest/masternodes/hosting.html) of the
+current providers recommended by the Dash community.*
 
-## I was really looking for a guide for a different platform. Help!"    
+### I was really looking for a guide for a different platform. Help!"    
 
-Check out the guidance found in the official dash core documentation: <https://docs.dash.org/en/latest/masternodes/index.html>
+Check out the guidance found in the official dash core documentation:
+<https://docs.dash.org/en/latest/masternodes/index.html>
 
 
-## A note about Testnet versus Mainnet
+### A note about Testnet versus Mainnet
 
 There are two Dash networks (actually more). Two blockchains, separate sets of
 miners, wallets, nodes, and masternodes. Testnet exists to as a proving grounds
-for new code and new ideas. You too can use it to get familiar with Dash and how
-all these pieces fit together. It uses freely available testnet DASH (tDASH)
-which can be acquired
-[here](https://docs.dash.org/en/stable/developers/testnet.html#faucets). Mainnet
-is the network that secures, mines, and transacts real DASH of real value.
+for new code and new ideas. You too can use it to get familiar with Dash and
+how all these pieces fit together. It uses freely available testnet DASH
+(tDASH) which can be acquired
+[here](https://docs.dash.org/en/stable/developers/testnet.html#faucets).
+Mainnet is the network that secures, mines, and transacts real DASH of real
+value.
 
 You can actually switch freely between Mainnet and Testnet. It's almost like a
 shadow network. Always there... just beyond our ability to see clearly... ;)
@@ -109,9 +119,16 @@ Data directory: Usually either `/var/lib/dashcore` or `$HOME/.dashcore`
 
 * `network=testnet` or `network=mainnet`
 
+
+
+
+&nbsp;
+
+&nbsp;
+
 ---
 
-### Disclaimer!
+## Disclaimer!
 
 These packages are built and tested. But just like with and cryptocurrency, you
 must assume the risk associated to this space. I only claim that I made a best
