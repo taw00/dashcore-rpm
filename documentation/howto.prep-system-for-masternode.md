@@ -1,15 +1,14 @@
-# HowTo: Deploy and Configure a Linux System (Fedora)
-***...in Preparation for Running a Masternode...***
+# HowTo: Deploy and Configure a Fedora Linux Operating System
+***...to serve as a platform for a Dash Core Node or Masternode***
 
 **Table of Content**
 
-<!-- TOC START min:1 max:3 link:true update:true -->
-- [HowTo: Deploy and Configure a Linux System (Fedora)](#howto-deploy-and-configure-a-linux-system-fedora)
-  - [Install the operating system](#install-the-operating-system)
-  - [Install and Configure FirewallD](#install-and-configure-firewalld)
-  - [ALL DONE!](#all-done)
-- [Appendix - Advanced Topics](#appendix---advanced-topics)
-  - [Improve SSD Write & Delete Performance for Linux Systems by Enabling ATA TRIM](#improve-ssd-write--delete-performance-for-linux-systems-by-enabling-ata-trim)
+<!-- TOC START min:2 max:3 link:true update:true -->
+- [Install the operating system](#install-the-operating-system)
+- [Install and Configure FirewallD](#install-and-configure-firewalld)
+- [Further secure the operating system](#further-secure-the-operating-system)
+- [ALL DONE!](#all-done)
+- [Improve SSD Write & Delete Performance for Linux Systems by Enabling ATA TRIM](#improve-ssd-write--delete-performance-for-linux-systems-by-enabling-ata-trim)
 
 <!-- TOC END -->
 
@@ -266,6 +265,11 @@ feel free to remove it following the pattern we demonstrated above._
 * And more: <https://itnotesandscribblings.blogspot.com/2014/08/firewalld-adding-services-and-direct.html>
 * Interesting discussion on fighting DOS attacks on http: <https://www.certdepot.net/rhel7-mitigate-http-attacks/>
 * Do some web searching for more about firewalld
+
+
+## Further secure the operating system
+
+Review [Configure FirewallD and Fail2Ban on a Dash Masternode](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.secure-your-dashcore-node.md). From experience, I can tell you that your node will be under regular attack. Make it more difficult for people.
 
 
 &nbsp;
