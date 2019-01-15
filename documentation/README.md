@@ -1,4 +1,4 @@
-# Overview: Installation and Management of a Dash Core Wallet, Node or Masternode on Fedora Linux
+# Overview: Installation and Management of a Dash Core Wallet, Node, or Masternode on Fedora Linux
 
 _**Run a Dash Core desktop wallet on one of the world's most secure and stable operating systems.**_
 
@@ -19,15 +19,7 @@ the Red Hat-family of linuxes.
 
 ---
 
-
-## The documents
-
-- All documents:<br /><https://github.com/taw00/dashcore-rpm/tree/master/documentation>
-- The overview (this document):<br /><https://github.com/taw00/dashcore-rpm/edit/master/documentation/README.md>
-
----
-
-### The masternode deployment process
+## The masternode deployment process
 
 Setting up a masternode requires (1) setting up a collateral-bearing wallet on
 one system and (2) a full node configured to be a masternode on a another.
@@ -43,7 +35,7 @@ the occasional update or upgrade.
 
 ---
 
-### Advanced and follow-on topics
+## Advanced and follow-on topics
 
 - Discussion about security: [Configure FirewallD and Fail2Ban on a Dash Masternode](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.dashcore-node-security.md)
 - Troubleshooting: [Dash Core Troubleshooting Guide](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.dashcore-troubleshooting.md)
