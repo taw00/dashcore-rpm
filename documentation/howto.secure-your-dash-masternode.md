@@ -1,16 +1,30 @@
-# Configure FirewallD and Fail2Ban on a Dash Masternode
+# Configure FirewallD and Fail2Ban on a Dash Core Node
 
 Whenever you expose a server to the wilds of the internet, it becomes vulnerable to attack.
 
-This document will get you started on configuring some basic firewall rules to help mitigate
-against some of the more obvious problems, like brute-force DOS and trimming down the attack
-surface by only having the minimal ports open.
+This document will get you started on configuring some basic firewall rules to
+help mitigate against some of the more obvious problems, like brute-force DOS
+and trimming down the attack surface by only having the minimal ports open.
 
-We'll examine FirewallD and Fails2ban. FirewallD manages communication coming and going from
-server. Fails2ban looks for oddities in how folks are attempting to access and adjusts firewall
-rules on the fly to squelch misbehavior.
+We'll examine FirewallD and Fails2ban. FirewallD manages communication coming
+and going from server. Fails2ban looks for oddities in how folks are attempting
+to access and adjusts firewall rules on the fly to squelch misbehavior.
 
----
+<!-- TOC START min:2 max:4 link:true update:true -->
+- [FirewallD](#firewalld)
+    - [Install `firewalld`](#install-firewalld)
+    - [Mask `iptables`](#mask-iptables)
+    - [Configure `firewalld`](#configure-firewalld)
+    - [Some references:](#some-references)
+- [Fail2Ban](#fail2ban)
+    - [Install `fail2ban`...](#install-fail2ban)
+    - [Configure `fail2ban`...](#configure-fail2ban)
+    - [Enable `fail2ban` and reboot...](#enable-fail2ban-and-reboot)
+    - [Monitor / Analyze](#monitor--analyze)
+    - [Reference:](#reference)
+- [Done!](#done)
+
+<!-- TOC END -->
 
 ## FirewallD
 
@@ -31,8 +45,8 @@ sudo apt install -y firewalld
 
 #### Mask `iptables`
 
-`iptables` and `firewalld` don't mix. Make sure they don't &mdash; "mask" `iptables`
-(assuming it is installed)...
+`iptables` and `firewalld` don't mix. Make sure they don't &mdash; "mask"
+`iptables` (assuming it is installed)...
 
 ```
 sudo systemctl disable iptables.service
@@ -83,7 +97,7 @@ configuration that is in place.
 FedoraServer usually starts with ssh, dhcp6-client, and cockpit opened up by
 default.  I want ssh. But dhcpv6 should probably be unneccessary, and cockpit
 is something only used intermittently. To be explicit, I am going to add ssh
-(though probably already an added service) and removing dhcpv6 and cockpit. 
+(though probably already an added service) and removing dhcpv6 and cockpit.
 
 ```
 # Add and remove base services.
@@ -98,7 +112,7 @@ our RPM packages (specifically `dashcore-server`), we included the service
 definitions for FirewallD. Let's allow that traffic.
 
 ```
-# Open up the Mastnernode port (9999 or 19999)
+# Open up the Dash Core Node port (9999 or 19999)
 sudo firewall-cmd --permanent --add-service dashcore
 #sudo firewall-cmd --permanent --add-service dashcore-testnet
 
@@ -107,12 +121,12 @@ sudo firewall-cmd --permanent --add-service dashcore
 #sudo firewall-cmd --permanent --add-service dashcore-testnet-rpc
 ```
 
-But if you are running a masternode that was _not_ installed via our RPM (DNF)
+But if you are running a node that was _not_ installed via our RPM (DNF)
 packages, you must be explicit in your port configuration. I.e., you configure
 either as done above or with this method.
 
 ```
-# Open up the Mastnernode port for nodes not installed via our packaging
+# Open up the Dash Core Node port for nodes not installed via our packaging
 sudo firewall-cmd --permanent --add-port=9999/tcp
 #sudo firewall-cmd --permanent --add-port=19999/tcp
 ```
@@ -127,9 +141,9 @@ that service is all about: Browse directory `/usr/lib/firewalld/services`
 Let's rate limit traffic to those ports to reduce abuse. SSH and cockpit, if
 those services were added they really need to be rate limited. You would
 probably want to rate limit 80 and 443, for example, if this were a webserver
-(but using more liberal values). Masternodes _probably_ don't need to be rate
-limited since they are filtered at the protocol level, but that is something to
-consider in the future.
+(but using more liberal values). Nodes _probably_ don't need to be rate limited
+since they are filtered at the protocol level, but that is something to consider
+in the future.
 
 
 > **Note:** `--add-service`, `--add-rich-rule`, `--add-port` &mdash; all of
@@ -143,7 +157,8 @@ consider in the future.
 sudo firewall-cmd --permanent --add-rich-rule='rule service name=ssh limit value=10/m accept'
 #sudo firewall-cmd --permanent --add-rich-rule='rule service name=cockpit limit value=10/m accept'
 
-# Rate limit incoming dash node (and masternode) traffic to 100 requests per minute
+# Rate limit incoming dash node (and masternode) traffic to 100 requests per
+# minute
 sudo firewall-cmd --permanent --add-rich-rule='rule service name=dashcore limit value=100/m accept'
 #sudo firewall-cmd --permanent --add-rich-rule='rule service name=dashcore-testnet limit value=100/m accept'
 ```
@@ -247,7 +262,7 @@ sudo systemctl restart fail2ban
 
 #### Monitor / Analyze
 
-Watch the IP addresses slowly pile up by occassionally looking in the SSH jail...
+Watch the IP addresses slowly pile up by occasionally looking in the SSH jail...
 
 ```
 sudo fail2ban-client status sshd
@@ -262,7 +277,7 @@ sudo journalctl -u fail2ban.service -f
 ...and...
 
 ```
-sudo tail -F /var/log/fail2ban.log 
+sudo tail -F /var/log/fail2ban.log
 ```
 
 #### Reference:
@@ -273,7 +288,6 @@ sudo tail -F /var/log/fail2ban.log
 
 ---
 
-### Done!
+## Done!
 
 Got a dash of feedback? Send it my way: <https://keybase.io/toddwarner>
-
