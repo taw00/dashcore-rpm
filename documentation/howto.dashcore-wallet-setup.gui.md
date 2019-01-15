@@ -1,18 +1,16 @@
 # HowTo: Install a Dash Core Wallet
 
-> This edition of the document is for GUI versions of the Dash Core Wallet
-(`dash-qt`).
->
-> These instructions are specific to the Red Hat-family of linuxes.
+These instructions target installation of the Dash Core graphical wallet client
+software, `dash-qt`. If you wish to use a hardware wallet instead (recommended),
+install the `dash-masternode-tool` package on your workstation and follow the
+guidelines found
+[here](<https://github.com/Bertrand256/dash-masternode-tool/blob/master/README.md>).
 
-> If you wish to use a hardware wallet instead (recommended)
-and you are running Fedora Linux, install the `dash-masternode-tool` instead on
-your workstation, and follow the guidelines found here:
-<https://github.com/Bertrand256/dash-masternode-tool/blob/master/README.md>.
+**Table of Contents**
 
 <!-- TOC START min:2 max:3 link:true update:true -->
 - [[0] Install the operating system](#0-install-the-operating-system)
-- [[1] Install the Dash Core Graphical Client and FirewallD](#1-install-the-dash-core-graphical-client-and-firewalld)
+- [[1] Install `dashcore-client` and `firewalld`](#1-install-dashcore-client-and-firewalld)
 - [[2] Configure firewall rules to better secure your wallet](#2-configure-firewall-rules-to-better-secure-your-wallet)
 - [[3] Create and edit your `dash.conf` configuration file](#3-create-and-edit-your-dashconf-configuration-file)
   - [Change your RPC (remote procedure call username and password)](#change-your-rpc-remote-procedure-call-username-and-password)
@@ -25,6 +23,10 @@ your workstation, and follow the guidelines found here:
 
 <!-- TOC END -->
 
+---
+
+&nbsp;
+
 ## [0] Install the operating system
 
 I leave it as an exercise for the reader to install Fedora Linux. For Fedora,
@@ -32,7 +34,7 @@ go here - https://getfedora.org/ I recommend the "Workstation" install.
 
 <!-- For CentOS, go here - https://www.centos.org/download/ -->
 
-***Sudoers access...***
+***sudoers access...***
 
 As you walk through the operating system installation wizard, you will be asked
 to create a normal user on the system. Do that. The wizard will also ask you if
@@ -70,7 +72,7 @@ sudo reboot
 ```
 -->
 
-## [1] Install the Dash Core Graphical Client and FirewallD
+## [1] Install `dashcore-client` and `firewalld`
 
 Log onto the system as a normal user (not root), install the Dash Core wallet and the firewalld service:
 
@@ -244,7 +246,7 @@ awhile.
 
 ### Encrypt your wallet...
 
-Don't put this off. Do it.
+Don't put this off. Do it!
 
 * Navigate the menus: Settings > Encrypt wallet
 * Set the password

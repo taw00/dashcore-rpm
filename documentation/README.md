@@ -25,7 +25,7 @@ linuxes.
 - [Install a Dash Core Wallet](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.dashcore-wallet-setup.gui.md)
 - [Deploy a VPS System to be Used as a Dash Core Node/Masternode](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.deploy-and-configure-operating-system.md)
 - [Deploy a Dash Masternode as SystemD Service](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.dashcore-node-setup.systemd.md)
-- Turn a Node into a Masternode: [Configure and Register Node as a Masternode](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.dashcore-masternode-registration.md)
+- [Configure and Register Node as a Masternode](https://github.com/taw02/dashcore-rpm/blob/master/documentation/howto.dashcore-masternode-registration.md) - ie. turn a node into a masternode 
 
 <!---
 - Advanced topics:

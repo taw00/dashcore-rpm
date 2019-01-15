@@ -1,13 +1,13 @@
 # HowTo: Upgrade from Dash Core version 0.12.3 to 0.13.0
 
 These instructions are specific to node, masternode, and wallet users running
-the software on Fedora, ~~CentOS, or RHEL~~ (x86_64) plugged into the
-~~`yum`~~ or `dnf` install and update process described in other documentation
-found at <https://github.com/taw00/dashcore-rpm>. Dash Core builds for Fedora
-27, RHEL7, or CentOS7 will no longer be available as of v0.13.0.
+the software on Fedora Linux (x86_64) plugged into the `dnf` install and update
+process described in the documentation found at
+<https://github.com/taw00/dashcore-rpm>. Dash Core builds for Fedora 27, RHEL7,
+or CentOS7 are no longer be available as of v0.13.0.
 
-The process for upgrade of Dash Core is actually rather trivial, ***but it does
-require attention to detail***. Read on...
+The process for upgrade of the Dash Core application software is actually rather
+trivial, _**but it does require attention to detail.**_ Read on...
 
 > **BIG UGLY WARNING #1**<br />Because of the extremely dated version of cmake
 > in Red Hat Enterprise Linux 7 (and CentOS 7), these platforms will no longer
@@ -43,19 +43,21 @@ sudo dnf list --refresh | grep dashcore
 - [[2] Update your repo configuration - switch to the new "stable" repo](#2-update-your-repo-configuration---switch-to-the-new-stable-repo)
 - [[3] Upgrade Dash Core binary packages](#3-upgrade-dash-core-binary-packages)
 - [[4] Start everything back up](#4-start-everything-back-up)
-- [[5] Generate NEW (as of 0.13) "BLS" public/private key-pair](#5-generate-new-as-of-013-bls-publicprivate-key-pair)
-- [[6] Masternode upgrade only: Send start command from Wallet to Masternode](#6-masternode-upgrade-only-send-start-command-from-wallet-to-masternode)
-- [[6] Masternode upgrades only:<br />Deploy new v0.13 configurations to support Deterministic Masternode Lists](#6-masternode-upgrades-onlydeploy-new-v013-configurations-to-support-deterministic-masternode-lists)
-- [[7] Masternode upgrade in particular: Monitor your status](#7-masternode-upgrade-in-particular-monitor-your-status)
+- [[5] Send start command from wallet to masternode](#5-send-start-command-from-wallet-to-masternode)
+- [[6] Masternode: Deploy new v0.13 configurations to support Deterministic Masternode Lists](#6-masternode-deploy-new-v013-configurations-to-support-deterministic-masternode-lists)
+- [[7] Masternodes: Monitor your status](#7-masternodes-monitor-your-status)
 - [Good luck! Comments and Feedback...](#good-luck-comments-and-feedback)
 
 <!-- TOC END -->
 
 ### [0] Shut everything down
 
-* If running `dash-qt` (the graphical client program), in your menus choose "File" and then "Exit"
-* If running `dashd` manually (not as a systemd service), then issue a shutdown with `dash-cli stop`
-* If running `dashd` as a systemd service, then issue a shutdown command with `sudo systemctl stop dash`
+- If running `dash-qt` (the graphical client application), in your menus choose
+  "File" and then "Exit"
+- If running `dashd` manually (not as a `systemd` service), then issue a
+  shutdown with `dash-cli stop`
+- If running `dashd` as a `systemd` service, then issue a shutdown command with
+  `sudo systemctl stop dash`
 
 ### [1] Back everything up
 
@@ -67,21 +69,22 @@ with a wallet, a backup is critical for ensuring your funds are protected.
 The easiest way to back up your wallet is to shut it down and then copy any
 configuration and wallet data files.
 
-* Shut down -- You should have already done this in step [0]
-* Open up a terminal
-* Create a tar-archive (like zip, but better) of your configuration and wallet data files<br />
+- Shut down -- You should have already done this in step [0]
+- Open up a terminal
+- Create a tar-archive (like zip, but better) of your configuration and wallet
+  data files<br />
   _Note: If these are overly complicated for you, just be sure to copy `wallet.dat` and any `.conf` files somewhere and you will be fine._
 
-*This is the general pattern of creating a backup tar-archive...*
+_This is the general pattern of creating a backup tar-archive..._
 
-Backing up, Scenario1: The dashd server is run as a systemd service:
+**Backup Scenario1:** The dashd server is run as a systemd service:
 ```
 sudo tar cvzf dash-backup-$(date +%F).tar.gz /etc/dashcore/dash.conf $(sudo find /var/lib/dashcore -name '*.conf' -or -name 'wallet.dat*')
 ```
 
 &nbsp;
 
-Backing up, Scenario2: The graphical client or dashd is run from the user's home directory:
+**Backup Scenario2:** The graphical client or dashd is run from the user's home directory:
 ```
 cd ~
 tar cvzf dash-backup-$(date -%F).tar.gz .dashcore/dash.conf $(find .dashcore/ -name '*.conf' -or -name 'wallet.dat*')
@@ -101,11 +104,11 @@ sha256sum wallet.dat /path/to/dash-data-directory/wallet.dat # The results shoul
 cd ..
 rm -rf x
 ```
-* If you ever need to restore your wallet, node, or masternode, set up a new
+- If you ever need to restore your wallet, node, or masternode, set up a new
   one and just like in the test, extract the archive but this time replace
   all the new setup's files with the ones from the archive.
-* Store that "tarball" somewhere safe.
-* Repeat to yourself: _"I should have been doing this all along!"_
+- Store that "tarball" somewhere safe.
+- Repeat to yourself: _"I should have been doing this all along!"_
 
 
 ### [2] Update your repo configuration - switch to the new "stable" repo
@@ -166,7 +169,7 @@ sudo dnf upgrade -y
 
 ### [4] Start everything back up
 
-#### If this is a GUI wallet - `dash-qt`
+#### If this is the graphical wallet - `dash-qt`
 
 Start it up via the desktop menuing system. It _might_ ask if you want to
 re-index the blockchain. If it does, choose "YES". When complete, check your
@@ -215,14 +218,14 @@ sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf -datadir=/var/lib/dashco
 #sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf -datadir=/var/lib/dashcore masternode mnsync reset
 ```
 
-### [5] Send start command from Wallet to Masternode (MASTERNODES ONLY)
+### [5] Send start command from wallet to masternode
 
-*This only has to happen for major releases, like 0.12.3 to 0.13.0. You
+_This only has to happen for major releases, like 0.12.3 to 0.13.0. You
 usually don't have send the restart command for minor releases (eg. 0.13.0 to
-0.13.1). The protocol change from 0.12.3 to 0.13.0 is `70210` to `70213`*
+0.13.1). The protocol change from 0.12.3 to 0.13.0 is `70210` to `70213`_
 
-***You have to restart the Masternode from your collateralizing wallet. Here's
-how...***
+_**You have to restart the masternode from your collateralizing wallet. Here's
+how...**_
 
 1. Ensure you have upgraded your wallet as well (IMPORTANT).
 2. Open your wallet, you can either...
@@ -233,11 +236,11 @@ how...***
 If you are using a hardware wallet, please follow Bertrand's instruction: <https://github.com/Bertrand256/dash-masternode-tool/blob/master/README.md>
 
 
-### [7] Deploy new v0.13 configurations to support Deterministic Masternode Lists (MASTERNODES ONLY)
+### [6] Masternode: Deploy new v0.13 configurations to support Deterministic Masternode Lists
 
 Follow these instructions: <https://github.com/Bertrand256/dash-masternode-tool/blob/master/howto.dashcore-masternode-registration.md>
 
-### [7] Masternode upgrade in particular: Monitor your status
+### [7] Masternodes: Monitor your status
 
 ```
 # On masternode (systemd managed in these examples)...

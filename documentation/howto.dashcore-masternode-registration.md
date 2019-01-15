@@ -6,51 +6,54 @@ the software on Fedora, ~~CentOS, or RHEL~~ (i386 and x86_64) plugged into the
 found at <https://github.com/taw00/dashcore-rpm>. Dash Core builds for Fedora
 27, RHEL7, or CentOS7 will no longer be available as of v0.13.0.
 
-Version 0.13.0 merges two models of registering a masternode on the network. The old model (steps 4 through 7) will fall away eventually and make way for the new model alone (steps 8 through 12).
+Version 0.13.0 merges two models of registering a masternode on the network. The old model (much of PART 2 below) will fall away eventually and make way for the new model alone (PART 3 below).
 
-The old model: proof of 1000 dash and share a secret between wallet and node
+**The old model:** proof of 1000 dash and secret shared between wallet and node.
 
-The new model: proof of 1000 dash, identification of dash addresses for reward payouts, operation, ownership, and voting; share a secret; and register the configuration to the blockchain.
+**The new model:** proof of 1000 dash; identification of dash addresses for reward payouts, operations, ownership, and voting; a shared secret; and registration of the configuration to the blockchain.
 
 **SUMMARY OF STEPS:**
 
 <!-- TOC START min:2 max:3 link:true update:true -->
-- [PART 1: Install the software](#part-1-install-the-software)
+- [PART 1: Install the software components](#part-1-install-the-software-components)
   - [[1] Install a Dash Core wallet (or use a hardware wallet)](#1-install-a-dash-core-wallet-or-use-a-hardware-wallet)
-  - [[2] Set up a Dash Core node](#2-set-up-a-dash-core-node)
+  - [[2] Deploy and configure a Dash Core node](#2-deploy-and-configure-a-dash-core-node)
 - [PART 2: Configure the wallet and masternode (old school)](#part-2-configure-the-wallet-and-masternode-old-school)
   - [[3] Send 1000 Dash (the collateral) to the wallet](#3-send-1000-dash-the-collateral-to-the-wallet)
   - [[4] Generate a private "masternode key" via the wallet (a shared secret)](#4-generate-a-private-masternode-key-via-the-wallet-a-shared-secret)
   - [[5] Configure the wallet and the masternode](#5-configure-the-wallet-and-the-masternode)
-  - [[6] Set up Dash Sentinel](#6-set-up-dash-sentinel)
+  - [[6] Configure Dash Sentinel](#6-configure-dash-sentinel)
   - [[7] Issue a remote start command from the wallet to the masternode](#7-issue-a-remote-start-command-from-the-wallet-to-the-masternode)
   - [[8] Monitor masternode enablement status](#8-monitor-masternode-enablement-status)
 - [PART 3: Configure the masternode (new 0.13.0 "DIP003" compatible)](#part-3-configure-the-masternode-new-0130-dip003-compatible)
   - [[9] Generate a BLS key-pair & configure the masternode with the secret key](#9-generate-a-bls-key-pair--configure-the-masternode-with-the-secret-key)
   - [[10] Determine owner address, voter address, and payout address](#10-determine-owner-address-voter-address-and-payout-address)
   - [[11] Prepare a "special transaction" that encapsulating masternode-relevant information (ownership, voting, payout)](#11-prepare-a-special-transaction-that-encapsulating-masternode-relevant-information-ownership-voting-payout)
-  - [[12] Sign the message (generate signature hash)](#12-sign-the-message-generate-signature-hash)
+  - [[12] Sign the "special transaction" message (generate signature hash)](#12-sign-the-special-transaction-message-generate-signature-hash)
   - [[13] Register the masternode on the blockchain (submit transaction and validating signature)](#13-register-the-masternode-on-the-blockchain-submit-transaction-and-validating-signature)
 - [WHEW!!! ALL DONE!](#whew-all-done)
 
 <!-- TOC END -->
 
-*Credit: Much of this documentation was inspired by the [good
-work](<https://docs.dash.org/en/latest/masternodes/maintenance.html#generate-a-bls-key-pair>
-) of the Dash Core documentation team.*
+> _**Credit:** Much of this documentation was inspired by the [good
+work](<https://docs.dash.org/en/latest/masternodes/maintenance.html#generate-a-bls-key-pair>)
+of the Dash Core documentation team._
+
 ---
 
-## PART 1: Install the software
+## PART 1: Install the software components
 
 ### [1] Install a Dash Core wallet (or use a hardware wallet)
 
 If you have already done this, skip this step. Obviously. Otherwise, read this document for more information: TODO_INSERT_LINK_HERE
 
-### [2] Set up a Dash Core node
+### [2] Deploy and configure a Dash Core node
 
 If you have one already set up, skip this step, or see [these instructions](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.dashcore-node-setup.systemd.md).
 
+
 ---
+
 
 ## PART 2: Configure the wallet and masternode (old school)
 
@@ -119,7 +122,7 @@ Save the file and then *restart the node*...
 - If running as a normal user: `dash-cli stop ; pause 5 ; dashd`
 - If running as a `systemd` service: `sudo systemctl restart dashd`
 
-### [6] Set up Dash Sentinel
+### [6] Configure Dash Sentinel
 
 There are really two services associated to a masternode, the node itself and a
 "sentinel" that performs certain actions and manages expanded processes for the
@@ -127,12 +130,12 @@ network. It was already installed when your dashcore-server package was
 installed. You just have to turn it on and edit crontab for the `dash` system
 user so that it executes every five minutes...
 
-***Configure it to run on testnet or mainnet...***
+_**Configure it to run on testnet or mainnet...**_
 
 Edit the `/var/lib/dashcore/sentinel/sentinel.conf` file and set either
 `network=testnet` or `network=mainnet`
 
-***Run it for the first time...***
+_**Run it for the first time...**_
 
 ```
 sudo -u dashcore -- bash -c "cd /var/lib/dashcore/sentinel && venv/bin/python bin/sentinel.py"
@@ -154,7 +157,7 @@ There should be no output.
 > sudo -u dashcore -- bash -c "cd /var/lib/dashcore/sentinel && SENTINEL_DEBUG=1 venv/bin/python bin/sentinel.py
 > ```
 
-***Edit cron and add a "run it every minute" entry***
+_**Edit cron and add a "run it every minute" entry**_
 
 On the commandline, edit `crontab` &mdash; notice, that we, like in most
 commands, are doing it as the `dashcore` system user...
@@ -212,8 +215,7 @@ Continue to monitor the enablement status. The status should start as
 settle on `ENABLED`. If your wallet failed to restart it, it will say something
 like `NEW_START_REQUIRED`
 
-
----
+&nbsp;
 
 While that is going on in one terminal, open up another terminal and...
 
@@ -326,16 +328,19 @@ ignore that for now and maybe revisit that at a later date. -- TODO
 
 Now we use just about all those keys and data we have been hanging onto.
 
-(1) Prepare a "special transaction" that encapsulates all that data...
+(1) Prepare a ["special
+transaction"](https://github.com/dashpay/dips/blob/master/dip-0002.md) that
+encapsulates all that data...
 
-We will now prepare an unsigned ProRegTx special transaction using the `protx register_prepare` command. This command has the following syntax:
+We will now prepare an unsigned ProRegTx special transaction using the `protx
+register_prepare` command. This command has the following syntax:
 
 ```
 protx register_prepare collateralHash collateralIndex ipAndPort ownerKeyAddr
   operatorPubKey votingKeyAddr operatorReward payoutAddress (feeSourceAddress)
 ```
 
-**Example use case 1 from above:**  
+**Example from use case 1 above:**  
 *...format it all on one line (remove the "\'s" and newlines)*
 ```
 protx register_prepare \
@@ -354,7 +359,7 @@ All on one line, it would look like this:
 protx register_prepare b34ad623453453456423454643541325c98d2f8b7a967551f31dd7cefdd67457 1 93.184.216.34:9999 XoVAtG8tW6hwcbqVJp1A9caKwqWMpg9oB2 01d2c43f022eeceaaf09532d84350feb49d7e72c183e56737c816076d0e803d4f86036bd4151160f5732ab4a461bd127 XoVAtG8tW6hwcbqVJp1A9caKwqWMpg9oB2 0 XMArVugC51J6WRkAVJpAwi2x6ecr4xvazH
 ```
 
-**Example use case 3 from above:**
+**Example from use case 3 above:**
 ```
 protx register_prepare \
 b34ad623453453456423454643541325c98d2f8b7a967551f31dd7cefdd67457 \
@@ -379,7 +384,7 @@ XwSrNFimUZbY58Sx17YiSLPAvPToxitZr1
 }
 ```
 
-### [12] Sign the message (generate signature hash)
+### [12] Sign the "special transaction" message (generate signature hash)
 
 Next we will use the `collateralAddress` and `signMessage` fields to sign the message: `signmessage <collateralAddress> <signMessage>` ...or...
 
@@ -397,7 +402,7 @@ IMf5P6WT60E+QcA5+ixors38umHuhTxx6TNHMsf9gLTIPcpilXkm1jDglMpK+JND0W3k/Z+NzEWUxvRy
 
 ### [13] Register the masternode on the blockchain (submit transaction and validating signature)
 
-Create a "ProRegTx" special transaction (using the `protx` command) to register the masternode on the blockchain. ***This command must be sent from a Dash Core wallet holding a balance,*** since a standard transaction fee is involved.
+Create a "ProRegTx" special transaction (using the `protx` command) to register the masternode on the blockchain. _**This command must be sent from a Dash Core wallet holding a balance,**_ since a standard transaction fee is involved.
 
 The command takes the following syntax: `protx register_submit tx sig`
 
@@ -437,6 +442,6 @@ this was helpful.
 
 Got a dash of feedback? *...har har...* Send it my way <https://keybase.io/toddwarner>    
 
-***Credit:** Much of this documentation was inspired by the [good
-work](<https://docs.dash.org/en/latest/masternodes/maintenance.html#generate-a-bls-key-pair>
-) of the Dash Core documentation team.*
+> _**Credit:** Much of this documentation was inspired by the [good
+work](<https://docs.dash.org/en/latest/masternodes/maintenance.html#generate-a-bls-key-pair>)
+of the Dash Core documentation team._

@@ -1,25 +1,25 @@
-# HowTo: Deploy and Configure a Dash Core Node as SystemD Service
+# HowTo: Deploy and Configure a Dash Core Node as `systemd` Service
 
-_aka I want to run a Dash Core Node (or Masternode) like a SysAdmin!_
+_aka I want to run a Dash Core Node (or Masternode) like a sysadmin!_
 
-> This edition of these instructions is for those who wish to install and
-> configure a Dash Node/Masternode running as a traditional `systemd` service. >
->
-> A Dash Core Node (`dashd`) is a long-running daemon service, therefore it
-> lends itself to the improved security and robustness that `systemd` provides.
-> I.e., It really is the "right way" of running your node or masternode. Another
-> "right way" would be to run it as a container. But that is beyond the scope of
-> this document.
+These instructions target those who wish to install and configure a Dash
+Node/Masternode running as a traditional `systemd` service.
+
+A Dash Core Node (`dashd`) is a long-running daemon service, therefore it lends
+itself to the improved security and robustness that `systemd` provides. Ie. It
+really is the "right way" of running your node or masternode. Another "right
+way" would be to run it as a container. But that is beyond the scope of this
+document.
 
 **Table of Content**
 
 <!-- TOC START min:2 max:3 link:true update:true -->
-- [FIRST: Install the operating systems](#first-install-the-operating-systems)
-- [[1] Install Dash (and FirewallD)](#1-install-dash-and-firewalld)
-- [[2] Configure Dash Server to be a Full Node](#2-configure-dash-server-to-be-a-full-node)
+- [[0] Install the operating systems](#0-install-the-operating-systems)
+- [[1] Install the Dash Core Node software](#1-install-the-dash-core-node-software)
+- [[2] Configure `dashd` to be a full node](#2-configure-dashd-to-be-a-full-node)
 - [[3] Start up your Dash Core full node](#3-start-up-your-dash-core-full-node)
 - [[4] Monitor the situation](#4-monitor-the-situation)
-- [[5] Configure firewall rules](#5-configure-firewall-rules)
+- [[5] Configure firewall rules - `firewalld`](#5-configure-firewall-rules---firewalld)
 - [ALL DONE!](#all-done)
 - [Email me when `dashd` starts or stops](#email-me-when-dashd-starts-or-stops)
 - [Email the admin when the Masternode's status changes from "ENABLED"](#email-the-admin-when-the-masternodes-status-changes-from-enabled)
@@ -28,13 +28,13 @@ _aka I want to run a Dash Core Node (or Masternode) like a SysAdmin!_
 
 <!-- TOC END -->
 
-## FIRST: Install the operating systems
+## [0] Install the operating systems
 
 Instruction for setting up, configuring, and securing a Fedora Linux system in preparation for deploying a Dash Core Node or Masternode can be found here: <https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.deploy-and-configure-operating-system.md>
 
-Once completed, you may continue.
+Once completed, please continue.
 
-## [1] Install Dash (and FirewallD)
+## [1] Install the Dash Core Node software
 
 Because this is a Red Hat-based system, management of installed software is
 trivial. This is how easy it is.
@@ -85,7 +85,7 @@ sudo yum install -y dashcore-server
 ```
 -->
 
-## [2] Configure Dash Server to be a Full Node
+## [2] Configure `dashd` to be a full node
 
 We are configuring this as a `systemd` service. Some of the process has been
 done for you. Please note these differences from other instruction you may read
@@ -94,7 +94,8 @@ out there.
 1. The default data directory will be `/var/lib/dashcore`
 2. The default configuration file will be `/etc/dashcore/dash.conf`
 3. Both are owned by system user (and group) `dashcore`
-4. All elements in 1, 2, and 3 above were installed automatically by the dashcore-server RPM package.
+4. All elements in 1, 2, and 3 above were installed and configured automatically
+by the `dashcore-server` RPM package
 
 Since the Dash service runs out of `dashcore` user owned directories and
 configuration, many of our configuration and ongoing maintenance actions will
@@ -253,7 +254,7 @@ sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf -conf=/etc/dashcore/dash
 
 &nbsp;
 
-## [5] Configure firewall rules
+## [5] Configure firewall rules - `firewalld`
 
 You can follow the instruction in
 [howto.dashcore-node-security.md](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.dashcore-node-security.md),
@@ -325,9 +326,9 @@ feel free to remove it following the pattern we demonstrated above._
 
 ## ALL DONE!
 
-If all went well, you have a working Dash Core Node that is working hard to help
-secure the network by validating and propagating blocks and transactions.
-Congratulations. I hope this was helpful.
+If all went well, you have a Dash Core Node humming along that is working hard
+to help secure the network by validating and propagating blocks and
+transactions.
 
 Got a dash of feedback? *...har har...* Send it my way <https://keybase.io/toddwarner>    
 
