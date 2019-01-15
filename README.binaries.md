@@ -109,7 +109,7 @@ If you are looking for Dash wallets for other platforms, those can be found here
 
 **Masternode Documentation:** <https://github.com/taw00/dashcore-rpm/tree/master/documentation><br />   
 **Dash Core Documentation:** <https://docs.dash.org/><br />
-**Dash Developer Documentation:** <>
+**Dash Developer Documentation:** <https://dash-docs.github.io/>
 
 
 ## Configuring your system to have access to the Dash Core RPM package repositories
