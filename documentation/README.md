@@ -29,19 +29,19 @@ wallet for that matter) that once set up, requires little maintenance except
 the occasional update or upgrade.
 
 - [Install a Dash Core Wallet](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.dashcore-wallet-setup.gui.md)
-- [Deploy a VPS System to be Used as a Dash Core Node/Masternode](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.deploy-and-configure-operating-system.md)
-- [Deploy a Dash Masternode as SystemD Service](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.dashcore-node-setup.systemd.md)
-- [Configure and Register Node as a Masternode](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.dashcore-masternode-registration.md) - ie. turn a node into a masternode
+- [Deploy a VPS System to be used as a Dash Core Node or Masternode](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.deploy-and-configure-operating-system.md)
+- [Deploy a Dash Core Node as systemd service](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.dashcore-node-setup.systemd.md)
+- [Configure and register a node as a masternode](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.dashcore-masternode-registration.md) - ie. turn a node into a masternode
 
 ---
 
 ## Advanced and follow-on topics
 
-- Discussion about security: [Configure FirewallD and Fail2Ban on a Dash Masternode](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.dashcore-node-security.md)
+- Discussion about security: [Configure firewalld and fail2ban on a Dash Masternode](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.dashcore-node-security.md)
 - Troubleshooting: [Dash Core Troubleshooting Guide](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.dashcore-troubleshooting.md)
-- Updating: [How to Update your Wallet, Node, or Masternode](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.update-a-wallet-node-or-masternode.md)
-- Upgrading Major Versions: [How to Upgrade from Version 0.12.3 to 0.13.0](https://github.com/taw00/dashcore-rpm/blob/master/documentation/testing/howto.dashcore-upgrade-from-0.12.3-to-0.13.0.md)
-- Upgrading OS: [How to Upgrade Your Masternode's Operating System](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.upgrade-the-operating-system.md)
+- Updating: [How to update your wallet, node, or masternode](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.update-a-wallet-node-or-masternode.md)
+- Upgrading Major Versions: [How to upgrade from version 0.12.3 to 0.13.0](https://github.com/taw00/dashcore-rpm/blob/master/documentation/testing/howto.dashcore-upgrade-from-0.12.3-to-0.13.0.md)
+- Upgrading OS: [How to upgrade your masternode's operating system](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.upgrade-the-operating-system.md)
 
 
 &nbsp;
