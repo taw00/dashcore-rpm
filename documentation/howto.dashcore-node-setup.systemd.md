@@ -1,15 +1,15 @@
-# HowTo: Deploy and Configure a Dash Core Node as `systemd` Service
+# HowTo: Deploy & Configure a Dash Core Node as `systemd` Service
 
 _aka I want to run a Dash Core Node (or Masternode) like a sysadmin!_
 
 These instructions target those who wish to install and configure a Dash
 Node/Masternode running as a traditional `systemd` service.
 
-A Dash Core Node (`dashd`) is a long-running daemon service, therefore it lends
-itself to the improved security and robustness that `systemd` provides. Ie. It
-really is the "right way" of running your node or masternode. Another "right
-way" would be to run it as a container. But that is beyond the scope of this
-document.
+_Why a `systemd` service?_ A Dash Core Node (`dashd`) is a long-running daemon
+service, therefore it lends itself to the improved security and robustness that
+`systemd` provides. Ie. It really is the "right way" of running your node or
+masternode. Another "right way" would be to run it as a container. But that is
+beyond the scope of this document.
 
 **Table of Content**
 
@@ -21,10 +21,11 @@ document.
 - [[4] Monitor the situation](#4-monitor-the-situation)
 - [[5] Configure firewall rules - `firewalld`](#5-configure-firewall-rules---firewalld)
 - [ALL DONE!](#all-done)
-- [Email me when `dashd` starts or stops](#email-me-when-dashd-starts-or-stops)
-- [Email the admin when the Masternode's status changes from "ENABLED"](#email-the-admin-when-the-masternodes-status-changes-from-enabled)
-- [Super fancy crontab settings](#super-fancy-crontab-settings)
-- [Improve SSD Write & Delete Performance for Linux Systems by Enabling ATA TRIM](#improve-ssd-write--delete-performance-for-linux-systems-by-enabling-ata-trim)
+- [Appendix - Advanced Topics](#appendix---advanced-topics)
+  - [Email me when `dashd` starts or stops](#email-me-when-dashd-starts-or-stops)
+- [#Email the admin when the Masternode's status changes from "ENABLED"](#email-the-admin-when-the-masternodes-status-changes-from-enabled)
+  - [Super fancy crontab settings](#super-fancy-crontab-settings)
+  - [Improve SSD Write & Delete Performance for Linux Systems by Enabling ATA TRIM](#improve-ssd-write--delete-performance-for-linux-systems-by-enabling-ata-trim)
 
 <!-- TOC END -->
 
@@ -338,10 +339,10 @@ Got a dash of feedback? *...har har...* Send it my way <https://keybase.io/toddw
 
 ---
 
-# Appendix - Advanced Topics
+## Appendix - Advanced Topics
 
 
-## Email me when `dashd` starts or stops
+### Email me when `dashd` starts or stops
 
 SystemD makes it easy for your system to be configured to send you emails if
 your masternode is rebooted, or systemd restarts dashd because it crashed, etc.
@@ -367,12 +368,12 @@ those emails a couple minutes to get to you (email is slow).
 That's it. Not so hard, right?
 
 
-## Email the admin when the Masternode's status changes from "ENABLED"
+## #Email the admin when the Masternode's status changes from "ENABLED"
 
 Not written yet. Stay tuned.
 
 
-## Super fancy crontab settings
+### Super fancy crontab settings
 
 Remember to edit with `sudo -u dashcore crontab -e` if dashcore-sentinel is
 installed with our RPM packages.
@@ -400,7 +401,7 @@ logfile=/var/log/dashcore/sentinel.log
 ```
 
 
-## Improve SSD Write & Delete Performance for Linux Systems by Enabling ATA TRIM
+### Improve SSD Write & Delete Performance for Linux Systems by Enabling ATA TRIM
 
 Because of the way SSDs (Solid State Drives) work, saving new data can impact performance. Namely, data marked as "deleted" have to be completely erased before write. With traditional magnetic drives, data marked for deletion is simply overwritten. Because SSDs have to take this extra step, performance can be impacted and slowly worsens over time.
 
