@@ -19,7 +19,7 @@ to access and adjusts firewall rules on the fly to squelch misbehavior.
 - [Fail2Ban](#fail2ban)
     - [Install `fail2ban`...](#install-fail2ban)
     - [Configure `fail2ban`...](#configure-fail2ban)
-    - [Enable `fail2ban` and reboot...](#enable-fail2ban-and-reboot)
+    - [Enable `fail2ban` and restart...](#enable-fail2ban-and-restart)
     - [Monitor / Analyze](#monitor--analyze)
     - [Reference:](#reference)
 - [Done!](#done)
@@ -37,10 +37,12 @@ though this will get you well on your way to a better protected system._
 ```
 # If Fedora...
 sudo dnf install -y firewalld # Probably already installed
-# If CentOS or RHEL...
-sudo yum install -y firewalld # Probably already installed
+
+# If CentOS7 or RHEL7...
+#sudo yum install -y firewalld # Probably already installed
+
 # If Debian or Ubuntu
-sudo apt install -y firewalld
+#sudo apt install -y firewalld
 ```
 
 #### Mask `iptables`
@@ -200,19 +202,24 @@ effective, especially against folks poking SSH.
 ```
 # If Fedora...
 sudo dnf install -y fail2ban fail2ban-systemd
-# If CentOS or RHEL
-sudo yum install epel-release # if not already installed
-sudo yum install -y fail2ban fail2ban-systemd
+
+# If CentOS7 or RHEL7
+#sudo yum install epel-release # if not already installed
+#sudo yum install -y fail2ban fail2ban-systemd
+
 # If Debian or Ubuntu
-sudo apt install -y fail2ban
+#sudo apt install -y fail2ban
 ```
 
 If you are not using FirewallD, and instead are using IPTables for your
 firewall, uninstall fail2ban-firewalld (for the Red Hat-based systems only).
 
 ```
-sudo dnf remove -y fail2ban-firewalld # Fedora
-sudo yum remove -y fail2ban-firewalld # CentOS or RHEL
+# If Fedora
+sudo dnf remove -y fail2ban-firewalld
+
+# If CentOS7 or RHEL7
+#sudo yum remove -y fail2ban-firewalld
 ```
 
 #### Configure `fail2ban`...
@@ -220,11 +227,7 @@ sudo yum remove -y fail2ban-firewalld # CentOS or RHEL
 Edit `/etc/fail2ban/jail.d/local.conf` _(Optionally `/etc/fail2ban/jail.local`
 instead)_
 
-```
-sudo nano /etc/fail2ban/jail.d/local.conf
-```
-
-Copy this, paste, then save...
+Copy this; paste; then save...
 
 ```
 [DEFAULT]
@@ -253,7 +256,7 @@ For more about setting up "send-only email", read
 [this](https://github.com/taw00/howto/blob/master/howto-configure-send-only-email-via-smtp-relay.md).
 
 
-#### Enable `fail2ban` and reboot...
+#### Enable `fail2ban` and restart...
 
 ```
 sudo systemctl enable fail2ban
