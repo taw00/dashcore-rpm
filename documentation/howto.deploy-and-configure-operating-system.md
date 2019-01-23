@@ -9,10 +9,13 @@ related configurations are made here. We describe those elsewhere.
 <!-- TOC START min:2 max:2 link:true update:true -->
 - [Summary -- the objectives are straight-forward:](#summary----the-objectives-are-straight-forward)
 - [[1] Deploy a minimal operating system](#1-deploy-a-minimal-operating-system)
-- [[2] Create user, setup SSH and sudo access...](#2-create-user-setup-ssh-and-sudo-access)
-- [[3] Minimize root user exposure](#3-minimize-root-user-exposure)
-- [[4] Install and Configure FirewallD](#4-install-and-configure-firewalld)
-- [[5] Install and Configure Fail2Ban](#5-install-and-configure-fail2ban)
+- [[2] Fully update the system and reboot](#2-fully-update-the-system-and-reboot)
+- [[3] Create user, setup SSH and sudo access...](#3-create-user-setup-ssh-and-sudo-access)
+- [[4] Minimize root user exposure](#4-minimize-root-user-exposure)
+- [[5] Install and Configure FirewallD](#5-install-and-configure-firewalld)
+- [[6] Install and Configure Fail2Ban](#6-install-and-configure-fail2ban)
+- [ALL DONE!](#all-done)
+- [Improve SSD Write & Delete Performance for Linux Systems by Enabling ATA TRIM](#improve-ssd-write--delete-performance-for-linux-systems-by-enabling-ata-trim)
 
 <!-- TOC END -->
 
@@ -127,7 +130,7 @@ Once installed, follow similar process as the Vultr VPS example for SSH configur
 
 
 
-### Fully update the system and reboot
+## [2] Fully update the system and reboot
 
 Log in as `mnuser` and...
 
@@ -143,7 +146,7 @@ reboot
 ```
 
 
-## [2] Create user, setup SSH and sudo access...
+## [3] Create user, setup SSH and sudo access...
 
 During the installation process using the wizard you will likely be asked to
 create a user. Do it. Additionally, choose to give this user administration
@@ -183,7 +186,7 @@ your desktop system.
 
 
 
-## [3] Minimize root user exposure
+## [4] Minimize root user exposure
 
 ***Turn off SSH logins for root...***
 
@@ -202,7 +205,7 @@ AllowUsers mnuser
 
 
 
-## [4] Install and Configure FirewallD
+## [5] Install and Configure FirewallD
 
 As a normal user (example `mnuser`)...
 
@@ -273,7 +276,7 @@ feel free to remove it following the pattern we demonstrated above._
 * Do some web searching for more about firewalld
 
 
-## [5] Install and Configure Fail2Ban
+## [6] Install and Configure Fail2Ban
 
 ### Install `fail2ban`...
 
@@ -335,14 +338,14 @@ For more about setting up "send-only email", read
 [this](https://github.com/taw00/howto/blob/master/howto-configure-send-only-email-via-smtp-relay.md).
 
 
-#### Enable `fail2ban` and restart...
+### Enable `fail2ban` and restart...
 
 ```
 sudo systemctl enable fail2ban
 sudo systemctl restart fail2ban
 ```
 
-#### Monitor / Analyze
+### Monitor / Analyze
 
 Watch the IP addresses slowly pile up by occasionally looking in the SSH jail...
 
