@@ -15,7 +15,7 @@ related configurations are made here. We describe those elsewhere.
 - [[5] Install and Configure FirewallD](#5-install-and-configure-firewalld)
 - [[6] Install and Configure Fail2Ban](#6-install-and-configure-fail2ban)
 - [ALL DONE!](#all-done)
-- [Improve SSD Write & Delete Performance for Linux Systems by Enabling ATA TRIM](#improve-ssd-write--delete-performance-for-linux-systems-by-enabling-ata-trim)
+- [Appendix - Advanced Topics](#appendix---advanced-topics)
 
 <!-- TOC END -->
 
@@ -391,9 +391,9 @@ Got a dash of feedback? *...har har...* Send it my way <https://keybase.io/toddw
 
 ---
 
-# Appendix - Advanced Topics
+## Appendix - Advanced Topics
 
-## Improve SSD Write & Delete Performance for Linux Systems by Enabling ATA TRIM
+### Improve SSD Write & Delete Performance for Linux Systems by Enabling ATA TRIM
 
 Because of the way SSDs (Solid State Drives) work, saving new data can impact performance. Namely, data marked as "deleted" have to be completely erased before write. With traditional magnetic drives, data marked for deletion is simply overwritten. Because SSDs have to take this extra step, performance can be impacted and slowly worsens over time.
 
