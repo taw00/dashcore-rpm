@@ -192,11 +192,9 @@ your desktop system.
 
 Attackers _love_ to attempt to login to root via SSH. Turn that off.
 
-* Edit `/etc/ssh/sshd_config` and either add or edit these lines (add only if
-  these settings do not yet exist)  
-  _Note: "mnuser" is our example user. For "AllowUsers" you can/should list
-  any usernames for which you have enabled sudo access and set up w/ SSH-key
-  access_
+* Edit `/etc/ssh/sshd_config`
+* Either add or edit these lines (add only if the setting does not already
+  exist)...      
 
 ```
 PermitRootLogin no
@@ -206,9 +204,14 @@ PasswordAuthentication no
 ChallengeResponseAuthentication no
 ```
 
+_Note: `AllowUsers` can be set to multiple users._
+
 * Once complete, restart sshd: `sudo systemctl restart sshd`
-* SSH login from another terminal to make sure you still have access. If not,
-  troubleshoot.
+* IMPORTANT TEST: While remaining logged into "mnuser" in one terminal, test that
+  you can still ssh-in to the machine using another terminal. If not, you need
+  to troubleshoot. If you lose that connection or are logged out from the other
+  terminal, you may have lost access to the machine. Fair warning.
+* All tested and better now? Good. Your system is now significantly more secure.
 
 
 ## [5] Install and Configure FirewallD
