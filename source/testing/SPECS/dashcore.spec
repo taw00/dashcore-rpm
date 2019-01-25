@@ -1000,10 +1000,12 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
-* Tue Jan 22 2019 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-1.1.testing.taw
+* Fri Jan 25 2019 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-1.1.testing.taw
   - Updated systemd configuration for dashd to kickoff only after network is  
     "online" (network-online.target). Suggested by dash-dude, xkcd, after  
     experimentation on low-powered devices, like the raspberry pi.
+  - Updated systemd configuration for dashd adjusting OOM score to a priority  
+    score favorable to dashd.
 
 * Mon Jan 14 2019 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-1.taw
 * Mon Jan 14 2019 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-0.14.testing.taw

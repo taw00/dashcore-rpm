@@ -16,6 +16,10 @@ Type=forking
 User=dashcore
 Group=dashcore
 EnvironmentFile=/etc/sysconfig/dashd
+# Make dashd less likely to be killed when RAM is low
+# (-1000 == will not be killed; 1000 == first to die)
+OOMScoreAdjust=-500
+
 
 ExecStart=/usr/bin/dashd -daemon -conf=${CONFIG_FILE} -datadir=${DATA_DIR} -pid=/run/dashd/dashd.pid $OPTIONS
 # Time that systemd gives a process to start before shooting it in the head

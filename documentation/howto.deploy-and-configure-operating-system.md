@@ -194,7 +194,7 @@ Attackers _love_ to attempt to login to root via SSH. Turn that off.
 
 * Edit `/etc/ssh/sshd_config`
 * Either add or edit these lines (add only if the setting does not already
-  exist)...      
+  exist)...
 
 ```
 PermitRootLogin no
