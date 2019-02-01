@@ -123,7 +123,9 @@ With your favorite editor &mdash; some use `nano`, I use `vim` &mdash; open up
 sudo -u dashcore nano /etc/dashcore/dash.conf
 ```
 
-Edit that file and save this data in it...
+Edit that file and save this data in it (if you are editing the default
+installed configuration file, most of these will already be set towards the end
+of the file)...
 ```
 # This is a Masternode Server configuration file
 # 1 = run as testnet server (fake money), 0 = run as mainnet server (real money)
@@ -154,8 +156,8 @@ rpcallowip=127.0.0.1
 
 #masternode=1
 #externalip=<results of "dig +short myip.opendns.com @resolver1.opendns.com">
-#masternodeprivkey=<process addressed in separate document>
-#masternodeblsprivkey=<new v0.13 process addressed in separate document>
+#masternodeprivkey=<setting described in a separate document>
+#masternodeblsprivkey=<new v0.13 setting described in a separate document>
 ```
 
 Please take special note of `"testnet=1"` and `"testnet=0"`.
@@ -240,7 +242,7 @@ echo $_json | python3 -c "import sys, json; print(json.load(sys.stdin)['info']['
 # node sees it (ie. it could be wrong)
 sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf getchaintips |grep -m1 height | sed 's/[^0-9]*//g'
 # ...or...
-sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf -conf=/etc/dashcore/dash.conf getblockcount
+sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf -datadir=/var/lib/dashcore getblockcount
 ```
 
 

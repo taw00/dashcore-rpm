@@ -649,6 +649,7 @@ daemon=1
 server=1
 # We participate peer-to-peer
 listen=1
+logtimestamps=1
 maxconnections=8
 
 # A systemd managed masternode probably not going to be a wallet as well
