@@ -344,10 +344,10 @@ Got a dash of feedback? *...har har...* Send it my way <https://keybase.io/toddw
 ## Appendix - Advanced Topics
 
 
-### Email me when `dashd` starts or stops
+### Email yourself when `dashd` starts or stops
 
 SystemD makes it easy for your system to be configured to send you emails if
-your masternode is rebooted, or systemd restarts dashd because it crashed, etc.
+your dash node is rebooted, or systemd restarts dashd because it crashed, etc.
 
 What takes a bit of doing is setting up your server to send emails in the first
 place. That can be a bit tricky, but it is not rocket science. I wrote a whole
@@ -361,52 +361,27 @@ if dashd stops or starts is trivial.
 * Configure these three settings: `EMAIL_FROM`, `EMAIL_TO`, `MASTERNODE_ALIAS`
   according to how your system is configured (see link above)
 
-You can ultimately test the system by issuing a Masternode restart &mdash
-`sudo systemctl restart dashd`. Folks are generally nervous about shutting down their
-Masternodes unnecessarily and rightly so, but you will not be positive if your system truly
-works without doing so. Just be aware that if you restart services, it may take
-those emails a couple minutes to get to you (email is slow).
+You can ultimately test the system by issuing a node restart &mdash `sudo
+systemctl restart dashd`. Folks are generally nervous about shutting down their
+nodes (especially masternodes) unnecessarily and rightly so, but you will not
+be positive if your system truly works without doing so. Just be aware that if
+you restart services, it may take those emails a couple minutes to get to you
+(email is slow).
 
 That's it. Not so hard, right?
 
 
-## #Email the admin when the Masternode's status changes from "ENABLED"
-
-Not written yet. Stay tuned.
-
-
-### Super fancy crontab settings
-
-Remember to edit with `sudo -u dashcore crontab -e` if dashcore-sentinel is
-installed with our RPM packages.
-
-```
-# Run Sentinel every minute; All messages are logged.
-logfile=/var/log/dashcore/sentinel.log
-* * * * * cd /var/lib/dashcore/sentinel && venv/bin/python bin/sentinel.py >> $logfile 2>&1
-```
-
-```
-# Run Sentinel every minute; dump COPIUS amounts of debug information to logfile
-SENTINEL_DEBUG=1
-logfile=/var/log/dashcore/sentinel.log
-* * * * * cd /var/lib/dashcore/sentinel && venv/bin/python bin/sentinel.py >> $logfile 2>&1
-```
-
-```
-# Run Sentinel every minute; each run is time stamped in the logs
-m0="----Sentinel job started --- pid:"
-m1="----Sentinel job completed - pid:" # Not used in this example
-t="%b %d %T UTC"
-logfile=/var/log/dashcore/sentinel.log
-* * * * * { cd /var/lib/dashcore/sentinel && date --utc +"$t $m0 $$" && venv/bin/python bin/sentinel.py ; } >> $logfile 2>&1
-```
-
 
 ### Improve SSD Write & Delete Performance for Linux Systems by Enabling ATA TRIM
 
-Because of the way SSDs (Solid State Drives) work, saving new data can impact performance. Namely, data marked as "deleted" have to be completely erased before write. With traditional magnetic drives, data marked for deletion is simply overwritten. Because SSDs have to take this extra step, performance can be impacted and slowly worsens over time.
+Because of the way SSDs (Solid State Drives) work, saving new data can impact
+performance. Namely, data marked as "deleted" have to be completely erased
+before write. With traditional magnetic drives, data marked for deletion is
+simply overwritten. Because SSDs have to take this extra step, performance can
+be impacted and slowly worsens over time.
 
-If, on the other hand, you can alert the operating system that it needs to wipe deleted data in the background, writes (and deletes) can improve in performance.
+If, on the other hand, you can alert the operating system that it needs to wipe
+deleted data in the background, writes (and deletes) can improve in
+performance.
 
 To learn more, follow this link: <https://github.com/taw00/howto/blob/master/howto-enable-ssd-trim-for-linux.md>

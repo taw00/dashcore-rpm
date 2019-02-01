@@ -445,3 +445,45 @@ Got a dash of feedback? *...har har...* Send it my way <https://keybase.io/toddw
 > _**Credit:** Much of this documentation was inspired by the [good
 work](<https://docs.dash.org/en/latest/masternodes/maintenance.html#generate-a-bls-key-pair>)
 of the Dash Core documentation team._
+
+---
+
+## Appendix - Advanced Topics
+
+### Email the admin when the Masternode's status changes from "ENABLED"
+
+Not written yet. Stay tuned. For general automated email setup, see the
+"Appendix" in the [node
+setup](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.dashcore-node-setup.systemd.md)
+documentation.
+
+### Super fancy crontab settings
+
+Remember to edit with `sudo -u dashcore crontab -e` if dashcore-sentinel is
+installed with our RPM packages.
+
+```
+# Run Sentinel every minute; All messages are logged.
+logfile=/var/log/dashcore/sentinel.log
+* * * * * cd /var/lib/dashcore/sentinel && venv/bin/python bin/sentinel.py >> $logfile 2>&1
+```
+
+```
+# Run Sentinel every minute; dump COPIUS amounts of debug information to logfile
+SENTINEL_DEBUG=1
+logfile=/var/log/dashcore/sentinel.log
+* * * * * cd /var/lib/dashcore/sentinel && venv/bin/python bin/sentinel.py >> $logfile 2>&1
+```
+
+```
+# Run Sentinel every minute; each run is time stamped in the logs
+m0="----Sentinel job started --- pid:"
+m1="----Sentinel job completed - pid:" # Not used in this example
+t="%b %d %T UTC"
+logfile=/var/log/dashcore/sentinel.log
+* * * * * { cd /var/lib/dashcore/sentinel && date --utc +"$t $m0 $$" && venv/bin/python bin/sentinel.py ; } >> $logfile 2>&1
+```
+
+
+
+
