@@ -252,6 +252,8 @@ sudo systemctl enable firewalld.service
 # On vultr, for example, the default zone is FedoraServer (it is the assumption
 # for this example)
 sudo firewall-cmd --get-active-zone
+# ...or better yet...
+sudo firewall-cmd --list-all |grep -iE '(active|interfaces|services)'
 
 # Whatever that default zone is, that is the starting conditions for your
 # configuration. For this example, I am going to demonstrate how to edit my
