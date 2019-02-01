@@ -37,7 +37,7 @@ bare-metal blade, server, white-box, whatever.
   - Create an account and login.
   - Click the ( + ) button.
   - Choose: 64 bit OS and Fedora
-  - Choose: 2048MB RAM, 2CPU 45GB SSD (consider a 4GB RAM system).
+  - Choose: 4096MB(4GB) RAM, 2CPU 60GB SSD
   - Set up SSH keys. This will make your life more pleasant and secure.
     [Vultr.com provides pretty solid instruction](https://www.vultr.com/docs/how-do-i-generate-ssh-keys)
     on this process.
