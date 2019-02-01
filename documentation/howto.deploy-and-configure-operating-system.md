@@ -36,12 +36,15 @@ bare-metal blade, server, white-box, whatever.
   - Browse to https://my.vultr.com/
   - Create an account and login.
   - Click the ( + ) button.
-  - Choose: 64 bit OS and Fedora
-  - Choose: 4096MB(4GB) RAM, 2CPU 60GB SSD
-  - Set up SSH keys. This will make your life more pleasant and secure.
-    [Vultr.com provides pretty solid instruction](https://www.vultr.com/docs/how-do-i-generate-ssh-keys)
-    on this process.
-  - Pick a hostname, `master00`, or whatever.
+  - Step (1): Choose some location
+  - Step (2): Choose 64 bit OS and Fedora
+  - Step (3): Choose 4096MB(4GB) RAM, 2CPU 60GB SSD
+  - Step (6): Set up SSH keys...
+    - This will make your life more pleasant and secure.
+      [Read more here](https://github.com/taw00/howto/blob/master/howto-ssh-keys.md)
+      for this process. Vultr also has a [great howto](https://github.com/taw00/howto/blob/master/howto-ssh-keys.md).
+    - Add (upload) the newly created SSH _public_ key to setup process.
+  - Step (7): Pick a hostname and label, `"master00" or whatever.
   - Deploy!
 
 **Post initial deployment to Vultr**
@@ -73,7 +76,7 @@ date
 
   - **Add swap space** to give your system memory some elbow room...
 
-Vulr mysteriously starts you with no swap. A reasonable
+Vulr initially boots with no configured swap. A reasonable
 [rule of thumb](https://github.com/taw00/howto/blob/master/howto-configure-swap-file-on-linux.md)
 is to configure swap to be twice the size of your RAM. Swap-size is more art
 than science, but your system will be brutalized occassionally... 2-times your
@@ -126,8 +129,10 @@ Ensure that your bare-metal server meets at least these requirements:
 As you walk through the installation process, choose to enable swap, it needs
 to be at least equal to the size of RAM, 2GB and ideally twice that, 4GB.
 
-Once installed, follow similar process as the Vultr VPS example for SSH configuration.
-
+Once installed, follow similar process as the Vultr VPS example above for SSH
+configuration. I.e., General instructions for the creation and initial
+configuration of SSH can be found
+[here](https://github.com/taw00/howto/blob/master/howto-ssh-keys.md).
 
 
 ## [2] Fully update the system and reboot
