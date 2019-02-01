@@ -230,7 +230,7 @@ As a normal user (example `mnuser`)...
 sudo dnf install -y firewalld
 
 # If CentOS7 or RHEL7...
-sudo yum install -y firewalld
+#sudo yum install -y firewalld
 ```
 
 
