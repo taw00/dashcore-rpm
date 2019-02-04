@@ -18,20 +18,23 @@ Version 0.13.0 merges two models of registering a masternode on the network. The
 - [PART 1: Install the software components](#part-1-install-the-software-components)
   - [[1] Install a Dash Core wallet (or use a hardware wallet)](#1-install-a-dash-core-wallet-or-use-a-hardware-wallet)
   - [[2] Deploy and configure a Dash Core node](#2-deploy-and-configure-a-dash-core-node)
+  - [[3] Configure Dash Sentinel](#3-configure-dash-sentinel)
 - [PART 2: Configure the wallet and masternode (old school)](#part-2-configure-the-wallet-and-masternode-old-school)
-  - [[3] Send 1000 Dash (the collateral) to the wallet](#3-send-1000-dash-the-collateral-to-the-wallet)
-  - [[4] Generate a private "masternode key" via the wallet (a shared secret)](#4-generate-a-private-masternode-key-via-the-wallet-a-shared-secret)
-  - [[5] Configure the wallet and the masternode](#5-configure-the-wallet-and-the-masternode)
-  - [[6] Configure Dash Sentinel](#6-configure-dash-sentinel)
+  - [[4] Send 1000 Dash (the collateral) to the wallet](#4-send-1000-dash-the-collateral-to-the-wallet)
+  - [[5] Generate a private "masternode key" via the wallet (a shared secret)](#5-generate-a-private-masternode-key-via-the-wallet-a-shared-secret)
+  - [[6] Configure the wallet and the masternode](#6-configure-the-wallet-and-the-masternode)
   - [[7] Issue a remote start command from the wallet to the masternode](#7-issue-a-remote-start-command-from-the-wallet-to-the-masternode)
   - [[8] Monitor masternode enablement status](#8-monitor-masternode-enablement-status)
-- [PART 3: Configure the masternode (new 0.13.0 "DIP003" compatible)](#part-3-configure-the-masternode-new-0130-dip003-compatible)
+- [PART 3: Configure and "start" the masternode (new 0.13.0 "DIP003" compatible)](#part-3-configure-and-start-the-masternode-new-0130-dip003-compatible)
   - [[9] Generate a BLS key-pair & configure the masternode with the secret key](#9-generate-a-bls-key-pair--configure-the-masternode-with-the-secret-key)
   - [[10] Determine owner address, voter address, and payout address](#10-determine-owner-address-voter-address-and-payout-address)
   - [[11] Prepare a "special transaction" that encapsulating masternode-relevant information (ownership, voting, payout)](#11-prepare-a-special-transaction-that-encapsulating-masternode-relevant-information-ownership-voting-payout)
   - [[12] Sign the "special transaction" message (generate signature hash)](#12-sign-the-special-transaction-message-generate-signature-hash)
   - [[13] Register the masternode on the blockchain (submit transaction and validating signature)](#13-register-the-masternode-on-the-blockchain-submit-transaction-and-validating-signature)
 - [WHEW!!! ALL DONE!](#whew-all-done)
+- [Appendix - Advanced Topics](#appendix---advanced-topics)
+  - [Email the admin when the Masternode's status changes from "ENABLED"](#email-the-admin-when-the-masternodes-status-changes-from-enabled)
+  - [Super fancy crontab settings](#super-fancy-crontab-settings)
 
 <!-- TOC END -->
 
@@ -51,13 +54,62 @@ If you have already done this, skip this step. Obviously. Otherwise, read this d
 
 If you have one already set up, skip this step, or see [these instructions](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.dashcore-node-setup.systemd.md).
 
+### [3] Configure Dash Sentinel
+
+There are really two services associated to a masternode, the node itself
+(dashd) that you set up in step [2] above and a "sentinel" that performs
+certain actions and manages expanded processes for the network. It was already
+installed when your dashcore-server package was installed. You just have to
+turn it on and edit crontab for the `dash` system user so that it executes
+every five minutes...
+
+_**Configure sentinel to run on testnet or mainnet...**_
+
+Edit the `/etc/dashcore/sentinel.conf` file and set either
+`network=testnet` or `network=mainnet`
+
+_**Run it for the first time...**_
+
+```
+sudo -u dashcore -- bash -c "cd /var/lib/dashcore/sentinel && venv/bin/python bin/sentinel.py"
+```
+
+It will issue an error associated to the dash core node not being synced yet,
+that it is not really a masternode just yet, or something similar. That's okay.
+This initial run creates a database for the sentinel and checks to see if
+something is really broken or not.
+
+> Note, if something seems to be really broken, set SENTINEL_DEBUG=1 and try
+> to make sense of the output
+>
+> ```
+> sudo -u dashcore -- bash -c "cd /var/lib/dashcore/sentinel && > SENTINEL_DEBUG=1 venv/bin/python bin/sentinel.py
+> ```
+
+_**Edit cron and add a "run it every minute" entry**_
+
+On the commandline, edit `crontab` &mdash; notice, that we, like in most
+commands, are doing it as the `dashcore` system user...
+
+```
+sudo -u dashcore EDITOR="nano" crontab -e
+#sudo -u dashcore EDITOR="vim" crontab -e
+```
+
+...add these lines, then save (CTRL-s) and exit (CTRL-X)...
+
+```
+#SENTINEL_DEBUG=1
+* * * * * { cd /var/lib/dashcore/sentinel && venv/bin/python bin/sentinel.py ; } >> /var/log/dashcore/sentinel.log 2>&1
+```
+
 
 ---
 
 
 ## PART 2: Configure the wallet and masternode (old school)
 
-### [3] Send 1000 Dash (the collateral) to the wallet
+### [4] Send 1000 Dash (the collateral) to the wallet
 
 If you have already done this, skip this step. Obviously. But keep the 1000 Dash transaction information handy and the address that received it.
 
@@ -79,7 +131,22 @@ b34ad623453453456423454643541325c98d2f8b7a967551f31dd7cefdd67457 1
 Take note of (store somewhere) the receiving address, transaction ID, and index (usually a 1 or 0) for future use.
 
 
-### [4] Generate a private "masternode key" via the wallet (a shared secret)
+### [5] Generate a private "masternode key" via the wallet (a shared secret)
+
+**_NOTE: This is only relevant if [SPORK 15](https://docs.dash.org/en/stable/developers/index.html#sporks) is not yet active. To check, do this..._**
+```
+sudo -u dashcore dash-cli mnsync status
+```
+Continue with this step only after `"IsSynced"` is listed as `true`. Fully syncing a node can take awhile if you recently restarted it.
+
+Next, check for the status of spork 15...
+```
+sudo -u dashcore dash-cli spork active
+```
+If `SPORK_15_DETERMINISTIC_MNS_ENABLED` is `false`, then continue with this
+process of configuring a `masternodeprivkey` value. If
+`SPORK_15_DETERMINISTIC_MNS_ENABLED` is `true`, do not set a
+`masternodeprivkey` value. It's fine if it is set but it becomes irrelevant.
 
 If this is an existing masternode, you already have this and it is configured
 on the masternode as `masternodeprivkey=THE_KEY` and also exists in the wallet's `masternode.conf` file.
@@ -87,7 +154,7 @@ on the masternode as `masternodeprivkey=THE_KEY` and also exists in the wallet's
 If this is a new masternode, this is generated by the graphical wallet via:
 Tools > Debug Console: `masternode genkey`. The results will look something like this: `92yZY5b8bYD5G2Qh1C7Un6Tf3TG3mH4LUZha2rdj3QUDGHNg4W9`
 
-### [5] Configure the wallet and the masternode
+### [6] Configure the wallet and the masternode
 
 The relevant info you have (these are examples only, of course)...
 
@@ -122,58 +189,10 @@ Save the file and then *restart the node*...
 - If running as a normal user: `dash-cli stop ; pause 5 ; dashd`
 - If running as a `systemd` service: `sudo systemctl restart dashd`
 
-### [6] Configure Dash Sentinel
-
-There are really two services associated to a masternode, the node itself and a
-"sentinel" that performs certain actions and manages expanded processes for the
-network. It was already installed when your dashcore-server package was
-installed. You just have to turn it on and edit crontab for the `dash` system
-user so that it executes every five minutes...
-
-_**Configure it to run on testnet or mainnet...**_
-
-Edit the `/var/lib/dashcore/sentinel/sentinel.conf` file and set either
-`network=testnet` or `network=mainnet`
-
-_**Run it for the first time...**_
-
-```
-sudo -u dashcore -- bash -c "cd /var/lib/dashcore/sentinel && venv/bin/python bin/sentinel.py"
-```
-
-It should create a database and populate it.
-
-Run it again...
-```
-sudo -u dashcore -- bash -c "cd /var/lib/dashcore/sentinel && venv/bin/python bin/sentinel.py"
-```
-
-There should be no output.
-
-> Note, if something seems to be going wrong, set SENTINEL_DEBUG=1 and try to
-> make sense of the output
->
-> ```
-> sudo -u dashcore -- bash -c "cd /var/lib/dashcore/sentinel && SENTINEL_DEBUG=1 venv/bin/python bin/sentinel.py
-> ```
-
-_**Edit cron and add a "run it every minute" entry**_
-
-On the commandline, edit `crontab` &mdash; notice, that we, like in most
-commands, are doing it as the `dashcore` system user...
-
-```
-sudo -u dashcore EDITOR="nano" crontab -e
-```
-
-...add these lines, save and exit...
-
-```
-#SENTINEL_DEBUG=1
-* * * * * { cd /var/lib/dashcore/sentinel && venv/bin/python bin/sentinel.py ; } >> /var/log/dashcore/sentinel.log 2>&1
-```
-
 ### [7] Issue a remote start command from the wallet to the masternode
+
+> IMPORTANT: This is the "old method" of triggering a masternode to "start" and will
+> be going away sometime in early to mid-2019. PART 3 covers the new method.
 
 You aren't starting the node. You are triggering a start of that node operating
 as a masternode.
@@ -221,7 +240,7 @@ While that is going on in one terminal, open up another terminal and...
 
 ---
 
-## PART 3: Configure the masternode (new 0.13.0 "DIP003" compatible)
+## PART 3: Configure and "start" the masternode (new 0.13.0 "DIP003" compatible)
 
 ### [9] Generate a BLS key-pair & configure the masternode with the secret key
 
@@ -483,7 +502,3 @@ t="%b %d %T UTC"
 logfile=/var/log/dashcore/sentinel.log
 * * * * * { cd /var/lib/dashcore/sentinel && date --utc +"$t $m0 $$" && venv/bin/python bin/sentinel.py ; } >> $logfile 2>&1
 ```
-
-
-
-
