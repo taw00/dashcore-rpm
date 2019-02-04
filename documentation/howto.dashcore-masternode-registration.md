@@ -15,22 +15,23 @@ Version 0.13.0 merges two models of registering a masternode on the network. The
 **SUMMARY OF STEPS:**
 
 <!-- TOC START min:2 max:3 link:true update:true -->
-- [PART 1: Install the software components](#part-1-install-the-software-components)
-  - [[1] Install a Dash Core wallet (or use a hardware wallet)](#1-install-a-dash-core-wallet-or-use-a-hardware-wallet)
-  - [[2] Deploy and configure a Dash Core node](#2-deploy-and-configure-a-dash-core-node)
-  - [[3] Configure Dash Sentinel](#3-configure-dash-sentinel)
-- [PART 2: Configure the wallet and masternode (old school)](#part-2-configure-the-wallet-and-masternode-old-school)
-  - [[4] Send 1000 Dash (the collateral) to the wallet](#4-send-1000-dash-the-collateral-to-the-wallet)
-  - [[5] Generate a private "masternode key" via the wallet (a shared secret)](#5-generate-a-private-masternode-key-via-the-wallet-a-shared-secret)
-  - [[6] Configure the wallet and the masternode](#6-configure-the-wallet-and-the-masternode)
-  - [[7] Issue a remote start command from the wallet to the masternode](#7-issue-a-remote-start-command-from-the-wallet-to-the-masternode)
-  - [[8] Monitor masternode enablement status](#8-monitor-masternode-enablement-status)
-- [PART 3: Configure and "start" the masternode (new 0.13.0 "DIP003" compatible)](#part-3-configure-and-start-the-masternode-new-0130-dip003-compatible)
-  - [[9] Generate a BLS key-pair & configure the masternode with the secret key](#9-generate-a-bls-key-pair--configure-the-masternode-with-the-secret-key)
-  - [[10] Determine owner address, voter address, and payout address](#10-determine-owner-address-voter-address-and-payout-address)
-  - [[11] Prepare a "special transaction" that encapsulating masternode-relevant information (ownership, voting, payout)](#11-prepare-a-special-transaction-that-encapsulating-masternode-relevant-information-ownership-voting-payout)
-  - [[12] Sign the "special transaction" message (generate signature hash)](#12-sign-the-special-transaction-message-generate-signature-hash)
-  - [[13] Register the masternode on the blockchain (submit transaction and validating signature)](#13-register-the-masternode-on-the-blockchain-submit-transaction-and-validating-signature)
+- [PART 1: Install the software components: Dash Core](#part-1-install-the-software-components-dash-core)
+  - [[1.1] Install a Dash Core wallet (or use a hardware wallet)](#11-install-a-dash-core-wallet-or-use-a-hardware-wallet)
+  - [[1.2] Send 1000 Dash (the collateral) to the wallet](#12-send-1000-dash-the-collateral-to-the-wallet)
+  - [[1.3] Deploy and configure a Dash Core node](#13-deploy-and-configure-a-dash-core-node)
+  - [[1.4] Configure Dash Sentinel on the Dash Core node](#14-configure-dash-sentinel-on-the-dash-core-node)
+  - [[1.5] Generate a private "masternode key" via the wallet (a shared secret)](#15-generate-a-private-masternode-key-via-the-wallet-a-shared-secret)
+  - [[1.6] Set `masternode=1` and `externalip=...` and `masternodeprivkey=...` values in the Dash Core node's `dash.conf` configuration file](#16-set-masternode1-and-externalip-and-masternodeprivkey-values-in-the-dash-core-nodes-dashconf-configuration-file)
+- [PART 2: Configure the wallet and masternode (pre-DIP003)](#part-2-configure-the-wallet-and-masternode-pre-dip003)
+  - [[2.1] Configure the wallet to talk to the masternode (pre-DIP003)](#21-configure-the-wallet-to-talk-to-the-masternode-pre-dip003)
+  - [[2.2] Issue a remote start command from the wallet to the masternode (pre-DIP003)](#22-issue-a-remote-start-command-from-the-wallet-to-the-masternode-pre-dip003)
+  - [[2.3] Monitor masternode enablement status](#23-monitor-masternode-enablement-status)
+- [PART 3: Configure and "start" the masternode (if "DIP003" enabled)](#part-3-configure-and-start-the-masternode-if-dip003-enabled)
+  - [[3.1] Generate a BLS key-pair & configure the masternode with the secret key](#31-generate-a-bls-key-pair--configure-the-masternode-with-the-secret-key)
+  - [[3.2] Determine owner address, voter address, and payout address](#32-determine-owner-address-voter-address-and-payout-address)
+  - [[3.3] Prepare a "special transaction" that encapsulating masternode-relevant information (ownership, voting, payout)](#33-prepare-a-special-transaction-that-encapsulating-masternode-relevant-information-ownership-voting-payout)
+  - [[3.4] Sign the "special transaction" message (generate signature hash)](#34-sign-the-special-transaction-message-generate-signature-hash)
+  - [[3.5] Register the masternode on the blockchain (submit transaction and validating signature)](#35-register-the-masternode-on-the-blockchain-submit-transaction-and-validating-signature)
 - [WHEW!!! ALL DONE!](#whew-all-done)
 - [Appendix - Advanced Topics](#appendix---advanced-topics)
   - [Email the admin when the Masternode's status changes from "ENABLED"](#email-the-admin-when-the-masternodes-status-changes-from-enabled)
@@ -44,17 +45,40 @@ of the Dash Core documentation team._
 
 ---
 
-## PART 1: Install the software components
+## PART 1: Install the software components: Dash Core
 
-### [1] Install a Dash Core wallet (or use a hardware wallet)
+### [1.1] Install a Dash Core wallet (or use a hardware wallet)
 
 If you have already done this, skip this step. Obviously. Otherwise, read this document for more information: TODO_INSERT_LINK_HERE
 
-### [2] Deploy and configure a Dash Core node
+### [1.2] Send 1000 Dash (the collateral) to the wallet
+
+If you have already done this, skip this step. Obviously. But keep the 1000 Dash transaction information handy and the address that received it.
+
+If you have not done this already...
+
+Send, as a lump sum, 1000 DASH to a wallet (Dash Core or a hardware wallet). Save the receiving address somewhere. It should look something like: `XMArVugC51J6WRkAVJpAwi2x6ecr4xvazH` (and testnet addresses start with a `Y`).
+
+Dash Core wallet instructions: Retrieve the transaction information associated
+to that 1000 DASH...
+
+- In the graphical client: Tools > Debug Console: `masternode outputs`
+- On the commandline (wallet): `dash-cli masternode outputs`
+
+The relevant output will look something like this:
+```
+b34ad623453453456423454643541325c98d2f8b7a967551f31dd7cefdd67457 1
+```
+
+Take note of (store somewhere) the receiving address, transaction ID, and index (usually a 1 or 0) for future use.
+
+**_Important node:_** You have to wait for 15 confirmations of that 1000 DASH to continue.
+
+### [1.3] Deploy and configure a Dash Core node
 
 If you have one already set up, skip this step, or see [these instructions](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.dashcore-node-setup.systemd.md).
 
-### [3] Configure Dash Sentinel
+### [1.4] Configure Dash Sentinel on the Dash Core node
 
 There are really two services associated to a masternode, the node itself
 (dashd) that you set up in step [2] above and a "sentinel" that performs
@@ -103,60 +127,66 @@ sudo -u dashcore EDITOR="nano" crontab -e
 * * * * * { cd /var/lib/dashcore/sentinel && venv/bin/python bin/sentinel.py ; } >> /var/log/dashcore/sentinel.log 2>&1
 ```
 
+Sentinel is now set up and "running" every minute. You can monitor it's activities by "tailing" that log file, though it will be issuing errors until the masternode is fully operational:
+```
+sudo tail -f /var/log/dashcore/sentinel.log
+```
+
+### [1.5] Generate a private "masternode key" via the wallet (a shared secret)
+
+_Masternode configuration is in transition._ The `masternodeprivkey` setting is particular to the older setup requirements for masternodes version 0.12, but until DIP003 is activated for 0.13 (via [SPORK 15](https://docs.dash.org/en/stable/developers/index.html#sporks)), this setting is still relevant. My suggestion. Set this anyway! Sometime in early 2019, it will become irrelevant, but until then, you need this to be set.
+
+If this is an existing masternode, you already have this and it is configured
+on the masternode as `masternodeprivkey=THE_KEY` in `/etc/dashcore/dash.conf` and also exists in the wallet's `masternode.conf` file in a Dash Core wallet OR in your Dash Masternode Tool settings (if using a hardware wallet).
+
+**_Create the masternode shared private key_**
+
+Note that this key is generated independent of any node or wallet. I.e., It doesn't matter where you generate it.
+
+If this is a new masternode, this is generated by the graphical wallet via:
+Tools > Debug Console: `masternode genkey`. Or you can generate it on the node itself (any node): `sudo -u dashcore masternode genkey`
+
+The results will look something like this:
+`92yZY5b8bYD5G2Qh1C7Un6Tf3TG3mH4LUZha2rdj3QUDGHNg4W9`
+
+Set this value in the masternode-to-be configuration file: Edit `/etc/dashcore/dash.conf`, scroll to the bottom, and set `masternodeprivkey=92yZY5b8bYD5G2Qh1C7Un6Tf3TG3mH4LUZha2rdj3QUDGHNg4W9` (or whatever your key value is).
+
+Write down that value, you'll need it later as well.
+
+### [1.6] Set `masternode=1` and `externalip=...` and `masternodeprivkey=...` values in the Dash Core node's `dash.conf` configuration file
+
+We're not a masternode yet, but will be. Edit `dash.conf` (ether
+`~/.dashcore/dash.conf` if you are running the node as a "normal" user or
+`/etc/dashcore/dash.conf` if this is a systemd service); scroll to the bottom;
+uncomment and set those three values as such (IP address and masternode shared
+private key are examples only, of course):
+
+```
+masternode=1
+externalip=93.184.216.34
+masternodeprivkey=92yZY5b8bYD5G2Qh1C7Un6Tf3TG3mH4LUZha2rdj3QUDGHNg4W9
+```
+
+Save and then exit.
+
+Then *restart the node*...
+- If running as a normal user: `dash-cli stop ; pause 5 ; dashd`
+- If running as a `systemd` service: `sudo systemctl restart dashd`
 
 ---
 
+## PART 2: Configure the wallet and masternode (pre-DIP003)
 
-## PART 2: Configure the wallet and masternode (old school)
+**_PART 2 is only relevant if DIP003 has NOT been enabled yet._** You can see
+the status of that via (in the graphical wallet UI) Tools > Debug Console:
+`spork active` Or from the commandline (on the node): `sudo -u dashcore spork
+active`
 
-### [4] Send 1000 Dash (the collateral) to the wallet
+You are looking for whether "SPORK_15_DETERMINISTIC_MNS_ENABLED" is "true" or not. If FALSE, then continue with PART 2. If TRUE, skip to PART 3.
 
-If you have already done this, skip this step. Obviously. But keep the 1000 Dash transaction information handy and the address that received it.
+### [2.1] Configure the wallet to talk to the masternode (pre-DIP003)
 
-If you have not done this already...
-
-Send as a lump sum, 1000 DASH to a wallet (Dash Core or a hardware wallet). Save the receiving address somewhere. It should look something like: `XMArVugC51J6WRkAVJpAwi2x6ecr4xvazH` (and testnet addresses start with a `Y`).
-
-Dash Core wallet instructions: Retrieve the transaction information associated
-to that 1000 DASH...
-
-- In the graphical client: Tools > Debug Console: `masternode outputs`
-- On the commandline (wallet): `dash-cli masternode outputs`
-
-The relevant output will look something like this:
-```
-b34ad623453453456423454643541325c98d2f8b7a967551f31dd7cefdd67457 1
-```
-
-Take note of (store somewhere) the receiving address, transaction ID, and index (usually a 1 or 0) for future use.
-
-
-### [5] Generate a private "masternode key" via the wallet (a shared secret)
-
-**_NOTE: This is only relevant if [SPORK 15](https://docs.dash.org/en/stable/developers/index.html#sporks) is not yet active. To check, do this..._**
-```
-sudo -u dashcore dash-cli mnsync status
-```
-Continue with this step only after `"IsSynced"` is listed as `true`. Fully syncing a node can take awhile if you recently restarted it.
-
-Next, check for the status of spork 15...
-```
-sudo -u dashcore dash-cli spork active
-```
-If `SPORK_15_DETERMINISTIC_MNS_ENABLED` is `false`, then continue with this
-process of configuring a `masternodeprivkey` value. If
-`SPORK_15_DETERMINISTIC_MNS_ENABLED` is `true`, do not set a
-`masternodeprivkey` value. It's fine if it is set but it becomes irrelevant.
-
-If this is an existing masternode, you already have this and it is configured
-on the masternode as `masternodeprivkey=THE_KEY` and also exists in the wallet's `masternode.conf` file.
-
-If this is a new masternode, this is generated by the graphical wallet via:
-Tools > Debug Console: `masternode genkey`. The results will look something like this: `92yZY5b8bYD5G2Qh1C7Un6Tf3TG3mH4LUZha2rdj3QUDGHNg4W9`
-
-### [6] Configure the wallet and the masternode
-
-The relevant info you have (these are examples only, of course)...
+The relevant info you now have (these are examples only, of course)...
 
 - Masternode IP:PORT: `93.184.216.34:9999`
 - `masternodeprivkey`: `92yZY5b8bYD5G2Qh1C7Un6Tf3TG3mH4LUZha2rdj3QUDGHNg4W9`
@@ -174,28 +204,16 @@ That "alias" can be anything you want it to be. It's a label.
 
 *Restart your wallet after configuration.*
 
-**Masternode:**
 
-Edit the node's `dash.conf` file. That file is found either in the `~/.dashcore/` directory (running `dashd` as a normal user) or the `/etc/dashcore/` (running `dashd` as a `systemd` service).
+### [2.2] Issue a remote start command from the wallet to the masternode (pre-DIP003)
 
-Uncomment and set these values: `masternode`, `externalip`, and `masternodeprivkey`:
-```
-masternode=1
-externalip=93.184.216.34
-masternodeprivkey=92yZY5b8bYD5G2Qh1C7Un6Tf3TG3mH4LUZha2rdj3QUDGHNg4W9
-```
+This is only relevant if DIP003 has NOT been enabled yet as described earlier.
 
-Save the file and then *restart the node*...
-- If running as a normal user: `dash-cli stop ; pause 5 ; dashd`
-- If running as a `systemd` service: `sudo systemctl restart dashd`
+This is also only relevant if you are using a Dash Core wallet (the GUI wallet)
+instead of a hardware wallet to store the 1000 DASH collateral. If you are using the Dash Masternode Tool and a hardware wallet, you will set the values similarly in that tool for the masternode IP address, the masternode private key and issue a start from there.
 
-### [7] Issue a remote start command from the wallet to the masternode
-
-> IMPORTANT: This is the "old method" of triggering a masternode to "start" and will
-> be going away sometime in early to mid-2019. PART 3 covers the new method.
-
-You aren't starting the node. You are triggering a start of that node operating
-as a masternode.
+You aren't really "starting" the node. You are triggering a start of that node
+operating as a masternode. You are telling the node to change roles.
 
 In the graphical wallet:
 - Navigate the menus: Tools > Debug console
@@ -215,7 +233,7 @@ masternode was truly started.
 There is 1000 DASH associated to that wallet. There is no reason to keep it
 online for very long. Shut it down.**
 
-### [8] Monitor masternode enablement status
+### [2.3] Monitor masternode enablement status
 
 Do this on the masternode itself...
 
@@ -240,9 +258,20 @@ While that is going on in one terminal, open up another terminal and...
 
 ---
 
-## PART 3: Configure and "start" the masternode (new 0.13.0 "DIP003" compatible)
+## PART 3: Configure and "start" the masternode (if "DIP003" enabled)
 
-### [9] Generate a BLS key-pair & configure the masternode with the secret key
+**_PART 3 is only relevant if DIP003 HAS been enabled._** You can see the
+status of that via (in the graphical wallet UI) Tools > Debug Console: `spork active` Or from the commandline (on the node): `sudo -u dashcore spork active`
+
+You are looking for whether "SPORK_15_DETERMINISTIC_MNS_ENABLED" is "true" or not. If FALSE, then go back to PART 2. If TRUE then continue with PART 3.
+
+If using a hardware wallet, [jump to the "Dash Masternode Tool"
+instructions](https://docs.dash.org/en/stable/masternodes/setup.html#option-1-registering-from-a-hardware-wallet)
+outside of these documents and proceed from there.
+
+If using a Dash Core wallet (the graphical wallet) to hold that 1000 DASH collateral, then continue.
+
+### [3.1] Generate a BLS key-pair & configure the masternode with the secret key
 
 As of version 0.13.0, a new signature mechanism is used to manage masternodes. It uses a cryptographic scheme called [BLS signatures](https://en.wikipedia.org/wiki/Boneh%E2%80%93Lynn%E2%80%93Shacham). The public key is used to sign a message that contains all that configuration information and the private key is added to the masternode's configuration file.
 
@@ -266,19 +295,21 @@ Example output:
 These are the `masternodeblsprivkey` (the secret/private key) and `operatorPubKey` (public key) respectively.
 
 Edit the masternode's `dash.conf` file (ether `~/.dashcore/dash.conf` or
-`/etc/dashcore/dash.conf` -- see "PART 2" above). Add this line to that file
-and restart the masternode:
+`/etc/dashcore/dash.conf`). Add this line to that file and restart the masternode:
 ```
 masternodeblsprivkey=565950700d7bdc6a9dbc9963920bc756551b02de6e4711eff9ba6d4af59c0101
 ```
 
-Don't forget to restart the masternode service (see "PART 2" for an example).
+Then *restart the node*...
+- If running as a normal user: `dash-cli stop ; pause 5 ; dashd`
+- If running as a `systemd` service: `sudo systemctl restart dashd`
+
 
 **Store those keys somewhere safe**
 These keys are not stored for you, per ce. Secure them in a safe place, along with the rest of this data. That is the only place the secret/private key is
 used.
 
-### [10] Determine owner address, voter address, and payout address
+### [3.2] Determine owner address, voter address, and payout address
 
 This is where things can get confusing. You need values for these concepts...
 
@@ -343,7 +374,7 @@ Note: There is also an optional `feeSourceAddress` value ... but we're going to
 ignore that for now and maybe revisit that at a later date. -- TODO
 
 
-### [11] Prepare a "special transaction" that encapsulating masternode-relevant information (ownership, voting, payout)
+### [3.3] Prepare a "special transaction" that encapsulating masternode-relevant information (ownership, voting, payout)
 
 Now we use just about all those keys and data we have been hanging onto.
 
@@ -403,7 +434,7 @@ XwSrNFimUZbY58Sx17YiSLPAvPToxitZr1
 }
 ```
 
-### [12] Sign the "special transaction" message (generate signature hash)
+### [3.4] Sign the "special transaction" message (generate signature hash)
 
 Next we will use the `collateralAddress` and `signMessage` fields to sign the message: `signmessage <collateralAddress> <signMessage>` ...or...
 
@@ -419,7 +450,7 @@ Example output of the signature hash:
 IMf5P6WT60E+QcA5+ixors38umHuhTxx6TNHMsf9gLTIPcpilXkm1jDglMpK+JND0W3k/Z+NzEWUxvRy71NEDns=
 ```
 
-### [13] Register the masternode on the blockchain (submit transaction and validating signature)
+### [3.5] Register the masternode on the blockchain (submit transaction and validating signature)
 
 Create a "ProRegTx" special transaction (using the `protx` command) to register the masternode on the blockchain. _**This command must be sent from a Dash Core wallet holding a balance,**_ since a standard transaction fee is involved.
 
