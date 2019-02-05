@@ -46,9 +46,9 @@ Version: %{vermajor}.%{verminor}
 
 # RELEASE
 # if production - "targetIsProduction 1"
-%define _pkgrel 1
+%define _pkgrel 2
 %if ! %{targetIsProduction}
-  %define _pkgrel 0.4
+  %define _pkgrel 1.1
 %endif
 
 # MINORBUMP
@@ -407,6 +407,11 @@ cd ../../
 
 
 %changelog
+* Mon Feb 04 2019 Todd Warner <t0dd_at_protonmail.com> 0.9.21-2.taw
+* Mon Feb 04 2019 Todd Warner <t0dd_at_protonmail.com> 0.9.21-1.1.testing.taw
+  - Fixed my broken config file sniffing logic in the .sh wrapper script
+
+* Mon Jan 14 2019 Todd Warner <t0dd_at_protonmail.com> 0.9.21-1.taw
 * Mon Jan 14 2019 Todd Warner <t0dd_at_protonmail.com> 0.9.21-1.taw
 * Mon Jan 14 2019 Todd Warner <t0dd_at_protonmail.com> 0.9.21-0.4.testing.taw
 * Mon Jan 14 2019 Todd Warner <t0dd_at_protonmail.com> 0.9.21-0.3.testing.taw
