@@ -222,6 +222,10 @@ cd ../.. ; /usr/bin/tree -df -L 2 BUILD ; cd -
   . ./venv/bin/activate
 
   # Is it pip3? or pip? and does Fedora version matter?
+  # Next pip3 command line is to address a bug in pyinstaller, see
+  # https://github.com/pyinstaller/pyinstaller/issues/4003  
+  # https://stackoverflow.com/questions/54338714/pip-install-pyinstaller-no-module-named-pyinstaller
+  ./venv/bin/pip3 install pip==18.1
   ./venv/bin/pip3 install --upgrade setuptools
   ./venv/bin/pip3 install ./%{srccodetree2}
   # Won't build my cached version of bls-signatures for some reason.
@@ -407,8 +411,12 @@ cd ../../
 
 
 %changelog
-* Mon Feb 04 2019 Todd Warner <t0dd_at_protonmail.com> 0.9.21-1.1.testing.taw
+* Tue Feb 05 2019 Todd Warner <t0dd_at_protonmail.com> 0.9.21-1.1.testing.taw
   - Fixed my broken config file sniffing logic in the .sh wrapper script
+  - pyinstaller has a bug, therefore I had to add...  
+      ./venv/bin/pip3 install pip==18.1  
+    The bug is: https://github.com/pyinstaller/pyinstaller/issues/4003  
+    Associated: https://stackoverflow.com/questions/54338714/pip-install-pyinstaller-no-module-named-pyinstaller
 
 * Mon Jan 14 2019 Todd Warner <t0dd_at_protonmail.com> 0.9.21-1.taw
 * Mon Jan 14 2019 Todd Warner <t0dd_at_protonmail.com> 0.9.21-1.taw
