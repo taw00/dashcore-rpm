@@ -21,13 +21,19 @@
 # Note: check dash.org to see if there are special upgrade steps that need to be taken.
 #   sudo yum update
 #
+# To switch from one repository version to the next (example, testing to stable-12.3)...
+#   sudo yum repolist | grep dashcore
+#   sudo yum list | grep dashcore
+#   sudo yum-config-manager --disable dashcore-testing
+#   sudo yum-config-manager --enable dashcore-stable-12.3
+#
 # Feedback: t0dd_at_protonmail.com
 
 # Be aware... EL7 is currently unsupported as of 0.13.0. Migrate to Fedora.
 # This may change with EL8 later in 2019
-[dashcore-stable]
+[dashcore-unsupported]
 enabled=0
-name=Dash Core 0.13.0 stable - epel-$releasever-$basearch
+name=Dash Core 0.13.0 - NOT SUPPORTED FOR THIS VERSION, MIGRATE TO FEDORA - epel-$releasever-$basearch
 # Note: The testing repository always provides the latest packages regardless
 # of how major the upgrade. In contrast, release quality packages are divided
 # into their own per-major version repositories.
@@ -68,7 +74,7 @@ enabled_metadata=0
 
 [dashcore-stable-12.3]
 enabled=0
-name=Dash Core 12.3 stable - epel-$releasever-$basearch
+name=Dash Core 12.3 - stable, but deprecated - epel-$releasever-$basearch
 baseurl=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.3/epel-$releasever-$basearch/
 type=rpm-md
 skip_if_unavailable=True

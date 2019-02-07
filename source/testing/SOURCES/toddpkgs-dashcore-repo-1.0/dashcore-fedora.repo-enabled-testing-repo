@@ -21,8 +21,10 @@
 # Note: check dash.org to see if there are special upgrade steps that need to be taken.
 #   sudo dnf upgrade
 #
-# To switch from one repository version to the next (example, stable-12.3 to stable (latest))...
-#   sudo dnf config-manager --set-disabled dashcore-stable-12.3
+# To switch from one repository version to the next (example, testing to stable)...
+#   sudo dnf repolist | grep dashcore
+#   sudo dnf list | grep dashcore
+#   sudo dnf config-manager --set-disabled dashcore-testing
 #   sudo dnf config-manager --set-enabled dashcore-stable
 #
 # Feedback: t0dd_at_protonmail.com
@@ -67,7 +69,7 @@ enabled_metadata=0
 
 [dashcore-stable-12.3]
 enabled=0
-name=Dash Core 12.3 - stable - fedora-$releasever-$basearch
+name=Dash Core 12.3 - stable, but deprecated - fedora-$releasever-$basearch
 baseurl=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.3/fedora-$releasever-$basearch/
 type=rpm-md
 skip_if_unavailable=True

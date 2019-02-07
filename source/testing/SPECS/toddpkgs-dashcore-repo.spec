@@ -5,9 +5,9 @@ Summary:    Repository configuration to enable management of dashcore packages (
 %define targetIsProduction 0
 
 # RELEASE
-%define _rel 6
+%define _rel 7
 %if ! %{targetIsProduction}
-%define _rel 5.1
+%define _rel 6.1
 %endif
 
 %define _snapinfo testing
@@ -53,6 +53,18 @@ Install this, then...
 
 You can edit /etc/yum.repos.d/dashcore.repo (as root) and 'enable=1' or '0'
 whether you want the stable or the testing repositories.
+...or better yet, for Fedora repos:
+  sudo dnf repolist | grep dashcore
+  sudo dnf config-manager --set-disabled dashcore-testing
+  sudo dnf config-manager --set-enabled dashcore-stable
+  sudo dnf repolist | grep dashcore
+  sudo dnf list | grep dashcore
+..and for CentOS7/RHEL7 (note, EL7 is not supported for Dash Core 0.13):
+  sudo yum repolist | grep dashcore
+  sudo yum-config-manager --enable dashcore-stable-12.3
+  sudo yum-config-manager --disable dashcore-testing
+  sudo yum repolist | grep dashcore
+  sudo yum list | grep dashcore
 
 Notes about GPG keys:
 * An RPM signing key is included. It is used to sign RPMs that I build by
@@ -100,6 +112,11 @@ install -D -m644 todd-694673ED-public-2030-01-04.2016-11-07.asc %{buildroot}%{_s
 
 
 %changelog
+* Thu Feb 07 2019 Todd Warner <t0dd_at_protonmail.com> 1.0-6.1.testing.taw
+  - Repos default to 0.13 now
+  - refreshed the instruction for enabling and disabling a bit
+
+* Mon Jan 14 2019 Todd Warner <t0dd_at_protonmail.com> 1.0-6.taw
 * Mon Jan 14 2019 Todd Warner <t0dd_at_protonmail.com> 1.0-5.1.testing.taw
   - updating the repos to include 0.13.0
 
