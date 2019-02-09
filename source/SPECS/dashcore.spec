@@ -38,15 +38,15 @@ Summary: Peer-to-peer, payments-focused, fungible digital currency, protocol, an
 %define includeArchiveQualifier 0
 
 # VERSION
-%define vermajor 0.13.0
+%define vermajor 0.13.1
 %define verminor 0
 Version: %{vermajor}.%{verminor}
 
 # RELEASE
 # package release, and potentially extrarel
-%define _pkgrel 2
+%define _pkgrel 1
 %if ! %{targetIsProduction}
-  %define _pkgrel 1.1
+  %define _pkgrel 0.1
 %endif
 
 # MINORBUMP
@@ -112,9 +112,10 @@ Release: %{_release}
 %endif
 
 # Extracted source tree structure (extracted in .../BUILD)
-#   srcroot               dashcore-0.12.3
-#      \_srccodetree        \_dash-0.12.3.0 or dashcore-0.12.3 or dash-0.12.3.0-rc2...
-#      \_srccontribtree     \_dashcore-0.12.3-contrib
+#   srcroot               dashcore-0.13.1
+#      \_srccodetree        \_dash-0.13.1.0 or dashcore-0.13.1 or dash-0.13.1.0-rc2...
+#      \_srccontribtree     \_dashcore-0.13.1-contrib
+#      \_patch_files        \_dash-0.13.1-...patch
 %define srcroot %{name}-%{vermajor}
 %define srccontribtree %{name}-%{vermajor}-contrib
 # srccodetree defined earlier
@@ -132,7 +133,7 @@ Source0: https://github.com/dashpay/dash/archive/v%{version}/%{archivename}.tar.
 Source1: https://github.com/taw00/dashcore-rpm/blob/master/source/testing/SOURCES/%{srccontribtree}.tar.gz
 # patches
 %if %{targetIsProduction}
-Patch0: https://github.com/taw00/dashcore-rpm/blob/master/source/testing/SOURCES/dash-0.13.0-remove-about-qt-menu-item.patch
+Patch0: https://github.com/taw00/dashcore-rpm/blob/master/source/testing/SOURCES/%{_name_d}-%{vermajor}-remove-about-qt-menu-item.patch
 %endif
 
 %global selinux_variants mls strict targeted
@@ -649,6 +650,7 @@ daemon=1
 server=1
 # We participate peer-to-peer
 listen=1
+logtimestamps=1
 maxconnections=8
 
 # A systemd managed masternode probably not going to be a wallet as well
@@ -1000,6 +1002,10 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
+* Fri Feb 08 2019 Todd Warner <t0dd_at_protonmail.com> 0.13.1.0-1.taw
+* Fri Feb 08 2019 Todd Warner <t0dd_at_protonmail.com> 0.13.1.0-0.1.testing.taw
+  - 0.13.1
+
 * Fri Jan 25 2019 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-2.taw
 * Fri Jan 25 2019 Todd Warner <t0dd_at_protonmail.com> 0.13.0.0-1.1.testing.taw
   - Updated systemd configuration for dashd to kickoff only after network is  
