@@ -85,16 +85,16 @@ RAM is a good choice.
 ```
 # As root...
 
-# Each "bs" setting below corresponds to a swapfile size based on a multiple.
-# I.e., If you want a swapfile 2-times the size of your RAM, choose 2048:
-#bs=512  # 1/2 times the size of RAM
-#bs=1024 # One times the size of RAM
-bs=2048  # Twice the size of RAM -- recommended if you are in doubt
-#bs=1536 # 1.5 times the size of RAM
+# Multiple (how many times the size of RAM?)...
+m=2
 
-# Create the swapfile
-TOTAL_MEM=$(free -k|grep Mem|awk '{print $2}')
-dd if=/dev/zero of=/swapfile bs=$bs count=$TOTAL_MEM
+# Size, in bytes...
+size=$(free -b|grep Mem|awk '{print $2}')
+size=$(echo "$size * $m" | bc)
+size=$(printf "%.0f\n" $size)
+
+# Create a swapfile...
+fallocate -l $size /swapfile
 chmod 0600 /swapfile
 mkswap /swapfile
 
