@@ -46,9 +46,9 @@ Version: %{vermajor}.%{verminor}
 
 # RELEASE
 # package release, and potentially extrarel
-%define _pkgrel 2
+%define _pkgrel 3
 %if ! %{targetIsProduction}
-  %define _pkgrel 1.2
+  %define _pkgrel 2.1
 %endif
 
 # MINORBUMP
@@ -178,9 +178,9 @@ Patch0: https://github.com/taw00/dashcore-rpm/blob/master/source/testing/SOURCES
 
 %if %{clientSourceIsPrebuilt} || %{serverSourceIsPrebuilt}
 %if 0%{?buildQualifier:1}
-Source3: https://github.com/dashpay/dash/archive/v%{version}-%{buildQualifier}/%{binaryarchivename}-i686-pc-linux-gnu.tar.gz
+Source3: https://github.com/dashpay/dash/archive/v%{version}-%{buildQualifier}/%{binaryarchivename}-x86_64-linux-gnu.tar.gz
 %else
-Source3: https://github.com/dashpay/dash/archive/v%{version}/%{binaryarchivename}-i686-pc-linux-gnu.tar.gz
+Source3: https://github.com/dashpay/dash/archive/v%{version}/%{binaryarchivename}-x86_64-linux-gnu.tar.gz
 %endif
 %endif
 
@@ -209,8 +209,8 @@ Source3: https://github.com/dashpay/dash/archive/v%{version}/%{binaryarchivename
 License: MIT
 URL: http://dash.org/
 # Note, for example, this will not build on ppc64le
-# I'm ditching i386 as a platform choice. Sorry.
-ExclusiveArch: x86_64 i686
+# I'm ditching i386 and i686 platform choices. Sorry.
+ExclusiveArch: x86_64
 
 %if ! %{clientSourceIsPrebuilt} || ! %{serverSourceIsPrebuilt}
   %define buildFromSource 1
@@ -1107,6 +1107,10 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
+* Sun Feb 24 2019 Todd Warner <t0dd_at_protonmail.com> 0.13.1.0-2.1.testing.taw
+  - I'm an idiot. Using x86_64 binaries now for the x86_64 builds. ;)
+
+* Sun Feb 24 2019 Todd Warner <t0dd_at_protonmail.com> 0.13.1.0-2.taw
 * Sun Feb 24 2019 Todd Warner <t0dd_at_protonmail.com> 0.13.1.0-1.2.testing.taw
 * Sun Feb 24 2019 Todd Warner <t0dd_at_protonmail.com> 0.13.1.0-1.1.testing.taw
   - issues with F29 builds of dash-qt  
