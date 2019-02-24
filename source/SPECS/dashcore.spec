@@ -31,11 +31,13 @@ Name: %{_name_dc}
 Summary: Peer-to-peer, payments-focused, fungible digital currency, protocol, and platform for payments and decentralized applications
 
 %define targetIsProduction 1
+%define clientSourceIsPrebuilt 1
+%define serverSourceIsPrebuilt 0
 
 # ARCHIVE QUALIFIER - edit this if applies
 # ie. if the dev team includes things like rc3 in the filename
-%define archiveQualifier rc11
-%define includeArchiveQualifier 0
+%define buildQualifier rc11
+%undefine buildQualifier
 
 # VERSION
 %define vermajor 0.13.1
@@ -44,14 +46,15 @@ Version: %{vermajor}.%{verminor}
 
 # RELEASE
 # package release, and potentially extrarel
-%define _pkgrel 1
+%define _pkgrel 2
 %if ! %{targetIsProduction}
-  %define _pkgrel 0.1
+  %define _pkgrel 1.2
 %endif
 
 # MINORBUMP
 # (for very small or rapid iterations)
 %define minorbump taw
+#%%undefine minorbump
 
 #
 # Build the release string - don't edit this
@@ -61,21 +64,46 @@ Version: %{vermajor}.%{verminor}
 %if %{targetIsProduction}
   %undefine snapinfo
 %endif
-%if %{includeArchiveQualifier}
-  %define snapinfo %{archiveQualifier}
+%if 0%{?buildQualifier:1}
+  %define snapinfo %{buildQualifier}
+%endif
+
+%undefine _rp
+%if %{clientSourceIsPrebuilt} && %{serverSourceIsPrebuilt}
+  %define _rp rp
+%else
+  %if %{clientSourceIsPrebuilt}
+    %define _rp rpc
+  %else
+  %if %{serverSourceIsPrebuilt}
+    %define _rp rps
+  %endif
+  %endif
+%endif
+
+# have to use _variables because rpm spec macros are easily recursive and break.
+%define _snapinfo THIS_WILL_BE_REPLACED
+%if 0%{?_rp:1}
+  %if 0%{?snapinfo:1}
+    %define _snapinfo %{snapinfo}.%{_rp}
+  %else
+    %define _snapinfo %{_rp}
+  %endif
+%else
+  %if 0%{?snapinfo:1}
+    %define _snapinfo %snapinfo
+  %else
+    %undefine _snapinfo
+  %endif
 %endif
 
 # pkgrel will be defined, snapinfo and minorbump may not be
 %define _release %{_pkgrel}
-%define includeMinorbump 1
-%if ! %{includeMinorbump}
-  %undefine minorbump
-%endif
-%if 0%{?snapinfo:1}
+%if 0%{?_snapinfo:1}
   %if 0%{?minorbump:1}
-    %define _release %{_pkgrel}.%{snapinfo}%{?dist}.%{minorbump}
+    %define _release %{_pkgrel}.%{_snapinfo}%{?dist}.%{minorbump}
   %else
-    %define _release %{_pkgrel}.%{snapinfo}%{?dist}
+    %define _release %{_pkgrel}.%{_snapinfo}%{?dist}
   %endif
 %else
   %if 0%{?minorbump:1}
@@ -100,40 +128,60 @@ Release: %{_release}
 %define _archivename_alt4 %{_name_dc}-%{version}
 
 # our selection for this build - edit this
-%define _archivename %{_archivename_alt2}
-%define _srccodetree %{_archivename_alt2}
+%define _sourcearchivename %{_archivename_alt2}
+%define _binaryarchivename %{_archivename_alt4}
+%define _binarytree %{_archivename_alt3}
 
-%if %{includeArchiveQualifier}
-  %define archivename %{_archivename}-%{archiveQualifier}
-  %define srccodetree %{_srccodetree}-%{archiveQualifier}
+%if 0%{?buildQualifier:1}
+  %define sourcearchivename %{_sourcearchivename}-%{buildQualifier}
+  %define binaryarchivename %{_binaryarchivename}-%{buildQualifier}
+  %define sourcetree %{_sourcearchivename}-%{buildQualifier}
+  %define binarytree %{_binarytree}-%{buildQualifier}
 %else
-  %define archivename %{_archivename}
-  %define srccodetree %{_srccodetree}
+  %define sourcearchivename %{_sourcearchivename}
+  %define binaryarchivename %{_binaryarchivename}
+  %define sourcetree %{_sourcearchivename}
+  %define binarytree %{_binarytree}
 %endif
+%define blsarchivedate 20181101
+%define blsarchivename bls-signatures-%{blsarchivedate}
 
 # Extracted source tree structure (extracted in .../BUILD)
 #   srcroot               dashcore-0.13.1
-#      \_srccodetree        \_dash-0.13.1.0 or dashcore-0.13.1 or dash-0.13.1.0-rc2...
+#      \_sourcetree         \_dash-0.13.1.0 or dashcore-0.13.1 or dash-0.13.1.0-rc2...
+#      \_binarytree         \_dashcore-0.13.1 or dash-0.13.1-rc2...
 #      \_srccontribtree     \_dashcore-0.13.1-contrib
 #      \_patch_files        \_dash-0.13.1-...patch
+#      \_blsarchive         \_bls-signatures-20181101.tar.gz
 %define srcroot %{name}-%{vermajor}
 %define srccontribtree %{name}-%{vermajor}-contrib
-# srccodetree defined earlier
+# sourcetree, binarytree, and blsarchivename defined earlier
 
-# Note, that ...
+# Note, that these two URLs point at the same tarball but with different filenames ...
 # https://github.com/dashpay/dash/archive/v0.12.3.0-rc2.tar.gz
-# ...is the same as...
 # https://github.com/dashpay/dash/archive/v0.12.3.0-rc2/dash-0.12.3.0-rc2.tar.gz
-%if %{includeArchiveQualifier}
-Source0: https://github.com/dashpay/dash/archive/v%{version}-%{archiveQualifier}/%{archivename}.tar.gz
+
+# source and contrib tarballs are always included
+%if 0%{?buildQualifier:1}
+Source0: https://github.com/dashpay/dash/archive/v%{version}-%{buildQualifier}/%{sourcearchivename}.tar.gz
 %else
-Source0: https://github.com/dashpay/dash/archive/v%{version}/%{archivename}.tar.gz
+Source0: https://github.com/dashpay/dash/archive/v%{version}/%{sourcearchivename}.tar.gz
 %endif
 
 Source1: https://github.com/taw00/dashcore-rpm/blob/master/source/testing/SOURCES/%{srccontribtree}.tar.gz
-# patches
+Source2: https://github.com/taw00/dashcore-rpm/blob/master/source/testing/SOURCES/%{blsarchivename}.tar.gz
+
+# patch (only used for production)
 %if %{targetIsProduction}
 Patch0: https://github.com/taw00/dashcore-rpm/blob/master/source/testing/SOURCES/%{_name_d}-%{vermajor}-remove-about-qt-menu-item.patch
+%endif
+
+%if %{clientSourceIsPrebuilt} || %{serverSourceIsPrebuilt}
+%if 0%{?buildQualifier:1}
+Source3: https://github.com/dashpay/dash/archive/v%{version}-%{buildQualifier}/%{binaryarchivename}-i686-pc-linux-gnu.tar.gz
+%else
+Source3: https://github.com/dashpay/dash/archive/v%{version}/%{binaryarchivename}-i686-pc-linux-gnu.tar.gz
+%endif
 %endif
 
 %global selinux_variants mls strict targeted
@@ -161,23 +209,31 @@ Patch0: https://github.com/taw00/dashcore-rpm/blob/master/source/testing/SOURCES
 License: MIT
 URL: http://dash.org/
 # Note, for example, this will not build on ppc64le
-ExclusiveArch: x86_64 i686 i386
+# I'm ditching i386 as a platform choice. Sorry.
+ExclusiveArch: x86_64 i686
+
+%if ! %{clientSourceIsPrebuilt} || ! %{serverSourceIsPrebuilt}
+  %define buildFromSource 1
+%endif
+
 
 # As recommended by...
+%if 0%{?buildFromSource:1}
 # https://github.com/dashpay/dash/blob/develop/doc/build-unix.md
 BuildRequires: libtool make autoconf automake patch
-BuildRequires: gcc-c++ >= 4.9 cmake libstdc++-static
+#BuildRequires: gcc-c++ >= 4.9 cmake libstdc++-static
+BuildRequires: cmake libstdc++-static
 BuildRequires: python3
 BuildRequires: libdb4-cxx-devel gettext
+BuildRequires: gettext
 # t0dd: added to avoid unneccessary fetching of libraries from the internet
 #       which is a packaging no-no
 BuildRequires: openssl-devel boost-devel libevent-devel
 BuildRequires: miniupnpc-devel ccache
-BuildRequires: python3-zmq zeromq-devel
+#BuildRequires: python3-zmq zeromq-devel
 # t0dd: added to satisfy chia_bls.
-#       (note chia_bls is currently downloaded from github at the moment,
-#       sadly. see dash-0.13.0.0-rc1/depends/packages/chia_bls.mk)
 BuildRequires: gmp-devel
+%endif
 # Other BuildRequires listed per package below
 
 #t0dd: SELinux stuff that I just haven't addressed yet...
@@ -197,17 +253,20 @@ Requires: dashcore-utils = %{version}-%{release}
 Requires: firewalld-filesystem
 Requires(post): firewalld-filesystem
 Requires(postun): firewalld-filesystem
+%if 0%{?fedora}
+Requires:       qt5-qtwayland
+%endif
 # Required for installing desktop applications on linux
 BuildRequires: libappstream-glib desktop-file-utils
+%if 0%{?buildFromSource:1}
 # t0dd: added to avoid unneccessary fetching of libraries from the internet
 #       which is a packaging no-no
 BuildRequires: qrencode-devel protobuf-devel
 BuildRequires: qt5-qtbase-devel qt5-linguist
 %if 0%{?fedora}
-Requires:       qt5-qtwayland
 BuildRequires:  qt5-qtwayland-devel
 %endif
-
+%endif
 
 # dashcore-server
 %package server
@@ -386,17 +445,27 @@ Learn more at www.dash.org.
 %endif
 
 mkdir -p %{srcroot}
-# dashcore
-# {_builddir}/dashcore-0.12.3/dashcore-0.12.3.0/
-# ..or something like..
-# {_builddir}/dash-0.13.0/dash-0.13.0.0-rc1/
+# Source0: dashcore (source)
+## {_builddir}/dashcore-0.12.3/dashcore-0.12.3.0/  ..or something like..
+## {_builddir}/dash-0.13.0/dash-0.13.0.0-rc1/
 %setup -q -T -D -a 0 -n %{srcroot}
-# contributions
-# {_builddir}/dashcore-0.12.3/dashcore-0.12.3-contrib/
+
+# Source1: contributions
+## {_builddir}/dashcore-0.12.3/dashcore-0.12.3-contrib/
 %setup -q -T -D -a 1 -n %{srcroot}
-# patches
+
+# Source2: bls archive
+mkdir -p %{sourcetree}/depends/sources/
+mv %{_sourcedir}/%{blsarchivename}.tar.gz %{sourcetree}/depends/sources/v%{blsarchivedate}.tar.gz
+
+# Source3: dashcore (binary)
+%if %{clientSourceIsPrebuilt} || %{serverSourceIsPrebuilt}
+%setup -q -T -D -a 3 -n %{srcroot}
+%endif
+
+# Patch0: patch (only used for production)
 %if %{targetIsProduction}
-cd %{srccodetree}
+cd %{sourcetree}
 %patch0 -p1
 cd ..
 %endif
@@ -407,22 +476,24 @@ cd ..
 mkdir -p selinux-tmp
 cp -p %{srccontribtree}/linux/selinux/dash.{te,if,fc} selinux-tmp/
 
-# pixmap contributions
-cp -a %{srccontribtree}/extras/pixmaps/*.??? %{srccodetree}/share/pixmaps/
-
-# Swap out packages.mk makefile in order to force usage of OS native devel
-# libraries and tools. Swap out chia_bls.mk because it asks for a dependency to
-# gmp that is satisfied via the OS (via BuildRequires) instead.
-cp -a %{srccontribtree}/build/depends/packages/*.mk %{srccodetree}/depends/packages/
-
-##t0dd: failed attempts to support EL7
-##t0dd: EL7 demands direct usage of cmake3 (and you can't do "alternatives"
-##      from an RPM specfile).
-#%%if 0%%{?rhel}
-#  cp -a %%{srccontribtree}/build/depends/packages/chia_bls.mk-cmake3 %%{srccodetree}/depends/packages/chia_bls.mk
-#  cp -a %%{srccontribtree}/build/depends/packages/native_cdrkit.mk-cmake3 %%{srccodetree}/depends/packages/native_cdrkit.mk
-#  cp -a %%{srccontribtree}/build/depends/packages/native_libdmg-hfsplus.mk-cmake3 %%{srccodetree}/depends/packages/native_libdmg-hfsplus.mk
-#%%endif
+%if 0%{?buildFromSource:1}
+  # pixmap contributions
+  cp -a %{srccontribtree}/extras/pixmaps/*.??? %{sourcetree}/share/pixmaps/
+  
+  # Swap out packages.mk makefile in order to force usage of OS native devel
+  # libraries and tools. Swap out chia_bls.mk because it asks for a dependency to
+  # gmp that is satisfied via the OS (via BuildRequires) instead.
+  cp -a %{srccontribtree}/build/depends/packages/*.mk %{sourcetree}/depends/packages/
+  
+  ##t0dd: failed attempts to support EL7
+  ##t0dd: EL7 demands direct usage of cmake3 (and you can't do "alternatives"
+  ##      from an RPM specfile).
+  #%%if 0%%{?rhel}
+  #  cp -a %%{srccontribtree}/build/depends/packages/chia_bls.mk-cmake3 %%{sourcetree}/depends/packages/chia_bls.mk
+  #  cp -a %%{srccontribtree}/build/depends/packages/native_cdrkit.mk-cmake3 %%{sourcetree}/depends/packages/native_cdrkit.mk
+  #  cp -a %%{srccontribtree}/build/depends/packages/native_libdmg-hfsplus.mk-cmake3 %%{sourcetree}/depends/packages/native_libdmg-hfsplus.mk
+  #%%endif
+%endif
 
 
 %build
@@ -432,7 +503,11 @@ cp -a %{srccontribtree}/build/depends/packages/*.mk %{srccodetree}/depends/packa
 #/usr/bin/scl enable devtoolset-7 bash
 #%%endif
 
-cd %{srccodetree}
+%if %{clientSourceIsPrebuilt} && %{serverSourceIsPrebuilt}
+  exit 0
+%endif
+
+cd %{sourcetree}
 
 # build dependencies
 cd depends
@@ -441,7 +516,7 @@ make HOST=%{_target_platform} -j$(nproc)
 cd ..
 
 # build code
-%define _targettree %{_builddir}/%{srcroot}/%{srccodetree}/depends/%{_target_platform}
+%define _targettree %{_builddir}/%{srcroot}/%{sourcetree}/depends/%{_target_platform}
 %define _FLAGS CPPFLAGS="$CPPFLAGS -I%{_targettree}/include -I%{_includedir}" LDFLAGS="$LDFLAGS -L%{_targettree}/lib -L%{_libdir}"
 
 %define _disable_tests --disable-tests --disable-gui-tests
@@ -455,7 +530,7 @@ cd ..
 #  mkdir -p %%{_targettree}/lib %%{_targettree}/include
 #  ln -s /opt/rh/devtoolset-7/root/usr/lib/gcc/x86_64-redhat-linux/7/* %%{_targettree}/lib/
 #%%endif
-%{_FLAGS} ./configure --prefix=%{_targettree} --enable-reduce-exports %{_disable_tests}
+%{_FLAGS} ./configure --prefix=%{_targettree} --enable-reduce-exports %{_disable_tests} --disable-zmq
 make 
 
 cd ..
@@ -476,7 +551,11 @@ cd ..
 
 %check
 # This section starts us in directory {_builddir}/{srcroot}
-cd %{srccodetree}
+%if %{clientSourceIsPrebuilt} && %{serverSourceIsPrebuilt}
+  exit 0
+%endif
+
+cd %{sourcetree}
 %if %{testing_extras}
 # Run all the tests
   make check
@@ -494,10 +573,13 @@ cd %{srccodetree}
 %install
 # This section starts us in directory {_builddir}/{srcroot}
 
-cd %{srccodetree}
-#make INSTALL="install -p" CP="cp -p" DESTDIR=%%{buildroot} install
-make install
-cd ..
+%if 0%{?buildFromSource:1}
+  cd %{sourcetree}
+  # make install deploys to {_targettree}/ (defined in %%build)
+  #make INSTALL="install -p" CP="cp -p" DESTDIR=%%{buildroot} install
+  make install
+  cd ..
+%endif
 
 # Cheatsheet for built-in RPM macros:
 # https://docs.fedoraproject.org/en-US/packaging-guidelines/RPMMacros/
@@ -537,15 +619,30 @@ install -d %{buildroot}%{_tmpfilesdir}
 install -d %{buildroot}%{_unitdir}
 install -d %{buildroot}%{_metainfodir}
 install -d -m755 -p %{buildroot}%{_bindir}
-install -d -m755 -p %{buildroot}%{_libdir}/pkgconfig
 install -d -m755 -p %{buildroot}%{_includedir}
+install -d -m755 -p %{buildroot}%{_libdir}
 
-# make install deploys to {_targettree}/ (defined in %%build)
-cp %{_targettree}/bin/* %{buildroot}%{_bindir}/
-mv %{_targettree}/lib/libdash* %{buildroot}%{_libdir}/
-mv %{_targettree}/lib/pkgconfig/libdash* %{buildroot}%{_libdir}/pkgconfig/
-mv %{_targettree}/include/dash* %{buildroot}%{_includedir}/
-# Remove the test binaries if still floating around
+%if 0%{?buildFromSource:1}
+  mv %{_targettree}/bin/* %{buildroot}%{_bindir}/
+  mv %{_targettree}/include/dash* %{buildroot}%{_includedir}/
+  mv %{_targettree}/lib/libdash* %{buildroot}%{_libdir}/
+  install -d -m755 -p %{buildroot}%{_libdir}/pkgconfig
+  mv %{_targettree}/lib/pkgconfig/libdash* %{buildroot}%{_libdir}/pkgconfig/
+%endif
+%if %{clientSourceIsPrebuilt} && %{serverSourceIsPrebuilt}
+  mv %{binarytree}/bin/* %{buildroot}%{_bindir}/
+  mv %{binarytree}/include/dash* %{buildroot}%{_includedir}/
+  mv %{binarytree}/lib/libdash* %{buildroot}%{_libdir}/
+%else
+  %if %{clientSourceIsPrebuilt}
+    mv %{binarytree}/bin/dash-qt %{buildroot}%{_bindir}/
+  %endif
+  %if %{serverSourceIsPrebuilt}
+    mv %{binarytree}/bin/dashd %{buildroot}%{_bindir}/
+  %endif
+%endif
+
+# Remove the test binaries if they are still floating around
 %if ! %{testing_extras}
   rm -f %{buildroot}%{_bindir}/test_*
   rm -f %{buildroot}%{_bindir}/bench_dash
@@ -579,15 +676,19 @@ ln -s %{_sysconfdir}/dashcore/dash.conf %{buildroot}%{_sharedstatedir}/dashcore/
 # Man Pages (from contrib)
 #install -D -m644 %%{srccontribtree}/linux/man/man1/* %%{buildroot}%%{_mandir}/man1/
 install -D -m644 %{srccontribtree}/linux/man/man5/* %{buildroot}%{_mandir}/man5/
-# Man Pages (from upstream) - likely to overwrite ones from contrib
-install -D -m644 %{srccodetree}/doc/man/*.1* %{buildroot}%{_mandir}/man1/
+# Man Pages (from upstream) - likely to overwrite ones from contrib (which is fine)
+install -D -m644 %{sourcetree}/doc/man/*.1* %{buildroot}%{_mandir}/man1/
+%if %{clientSourceIsPrebuilt} || %{serverSourceIsPrebuilt}
+  # probably the same. I haven't checked.
+  install -D -m644 %{binarytree}/share/man/man1/*.1* %{buildroot}%{_mandir}/man1/
+%endif
 gzip -f %{buildroot}%{_mandir}/man1/*.1
 gzip -f %{buildroot}%{_mandir}/man5/*.5
 
 # Bash completion
-install -D -m644 %{srccodetree}/contrib/dash-cli.bash-completion %{buildroot}%{_datadir}/bash-completion/completions/dash-cli
-install -D -m644 %{srccodetree}/contrib/dash-tx.bash-completion %{buildroot}%{_datadir}/bash-completion/completions/dash-tx
-install -D -m644 %{srccodetree}/contrib/dashd.bash-completion %{buildroot}%{_datadir}/bash-completion/completions/dashd
+install -D -m644 %{sourcetree}/contrib/dash-cli.bash-completion %{buildroot}%{_datadir}/bash-completion/completions/dash-cli
+install -D -m644 %{sourcetree}/contrib/dash-tx.bash-completion %{buildroot}%{_datadir}/bash-completion/completions/dash-tx
+install -D -m644 %{sourcetree}/contrib/dashd.bash-completion %{buildroot}%{_datadir}/bash-completion/completions/dashd
 
 # Desktop elements - desktop file and kde protocol file (from contrib)
 cd %{srccontribtree}/linux/desktop/
@@ -602,7 +703,7 @@ install -D -m644 -p dash-qt.appdata.xml %{buildroot}%{_metainfodir}/dash-qt.appd
 appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/*.appdata.xml
 
 # I think this is not used anymore --t0dd: Need to investigate
-install -D -m644 usr-share-kde4-services_dash-qt.protocol %{buildroot}%{_datadir}/kde4/services/dash-qt.protocol
+###install -D -m644 usr-share-kde4-services_dash-qt.protocol %%{buildroot}%%{_datadir}/kde4/services/dash-qt.protocol
 
 # Desktop elements - hicolor icons
 install -D -m644 dash-hicolor-128.png      %{buildroot}%{_datadir}/icons/hicolor/128x128/apps/dash.png
@@ -857,14 +958,14 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 # dashcore-client
 %files client
 %defattr(-,root,root,-)
-%license %{srccodetree}/COPYING
-%doc %{srccodetree}/doc/*.md %{srccontribtree}/extras/dash.conf.example
+%license %{sourcetree}/COPYING
+%doc %{sourcetree}/doc/*.md %{srccontribtree}/extras/dash.conf.example
 %{_bindir}/dash-qt
 %{_bindir}/dash-qt.wrapper.sh
 %{_datadir}/applications/dash-qt.desktop
 %{_metainfodir}/dash-qt.appdata.xml
-%{_datadir}/kde4/services/dash-qt.protocol
-#%%{_datadir}/pixmaps/*
+# XXX Removing this unless someone bitches
+#%%{_datadir}/kde4/services/dash-qt.protocol
 %{_datadir}/icons/*
 %{_mandir}/man1/dash-qt.1.gz
 %{_mandir}/man5/masternode.conf.5.gz
@@ -875,14 +976,17 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #%%dir %%attr(750,dashcore,dashcore) %%{_sysconfdir}/dashcore
 #%%config(noreplace) %%attr(640,dashcore,dashcore) %%{_sysconfdir}/dashcore/dash.conf
 %if %{testing_extras}
-  %{_bindir}/test_dash-qt
+  %if 0%{?buildFromSource:1}
+    %{_bindir}/test_dash-qt
+  %endif
 %endif
 
 
 # dashcore-server
 %files server
 %defattr(-,root,root,-)
-%license %{srccodetree}/COPYING
+%license %{sourcetree}/COPYING
+%doc %{sourcetree}/doc/*.md %{srccontribtree}/extras/dash.conf.example
 
 # Application as systemd service directory structure
 %defattr(-,dashcore,dashcore,-)
@@ -899,7 +1003,6 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 %dir %attr(755,dashcore,dashcore) %{_sysconfdir}/sysconfig/dashd-scripts
 %defattr(-,root,root,-)
 
-%doc %{srccodetree}/doc/*.md %{srccontribtree}/extras/dash.conf.example
 %config(noreplace) %attr(600,root,root) %{_sysconfdir}/sysconfig/dashd
 %attr(755,root,root) %{_sysconfdir}/sysconfig/dashd-scripts/dashd.send-email.sh
 
@@ -942,22 +1045,24 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #t0dd %%{_datadir}/selinux/*/dash.pp
 
 %if %{testing_extras}
-%{_bindir}/test_dash
-%{_bindir}/bench_dash
+  %if 0%{?buildFromSource:1}
+    %{_bindir}/test_dash
+    %{_bindir}/bench_dash
+  %endif
 %endif
 
 
 # dashcore-libs
 %files libs
 %defattr(-,root,root,-)
-%license %{srccodetree}/COPYING
+%license %{sourcetree}/COPYING
 %{_libdir}/*
 
 
 # dashcore-devel
 %files devel
 %defattr(-,root,root,-)
-%license %{srccodetree}/COPYING
+%license %{sourcetree}/COPYING
 %{_includedir}/*
 %{_libdir}/*
 
@@ -965,7 +1070,7 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 # dashcore-utils
 %files utils
 %defattr(-,root,root,-)
-%license %{srccodetree}/COPYING
+%license %{sourcetree}/COPYING
 %{_bindir}/dash-cli
 %{_bindir}/dash-tx
 %{_datadir}/bash-completion/completions/dash-cli
@@ -1002,6 +1107,16 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
+* Sun Feb 24 2019 Todd Warner <t0dd_at_protonmail.com> 0.13.1.0-2.taw
+* Sun Feb 24 2019 Todd Warner <t0dd_at_protonmail.com> 0.13.1.0-1.2.testing.taw
+* Sun Feb 24 2019 Todd Warner <t0dd_at_protonmail.com> 0.13.1.0-1.1.testing.taw
+  - issues with F29 builds of dash-qt  
+    including prebuilt for that component for now
+  - can selectively include our own builds or prebuilt for client and/or   
+    server -- this is far more complicated than it needs to be.
+  - including bls-signatures archive eliminating need to reach out to the  
+    internet during builds
+
 * Fri Feb 08 2019 Todd Warner <t0dd_at_protonmail.com> 0.13.1.0-1.taw
 * Fri Feb 08 2019 Todd Warner <t0dd_at_protonmail.com> 0.13.1.0-0.1.testing.taw
   - 0.13.1
