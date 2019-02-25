@@ -36,7 +36,7 @@ Summary: Manage and collateralize a Dash Masternode with a hardware wallet
 %define targetIsProduction 0
 %define sourceIsPrebuilt 0
 %define buildQualifier beta1
-#%%undefine buildQualifier
+%undefine buildQualifier
 
 # Package (RPM) name-version-release.
 # <name>-<vermajor.<verminor>-<pkgrel>[.<extraver>][.<snapinfo>].DIST[.<minorbump>]
@@ -56,6 +56,7 @@ Version: %{vermajor}.%{verminor}
 # MINORBUMP
 # (for very small or rapid iterations)
 %define minorbump taw
+#%%undefine minorbump
 
 #
 # Build the release string - don't edit this
@@ -68,24 +69,30 @@ Version: %{vermajor}.%{verminor}
 %if 0%{?buildQualifier:1}
   %define snapinfo %{buildQualifier}
 %endif
-%define _snapinfo_saved %{snapinfo}
+
+# have to use _variables because rpm spec macros are easily recursive and break.
+%define _snapinfo THIS_WILL_BE_REPLACED
 %if %{sourceIsPrebuilt}
   %if 0%{?snapinfo:1}
-    %define snapinfo %{_snapinfo_saved}.rp
+    %define _snapinfo %{snapinfo}.rp
+  %else
+    %define _snapinfo rp
+  %endif
+%else
+  %if 0%{?snapinfo:1}
+    %define _snapinfo %snapinfo
+  %else
+    %undefine _snapinfo
   %endif
 %endif
 
 # pkgrel will be defined, snapinfo and minorbump may not be
 %define _release %{_pkgrel}
-%define includeMinorbump 1
-%if ! %{includeMinorbump}
-  %undefine minorbump
-%endif
-%if 0%{?snapinfo:1}
+%if 0%{?_snapinfo:1}
   %if 0%{?minorbump:1}
-    %define _release %{_pkgrel}.%{snapinfo}%{?dist}.%{minorbump}
+    %define _release %{_pkgrel}.%{_snapinfo}%{?dist}.%{minorbump}
   %else
-    %define _release %{_pkgrel}.%{snapinfo}%{?dist}
+    %define _release %{_pkgrel}.%{_snapinfo}%{?dist}
   %endif
 %else
   %if 0%{?minorbump:1}
@@ -100,30 +107,29 @@ Release: %{_release}
 
 
 # Extracted source tree structure (extracted in .../BUILD)
-# (sourcetree and binarytree will be mutually exclusive)
+# (sourcetree and binaryarchivename will be mutually exclusive)
 #   srcroot               dash-masternode-tool-0.9
 #      \_sourcetree          \_dash-masternode-tool-0.9.22
-#      \_binarytree          \_DashMasternodeTool (file)
+#      \_binaryarchivename   \_DashMasternodeTool (file)
 #      \_sourcetree2         \_btchip-python-0.1.26
 #      \_srccontribtree      \_dash-masternode-tool-0.9-contrib
 %define srcroot %{name}-%{vermajor}
 %if 0%{?buildQualifier:1}
 %define sourcetree %{name}-%{version}-%{buildQualifier}
+%define binaryarchivename %{_name2}_%{version}.%{buildQualifier}.linux
 %else
 %define sourcetree %{name}-%{version}
+%define binaryarchivename %{_name2}_%{version}.linux
 %endif
-%define binarytree %{_name2}_%{version}.linux
 %define btchip_python_version 0.1.26
 %define sourcetree2 btchip-python-%{btchip_python_version}
-%define bls_signature_version 20181116
-%define sourcetree3 bls-signatures-%{bls_signature_version}
 %define srccontribtree %{name}-%{vermajor}-contrib
 
 # dash-masternode-tool-0.9.z
-%if ! %{sourceIsPrebuilt}
-Source0: https://github.com/Bertrand256/dash-masternode-tool/archive/v%{version}/%{sourcetree}.tar.gz
+%if %{sourceIsPrebuilt}
+Source0: https://github.com/Bertrand256/dash-masternode-tool/archive/v%{version}/%{binaryarchivename}.tar.gz
 %else
-Source0: https://github.com/Bertrand256/dash-masternode-tool/archive/v%{version}/%{binarytree}.tar.gz
+Source0: https://github.com/Bertrand256/dash-masternode-tool/archive/v%{version}/%{sourcetree}.tar.gz
 %endif
 # dash-masternode-tool-0.9-contrib
 %if %{targetIsProduction}
@@ -133,16 +139,18 @@ Source1: https://github.com/taw00/dashcore-rpm/blob/master/source/testing/SOURCE
 %endif
 # btchip-python-...
 Source2: https://github.com/Bertrand256/btchip-python/archive/v%{btchip_python_version}/%{sourcetree2}.tar.gz
-# bls-signatures-...
-Source3: https://github.com/Bertrand256/bls-signatures/archive/master/%{sourcetree3}.tar.gz
 
 %if ! %{sourceIsPrebuilt}
 Requires: zenity
 BuildRequires: python3-devel python3-virtualenv
 BuildRequires: libusbx-devel libudev-devel
 BuildRequires: gcc-c++ cmake
-#BuildRequires: python3-qt5-base
-BuildRequires: git
+# All these python requirements were an attempt to reduce the python upstream
+# fetches by the build. Unfortunately, DMT doesn't attempt to use
+# system-installed packages.
+#BuildRequires: python2-qt5
+#BuildRequires: python3-pyqtchart-devel
+#BuildRequires: python3-simplejson python3-mnemonic python3-requests python3-paramiko python3-cryptography python3-more-itertools
 %endif
 
 # tree, vim-enhanced, and less for mock build environment introspection
@@ -203,7 +211,6 @@ Supported hardware wallets: Trezor (model One and T), KeepKey, Ledger Nano S
 #   srcroot               dash-masternode-tool-0.9
 #      \_sourcetree        \_dash-masternode-tool-0.9.21
 #      \_sourcetree2       \_btchip-python-SOME_VERSION
-#      \_sourcetree3       \_bls-signatures-SOME_VERSION
 #      \_srccontribtree     \_dash-masternode-tool-0.9-contrib
 
 mkdir -p %{srcroot}
@@ -213,8 +220,6 @@ mkdir -p %{srcroot}
 %setup -q -T -D -a 1 -n %{srcroot}
 # btchip-python
 %setup -q -T -D -a 2 -n %{srcroot}
-# bls-signatures
-%setup -q -T -D -a 3 -n %{srcroot}
 
 # For debugging purposes...
 %if ! %{targetIsProduction}
@@ -223,7 +228,7 @@ cd ../.. ; /usr/bin/tree -df -L 2 BUILD ; cd -
 
 %if ! %{sourceIsPrebuilt}
   # My modified requirements a tad since we use the native QT libraries
-  # and include btchip-python and bls-signatures (blspy)
+  # and include btchip-python
   cp %{srccontribtree}/build/requirements.txt %{sourcetree}/
 
   [ -f /usr/bin/virtualenv-3 ] && /usr/bin/virtualenv-3 -p python3 ./venv || /usr/bin/virtualenv -p python3 ./venv
@@ -234,12 +239,9 @@ cd ../.. ; /usr/bin/tree -df -L 2 BUILD ; cd -
   # https://github.com/pyinstaller/pyinstaller/issues/4003  
   # https://stackoverflow.com/questions/54338714/pip-install-pyinstaller-no-module-named-pyinstaller
   ./venv/bin/pip3 install pip==18.1
+  ./venv/bin/pip3 install pyinstaller
   ./venv/bin/pip3 install --upgrade setuptools
   ./venv/bin/pip3 install ./%{sourcetree2}
-  # Won't build my cached version of bls-signatures for some reason.
-  # Will troubleshoot later -t0dd
-  #./venv/bin/pip3 install ./%{sourcetree3}
-  
   cd %{sourcetree}
   ../venv/bin/pip3 install -r requirements.txt
   cd ..
@@ -419,6 +421,9 @@ cd ../../
 
 
 %changelog
+* Sun Feb 24 2019 Todd Warner <t0dd_at_protonmail.com> 0.9.22-0.1.testing.taw
+  - v0.9.22
+
 * Wed Feb 20 2019 Todd Warner <t0dd_at_protonmail.com> 0.9.22-0.1.beta1.taw
   - v0.9.22 beta1
 

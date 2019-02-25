@@ -35,25 +35,28 @@ Summary: Manage and collateralize a Dash Masternode with a hardware wallet
 
 %define targetIsProduction 1
 %define sourceIsPrebuilt 0
+%define buildQualifier beta1
+%undefine buildQualifier
 
 # Package (RPM) name-version-release.
 # <name>-<vermajor.<verminor>-<pkgrel>[.<extraver>][.<snapinfo>].DIST[.<minorbump>]
 
 # VERSION
 %define vermajor 0.9
-%define verminor 21
+%define verminor 22
 Version: %{vermajor}.%{verminor}
 
 # RELEASE
 # if production - "targetIsProduction 1"
-%define _pkgrel 2
+%define _pkgrel 1
 %if ! %{targetIsProduction}
-  %define _pkgrel 1.1
+  %define _pkgrel 0.1
 %endif
 
 # MINORBUMP
 # (for very small or rapid iterations)
 %define minorbump taw
+#%%undefine minorbump
 
 #
 # Build the release string - don't edit this
@@ -61,28 +64,35 @@ Version: %{vermajor}.%{verminor}
 
 %define snapinfo testing
 %if %{targetIsProduction}
-  %if %{sourceIsPrebuilt}
-    %define snapinfo rp
+  %undefine snapinfo
+%endif
+%if 0%{?buildQualifier:1}
+  %define snapinfo %{buildQualifier}
+%endif
+
+# have to use _variables because rpm spec macros are easily recursive and break.
+%define _snapinfo THIS_WILL_BE_REPLACED
+%if %{sourceIsPrebuilt}
+  %if 0%{?snapinfo:1}
+    %define _snapinfo %{snapinfo}.rp
   %else
-    %undefine snapinfo
+    %define _snapinfo rp
   %endif
 %else
-  %if %{sourceIsPrebuilt}
-    %define snapinfo testing.rp
+  %if 0%{?snapinfo:1}
+    %define _snapinfo %snapinfo
+  %else
+    %undefine _snapinfo
   %endif
 %endif
 
 # pkgrel will be defined, snapinfo and minorbump may not be
 %define _release %{_pkgrel}
-%define includeMinorbump 1
-%if ! %{includeMinorbump}
-  %undefine minorbump
-%endif
-%if 0%{?snapinfo:1}
+%if 0%{?_snapinfo:1}
   %if 0%{?minorbump:1}
-    %define _release %{_pkgrel}.%{snapinfo}%{?dist}.%{minorbump}
+    %define _release %{_pkgrel}.%{_snapinfo}%{?dist}.%{minorbump}
   %else
-    %define _release %{_pkgrel}.%{snapinfo}%{?dist}
+    %define _release %{_pkgrel}.%{_snapinfo}%{?dist}
   %endif
 %else
   %if 0%{?minorbump:1}
@@ -97,25 +107,29 @@ Release: %{_release}
 
 
 # Extracted source tree structure (extracted in .../BUILD)
+# (sourcetree and binaryarchivename will be mutually exclusive)
 #   srcroot               dash-masternode-tool-0.9
-#      \_srccodetree        \_dash-masternode-tool-0.9.18
-#      \_binarytree         \_DashMasternodeTool (file)
-#      \_srccodetree2       \_btchip-python-0.1.21
-#      \_srccontribtree     \_dash-masternode-tool-0.9-contrib
+#      \_sourcetree          \_dash-masternode-tool-0.9.22
+#      \_binaryarchivename   \_DashMasternodeTool (file)
+#      \_sourcetree2         \_btchip-python-0.1.26
+#      \_srccontribtree      \_dash-masternode-tool-0.9-contrib
 %define srcroot %{name}-%{vermajor}
-%define srccodetree %{name}-%{version}
-%define binarytree %{_name2}_%{version}.linux
+%if 0%{?buildQualifier:1}
+%define sourcetree %{name}-%{version}-%{buildQualifier}
+%define binaryarchivename %{_name2}_%{version}.%{buildQualifier}.linux
+%else
+%define sourcetree %{name}-%{version}
+%define binaryarchivename %{_name2}_%{version}.linux
+%endif
 %define btchip_python_version 0.1.26
-%define srccodetree2 btchip-python-%{btchip_python_version}
-%define bls_signature_version 20181116
-%define srccodetree3 bls-signatures-%{bls_signature_version}
+%define sourcetree2 btchip-python-%{btchip_python_version}
 %define srccontribtree %{name}-%{vermajor}-contrib
 
 # dash-masternode-tool-0.9.z
-%if ! %{sourceIsPrebuilt}
-Source0: https://github.com/Bertrand256/dash-masternode-tool/archive/v%{version}/%{srccodetree}.tar.gz
+%if %{sourceIsPrebuilt}
+Source0: https://github.com/Bertrand256/dash-masternode-tool/archive/v%{version}/%{binaryarchivename}.tar.gz
 %else
-Source0: https://github.com/Bertrand256/dash-masternode-tool/archive/v%{version}/%{binarytree}.tar.gz
+Source0: https://github.com/Bertrand256/dash-masternode-tool/archive/v%{version}/%{sourcetree}.tar.gz
 %endif
 # dash-masternode-tool-0.9-contrib
 %if %{targetIsProduction}
@@ -124,17 +138,19 @@ Source1: https://github.com/taw00/dashcore-rpm/blob/master/source/SOURCES/%{srcc
 Source1: https://github.com/taw00/dashcore-rpm/blob/master/source/testing/SOURCES/%{srccontribtree}.tar.gz
 %endif
 # btchip-python-...
-Source2: https://github.com/Bertrand256/btchip-python/archive/v%{btchip_python_version}/%{srccodetree2}.tar.gz
-# bls-signatures-...
-Source3: https://github.com/Bertrand256/bls-signatures/archive/master/%{srccodetree3}.tar.gz
+Source2: https://github.com/Bertrand256/btchip-python/archive/v%{btchip_python_version}/%{sourcetree2}.tar.gz
 
 %if ! %{sourceIsPrebuilt}
 Requires: zenity
 BuildRequires: python3-devel python3-virtualenv
 BuildRequires: libusbx-devel libudev-devel
 BuildRequires: gcc-c++ cmake
-#BuildRequires: python3-qt5-base
-BuildRequires: git
+# All these python requirements were an attempt to reduce the python upstream
+# fetches by the build. Unfortunately, DMT doesn't attempt to use
+# system-installed packages.
+#BuildRequires: python2-qt5
+#BuildRequires: python3-pyqtchart-devel
+#BuildRequires: python3-simplejson python3-mnemonic python3-requests python3-paramiko python3-cryptography python3-more-itertools
 %endif
 
 # tree, vim-enhanced, and less for mock build environment introspection
@@ -193,9 +209,8 @@ Supported hardware wallets: Trezor (model One and T), KeepKey, Ledger Nano S
 # I create a root dir and place the source and contribution trees under it.
 # Extracted source tree structure (extracted in .../BUILD)
 #   srcroot               dash-masternode-tool-0.9
-#      \_srccodetree        \_dash-masternode-tool-0.9.21
-#      \_srccodetree2       \_btchip-python-SOME_VERSION
-#      \_srccodetree3       \_bls-signatures-SOME_VERSION
+#      \_sourcetree        \_dash-masternode-tool-0.9.21
+#      \_sourcetree2       \_btchip-python-SOME_VERSION
 #      \_srccontribtree     \_dash-masternode-tool-0.9-contrib
 
 mkdir -p %{srcroot}
@@ -205,8 +220,6 @@ mkdir -p %{srcroot}
 %setup -q -T -D -a 1 -n %{srcroot}
 # btchip-python
 %setup -q -T -D -a 2 -n %{srcroot}
-# bls-signatures
-%setup -q -T -D -a 3 -n %{srcroot}
 
 # For debugging purposes...
 %if ! %{targetIsProduction}
@@ -215,8 +228,8 @@ cd ../.. ; /usr/bin/tree -df -L 2 BUILD ; cd -
 
 %if ! %{sourceIsPrebuilt}
   # My modified requirements a tad since we use the native QT libraries
-  # and include btchip-python and bls-signatures (blspy)
-  cp %{srccontribtree}/build/requirements.txt %{srccodetree}/
+  # and include btchip-python
+  cp %{srccontribtree}/build/requirements.txt %{sourcetree}/
 
   [ -f /usr/bin/virtualenv-3 ] && /usr/bin/virtualenv-3 -p python3 ./venv || /usr/bin/virtualenv -p python3 ./venv
   . ./venv/bin/activate
@@ -226,18 +239,15 @@ cd ../.. ; /usr/bin/tree -df -L 2 BUILD ; cd -
   # https://github.com/pyinstaller/pyinstaller/issues/4003  
   # https://stackoverflow.com/questions/54338714/pip-install-pyinstaller-no-module-named-pyinstaller
   ./venv/bin/pip3 install pip==18.1
+  ./venv/bin/pip3 install pyinstaller
   ./venv/bin/pip3 install --upgrade setuptools
-  ./venv/bin/pip3 install ./%{srccodetree2}
-  # Won't build my cached version of bls-signatures for some reason.
-  # Will troubleshoot later -t0dd
-  #./venv/bin/pip3 install ./%{srccodetree3}
-  
-  cd %{srccodetree}
+  ./venv/bin/pip3 install ./%{sourcetree2}
+  cd %{sourcetree}
   ../venv/bin/pip3 install -r requirements.txt
   cd ..
 %else
-  mkdir -p %{srccodetree}
-  mv DashMasternodeTool %{srccodetree}
+  mkdir -p %{sourcetree}
+  mv DashMasternodeTool %{sourcetree}
 %endif
 
 # For debugging purposes...
@@ -251,7 +261,7 @@ cd ../.. ; /usr/bin/tree -df -L 2 BUILD ; cd -
 # This section starts us in directory {_builddir}/{srcroot}
 
 %if ! %{sourceIsPrebuilt}
-  cd %{srccodetree}
+  cd %{sourcetree}
   ../venv/bin/pyinstaller --distpath=../dist/linux --workpath=../dist/linux/build dash_masternode_tool.spec
   cd ..
 %endif
@@ -294,13 +304,13 @@ install -D -m755 -p %{srccontribtree}/desktop/%{name}-desktop-script.sh %{buildr
 %if ! %{sourceIsPrebuilt}
 install -D -m755 -p ./dist/linux/%{_name2} %{buildroot}%{_datadir}/%{name}/%{_name2}
 %else
-install -D -m755 -p %{srccodetree}/%{_name2} %{buildroot}%{_datadir}/%{name}/%{_name2}
+install -D -m755 -p %{sourcetree}/%{_name2} %{buildroot}%{_datadir}/%{name}/%{_name2}
 %endif
 ln -s %{_datadir}/%{name}/%{_name2} %{buildroot}%{_bindir}/%{name}
 
 # Most use LICENSE or COPYING... not LICENSE.txt
 # Now using the copy in srccontribtree
-#install -D -p %%{srccodetree}/LICENSE.txt %%{srccodetree}/LICENSE
+#install -D -p %%{sourcetree}/LICENSE.txt %%{sourcetree}/LICENSE
 
 # Desktop
 cd %{srccontribtree}/desktop/
@@ -338,7 +348,7 @@ cd ../../
 
 ## Man Pages - not used as of yet
 #install -d %%{buildroot}%%{_mandir}
-#install -D -m644 %%{srccodetree}/share/man/man1/* %%{buildroot}%%{_mandir}/man1/
+#install -D -m644 %%{sourcetree}/share/man/man1/* %%{buildroot}%%{_mandir}/man1/
 
 ## Bash completion
 #install -D -m644 %%{srccontribtree}/bash/%%{name}.bash-completion  %%{buildroot}%%{_datadir}/bash-completion/completions/%%{name}
@@ -354,12 +364,12 @@ cd ../../
 #   but of final tweaking is often done in this section
 #
 %defattr(-,root,root,-)
-#%%license %%{srccodetree}/LICENSE
+#%%license %%{sourcetree}/LICENSE
 %license %{srccontribtree}/LICENSE
 %doc %{srccontribtree}/README.about-this-rpm.md
 %doc %{srccontribtree}/README.changelog.md
 %if ! %{sourceIsPrebuilt}
-%doc %{srccodetree}/README.md
+%doc %{sourcetree}/README.md
 %else
 %doc %{srccontribtree}/build/README.md
 %endif
@@ -411,7 +421,13 @@ cd ../../
 
 
 %changelog
-* Tue Feb 05 2019 Todd Warner <t0dd_at_protonmail.com> 0.9.21-2.taw
+* Sun Feb 24 2019 Todd Warner <t0dd_at_protonmail.com> 0.9.22-1.taw
+* Sun Feb 24 2019 Todd Warner <t0dd_at_protonmail.com> 0.9.22-0.1.testing.taw
+  - v0.9.22
+
+* Wed Feb 20 2019 Todd Warner <t0dd_at_protonmail.com> 0.9.22-0.1.beta1.taw
+  - v0.9.22 beta1
+
 * Tue Feb 05 2019 Todd Warner <t0dd_at_protonmail.com> 0.9.21-1.1.testing.taw
   - Fixed my broken config file sniffing logic in the .sh wrapper script
   - pyinstaller has a bug, therefore I had to add...  
