@@ -35,8 +35,8 @@ Summary: Manage and collateralize a Dash Masternode with a hardware wallet
 
 %define targetIsProduction 0
 %define sourceIsPrebuilt 0
-%define buildQualifier beta1
-%undefine buildQualifier
+%define buildQualifier hotfix1
+#%%undefine buildQualifier
 
 # Package (RPM) name-version-release.
 # <name>-<vermajor.<verminor>-<pkgrel>[.<extraver>][.<snapinfo>].DIST[.<minorbump>]
@@ -48,9 +48,9 @@ Version: %{vermajor}.%{verminor}
 
 # RELEASE
 # if production - "targetIsProduction 1"
-%define _pkgrel 1
+%define _pkgrel 2
 %if ! %{targetIsProduction}
-  %define _pkgrel 0.1
+  %define _pkgrel 1.1
 %endif
 
 # MINORBUMP
@@ -421,6 +421,10 @@ cd ../../
 
 
 %changelog
+* Mon Feb 25 2019 Todd Warner <t0dd_at_protonmail.com> 0.9.22-1.1.hotfix1.taw
+  - fixes vote results to csv bug
+
+* Sun Feb 24 2019 Todd Warner <t0dd_at_protonmail.com> 0.9.22-1.taw
 * Sun Feb 24 2019 Todd Warner <t0dd_at_protonmail.com> 0.9.22-0.1.testing.taw
   - v0.9.22
 
