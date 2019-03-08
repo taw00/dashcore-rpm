@@ -35,7 +35,7 @@ Summary: Manage and collateralize a Dash Masternode with a hardware wallet
 
 %define targetIsProduction 1
 %define sourceIsPrebuilt 0
-%define buildQualifier hotfix4
+%define buildQualifier hotfix5
 #%%undefine buildQualifier
 
 # Package (RPM) name-version-release.
@@ -47,14 +47,12 @@ Summary: Manage and collateralize a Dash Masternode with a hardware wallet
 Version: %{vermajor}.%{verminor}
 
 # RELEASE
-# if production - "targetIsProduction 1"
-%define _pkgrel 3
+%define _pkgrel 4
 %if ! %{targetIsProduction}
-  %define _pkgrel 2.1
+  %define _pkgrel 3.1
 %endif
 
 # MINORBUMP
-# (for very small or rapid iterations)
 %define minorbump taw
 #%%undefine minorbump
 
@@ -108,11 +106,11 @@ Release: %{_release}
 
 # Extracted source tree structure (extracted in .../BUILD)
 # (sourcetree and binaryarchivename will be mutually exclusive)
-#   srcroot               dash-masternode-tool-0.9
-#      \_sourcetree          \_dash-masternode-tool-0.9.22
-#      \_binaryarchivename   \_DashMasternodeTool (file)
-#      \_sourcetree2         \_btchip-python-0.1.26
-#      \_srccontribtree      \_dash-masternode-tool-0.9-contrib
+#   srcroot                      dash-masternode-tool-0.9
+#      \_sourcetree                \_dash-masternode-tool-0.9.22
+#      \_binaryarchivename         \_DashMasternodeTool (file)
+#      \_sourcetree_btchip_python  \_btchip-python-SOME_VERSION
+#      \_sourcetree_contrib        \_dash-masternode-tool-0.9-contrib
 %define srcroot %{name}-%{vermajor}
 %if 0%{?buildQualifier:1}
 %define sourcetree %{name}-%{version}-%{buildQualifier}
@@ -121,9 +119,14 @@ Release: %{_release}
 %define sourcetree %{name}-%{version}
 %define binaryarchivename %{_name2}_%{version}.linux
 %endif
-%define btchip_python_version 0.1.26
-%define sourcetree2 btchip-python-%{btchip_python_version}
-%define srccontribtree %{name}-%{vermajor}-contrib
+#%%define btchip_python_version 0.1.26
+%define btchip_python_vermajor master-branch
+%define btchip_python_verminor 2019-03-08
+%define btchip_python_version %{btchip_python_vermajor}-%{btchip_python_verminor}
+#%%define sourcetree_btchip_python btchip-python-%{btchip_python_version}
+%define archivename_btchip_python btchip-python-%{btchip_python_version}
+%define sourcetree_btchip_python btchip-python-%{btchip_python_vermajor}
+%define sourcetree_contrib %{name}-%{vermajor}-contrib
 
 # dash-masternode-tool-0.9.z
 %if %{sourceIsPrebuilt}
@@ -132,13 +135,10 @@ Source0: https://github.com/Bertrand256/dash-masternode-tool/archive/v%{version}
 Source0: https://github.com/Bertrand256/dash-masternode-tool/archive/v%{version}/%{sourcetree}.tar.gz
 %endif
 # dash-masternode-tool-0.9-contrib
-%if %{targetIsProduction}
-Source1: https://github.com/taw00/dashcore-rpm/blob/master/source/SOURCES/%{srccontribtree}.tar.gz
-%else
-Source1: https://github.com/taw00/dashcore-rpm/blob/master/source/testing/SOURCES/%{srccontribtree}.tar.gz
-%endif
+Source1: https://github.com/taw00/dashcore-rpm/blob/master/source/SOURCES/%{sourcetree_contrib}.tar.gz
 # btchip-python-...
-Source2: https://github.com/Bertrand256/btchip-python/archive/v%{btchip_python_version}/%{sourcetree2}.tar.gz
+#Source2: https://github.com/Bertrand256/btchip-python/archive/v%%{btchip_python_version}/%%{sourcetree_btchip_python}.tar.gz
+Source2: https://github.com/taw00/dashcore-rpm/blob/master/source/SOURCES/%{archivename_btchip_python}.tar.gz
 
 %if ! %{sourceIsPrebuilt}
 Requires: zenity
@@ -208,10 +208,10 @@ Supported hardware wallets: Trezor (model One and T), KeepKey, Ledger Nano S
 #
 # I create a root dir and place the source and contribution trees under it.
 # Extracted source tree structure (extracted in .../BUILD)
-#   srcroot               dash-masternode-tool-0.9
-#      \_sourcetree        \_dash-masternode-tool-0.9.21
-#      \_sourcetree2       \_btchip-python-SOME_VERSION
-#      \_srccontribtree     \_dash-masternode-tool-0.9-contrib
+#   srcroot                      dash-masternode-tool-0.9
+#      \_sourcetree               \_dash-masternode-tool-0.9.22
+#      \_sourcetree_btchip_python \_btchip-python-SOME_VERSION
+#      \_sourcetree_contrib       \_dash-masternode-tool-0.9-contrib
 
 mkdir -p %{srcroot}
 # sourcecode or DashMasternodeTool (binary)
@@ -229,7 +229,7 @@ cd ../.. ; /usr/bin/tree -df -L 2 BUILD ; cd -
 %if ! %{sourceIsPrebuilt}
   # My modified requirements a tad since we use the native QT libraries
   # and include btchip-python
-  cp %{srccontribtree}/build/requirements.txt %{sourcetree}/
+  cp %{sourcetree_contrib}/build/requirements.txt %{sourcetree}/
 
   [ -f /usr/bin/virtualenv-3 ] && /usr/bin/virtualenv-3 -p python3 ./venv || /usr/bin/virtualenv -p python3 ./venv
   . ./venv/bin/activate
@@ -241,7 +241,7 @@ cd ../.. ; /usr/bin/tree -df -L 2 BUILD ; cd -
   ./venv/bin/pip3 install pip==18.1
   ./venv/bin/pip3 install pyinstaller
   ./venv/bin/pip3 install --upgrade setuptools
-  ./venv/bin/pip3 install ./%{sourcetree2}
+  ./venv/bin/pip3 install ./%{sourcetree_btchip_python}
   cd %{sourcetree}
   ../venv/bin/pip3 install -r requirements.txt
   cd ..
@@ -300,7 +300,7 @@ install -d %{buildroot}%{_datadir}/applications
 install -d %{buildroot}%{_datadir}/%{name}
 
 # Binaries
-install -D -m755 -p %{srccontribtree}/desktop/%{name}-desktop-script.sh %{buildroot}%{_datadir}/%{name}/
+install -D -m755 -p %{sourcetree_contrib}/desktop/%{name}-desktop-script.sh %{buildroot}%{_datadir}/%{name}/
 %if ! %{sourceIsPrebuilt}
 install -D -m755 -p ./dist/linux/%{_name2} %{buildroot}%{_datadir}/%{name}/%{_name2}
 %else
@@ -309,11 +309,11 @@ install -D -m755 -p %{sourcetree}/%{_name2} %{buildroot}%{_datadir}/%{name}/%{_n
 ln -s %{_datadir}/%{name}/%{_name2} %{buildroot}%{_bindir}/%{name}
 
 # Most use LICENSE or COPYING... not LICENSE.txt
-# Now using the copy in srccontribtree
+# Now using the copy in sourcetree_contrib
 #install -D -p %%{sourcetree}/LICENSE.txt %%{sourcetree}/LICENSE
 
 # Desktop
-cd %{srccontribtree}/desktop/
+cd %{sourcetree_contrib}/desktop/
 install -D -m644 -p %{name}.hicolor.16x16.png        %{buildroot}%{_datadir}/icons/hicolor/16x16/apps/%{name}.png
 install -D -m644 -p %{name}.hicolor.22x22.png        %{buildroot}%{_datadir}/icons/hicolor/22x22/apps/%{name}.png
 install -D -m644 -p %{name}.hicolor.24x24.png        %{buildroot}%{_datadir}/icons/hicolor/24x24/apps/%{name}.png
@@ -351,8 +351,8 @@ cd ../../
 #install -D -m644 %%{sourcetree}/share/man/man1/* %%{buildroot}%%{_mandir}/man1/
 
 ## Bash completion
-#install -D -m644 %%{srccontribtree}/bash/%%{name}.bash-completion  %%{buildroot}%%{_datadir}/bash-completion/completions/%%{name}
-#install -D -m644 %%{srccontribtree}/bash/%%{name}d.bash-completion %%{buildroot}%%{_datadir}/bash-completion/completions/%%{name}d
+#install -D -m644 %%{sourcetree_contrib}/bash/%%{name}.bash-completion  %%{buildroot}%%{_datadir}/bash-completion/completions/%%{name}
+#install -D -m644 %%{sourcetree_contrib}/bash/%%{name}d.bash-completion %%{buildroot}%%{_datadir}/bash-completion/completions/%%{name}d
 
 
 %files
@@ -365,13 +365,13 @@ cd ../../
 #
 %defattr(-,root,root,-)
 #%%license %%{sourcetree}/LICENSE
-%license %{srccontribtree}/LICENSE
-%doc %{srccontribtree}/README.about-this-rpm.md
-%doc %{srccontribtree}/README.changelog.md
+%license %{sourcetree_contrib}/LICENSE
+%doc %{sourcetree_contrib}/README.about-this-rpm.md
+%doc %{sourcetree_contrib}/README.changelog.md
 %if ! %{sourceIsPrebuilt}
 %doc %{sourcetree}/README.md
 %else
-%doc %{srccontribtree}/build/README.md
+%doc %{sourcetree_contrib}/build/README.md
 %endif
 
 # Binaries
@@ -421,8 +421,14 @@ cd ../../
 
 
 %changelog
-* Wed Mar 06 2019 Todd Warner <t0dd_at_protonmail.com> 0.9.22-3.hotfit4.taw
-* Wed Mar 06 2019 Todd Warner <t0dd_at_protonmail.com> 0.9.22-2.1.hotfit4.taw
+* Fri Mar 08 2019 Todd Warner <t0dd_at_protonmail.com> 0.9.22-4.hotfix5.taw
+* Fri Mar 08 2019 Todd Warner <t0dd_at_protonmail.com> 0.9.22-3.1.hotfix5.taw
+  - hotfix5 - keepkey issue fix
+  - refreshed btchip-python sourcetree
+  - renamed some variables in the specfile
+
+* Wed Mar 06 2019 Todd Warner <t0dd_at_protonmail.com> 0.9.22-3.hotfix4.taw
+* Wed Mar 06 2019 Todd Warner <t0dd_at_protonmail.com> 0.9.22-2.1.hotfix4.taw
   - hotfix2, 3, 4 -- squashing a smattering of small or corner-case bugs
 
 * Mon Feb 25 2019 Todd Warner <t0dd_at_protonmail.com> 0.9.22-2.hotfix1.taw
