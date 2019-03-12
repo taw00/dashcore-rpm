@@ -855,6 +855,8 @@ getent passwd dashcore >/dev/null || useradd -r -g dashcore -d %{_sharedstatedir
 #  _localstatedir is /var
 #  _sharedstatedir is /var/lib
 #  /var/lib/dashcore is the $HOME for the dashcore user
+#  There is argument for moving all data to /srv/dashcore, and I may
+#  do so in the future.
 
 # Fix the debug.log directory structure if it is not aligned to /var/log/
 # standards.
