@@ -31,7 +31,7 @@ Name: %{_name_dc}
 Summary: Peer-to-peer, payments-focused, fungible digital currency, protocol, and platform for payments and decentralized applications
 
 %define targetIsProduction 0
-%define clientSourceIsPrebuilt 1
+%define clientSourceIsPrebuilt 0
 %define serverSourceIsPrebuilt 0
 
 # ARCHIVE QUALIFIER - edit this if applies
@@ -40,15 +40,15 @@ Summary: Peer-to-peer, payments-focused, fungible digital currency, protocol, an
 %undefine buildQualifier
 
 # VERSION
-%define vermajor 0.13.1
+%define vermajor 0.13.2
 %define verminor 0
 Version: %{vermajor}.%{verminor}
 
 # RELEASE
 # package release, and potentially extrarel
-%define _pkgrel 3
+%define _pkgrel 1
 %if ! %{targetIsProduction}
-  %define _pkgrel 2.1
+  %define _pkgrel 0.1
 %endif
 
 # MINORBUMP
@@ -147,11 +147,11 @@ Release: %{_release}
 %define blsarchivename bls-signatures-%{blsarchivedate}
 
 # Extracted source tree structure (extracted in .../BUILD)
-#   srcroot               dashcore-0.13.1
-#      \_sourcetree         \_dash-0.13.1.0 or dashcore-0.13.1 or dash-0.13.1.0-rc2...
-#      \_binarytree         \_dashcore-0.13.1 or dash-0.13.1-rc2...
-#      \_srccontribtree     \_dashcore-0.13.1-contrib
-#      \_patch_files        \_dash-0.13.1-...patch
+#   srcroot               dashcore-0.13.2
+#      \_sourcetree         \_dash-0.13.2.0 or dashcore-0.13.2 or dash-0.13.2.0-rc2...
+#      \_binarytree         \_dashcore-0.13.2 or dash-0.13.2-rc2...
+#      \_srccontribtree     \_dashcore-0.13.2-contrib
+#      \_patch_files        \_dash-0.13.2-...patch
 #      \_blsarchive         \_bls-signatures-20181101.tar.gz
 %define srcroot %{name}-%{vermajor}
 %define srccontribtree %{name}-%{vermajor}-contrib
@@ -1109,6 +1109,10 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
+* Fri Mar 15 2019 Todd Warner <t0dd_at_protonmail.com> 0.13.2.0-0.1.testing.taw
+  - 0.13.2.0
+
+* Sun Feb 24 2019 Todd Warner <t0dd_at_protonmail.com> 0.13.1.0-3.taw
 * Sun Feb 24 2019 Todd Warner <t0dd_at_protonmail.com> 0.13.1.0-2.1.testing.taw
   - I'm an idiot. Using x86_64 binaries now for the x86_64 builds. ;)
 
