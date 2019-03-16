@@ -168,12 +168,12 @@ Source0: https://github.com/dashpay/dash/archive/v%{version}-%{buildQualifier}/%
 Source0: https://github.com/dashpay/dash/archive/v%{version}/%{sourcearchivename}.tar.gz
 %endif
 
-Source1: https://github.com/taw00/dashcore-rpm/blob/master/source/testing/SOURCES/%{srccontribtree}.tar.gz
-Source2: https://github.com/taw00/dashcore-rpm/blob/master/source/testing/SOURCES/%{blsarchivename}.tar.gz
+Source1: https://github.com/taw00/dashcore-rpm/blob/master/source/SOURCES/%{srccontribtree}.tar.gz
+Source2: https://github.com/taw00/dashcore-rpm/blob/master/source/SOURCES/%{blsarchivename}.tar.gz
 
 # patch (only used for production)
 %if %{targetIsProduction}
-Patch0: https://github.com/taw00/dashcore-rpm/blob/master/source/testing/SOURCES/%{_name_d}-%{vermajor}-remove-about-qt-menu-item.patch
+Patch0: https://github.com/taw00/dashcore-rpm/blob/master/source/SOURCES/%{_name_d}-%{vermajor}-remove-about-qt-menu-item.patch
 %endif
 
 %if %{clientSourceIsPrebuilt} || %{serverSourceIsPrebuilt}
@@ -456,7 +456,20 @@ mkdir -p %{srcroot}
 
 # Source2: bls archive
 mkdir -p %{sourcetree}/depends/sources/
-mv %{_sourcedir}/%{blsarchivename}.tar.gz %{sourcetree}/depends/sources/v%{blsarchivedate}.tar.gz
+# ---- rpmlint hates the use of {_sourcedir}, therefore...
+# OPTION 1 -- do it anyway...
+#mv %%{_sourcedir}/%%{blsarchivename}.tar.gz %%{sourcetree}/depends/sources/v%%{blsarchivedate}.tar.gz
+# OPTION 2 -- repack the archive...
+# Man, there has to got be a better way.
+#%%setup -q -T -D -a 2 -n %%{srcroot}
+#tar czf %%{blsarchivename}.tar.gz %%{blsarchivename}
+#mv %%{blsarchivename}.tar.gz %%{sourcetree}/depends/sources/v%%{blsarchivedate}.tar.gz
+# Option 2 update: The build doesn't like me messing with the archive (it does
+# an integrity check on the tarball). So, without editing the build scripts
+# that's a no-go.
+# OPTION 3 -- brute force method - so ugly...
+# Moving the supplied tarball from SOURCES to the desired location
+mv ../../SOURCES/%{blsarchivename}.tar.gz %{sourcetree}/depends/sources/v%{blsarchivedate}.tar.gz
 
 # Source3: dashcore (binary)
 %if %{clientSourceIsPrebuilt} || %{serverSourceIsPrebuilt}
@@ -530,7 +543,7 @@ cd ..
 #  mkdir -p %%{_targettree}/lib %%{_targettree}/include
 #  ln -s /opt/rh/devtoolset-7/root/usr/lib/gcc/x86_64-redhat-linux/7/* %%{_targettree}/lib/
 #%%endif
-%{_FLAGS} ./configure --prefix=%{_targettree} --enable-reduce-exports %{_disable_tests} --disable-zmq
+%{_FLAGS} ./configure --libdir=%{_libdir} --prefix=%{_targettree} --enable-reduce-exports %{_disable_tests} --disable-zmq
 make 
 
 cd ..
@@ -1109,8 +1122,13 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
+* Fri Mar 15 2019 Todd Warner <t0dd_at_protonmail.com> 0.13.2.0-1.taw
 * Fri Mar 15 2019 Todd Warner <t0dd_at_protonmail.com> 0.13.2.0-0.1.testing.taw
   - 0.13.2.0
+  - Fixed a ./configure --libdir thing that caused rpmlint to whine
+  - Fixed a {_sourcedir} thing that also caused rpmlint to whine
+  - Fixed the date of this changelog entry. cut-n-paste error.
+  - Updated the URLs to the sources. They pointed to an old location.
 
 * Sun Feb 24 2019 Todd Warner <t0dd_at_protonmail.com> 0.13.1.0-3.taw
 * Sun Feb 24 2019 Todd Warner <t0dd_at_protonmail.com> 0.13.1.0-2.1.testing.taw
