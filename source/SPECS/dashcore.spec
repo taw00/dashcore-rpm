@@ -48,7 +48,7 @@ Version: %{vermajor}.%{verminor}
 # package release, and potentially extrarel
 %define _pkgrel 1
 %if ! %{targetIsProduction}
-  %define _pkgrel 0.1
+  %define _pkgrel 0.2
 %endif
 
 # MINORBUMP
@@ -543,7 +543,7 @@ cd ..
 #  mkdir -p %%{_targettree}/lib %%{_targettree}/include
 #  ln -s /opt/rh/devtoolset-7/root/usr/lib/gcc/x86_64-redhat-linux/7/* %%{_targettree}/lib/
 #%%endif
-%{_FLAGS} ./configure --libdir=%{_libdir} --prefix=%{_targettree} --enable-reduce-exports %{_disable_tests} --disable-zmq
+%{_FLAGS} ./configure --libdir=%{_targettree}/lib --prefix=%{_targettree} --enable-reduce-exports %{_disable_tests} --disable-zmq
 make 
 
 cd ..
@@ -1122,7 +1122,8 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
-* Fri Mar 15 2019 Todd Warner <t0dd_at_protonmail.com> 0.13.2.0-1.taw
+* Sat Mar 16 2019 Todd Warner <t0dd_at_protonmail.com> 0.13.2.0-1.taw
+* Sat Mar 16 2019 Todd Warner <t0dd_at_protonmail.com> 0.13.2.0-0.2.testing.taw
 * Fri Mar 15 2019 Todd Warner <t0dd_at_protonmail.com> 0.13.2.0-0.1.testing.taw
   - 0.13.2.0
   - Fixed a ./configure --libdir thing that caused rpmlint to whine
