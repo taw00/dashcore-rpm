@@ -5,9 +5,9 @@ Summary:    Repository configuration to enable management of dashcore packages (
 %define targetIsProduction 1
 
 # RELEASE
-%define _rel 7
+%define _rel 8
 %if ! %{targetIsProduction}
-%define _rel 6.1
+%define _rel 7.1
 %endif
 
 %define _snapinfo testing
@@ -20,7 +20,7 @@ Release:    %{_rel}.%{_snapinfo}%{?dist}.%{_minorbump}
 
 License:    MIT
 URL:        https://github.com/taw00/dashcore-rpm
-Source0:    https://github.com/taw00/dashcore-rpm/raw/master/source/testing/SOURCES/toddpkgs-dashcore-repo-1.0.tar.gz
+Source0:    https://github.com/taw00/dashcore-rpm/raw/master/source/SOURCES/toddpkgs-dashcore-repo-1.0.tar.gz
 BuildArch:  noarch
 #BuildRequires:  tree
 
@@ -91,10 +91,20 @@ install -d %{buildroot}%{_sysconfdir}/pki/rpm-gpg
 install -D -m644 todd-694673ED-public-2030-01-04.2016-11-07.asc %{buildroot}%{_sysconfdir}/pki/rpm-gpg/RPM-GPG-KEY-todd-694673ED-public
 
 %if 0%{?rhel:1}
-  %if %{targetIsProduction}
-    install -D -m644 dashcore-epel.repo %{buildroot}%{_sysconfdir}/yum.repos.d/dashcore.repo
+  %if 0%{?rhel} < 8
+    %if %{targetIsProduction}
+      install -D -m644 dashcore-el7.repo %{buildroot}%{_sysconfdir}/yum.repos.d/dashcore.repo
+    %else
+      install -D -m644 dashcore-el7.repo-enabled-testing-repo %{buildroot}%{_sysconfdir}/yum.repos.d/dashcore.repo
+    %endif
   %else
-    install -D -m644 dashcore-epel.repo-enabled-testing-repo %{buildroot}%{_sysconfdir}/yum.repos.d/dashcore.repo
+  %if 0%{?rhel} < 9
+    %if %{targetIsProduction}
+      install -D -m644 dashcore-el8.repo %{buildroot}%{_sysconfdir}/yum.repos.d/dashcore.repo
+    %else
+      install -D -m644 dashcore-el8.repo-enabled-testing-repo %{buildroot}%{_sysconfdir}/yum.repos.d/dashcore.repo
+    %endif
+  %endif
   %endif
 %else
   %if %{targetIsProduction}
@@ -112,7 +122,10 @@ install -D -m644 todd-694673ED-public-2030-01-04.2016-11-07.asc %{buildroot}%{_s
 
 
 %changelog
-* Thu Feb 07 2019 Todd Warner <t0dd_at_protonmail.com> 1.0-7.taw
+* Wed Mar 20 2019 Todd Warner <t0dd_at_protonmail.com> 1.0-8.taw
+* Wed Mar 20 2019 Todd Warner <t0dd_at_protonmail.com> 1.0-7.1.testing.taw
+  - fixed a EL lookup issue
+
 * Thu Feb 07 2019 Todd Warner <t0dd_at_protonmail.com> 1.0-6.1.testing.taw
   - Repos default to 0.13 now
   - refreshed the instruction for enabling and disabling a bit

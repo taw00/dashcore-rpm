@@ -3,7 +3,8 @@
 **Important notice (as of 2018-11-28):<br />EL7 and Fedora Linux 27 users need
 to migrate to Fedora Linux 29:**
 
-Dash Core 0.13.0 was released on January 14, 2019. As of that release, I will not be building Dash Core for EL7-based linuxes (CentOS7 and RHEL7) nor
+Dash Core 0.13.0 was released on January 14, 2019. As of that release, I will
+not be building Dash Core for EL7-based linuxes (CentOS7 and RHEL7) nor
 for Fedora Linux 27.
 
 * EL7 is being dropped because the OS supplied libraries are simply far too
