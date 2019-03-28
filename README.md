@@ -83,5 +83,6 @@ Telegram](https://web.telegram.org/#/im?p=@dash_chat), and
 
 _If you like my Dash stuff, also check out the packages I maintain for a couple
 other projects. Namely [ZCash](https://github.com/taw00/zcash-rpm) and
-[BEAM](https://github.com/taw00/beam-rpm). I'm a fan of these projects; don't
-troll me. :)_
+[BEAM](https://github.com/taw00/beam-rpm). I'm most bullish on Dash and the
+direction that project is taking, but I am a fan of what Zcash and the two
+primary Mimblewimble implementation teams are doing. Don't troll me. :)_
