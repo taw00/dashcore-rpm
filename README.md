@@ -8,17 +8,15 @@ not be building Dash Core for EL7-based linuxes (CentOS7 and RHEL7) nor
 for Fedora Linux 27.
 
 * EL7 is being dropped because the OS supplied libraries are simply far too
-  dated. Once EL8 comes out (May-ish 2019), Dash Core builds should be
-  available on those platforms.
-* As for Fedora Linux 27, it's EOL (end-of-life) date is November 30th, 2018.
-  Generally I continue to build and test packages on dated platforms for some
-  time, but since Dash Core 0.13.0 will be out after the EOL date and is such a
-  significant upgrade, I will not be making builds availabe for Fedora Linux 27.
+  dated. Once EL8 comes out (May-ish 2019), Dash Core builds _should_ be
+  available on those platforms (currently EL8-beta is not building -- missing
+  packages)
+* As for Fedora Linux 27, it's EOL (end-of-life) as of November 30th, 2018.
 
-Please move to the latest version of Fedora (as of today, that is Fedore Linux
-29). Fedora upgrades are easy (see available documentation in the
-"documentation" folder). RHEL/CentOS to Fedora migrations should be performed
-as fresh installs.
+Please move to the latest version of Fedora (as of today, that is Fedora Linux
+29 though 30 is in beta). Fedora upgrades are easy (see available documentation
+in the "documentation" folder). RHEL/CentOS to Fedora migrations should be
+performed as fresh installs.
 
 ---
 
