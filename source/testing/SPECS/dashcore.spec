@@ -35,23 +35,22 @@ Summary: Peer-to-peer, fungible, digital currency, protocol, and platform for pa
 %define serverSourceIsPrebuilt 0
 
 # ie. if the dev team includes things like rc3 in the filename
+%define buildQualifier rc11
 %undefine buildQualifier
-%define buildQualifier rc2
 
 # VERSION
-%define vermajor 0.14.0
-%define verminor 0
+%define vermajor 0.13
+%define verminor 3.0
 Version: %{vermajor}.%{verminor}
 
 # RELEASE
-# package release, and potentially extrarel
+# package release, and, test-only, extrarel
 %define _pkgrel 1
 %if ! %{targetIsProduction}
   %define _pkgrel 0.1
 %endif
 
 # MINORBUMP
-# (for very small or rapid iterations)
 %define minorbump taw
 #%%undefine minorbump
 
@@ -116,21 +115,21 @@ Release: %{_release}
 # ----------- end of release building section
 
 # the archive name and directory tree can have some variances
-# v0.14.0.0.tar.gz
+# v0.13.0.0.tar.gz
 %define _archivename_alt1 v%{version}
-# dash-0.14.0.0.tar.gz
+# dash-0.13.0.0.tar.gz
 %define _archivename_alt2 %{_name_d}-%{version}
-# dashcore-0.14.0.tar.gz
+# dashcore-0.13.0.tar.gz
 %define _archivename_alt3 %{_name_dc}-%{vermajor}
-# dashcore-0.14.0.0.tar.gz
+# dashcore-0.13.0.0.tar.gz
 %define _archivename_alt4 %{_name_dc}-%{version}
 
 # Extracted source tree structure (extracted in .../BUILD)
-#   srcroot               dashcore-0.14.0
-#      \_sourcetree         \_dash-0.14.0.0 or dashcore-0.14.0 or dash-0.14.0.0-rc1...
-#      \_binarytree         \_dashcore-0.14.0 or dash-0.14.0-rc1...
-#      \_srccontribtree     \_dashcore-0.14.0-contrib
-#      \_patch_files        \_dash-0.14.0-...patch
+#   srcroot               dashcore-0.13.2
+#      \_sourcetree         \_dash-0.13.2.0 or dashcore-0.13.2 or dash-0.13.2.0-rc2...
+#      \_binarytree         \_dashcore-0.13.2 or dash-0.13.2-rc2...
+#      \_srccontribtree     \_dashcore-0.13.2-contrib
+#      \_patch_files        \_dash-0.13.2-...patch
 #      \_blsarchive         \_bls-signatures-20181101.tar.gz
 
 # our selection for this build - edit this
@@ -165,17 +164,16 @@ Source0: https://github.com/dashpay/dash/archive/v%{version}/%{sourcearchivename
 Source1: https://github.com/taw00/dashcore-rpm/blob/master/source/SOURCES/%{srccontribtree}.tar.gz
 Source2: https://github.com/taw00/dashcore-rpm/blob/master/source/SOURCES/%{blsarchivename}.tar.gz
 
-# patch (only used for production) -- now always used -t0dd
-#%%if %%{targetIsProduction}
-Patch0: https://github.com/taw00/dashcore-rpm/blob/master/source/SOURCES/%{_name_d}-%{vermajor}-remove-about-qt-menu-item.patch
-#%%endif
-
 %if %{clientSourceIsPrebuilt} || %{serverSourceIsPrebuilt}
 %if 0%{?buildQualifier:1}
 Source3: https://github.com/dashpay/dash/archive/v%{version}-%{buildQualifier}/%{binaryarchivename}-x86_64-linux-gnu.tar.gz
 %else
 Source3: https://github.com/dashpay/dash/archive/v%{version}/%{binaryarchivename}-x86_64-linux-gnu.tar.gz
 %endif
+%endif
+
+%if ! %{clientSourceIsPrebuilt}
+Patch0: https://github.com/taw00/dashcore-rpm/blob/master/source/SOURCES/%{_name_d}-%{vermajor}-remove-about-qt-menu-item.patch
 %endif
 
 %global selinux_variants mls strict targeted
@@ -211,8 +209,8 @@ ExclusiveArch: x86_64
 %endif
 
 
-# As recommended by...
 %if 0%{?buildFromSource:1}
+# As recommended by...
 # https://github.com/dashpay/dash/blob/develop/doc/build-unix.md
 BuildRequires: libtool make autoconf automake patch
 #BuildRequires: gcc-c++ >= 4.9 cmake libstdc++-static
@@ -247,8 +245,8 @@ Requires: dashcore-utils = %{version}-%{release}
 Requires: firewalld-filesystem
 Requires(post): firewalld-filesystem
 Requires(postun): firewalld-filesystem
-%if 0%{?fedora}
-Requires:       qt5-qtwayland
+%if 0%{?fedora} || 0%{?rhel} >= 8
+Requires: qt5-qtwayland
 %endif
 # Required for installing desktop applications on linux
 BuildRequires: libappstream-glib desktop-file-utils
@@ -257,8 +255,8 @@ BuildRequires: libappstream-glib desktop-file-utils
 #       which is a packaging no-no
 BuildRequires: qrencode-devel protobuf-devel
 BuildRequires: qt5-qtbase-devel qt5-linguist
-%if 0%{?fedora}
-BuildRequires:  qt5-qtwayland-devel
+%if 0%{?fedora} || 0%{?rhel} >= 8
+BuildRequires: qt5-qtwayland-devel
 %endif
 %endif
 
@@ -320,6 +318,8 @@ Learn more at www.dash.org.
 
 # dashcore-client
 %description client
+Dash is Digital Cash
+
 Dash Core reference implementation. This package provides a user-friendly(er)
 graphical wallet manager (dash-qt) for personal use. This package requires the
 dashcore-utils RPM package to be installed as well.
@@ -428,16 +428,15 @@ Learn more at www.dash.org.
 
 mkdir -p %{srcroot}
 # Source0: dashcore (source)
-## {_builddir}/dashcore-0.14.0/dashcore-0.14.0.0/  ..or something like..
-## {_builddir}/dash-0.14.0/dash-0.14.0.0-rc1/
+## {_builddir}/dashcore-0.12.3/dashcore-0.12.3.0/  ..or something like..
+## {_builddir}/dash-0.13.0/dash-0.13.0.0-rc1/
 %setup -q -T -D -a 0 -n %{srcroot}
 
 # Source1: contributions
-## {_builddir}/dashcore-0.14.0/dashcore-0.14.0-contrib/
+## {_builddir}/dashcore-0.12.3/dashcore-0.12.3-contrib/
 %setup -q -T -D -a 1 -n %{srcroot}
 
 # Source2: bls archive
-# Original: https://github.com/codablock/bls-signatures
 mkdir -p %{sourcetree}/depends/sources/
 # ---- rpmlint hates the use of {_sourcedir}, therefore...
 # OPTION 1 -- do it anyway...
@@ -459,12 +458,11 @@ mv ../../SOURCES/%{blsarchivename}.tar.gz %{sourcetree}/depends/sources/v%{blsar
 %setup -q -T -D -a 3 -n %{srcroot}
 %endif
 
-# Patch0: patch (only used for production) -- now always used -t0dd
-#%%if %%{targetIsProduction}
+%if ! %{clientSourceIsPrebuilt}
 cd %{sourcetree}
 %patch0 -p1
 cd ..
-#%%endif
+%endif
 
 #t0dd: Prep SELinux policy -- NOT USED YET
 # Done here to prep for action taken in the %%build step
@@ -480,24 +478,11 @@ cp -p %{srccontribtree}/linux/selinux/dash.{te,if,fc} selinux-tmp/
   # libraries and tools. Swap out chia_bls.mk because it asks for a dependency to
   # gmp that is satisfied via the OS (via BuildRequires) instead.
   cp -a %{srccontribtree}/build/depends/packages/*.mk %{sourcetree}/depends/packages/
-  
-  ##t0dd: failed attempts to support EL7
-  ##t0dd: EL7 demands direct usage of cmake3 (and you can't do "alternatives"
-  ##      from an RPM specfile).
-  #%%if 0%%{?rhel}
-  #  cp -a %%{srccontribtree}/build/depends/packages/chia_bls.mk-cmake3 %%{sourcetree}/depends/packages/chia_bls.mk
-  #  cp -a %%{srccontribtree}/build/depends/packages/native_cdrkit.mk-cmake3 %%{sourcetree}/depends/packages/native_cdrkit.mk
-  #  cp -a %%{srccontribtree}/build/depends/packages/native_libdmg-hfsplus.mk-cmake3 %%{sourcetree}/depends/packages/native_libdmg-hfsplus.mk
-  #%%endif
 %endif
 
 
 %build
 # This section starts us in directory {_builddir}/{srcroot}
-##t0dd: failed attempts to support EL7
-#%%if 0%%{?rhel}
-#/usr/bin/scl enable devtoolset-7 bash
-#%%endif
 
 %if %{clientSourceIsPrebuilt} && %{serverSourceIsPrebuilt}
   exit 0
@@ -521,11 +506,7 @@ cd ..
 %endif
 
 ./autogen.sh
-##t0dd: failed attempts to support EL7
-#%%if 0%%{?rhel}
-#  mkdir -p %%{_targettree}/lib %%{_targettree}/include
-#  ln -s /opt/rh/devtoolset-7/root/usr/lib/gcc/x86_64-redhat-linux/7/* %%{_targettree}/lib/
-#%%endif
+
 %{_FLAGS} ./configure --libdir=%{_targettree}/lib --prefix=%{_targettree} --enable-reduce-exports %{_disable_tests} --disable-zmq
 make 
 
@@ -697,9 +678,6 @@ desktop-file-validate %{buildroot}%{_datadir}/applications/dash-qt.desktop
 # https://docs.fedoraproject.org/en-US/packaging-guidelines/AppData/
 install -D -m644 -p dash-qt.appdata.xml %{buildroot}%{_metainfodir}/dash-qt.appdata.xml
 appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/*.appdata.xml
-
-# I think this is not used anymore --t0dd: Need to investigate
-###install -D -m644 usr-share-kde4-services_dash-qt.protocol %%{buildroot}%%{_datadir}/kde4/services/dash-qt.protocol
 
 # Desktop elements - hicolor icons
 install -D -m644 dash-hicolor-128.png      %{buildroot}%{_datadir}/icons/hicolor/128x128/apps/dash.png
@@ -1089,7 +1067,7 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Documentation: https://github.com/taw00/dashcore-rpm/tree/master/documentation
 #
 # The last major testnet effort...
-#   * Announcement: https://www.dash.org/forum/threads/v14-0-testing.44047/
+#   * Announcement: https://www.dash.org/forum/threads/v13-0-testing.41945/
 #   * Documentation:  
 #     https://docs.dash.org/en/latest/developers/testnet.html
 #     https://docs.dash.org/en/latest/masternodes/dip3-upgrade.html
@@ -1097,19 +1075,20 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 # Source snapshots...
 #     https://github.com/dashpay/dash/tags
 #     https://github.com/dashpay/dash/releases
-#     test example: dash-0.14.0.0-rc1.tar.gz
-#     release example: dash-0.14.0.0.tar.gz
+#     test example: dash-0.13.0.0-rc6.tar.gz
+#     release example: dash-0.13.0.0.tar.gz
 #
 # Dash Core git repos...
 #   * Dash: https://github.com/dashpay/dash
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
-* Mon Apr 01 2019 Todd Warner <t0dd_at_protonmail.com> 0.14.0.0-0.1.rc2.taw
-  - 0.14.0.0-rc2
-
-* Thu Mar 28 2019 Todd Warner <t0dd_at_protonmail.com> 0.14.0.0-0.1.rc1.taw
-  - 0.14.0.0-rc1
+* Thu Apr 04 2019 Todd Warner <t0dd_at_protonmail.com> 0.13.3.0-0.1.testing.taw
+  - 0.13.3.0
+  - vermajor and verminor shifted a decimal point
+  - specfile cleanup
+  - patch management more correct in the case building client from binaries
+  - minor changes to prep for EL8 testing
 
 * Sat Mar 16 2019 Todd Warner <t0dd_at_protonmail.com> 0.13.2.0-1.taw
 * Sat Mar 16 2019 Todd Warner <t0dd_at_protonmail.com> 0.13.2.0-0.2.testing.taw

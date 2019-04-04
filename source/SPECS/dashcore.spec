@@ -28,31 +28,29 @@
 %define _name_d dash
 %define _name_dc dashcore
 Name: %{_name_dc}
-Summary: Peer-to-peer, payments-focused, fungible digital currency, protocol, and platform for payments and decentralized applications
+Summary: Peer-to-peer, fungible, digital currency, protocol, and platform for payments and decentralized applications
 
 %define targetIsProduction 1
 %define clientSourceIsPrebuilt 0
 %define serverSourceIsPrebuilt 0
 
-# ARCHIVE QUALIFIER - edit this if applies
 # ie. if the dev team includes things like rc3 in the filename
 %define buildQualifier rc11
 %undefine buildQualifier
 
 # VERSION
-%define vermajor 0.13.2
-%define verminor 0
+%define vermajor 0.13
+%define verminor 3.0
 Version: %{vermajor}.%{verminor}
 
 # RELEASE
-# package release, and potentially extrarel
+# package release, and, test-only, extrarel
 %define _pkgrel 1
 %if ! %{targetIsProduction}
-  %define _pkgrel 0.2
+  %define _pkgrel 0.1
 %endif
 
 # MINORBUMP
-# (for very small or rapid iterations)
 %define minorbump taw
 #%%undefine minorbump
 
@@ -116,7 +114,6 @@ Version: %{vermajor}.%{verminor}
 Release: %{_release}
 # ----------- end of release building section
 
-# dashcore source tarball file basename
 # the archive name and directory tree can have some variances
 # v0.13.0.0.tar.gz
 %define _archivename_alt1 v%{version}
@@ -126,6 +123,14 @@ Release: %{_release}
 %define _archivename_alt3 %{_name_dc}-%{vermajor}
 # dashcore-0.13.0.0.tar.gz
 %define _archivename_alt4 %{_name_dc}-%{version}
+
+# Extracted source tree structure (extracted in .../BUILD)
+#   srcroot               dashcore-0.13.2
+#      \_sourcetree         \_dash-0.13.2.0 or dashcore-0.13.2 or dash-0.13.2.0-rc2...
+#      \_binarytree         \_dashcore-0.13.2 or dash-0.13.2-rc2...
+#      \_srccontribtree     \_dashcore-0.13.2-contrib
+#      \_patch_files        \_dash-0.13.2-...patch
+#      \_blsarchive         \_bls-signatures-20181101.tar.gz
 
 # our selection for this build - edit this
 %define _sourcearchivename %{_archivename_alt2}
@@ -146,22 +151,10 @@ Release: %{_release}
 %define blsarchivedate 20181101
 %define blsarchivename bls-signatures-%{blsarchivedate}
 
-# Extracted source tree structure (extracted in .../BUILD)
-#   srcroot               dashcore-0.13.2
-#      \_sourcetree         \_dash-0.13.2.0 or dashcore-0.13.2 or dash-0.13.2.0-rc2...
-#      \_binarytree         \_dashcore-0.13.2 or dash-0.13.2-rc2...
-#      \_srccontribtree     \_dashcore-0.13.2-contrib
-#      \_patch_files        \_dash-0.13.2-...patch
-#      \_blsarchive         \_bls-signatures-20181101.tar.gz
 %define srcroot %{name}-%{vermajor}
 %define srccontribtree %{name}-%{vermajor}-contrib
-# sourcetree, binarytree, and blsarchivename defined earlier
 
-# Note, that these two URLs point at the same tarball but with different filenames ...
-# https://github.com/dashpay/dash/archive/v0.12.3.0-rc2.tar.gz
-# https://github.com/dashpay/dash/archive/v0.12.3.0-rc2/dash-0.12.3.0-rc2.tar.gz
 
-# source and contrib tarballs are always included
 %if 0%{?buildQualifier:1}
 Source0: https://github.com/dashpay/dash/archive/v%{version}-%{buildQualifier}/%{sourcearchivename}.tar.gz
 %else
@@ -171,17 +164,16 @@ Source0: https://github.com/dashpay/dash/archive/v%{version}/%{sourcearchivename
 Source1: https://github.com/taw00/dashcore-rpm/blob/master/source/SOURCES/%{srccontribtree}.tar.gz
 Source2: https://github.com/taw00/dashcore-rpm/blob/master/source/SOURCES/%{blsarchivename}.tar.gz
 
-# patch (only used for production)
-%if %{targetIsProduction}
-Patch0: https://github.com/taw00/dashcore-rpm/blob/master/source/SOURCES/%{_name_d}-%{vermajor}-remove-about-qt-menu-item.patch
-%endif
-
 %if %{clientSourceIsPrebuilt} || %{serverSourceIsPrebuilt}
 %if 0%{?buildQualifier:1}
 Source3: https://github.com/dashpay/dash/archive/v%{version}-%{buildQualifier}/%{binaryarchivename}-x86_64-linux-gnu.tar.gz
 %else
 Source3: https://github.com/dashpay/dash/archive/v%{version}/%{binaryarchivename}-x86_64-linux-gnu.tar.gz
 %endif
+%endif
+
+%if ! %{clientSourceIsPrebuilt}
+Patch0: https://github.com/taw00/dashcore-rpm/blob/master/source/SOURCES/%{_name_d}-%{vermajor}-remove-about-qt-menu-item.patch
 %endif
 
 %global selinux_variants mls strict targeted
@@ -217,8 +209,8 @@ ExclusiveArch: x86_64
 %endif
 
 
-# As recommended by...
 %if 0%{?buildFromSource:1}
+# As recommended by...
 # https://github.com/dashpay/dash/blob/develop/doc/build-unix.md
 BuildRequires: libtool make autoconf automake patch
 #BuildRequires: gcc-c++ >= 4.9 cmake libstdc++-static
@@ -247,14 +239,14 @@ BuildRequires: tree vim-enhanced less findutils
 
 # dashcore-client
 %package client
-Summary: Peer-to-peer, payments-focused, fungible digital currency, protocol, and platform for payments and decentralized applications (desktop reference client)
+Summary: Peer-to-peer, fungible, digital currency, protocol, and platform for payments and decentralized applications (desktop reference client)
 Requires: dashcore-utils = %{version}-%{release}
 # https://fedoraproject.org/wiki/PackagingDrafts/ScriptletSnippets/Firewalld
 Requires: firewalld-filesystem
 Requires(post): firewalld-filesystem
 Requires(postun): firewalld-filesystem
-%if 0%{?fedora}
-Requires:       qt5-qtwayland
+%if 0%{?fedora} || 0%{?rhel} >= 8
+Requires: qt5-qtwayland
 %endif
 # Required for installing desktop applications on linux
 BuildRequires: libappstream-glib desktop-file-utils
@@ -263,14 +255,14 @@ BuildRequires: libappstream-glib desktop-file-utils
 #       which is a packaging no-no
 BuildRequires: qrencode-devel protobuf-devel
 BuildRequires: qt5-qtbase-devel qt5-linguist
-%if 0%{?fedora}
-BuildRequires:  qt5-qtwayland-devel
+%if 0%{?fedora} || 0%{?rhel} >= 8
+BuildRequires: qt5-qtwayland-devel
 %endif
 %endif
 
 # dashcore-server
 %package server
-Summary: Peer-to-peer, payments-focused, fungible digital currency, protocol, and platform for payments and decentralized applications (reference server)
+Summary: Peer-to-peer, fungible, digital currency, protocol, and platform for payments and decentralized applications (reference server)
 # https://fedoraproject.org/wiki/PackagingDrafts/ScriptletSnippets/Firewalld
 Requires: firewalld-filesystem
 Requires(post): firewalld-filesystem
@@ -293,18 +285,18 @@ Requires: dashcore-sentinel
 
 # dashcore-libs
 %package libs
-Summary: Peer-to-peer, payments-focused, fungible digital currency, protocol, and platform for payments and decentralized applications (consensus libraries)
+Summary: Peer-to-peer, fungible, digital currency, protocol, and platform for payments and decentralized applications (consensus libraries)
 
 
 # dashcore-devel
 %package devel
-Summary: Peer-to-peer, payments-focused, fungible digital currency, protocol, and platform for payments and decentralized applications (dev libraries and headers)
+Summary: Peer-to-peer, fungible, digital currency, protocol, and platform for payments and decentralized applications (dev libraries and headers)
 Requires: dashcore-libs = %{version}-%{release}
 
 
 # dashcore-utils
 %package utils
-Summary: Peer-to-peer, payments-focused, fungible digital currency, protocol, and platform for payments and decentralized applications (commandline utilities)
+Summary: Peer-to-peer, fungible, digital currency, protocol, and platform for payments and decentralized applications (commandline utilities)
 
 
 # dashcore src.rpm
@@ -313,34 +305,32 @@ Dash Core reference implementation. This is the source package for building
 most of the Dash Core set of binary packages.  It will build
 dashcore-{client,server,utils,libs,devel,debuginfo}.
 
-Dash (Digital Cash) is an open source peer-to-peer cryptocurrency with a
-strong focus on serving the payments industry. Dash offers a form of money
-that is portable, inexpensive, divisible and fast. It can be spent securely
-both online and in person with minimal transaction fees. Dash offers instant
-transactions (InstantSend), private transactions (PrivateSend), and operates
-a self-governing and self-funding model. This decentralized governance and
-budgeting system makes it one of the first ever successful decentralized
-autonomous organizations (DAO). Dash is also a platform for innovative
-decentralized crypto-tech.
+Dash (Digital Cash) is a digital currency that enables anonymous, instant
+payments to anyone, anywhere in the world. Dash uses peer-to-peer technology to
+operate with no central authority: managing transactions and issuing money are
+carried out collectively by the network. Additionally, the Dash Network
+operates with a self-governing and self-funding model. The Dash Network is the
+first ever successful decentralized autonomous organizations (DAO). Dash Core
+is the name of the open source software which enables the use of this currency.
 
 Learn more at www.dash.org.
 
 
 # dashcore-client
 %description client
+Dash is Digital Cash
+
 Dash Core reference implementation. This package provides a user-friendly(er)
 graphical wallet manager (dash-qt) for personal use. This package requires the
 dashcore-utils RPM package to be installed as well.
 
-Dash (Digital Cash) is an open source peer-to-peer cryptocurrency with a strong
-focus on serving as a superior means of payment. Dash offers a form of money
-that is portable, inexpensive, divisible and incredibly fast. It can be spent
-securely both online and in person with minimal transaction fees. Dash offers
-instant transactions (InstantSend), fungible transactions (PrivateSend), and,
-as a network, is self-governing and self-funding. This decentralized governance
-and budgeting system makes is the first ever successful decentralized
-autonomous organization (DAO). Dash is also a platform for innovative
-decentralized crypto-tech.
+Dash (Digital Cash) is a digital currency that enables anonymous, instant
+payments to anyone, anywhere in the world. Dash uses peer-to-peer technology to
+operate with no central authority: managing transactions and issuing money are
+carried out collectively by the network. Additionally, the Dash Network
+operates with a self-governing and self-funding model. The Dash Network is the
+first ever successful decentralized autonomous organizations (DAO). Dash Core
+is the name of the open source software which enables the use of this currency.
 
 Learn more at www.dash.org.
 
@@ -364,15 +354,13 @@ servers that validate transactions and blocks. A Dash Masternode is a member
 of a network of incentivized servers that perform expanded critical services
 for the Dash cryptocurrency protocol.
 
-Dash (Digital Cash) is an open source peer-to-peer cryptocurrency with a strong
-focus on serving as a superior means of payment. Dash offers a form of money
-that is portable, inexpensive, divisible and incredibly fast. It can be spent
-securely both online and in person with minimal transaction fees. Dash offers
-instant transactions (InstantSend), fungible transactions (PrivateSend), and,
-as a network, is self-governing and self-funding. This decentralized governance
-and budgeting system makes is the first ever successful decentralized
-autonomous organization (DAO). Dash is also a platform for innovative
-decentralized crypto-tech.
+Dash (Digital Cash) is a digital currency that enables anonymous, instant
+payments to anyone, anywhere in the world. Dash uses peer-to-peer technology to
+operate with no central authority: managing transactions and issuing money are
+carried out collectively by the network. Additionally, the Dash Network
+operates with a self-governing and self-funding model. The Dash Network is the
+first ever successful decentralized autonomous organizations (DAO). Dash Core
+is the name of the open source software which enables the use of this currency.
 
 Learn more at www.dash.org.
 
@@ -383,15 +371,13 @@ Learn more at www.dash.org.
 This package provides libdashconsensus, which is used by third party
 applications to verify scripts (and other functionality in the future).
 
-Dash (Digital Cash) is an open source peer-to-peer cryptocurrency with a strong
-focus on serving as a superior means of payment. Dash offers a form of money
-that is portable, inexpensive, divisible and incredibly fast. It can be spent
-securely both online and in person with minimal transaction fees. Dash offers
-instant transactions (InstantSend), fungible transactions (PrivateSend), and,
-as a network, is self-governing and self-funding. This decentralized governance
-and budgeting system makes is the first ever successful decentralized
-autonomous organization (DAO). Dash is also a platform for innovative
-decentralized crypto-tech.
+Dash (Digital Cash) is a digital currency that enables anonymous, instant
+payments to anyone, anywhere in the world. Dash uses peer-to-peer technology to
+operate with no central authority: managing transactions and issuing money are
+carried out collectively by the network. Additionally, the Dash Network
+operates with a self-governing and self-funding model. The Dash Network is the
+first ever successful decentralized autonomous organizations (DAO). Dash Core
+is the name of the open source software which enables the use of this currency.
 
 Learn more at www.dash.org.
 
@@ -401,15 +387,13 @@ Learn more at www.dash.org.
 This package provides the libraries and header files necessary to compile
 programs which use libdashconsensus.
 
-Dash (Digital Cash) is an open source peer-to-peer cryptocurrency with a strong
-focus on serving as a superior means of payment. Dash offers a form of money
-that is portable, inexpensive, divisible and incredibly fast. It can be spent
-securely both online and in person with minimal transaction fees. Dash offers
-instant transactions (InstantSend), fungible transactions (PrivateSend), and,
-as a network, is self-governing and self-funding. This decentralized governance
-and budgeting system makes is the first ever successful decentralized
-autonomous organization (DAO). Dash is also a platform for innovative
-decentralized crypto-tech.
+Dash (Digital Cash) is a digital currency that enables anonymous, instant
+payments to anyone, anywhere in the world. Dash uses peer-to-peer technology to
+operate with no central authority: managing transactions and issuing money are
+carried out collectively by the network. Additionally, the Dash Network
+operates with a self-governing and self-funding model. The Dash Network is the
+first ever successful decentralized autonomous organizations (DAO). Dash Core
+is the name of the open source software which enables the use of this currency.
 
 Learn more at www.dash.org.
 
@@ -422,15 +406,13 @@ This package provides dash-cli, a utility to communicate with and control a
 Dash server via its RPC protocol, and dash-tx, a utility to create custom
 Dash transactions.
 
-Dash (Digital Cash) is an open source peer-to-peer cryptocurrency with a strong
-focus on serving as a superior means of payment. Dash offers a form of money
-that is portable, inexpensive, divisible and incredibly fast. It can be spent
-securely both online and in person with minimal transaction fees. Dash offers
-instant transactions (InstantSend), fungible transactions (PrivateSend), and,
-as a network, is self-governing and self-funding. This decentralized governance
-and budgeting system makes is the first ever successful decentralized
-autonomous organization (DAO). Dash is also a platform for innovative
-decentralized crypto-tech.
+Dash (Digital Cash) is a digital currency that enables anonymous, instant
+payments to anyone, anywhere in the world. Dash uses peer-to-peer technology to
+operate with no central authority: managing transactions and issuing money are
+carried out collectively by the network. Additionally, the Dash Network
+operates with a self-governing and self-funding model. The Dash Network is the
+first ever successful decentralized autonomous organizations (DAO). Dash Core
+is the name of the open source software which enables the use of this currency.
 
 Learn more at www.dash.org.
 
@@ -476,8 +458,7 @@ mv ../../SOURCES/%{blsarchivename}.tar.gz %{sourcetree}/depends/sources/v%{blsar
 %setup -q -T -D -a 3 -n %{srcroot}
 %endif
 
-# Patch0: patch (only used for production)
-%if %{targetIsProduction}
+%if ! %{clientSourceIsPrebuilt}
 cd %{sourcetree}
 %patch0 -p1
 cd ..
@@ -497,24 +478,11 @@ cp -p %{srccontribtree}/linux/selinux/dash.{te,if,fc} selinux-tmp/
   # libraries and tools. Swap out chia_bls.mk because it asks for a dependency to
   # gmp that is satisfied via the OS (via BuildRequires) instead.
   cp -a %{srccontribtree}/build/depends/packages/*.mk %{sourcetree}/depends/packages/
-  
-  ##t0dd: failed attempts to support EL7
-  ##t0dd: EL7 demands direct usage of cmake3 (and you can't do "alternatives"
-  ##      from an RPM specfile).
-  #%%if 0%%{?rhel}
-  #  cp -a %%{srccontribtree}/build/depends/packages/chia_bls.mk-cmake3 %%{sourcetree}/depends/packages/chia_bls.mk
-  #  cp -a %%{srccontribtree}/build/depends/packages/native_cdrkit.mk-cmake3 %%{sourcetree}/depends/packages/native_cdrkit.mk
-  #  cp -a %%{srccontribtree}/build/depends/packages/native_libdmg-hfsplus.mk-cmake3 %%{sourcetree}/depends/packages/native_libdmg-hfsplus.mk
-  #%%endif
 %endif
 
 
 %build
 # This section starts us in directory {_builddir}/{srcroot}
-##t0dd: failed attempts to support EL7
-#%%if 0%%{?rhel}
-#/usr/bin/scl enable devtoolset-7 bash
-#%%endif
 
 %if %{clientSourceIsPrebuilt} && %{serverSourceIsPrebuilt}
   exit 0
@@ -538,11 +506,7 @@ cd ..
 %endif
 
 ./autogen.sh
-##t0dd: failed attempts to support EL7
-#%%if 0%%{?rhel}
-#  mkdir -p %%{_targettree}/lib %%{_targettree}/include
-#  ln -s /opt/rh/devtoolset-7/root/usr/lib/gcc/x86_64-redhat-linux/7/* %%{_targettree}/lib/
-#%%endif
+
 %{_FLAGS} ./configure --libdir=%{_targettree}/lib --prefix=%{_targettree} --enable-reduce-exports %{_disable_tests} --disable-zmq
 make 
 
@@ -714,9 +678,6 @@ desktop-file-validate %{buildroot}%{_datadir}/applications/dash-qt.desktop
 # https://docs.fedoraproject.org/en-US/packaging-guidelines/AppData/
 install -D -m644 -p dash-qt.appdata.xml %{buildroot}%{_metainfodir}/dash-qt.appdata.xml
 appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/*.appdata.xml
-
-# I think this is not used anymore --t0dd: Need to investigate
-###install -D -m644 usr-share-kde4-services_dash-qt.protocol %%{buildroot}%%{_datadir}/kde4/services/dash-qt.protocol
 
 # Desktop elements - hicolor icons
 install -D -m644 dash-hicolor-128.png      %{buildroot}%{_datadir}/icons/hicolor/128x128/apps/dash.png
@@ -1122,6 +1083,14 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
+* Thu Apr 04 2019 Todd Warner <t0dd_at_protonmail.com> 0.13.3.0-1.taw
+* Thu Apr 04 2019 Todd Warner <t0dd_at_protonmail.com> 0.13.3.0-0.1.testing.taw
+  - 0.13.3.0
+  - vermajor and verminor shifted a decimal point
+  - specfile cleanup
+  - patch management more correct in the case building client from binaries
+  - minor changes to prep for EL8 testing
+
 * Sat Mar 16 2019 Todd Warner <t0dd_at_protonmail.com> 0.13.2.0-1.taw
 * Sat Mar 16 2019 Todd Warner <t0dd_at_protonmail.com> 0.13.2.0-0.2.testing.taw
 * Fri Mar 15 2019 Todd Warner <t0dd_at_protonmail.com> 0.13.2.0-0.1.testing.taw
