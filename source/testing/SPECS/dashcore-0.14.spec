@@ -40,18 +40,20 @@ Summary: Peer-to-peer, fungible, digital currency, protocol, and platform for pa
 
 # VERSION
 %define vermajor 0.14
-%define verminor 0.0
+%define verminor1 0
+%define verminor2 0
+%define verminor %{verminor1}.%{verminor2}
 Version: %{vermajor}.%{verminor}
 
 # RELEASE
 # package release, and, test-only, extrarel
 %define _pkgrel 1
 %if ! %{targetIsProduction}
-  %define _pkgrel 0.1
+  %define _pkgrel 0.2
 %endif
 
 # MINORBUMP
-%define minorbump taw1
+%define minorbump taw
 #%%undefine minorbump
 
 #
@@ -120,7 +122,7 @@ Release: %{_release}
 # dash-0.14.0.0.tar.gz
 %define _archivename_alt2 %{_name_d}-%{version}
 # dashcore-0.14.0.tar.gz
-%define _archivename_alt3 %{_name_dc}-%{vermajor}
+%define _archivename_alt3 %{_name_dc}-%{vermajor}.%{verminor1}
 # dashcore-0.14.0.0.tar.gz
 %define _archivename_alt4 %{_name_dc}-%{version}
 
@@ -1084,11 +1086,12 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
-* Thu Apr 04 2019 Todd Warner <t0dd_at_protonmail.com> 0.14.0.0-0.1.rc2.taw1
+* Thu Apr 04 2019 Todd Warner <t0dd_at_protonmail.com> 0.14.0.0-0.2.rc2.taw
   - vermajor and verminor shifted a decimal point
   - specfile cleanup
   - patch management more correct in the case building client from binaries
   - minor changes to prep for EL8 testing
+  - adjustments to allow rp (repackaged) binary builds to work again.
 
 * Mon Apr 01 2019 Todd Warner <t0dd_at_protonmail.com> 0.14.0.0-0.1.rc2.taw
   - 0.14.0.0-rc2

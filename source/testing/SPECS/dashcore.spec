@@ -40,14 +40,16 @@ Summary: Peer-to-peer, fungible, digital currency, protocol, and platform for pa
 
 # VERSION
 %define vermajor 0.13
-%define verminor 3.0
+%define verminor1 3
+%define verminor2 0
+%define verminor %{verminor1}.%{verminor2}
 Version: %{vermajor}.%{verminor}
 
 # RELEASE
 # package release, and, test-only, extrarel
-%define _pkgrel 1
+%define _pkgrel 2
 %if ! %{targetIsProduction}
-  %define _pkgrel 0.1
+  %define _pkgrel 1.1
 %endif
 
 # MINORBUMP
@@ -120,7 +122,7 @@ Release: %{_release}
 # dash-0.13.0.0.tar.gz
 %define _archivename_alt2 %{_name_d}-%{version}
 # dashcore-0.13.0.tar.gz
-%define _archivename_alt3 %{_name_dc}-%{vermajor}
+%define _archivename_alt3 %{_name_dc}-%{vermajor}.%{verminor1}
 # dashcore-0.13.0.0.tar.gz
 %define _archivename_alt4 %{_name_dc}-%{version}
 
@@ -1083,6 +1085,10 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
+* Thu Apr 04 2019 Todd Warner <t0dd_at_protonmail.com> 0.13.3.0-1.1.testing.taw
+  - adjustments to allow rp (repackaged) binary builds to work again.
+
+* Thu Apr 04 2019 Todd Warner <t0dd_at_protonmail.com> 0.13.3.0-1.taw
 * Thu Apr 04 2019 Todd Warner <t0dd_at_protonmail.com> 0.13.3.0-0.1.testing.taw
   - 0.13.3.0
   - vermajor and verminor shifted a decimal point
