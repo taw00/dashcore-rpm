@@ -141,7 +141,7 @@ Release: %{_release}
 
 %if 0%{?buildQualifier:1}
   %define sourcearchivename %{_sourcearchivename}-%{buildQualifier}
-  %define binaryarchivename %{_binaryarchivename}-%{buildQualifier}
+  %define binaryarchivename %{_binaryarchivename}
   %define sourcetree %{_sourcearchivename}-%{buildQualifier}
   %define binarytree %{_binarytree}-%{buildQualifier}
 %else

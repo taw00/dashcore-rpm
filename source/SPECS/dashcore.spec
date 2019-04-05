@@ -53,7 +53,7 @@ Version: %{vermajor}.%{verminor}
 %endif
 
 # MINORBUMP
-%define minorbump taw
+%define minorbump taw1
 #%%undefine minorbump
 
 #
@@ -143,7 +143,7 @@ Release: %{_release}
   %define sourcearchivename %{_sourcearchivename}-%{buildQualifier}
   %define binaryarchivename %{_binaryarchivename}-%{buildQualifier}
   %define sourcetree %{_sourcearchivename}-%{buildQualifier}
-  %define binarytree %{_binarytree}-%{buildQualifier}
+  %define binarytree %{_binarytree}
 %else
   %define sourcearchivename %{_sourcearchivename}
   %define binaryarchivename %{_binaryarchivename}
