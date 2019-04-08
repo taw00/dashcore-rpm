@@ -1074,6 +1074,7 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Documentation:  
 #     https://docs.dash.org/en/latest/developers/testnet.html
 #     https://docs.dash.org/en/latest/masternodes/dip3-upgrade.html
+#     https://thephez.github.io/en/developer-reference
 #
 # Source snapshots...
 #     https://github.com/dashpay/dash/tags

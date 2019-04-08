@@ -31,8 +31,8 @@ Name: %{_name_dc}
 Summary: Peer-to-peer, fungible, digital currency, protocol, and platform for payments and decentralized applications
 
 %define targetIsProduction 0
-%define clientSourceIsPrebuilt 0
-%define serverSourceIsPrebuilt 0
+%define clientSourceIsBinary 0
+%define serverSourceIsBinary 0
 
 # ie. if the dev team includes things like rc3 in the filename
 %define buildQualifier rc11
@@ -46,7 +46,6 @@ Summary: Peer-to-peer, fungible, digital currency, protocol, and platform for pa
 Version: %{vermajor}.%{verminor}
 
 # RELEASE
-# package release, and, test-only, extrarel
 %define _pkgrel 2
 %if ! %{targetIsProduction}
   %define _pkgrel 1.1
@@ -69,20 +68,20 @@ Version: %{vermajor}.%{verminor}
 %endif
 
 %undefine _rp
-%if %{clientSourceIsPrebuilt} && %{serverSourceIsPrebuilt}
+%if %{clientSourceIsBinary} && %{serverSourceIsBinary}
   %define _rp rp
 %else
-  %if %{clientSourceIsPrebuilt}
+  %if %{clientSourceIsBinary}
     %define _rp rpc
   %else
-  %if %{serverSourceIsPrebuilt}
+  %if %{serverSourceIsBinary}
     %define _rp rps
   %endif
   %endif
 %endif
 
 # have to use _variables because rpm spec macros are easily recursive and break.
-%define _snapinfo THIS_WILL_BE_REPLACED
+%define _snapinfo THIS_VALUE_WILL_BE_REPLACED
 %if 0%{?_rp:1}
   %if 0%{?snapinfo:1}
     %define _snapinfo %{snapinfo}.%{_rp}
@@ -166,7 +165,7 @@ Source0: https://github.com/dashpay/dash/archive/v%{version}/%{sourcearchivename
 Source1: https://github.com/taw00/dashcore-rpm/blob/master/source/SOURCES/%{srccontribtree}.tar.gz
 Source2: https://github.com/taw00/dashcore-rpm/blob/master/source/SOURCES/%{blsarchivename}.tar.gz
 
-%if %{clientSourceIsPrebuilt} || %{serverSourceIsPrebuilt}
+%if %{clientSourceIsBinary} || %{serverSourceIsBinary}
 %if 0%{?buildQualifier:1}
 Source3: https://github.com/dashpay/dash/archive/v%{version}-%{buildQualifier}/%{binaryarchivename}-x86_64-linux-gnu.tar.gz
 %else
@@ -174,7 +173,7 @@ Source3: https://github.com/dashpay/dash/archive/v%{version}/%{binaryarchivename
 %endif
 %endif
 
-%if ! %{clientSourceIsPrebuilt}
+%if ! %{clientSourceIsBinary}
 Patch0: https://github.com/taw00/dashcore-rpm/blob/master/source/SOURCES/%{_name_d}-%{vermajor}-remove-about-qt-menu-item.patch
 %endif
 
@@ -206,7 +205,7 @@ URL: http://dash.org/
 # I'm ditching i386 and i686 platform choices. Sorry.
 ExclusiveArch: x86_64
 
-%if ! %{clientSourceIsPrebuilt} || ! %{serverSourceIsPrebuilt}
+%if ! %{clientSourceIsBinary} || ! %{serverSourceIsBinary}
   %define buildFromSource 1
 %endif
 
@@ -456,11 +455,11 @@ mkdir -p %{sourcetree}/depends/sources/
 mv ../../SOURCES/%{blsarchivename}.tar.gz %{sourcetree}/depends/sources/v%{blsarchivedate}.tar.gz
 
 # Source3: dashcore (binary)
-%if %{clientSourceIsPrebuilt} || %{serverSourceIsPrebuilt}
+%if %{clientSourceIsBinary} || %{serverSourceIsBinary}
 %setup -q -T -D -a 3 -n %{srcroot}
 %endif
 
-%if ! %{clientSourceIsPrebuilt}
+%if ! %{clientSourceIsBinary}
 cd %{sourcetree}
 %patch0 -p1
 cd ..
@@ -486,7 +485,7 @@ cp -p %{srccontribtree}/linux/selinux/dash.{te,if,fc} selinux-tmp/
 %build
 # This section starts us in directory {_builddir}/{srcroot}
 
-%if %{clientSourceIsPrebuilt} && %{serverSourceIsPrebuilt}
+%if %{clientSourceIsBinary} && %{serverSourceIsBinary}
   exit 0
 %endif
 
@@ -530,7 +529,7 @@ cd ..
 
 %check
 # This section starts us in directory {_builddir}/{srcroot}
-%if %{clientSourceIsPrebuilt} && %{serverSourceIsPrebuilt}
+%if %{clientSourceIsBinary} && %{serverSourceIsBinary}
   exit 0
 %endif
 
@@ -608,15 +607,15 @@ install -d -m755 -p %{buildroot}%{_libdir}
   install -d -m755 -p %{buildroot}%{_libdir}/pkgconfig
   mv %{_targettree}/lib/pkgconfig/libdash* %{buildroot}%{_libdir}/pkgconfig/
 %endif
-%if %{clientSourceIsPrebuilt} && %{serverSourceIsPrebuilt}
+%if %{clientSourceIsBinary} && %{serverSourceIsBinary}
   mv %{binarytree}/bin/* %{buildroot}%{_bindir}/
   mv %{binarytree}/include/dash* %{buildroot}%{_includedir}/
   mv %{binarytree}/lib/libdash* %{buildroot}%{_libdir}/
 %else
-  %if %{clientSourceIsPrebuilt}
+  %if %{clientSourceIsBinary}
     mv %{binarytree}/bin/dash-qt %{buildroot}%{_bindir}/
   %endif
-  %if %{serverSourceIsPrebuilt}
+  %if %{serverSourceIsBinary}
     mv %{binarytree}/bin/dashd %{buildroot}%{_bindir}/
   %endif
 %endif
@@ -657,7 +656,7 @@ ln -s %{_sysconfdir}/dashcore/dash.conf %{buildroot}%{_sharedstatedir}/dashcore/
 install -D -m644 %{srccontribtree}/linux/man/man5/* %{buildroot}%{_mandir}/man5/
 # Man Pages (from upstream) - likely to overwrite ones from contrib (which is fine)
 install -D -m644 %{sourcetree}/doc/man/*.1* %{buildroot}%{_mandir}/man1/
-%if %{clientSourceIsPrebuilt} || %{serverSourceIsPrebuilt}
+%if %{clientSourceIsBinary} || %{serverSourceIsBinary}
   # probably the same. I haven't checked.
   install -D -m644 %{binarytree}/share/man/man1/*.1* %{buildroot}%{_mandir}/man1/
 %endif
