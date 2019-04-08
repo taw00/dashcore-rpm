@@ -1,7 +1,7 @@
 # Dash Core for Fedora Linux<br />_...wallet, node, and masternode_
 
 The most current source packages can be found in this directory:
-<https://github.com/taw00/dashcore-rpm/tree/master/source/SRPMS>
+<https://github.com/taw00/dashcore-rpm/tree/master/SRPMS>
 
 From these source packages, we have successfully built Dash Core for Fedora
 for years (starting with Fedora 23 or 24). CentOS and RHEL package have been built in the past, but as of late, they cannot be developed due to how dated EL7 packages are. Build on the latest versions of Fedora please.
@@ -22,7 +22,7 @@ Each RPM contains my own contributed imagery and configuration. If you wish to
 browse my contributions, browse to this link and explore the directories ending
 in `-contrib`:
 
-<https://github.com/taw00/dashcore-rpm/tree/master/source/SOURCES/>
+<https://github.com/taw00/dashcore-rpm/tree/master/SOURCES/>
 
 ----
 

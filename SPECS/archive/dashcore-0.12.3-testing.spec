@@ -165,13 +165,8 @@ Source0: https://github.com/dashpay/dash/archive/v%{version}-%{archiveQualifier}
 Source0: https://github.com/dashpay/dash/archive/v%{version}/%{archivename}.tar.gz
 %endif
 
-%if %{targetIsProduction}
-#Source0: https://github.com/taw00/dashcore-rpm/blob/master/source/SOURCES/%%{archivename}.tar.gz
-Source1: https://github.com/taw00/dashcore-rpm/blob/master/source/SOURCES/%{srccontribtree}.tar.gz
-%else
-#Source0: https://github.com/taw00/dashcore-rpm/blob/master/source/testing/SOURCES/%%{archivename}.tar.gz
-Source1: https://github.com/taw00/dashcore-rpm/blob/master/source/testing/SOURCES/%{srccontribtree}.tar.gz
-%endif
+#Source0: https://github.com/taw00/dashcore-rpm/blob/master/SOURCES/%%{archivename}.tar.gz
+Source1: https://github.com/taw00/dashcore-rpm/blob/master/SOURCES/%{srccontribtree}.tar.gz
 
 %global selinux_variants mls strict targeted
 %define testing_extras 0
