@@ -135,10 +135,10 @@ Source0: https://github.com/Bertrand256/dash-masternode-tool/archive/v%{version}
 Source0: https://github.com/Bertrand256/dash-masternode-tool/archive/v%{version}/%{sourcetree}.tar.gz
 %endif
 # dash-masternode-tool-0.9-contrib
-Source1: https://github.com/taw00/dashcore-rpm/blob/master/source/SOURCES/%{sourcetree_contrib}.tar.gz
+Source1: https://github.com/taw00/dashcore-rpm/blob/master/SOURCES/%{sourcetree_contrib}.tar.gz
 # btchip-python-...
 #Source2: https://github.com/Bertrand256/btchip-python/archive/v%%{btchip_python_version}/%%{sourcetree_btchip_python}.tar.gz
-Source2: https://github.com/taw00/dashcore-rpm/blob/master/source/SOURCES/%{archivename_btchip_python}.tar.gz
+Source2: https://github.com/taw00/dashcore-rpm/blob/master/SOURCES/%{archivename_btchip_python}.tar.gz
 
 %if ! %{sourceIsPrebuilt}
 Requires: zenity

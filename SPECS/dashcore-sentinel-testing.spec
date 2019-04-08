@@ -78,13 +78,8 @@ Release: %{_release}
 %define srccodetree %{_name_s}-%{version}
 %define srccontribtree %{_name_dcs}-%{vermajor}-contrib
 
-%if %{targetIsProduction}
-Source0: https://github.com/taw00/dashcore-rpm/blob/master/source/SOURCES/%{srccodetree}.tar.gz
-Source1: https://github.com/taw00/dashcore-rpm/blob/master/source/SOURCES/%{srccontribtree}.tar.gz
-%else
-Source0: https://github.com/taw00/dashcore-rpm/blob/master/source/testing/SOURCES/%{srccodetree}.tar.gz
-Source1: https://github.com/taw00/dashcore-rpm/blob/master/source/testing/SOURCES/%{srccontribtree}.tar.gz
-%endif
+Source0: https://github.com/taw00/dashcore-rpm/blob/master/SOURCES/%{srccodetree}.tar.gz
+Source1: https://github.com/taw00/dashcore-rpm/blob/master/SOURCES/%{srccontribtree}.tar.gz
 
 # Most of the time, the build system can figure out the requires.
 # But if you need something specific...

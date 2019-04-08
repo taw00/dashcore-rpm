@@ -163,8 +163,8 @@ Source0: https://github.com/dashpay/dash/archive/v%{version}-%{buildQualifier}/%
 Source0: https://github.com/dashpay/dash/archive/v%{version}/%{sourcearchivename}.tar.gz
 %endif
 
-Source1: https://github.com/taw00/dashcore-rpm/blob/master/source/SOURCES/%{srccontribtree}.tar.gz
-Source2: https://github.com/taw00/dashcore-rpm/blob/master/source/SOURCES/%{blsarchivename}.tar.gz
+Source1: https://github.com/taw00/dashcore-rpm/blob/master/SOURCES/%{srccontribtree}.tar.gz
+Source2: https://github.com/taw00/dashcore-rpm/blob/master/SOURCES/%{blsarchivename}.tar.gz
 
 %if %{clientSourceIsPrebuilt} || %{serverSourceIsPrebuilt}
 %if 0%{?buildQualifier:1}
@@ -175,7 +175,7 @@ Source3: https://github.com/dashpay/dash/archive/v%{version}/%{binaryarchivename
 %endif
 
 %if ! %{clientSourceIsPrebuilt}
-Patch0: https://github.com/taw00/dashcore-rpm/blob/master/source/SOURCES/%{_name_d}-%{vermajor}-remove-about-qt-menu-item.patch
+Patch0: https://github.com/taw00/dashcore-rpm/blob/master/SOURCES/%{_name_d}-%{vermajor}-remove-about-qt-menu-item.patch
 %endif
 
 %global selinux_variants mls strict targeted

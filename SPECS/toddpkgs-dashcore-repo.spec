@@ -20,7 +20,7 @@ Release:    %{_rel}.%{_snapinfo}%{?dist}.%{_minorbump}
 
 License:    MIT
 URL:        https://github.com/taw00/dashcore-rpm
-Source0:    https://github.com/taw00/dashcore-rpm/raw/master/source/SOURCES/toddpkgs-dashcore-repo-1.0.tar.gz
+Source0:    https://github.com/taw00/dashcore-rpm/raw/master/SOURCES/toddpkgs-dashcore-repo-1.0.tar.gz
 BuildArch:  noarch
 #BuildRequires:  tree
 
