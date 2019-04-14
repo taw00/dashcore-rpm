@@ -36,13 +36,13 @@ Summary: Peer-to-peer, fungible, digital currency, protocol, and platform for pa
 
 # ie. if the dev team includes things like rc3 in the filename
 %undefine buildQualifier
-%define buildQualifier rc3
+%define buildQualifier rc4
 
 # VERSION
 %define vermajor 0.14
-%define verminor1 0
-%define verminor2 0
-%define verminor %{verminor1}.%{verminor2}
+%define _verminor1 0
+%define _verminor2 0
+%define verminor %{_verminor1}.%{_verminor2}
 Version: %{vermajor}.%{verminor}
 
 # RELEASE
@@ -117,13 +117,13 @@ Release: %{_release}
 # ----------- end of release building section
 
 # the archive name and directory tree can have some variances
-# v0.14.0.0.tar.gz
+# v0.14.0.0
 %define _archivename_alt1 v%{version}
-# dash-0.14.0.0.tar.gz
+# dash-0.14.0.0
 %define _archivename_alt2 %{_name_d}-%{version}
-# dashcore-0.14.0.tar.gz
-%define _archivename_alt3 %{_name_dc}-%{vermajor}.%{verminor1}
-# dashcore-0.14.0.0.tar.gz
+# dashcore-0.14.0
+%define _archivename_alt3 %{_name_dc}-%{vermajor}.%{_verminor1}
+# dashcore-0.14.0.0
 %define _archivename_alt4 %{_name_dc}-%{version}
 
 # Extracted source tree structure (extracted in .../BUILD)
@@ -141,9 +141,9 @@ Release: %{_release}
 
 %if 0%{?buildQualifier:1}
   %define sourcearchivename %{_sourcearchivename}-%{buildQualifier}
-  %define binaryarchivename %{_binaryarchivename}
+  %define binaryarchivename %{_binaryarchivename}-%{buildQualifier}
   %define sourcetree %{_sourcearchivename}-%{buildQualifier}
-  %define binarytree %{_binarytree}-%{buildQualifier}
+  %define binarytree %{_binarytree}
 %else
   %define sourcearchivename %{_sourcearchivename}
   %define binaryarchivename %{_binaryarchivename}
@@ -1087,6 +1087,9 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
+* Sun Apr 14 2019 Todd Warner <t0dd_at_protonmail.com> 0.14.0.0-0.2.rc4.taw
+  - 0.14 rc4
+
 * Fri Apr 05 2019 Todd Warner <t0dd_at_protonmail.com> 0.14.0.0-0.2.rc3.taw
   - 0.14 rc3
 
