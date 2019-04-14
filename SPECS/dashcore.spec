@@ -40,9 +40,9 @@ Summary: Peer-to-peer, fungible, digital currency, protocol, and platform for pa
 
 # VERSION
 %define vermajor 0.13
-%define verminor1 3
-%define verminor2 0
-%define verminor %{verminor1}.%{verminor2}
+%define _verminor1 3
+%define _verminor2 0
+%define verminor %{_verminor1}.%{_verminor2}
 Version: %{vermajor}.%{verminor}
 
 # RELEASE
@@ -53,7 +53,7 @@ Version: %{vermajor}.%{verminor}
 %endif
 
 # MINORBUMP
-%define minorbump taw1
+%define minorbump taw2
 #%%undefine minorbump
 
 #
@@ -117,13 +117,13 @@ Release: %{_release}
 # ----------- end of release building section
 
 # the archive name and directory tree can have some variances
-# v0.13.0.0.tar.gz
+# v0.13.0.0
 %define _archivename_alt1 v%{version}
-# dash-0.13.0.0.tar.gz
+# dash-0.13.0.0
 %define _archivename_alt2 %{_name_d}-%{version}
-# dashcore-0.13.0.tar.gz
-%define _archivename_alt3 %{_name_dc}-%{vermajor}.%{verminor1}
-# dashcore-0.13.0.0.tar.gz
+# dashcore-0.13.0
+%define _archivename_alt3 %{_name_dc}-%{vermajor}.%{_verminor1}
+# dashcore-0.13.0.0
 %define _archivename_alt4 %{_name_dc}-%{version}
 
 # Extracted source tree structure (extracted in .../BUILD)
