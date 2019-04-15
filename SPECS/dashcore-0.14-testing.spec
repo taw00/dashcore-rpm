@@ -31,8 +31,8 @@ Name: %{_name_dc}
 Summary: Peer-to-peer, fungible, digital currency, protocol, and platform for payments and decentralized applications
 
 %define targetIsProduction 0
-%define clientSourceIsPrebuilt 0
-%define serverSourceIsPrebuilt 0
+%define clientSourceIsBinary 0
+%define serverSourceIsBinary 0
 
 # ie. if the dev team includes things like rc3 in the filename
 %undefine buildQualifier
@@ -69,20 +69,20 @@ Version: %{vermajor}.%{verminor}
 %endif
 
 %undefine _rp
-%if %{clientSourceIsPrebuilt} && %{serverSourceIsPrebuilt}
+%if %{clientSourceIsBinary} && %{serverSourceIsBinary}
   %define _rp rp
 %else
-  %if %{clientSourceIsPrebuilt}
+  %if %{clientSourceIsBinary}
     %define _rp rpc
   %else
-  %if %{serverSourceIsPrebuilt}
+  %if %{serverSourceIsBinary}
     %define _rp rps
   %endif
   %endif
 %endif
 
 # have to use _variables because rpm spec macros are easily recursive and break.
-%define _snapinfo THIS_WILL_BE_REPLACED
+%define _snapinfo THIS_VALUE_WILL_BE_REPLACED
 %if 0%{?_rp:1}
   %if 0%{?snapinfo:1}
     %define _snapinfo %{snapinfo}.%{_rp}
@@ -127,7 +127,7 @@ Release: %{_release}
 %define _archivename_alt4 %{_name_dc}-%{version}
 
 # Extracted source tree structure (extracted in .../BUILD)
-#   srcroot               dashcore-0.14.0
+#   projectroot           dashcore-0.14.0
 #      \_sourcetree         \_dash-0.14.0.0 or dashcore-0.14.0 or dash-0.14.0.0-rc1...
 #      \_binarytree         \_dashcore-0.14.0 or dash-0.14.0-rc1...
 #      \_srccontribtree     \_dashcore-0.14.0-contrib
@@ -153,7 +153,7 @@ Release: %{_release}
 %define blsarchivedate 20181101
 %define blsarchivename bls-signatures-%{blsarchivedate}
 
-%define srcroot %{name}-%{vermajor}
+%define projectroot %{name}-%{vermajor}
 %define srccontribtree %{name}-%{vermajor}-contrib
 
 
@@ -166,7 +166,7 @@ Source0: https://github.com/dashpay/dash/archive/v%{version}/%{sourcearchivename
 Source1: https://github.com/taw00/dashcore-rpm/blob/master/SOURCES/%{srccontribtree}.tar.gz
 Source2: https://github.com/taw00/dashcore-rpm/blob/master/SOURCES/%{blsarchivename}.tar.gz
 
-%if %{clientSourceIsPrebuilt} || %{serverSourceIsPrebuilt}
+%if %{clientSourceIsBinary} || %{serverSourceIsBinary}
 %if 0%{?buildQualifier:1}
 Source3: https://github.com/dashpay/dash/archive/v%{version}-%{buildQualifier}/%{binaryarchivename}-x86_64-linux-gnu.tar.gz
 %else
@@ -174,7 +174,7 @@ Source3: https://github.com/dashpay/dash/archive/v%{version}/%{binaryarchivename
 %endif
 %endif
 
-%if ! %{clientSourceIsPrebuilt}
+%if ! %{clientSourceIsBinary}
 Patch0: https://github.com/taw00/dashcore-rpm/blob/master/SOURCES/%{_name_d}-%{vermajor}-remove-about-qt-menu-item.patch
 %endif
 
@@ -206,7 +206,7 @@ URL: http://dash.org/
 # I'm ditching i386 and i686 platform choices. Sorry.
 ExclusiveArch: x86_64
 
-%if ! %{clientSourceIsPrebuilt} || ! %{serverSourceIsPrebuilt}
+%if ! %{clientSourceIsBinary} || ! %{serverSourceIsBinary}
   %define buildFromSource 1
 %endif
 
@@ -428,15 +428,15 @@ Learn more at www.dash.org.
   %{error: "EL7-based platforms (CentOS7/RHEL7) are not supportable build targets."}
 %endif
 
-mkdir -p %{srcroot}
+mkdir -p %{projectroot}
 # Source0: dashcore (source)
 ## {_builddir}/dashcore-0.14.0/dashcore-0.14.0.0/  ..or something like..
 ## {_builddir}/dash-0.14.0/dash-0.14.0.0-rc1/
-%setup -q -T -D -a 0 -n %{srcroot}
+%setup -q -T -D -a 0 -n %{projectroot}
 
 # Source1: contributions
 ## {_builddir}/dashcore-0.14.0/dashcore-0.14.0-contrib/
-%setup -q -T -D -a 1 -n %{srcroot}
+%setup -q -T -D -a 1 -n %{projectroot}
 
 # Source2: bls archive
 # Original: https://github.com/codablock/bls-signatures
@@ -446,7 +446,7 @@ mkdir -p %{sourcetree}/depends/sources/
 #mv %%{_sourcedir}/%%{blsarchivename}.tar.gz %%{sourcetree}/depends/sources/v%%{blsarchivedate}.tar.gz
 # OPTION 2 -- repack the archive...
 # Man, there has to got be a better way.
-#%%setup -q -T -D -a 2 -n %%{srcroot}
+#%%setup -q -T -D -a 2 -n %%{projectroot}
 #tar czf %%{blsarchivename}.tar.gz %%{blsarchivename}
 #mv %%{blsarchivename}.tar.gz %%{sourcetree}/depends/sources/v%%{blsarchivedate}.tar.gz
 # Option 2 update: The build doesn't like me messing with the archive (it does
@@ -457,11 +457,11 @@ mkdir -p %{sourcetree}/depends/sources/
 mv ../../SOURCES/%{blsarchivename}.tar.gz %{sourcetree}/depends/sources/v%{blsarchivedate}.tar.gz
 
 # Source3: dashcore (binary)
-%if %{clientSourceIsPrebuilt} || %{serverSourceIsPrebuilt}
-%setup -q -T -D -a 3 -n %{srcroot}
+%if %{clientSourceIsBinary} || %{serverSourceIsBinary}
+%setup -q -T -D -a 3 -n %{projectroot}
 %endif
 
-%if ! %{clientSourceIsPrebuilt}
+%if ! %{clientSourceIsBinary}
 cd %{sourcetree}
 %patch0 -p1
 cd ..
@@ -469,7 +469,7 @@ cd ..
 
 #t0dd: Prep SELinux policy -- NOT USED YET
 # Done here to prep for action taken in the %%build step
-# At this moment, we are in the srcroot directory
+# At this moment, we are in the projectroot directory
 mkdir -p selinux-tmp
 cp -p %{srccontribtree}/linux/selinux/dash.{te,if,fc} selinux-tmp/
 
@@ -485,9 +485,9 @@ cp -p %{srccontribtree}/linux/selinux/dash.{te,if,fc} selinux-tmp/
 
 
 %build
-# This section starts us in directory {_builddir}/{srcroot}
+# This section starts us in directory {_builddir}/{projectroot}
 
-%if %{clientSourceIsPrebuilt} && %{serverSourceIsPrebuilt}
+%if %{clientSourceIsBinary} && %{serverSourceIsBinary}
   exit 0
 %endif
 
@@ -500,7 +500,7 @@ make HOST=%{_target_platform} -j$(nproc)
 cd ..
 
 # build code
-%define _targettree %{_builddir}/%{srcroot}/%{sourcetree}/depends/%{_target_platform}
+%define _targettree %{_builddir}/%{projectroot}/%{sourcetree}/depends/%{_target_platform}
 %define _FLAGS CPPFLAGS="$CPPFLAGS -I%{_targettree}/include -I%{_includedir}" LDFLAGS="$LDFLAGS -L%{_targettree}/lib -L%{_libdir}"
 
 %define _disable_tests --disable-tests --disable-gui-tests
@@ -530,8 +530,8 @@ cd ..
 
 
 %check
-# This section starts us in directory {_builddir}/{srcroot}
-%if %{clientSourceIsPrebuilt} && %{serverSourceIsPrebuilt}
+# This section starts us in directory {_builddir}/{projectroot}
+%if %{clientSourceIsBinary} && %{serverSourceIsBinary}
   exit 0
 %endif
 
@@ -551,7 +551,7 @@ cd %{sourcetree}
 
 
 %install
-# This section starts us in directory {_builddir}/{srcroot}
+# This section starts us in directory {_builddir}/{projectroot}
 
 %if 0%{?buildFromSource:1}
   cd %{sourcetree}
@@ -609,15 +609,15 @@ install -d -m755 -p %{buildroot}%{_libdir}
   install -d -m755 -p %{buildroot}%{_libdir}/pkgconfig
   mv %{_targettree}/lib/pkgconfig/libdash* %{buildroot}%{_libdir}/pkgconfig/
 %endif
-%if %{clientSourceIsPrebuilt} && %{serverSourceIsPrebuilt}
+%if %{clientSourceIsBinary} && %{serverSourceIsBinary}
   mv %{binarytree}/bin/* %{buildroot}%{_bindir}/
   mv %{binarytree}/include/dash* %{buildroot}%{_includedir}/
   mv %{binarytree}/lib/libdash* %{buildroot}%{_libdir}/
 %else
-  %if %{clientSourceIsPrebuilt}
+  %if %{clientSourceIsBinary}
     mv %{binarytree}/bin/dash-qt %{buildroot}%{_bindir}/
   %endif
-  %if %{serverSourceIsPrebuilt}
+  %if %{serverSourceIsBinary}
     mv %{binarytree}/bin/dashd %{buildroot}%{_bindir}/
   %endif
 %endif
@@ -658,7 +658,7 @@ ln -s %{_sysconfdir}/dashcore/dash.conf %{buildroot}%{_sharedstatedir}/dashcore/
 install -D -m644 %{srccontribtree}/linux/man/man5/* %{buildroot}%{_mandir}/man5/
 # Man Pages (from upstream) - likely to overwrite ones from contrib (which is fine)
 install -D -m644 %{sourcetree}/doc/man/*.1* %{buildroot}%{_mandir}/man1/
-%if %{clientSourceIsPrebuilt} || %{serverSourceIsPrebuilt}
+%if %{clientSourceIsBinary} || %{serverSourceIsBinary}
   # probably the same. I haven't checked.
   install -D -m644 %{binarytree}/share/man/man1/*.1* %{buildroot}%{_mandir}/man1/
 %endif

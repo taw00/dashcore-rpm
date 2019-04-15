@@ -40,9 +40,9 @@ Summary: Peer-to-peer, fungible, digital currency, protocol, and platform for pa
 
 # VERSION
 %define vermajor 0.13
-%define verminor1 3
-%define verminor2 0
-%define verminor %{verminor1}.%{verminor2}
+%define _verminor1 3
+%define _verminor2 0
+%define verminor %{_verminor1}.%{_verminor2}
 Version: %{vermajor}.%{verminor}
 
 # RELEASE
@@ -52,7 +52,7 @@ Version: %{vermajor}.%{verminor}
 %endif
 
 # MINORBUMP
-%define minorbump taw1
+%define minorbump taw2
 #%%undefine minorbump
 
 #
@@ -116,17 +116,17 @@ Release: %{_release}
 # ----------- end of release building section
 
 # the archive name and directory tree can have some variances
-# v0.13.0.0.tar.gz
+# v0.13.0.0
 %define _archivename_alt1 v%{version}
-# dash-0.13.0.0.tar.gz
+# dash-0.13.0.0
 %define _archivename_alt2 %{_name_d}-%{version}
-# dashcore-0.13.0.tar.gz
-%define _archivename_alt3 %{_name_dc}-%{vermajor}.%{verminor1}
-# dashcore-0.13.0.0.tar.gz
+# dashcore-0.13.0
+%define _archivename_alt3 %{_name_dc}-%{vermajor}.%{_verminor1}
+# dashcore-0.13.0.0
 %define _archivename_alt4 %{_name_dc}-%{version}
 
 # Extracted source tree structure (extracted in .../BUILD)
-#   srcroot               dashcore-0.13.2
+#   projectroot           dashcore-0.13.2
 #      \_sourcetree         \_dash-0.13.2.0 or dashcore-0.13.2 or dash-0.13.2.0-rc2...
 #      \_binarytree         \_dashcore-0.13.2 or dash-0.13.2-rc2...
 #      \_srccontribtree     \_dashcore-0.13.2-contrib
@@ -152,7 +152,7 @@ Release: %{_release}
 %define blsarchivedate 20181101
 %define blsarchivename bls-signatures-%{blsarchivedate}
 
-%define srcroot %{name}-%{vermajor}
+%define projectroot %{name}-%{vermajor}
 %define srccontribtree %{name}-%{vermajor}-contrib
 
 
@@ -427,15 +427,15 @@ Learn more at www.dash.org.
   %{error: "EL7-based platforms (CentOS7/RHEL7) are not supportable build targets."}
 %endif
 
-mkdir -p %{srcroot}
+mkdir -p %{projectroot}
 # Source0: dashcore (source)
 ## {_builddir}/dashcore-0.12.3/dashcore-0.12.3.0/  ..or something like..
 ## {_builddir}/dash-0.13.0/dash-0.13.0.0-rc1/
-%setup -q -T -D -a 0 -n %{srcroot}
+%setup -q -T -D -a 0 -n %{projectroot}
 
 # Source1: contributions
 ## {_builddir}/dashcore-0.12.3/dashcore-0.12.3-contrib/
-%setup -q -T -D -a 1 -n %{srcroot}
+%setup -q -T -D -a 1 -n %{projectroot}
 
 # Source2: bls archive
 mkdir -p %{sourcetree}/depends/sources/
@@ -444,7 +444,7 @@ mkdir -p %{sourcetree}/depends/sources/
 #mv %%{_sourcedir}/%%{blsarchivename}.tar.gz %%{sourcetree}/depends/sources/v%%{blsarchivedate}.tar.gz
 # OPTION 2 -- repack the archive...
 # Man, there has to got be a better way.
-#%%setup -q -T -D -a 2 -n %%{srcroot}
+#%%setup -q -T -D -a 2 -n %%{projectroot}
 #tar czf %%{blsarchivename}.tar.gz %%{blsarchivename}
 #mv %%{blsarchivename}.tar.gz %%{sourcetree}/depends/sources/v%%{blsarchivedate}.tar.gz
 # Option 2 update: The build doesn't like me messing with the archive (it does
@@ -456,7 +456,7 @@ mv ../../SOURCES/%{blsarchivename}.tar.gz %{sourcetree}/depends/sources/v%{blsar
 
 # Source3: dashcore (binary)
 %if %{clientSourceIsBinary} || %{serverSourceIsBinary}
-%setup -q -T -D -a 3 -n %{srcroot}
+%setup -q -T -D -a 3 -n %{projectroot}
 %endif
 
 %if ! %{clientSourceIsBinary}
@@ -467,7 +467,7 @@ cd ..
 
 #t0dd: Prep SELinux policy -- NOT USED YET
 # Done here to prep for action taken in the %%build step
-# At this moment, we are in the srcroot directory
+# At this moment, we are in the projectroot directory
 mkdir -p selinux-tmp
 cp -p %{srccontribtree}/linux/selinux/dash.{te,if,fc} selinux-tmp/
 
@@ -483,7 +483,7 @@ cp -p %{srccontribtree}/linux/selinux/dash.{te,if,fc} selinux-tmp/
 
 
 %build
-# This section starts us in directory {_builddir}/{srcroot}
+# This section starts us in directory {_builddir}/{projectroot}
 
 %if %{clientSourceIsBinary} && %{serverSourceIsBinary}
   exit 0
@@ -498,7 +498,7 @@ make HOST=%{_target_platform} -j$(nproc)
 cd ..
 
 # build code
-%define _targettree %{_builddir}/%{srcroot}/%{sourcetree}/depends/%{_target_platform}
+%define _targettree %{_builddir}/%{projectroot}/%{sourcetree}/depends/%{_target_platform}
 %define _FLAGS CPPFLAGS="$CPPFLAGS -I%{_targettree}/include -I%{_includedir}" LDFLAGS="$LDFLAGS -L%{_targettree}/lib -L%{_libdir}"
 
 %define _disable_tests --disable-tests --disable-gui-tests
@@ -528,7 +528,7 @@ cd ..
 
 
 %check
-# This section starts us in directory {_builddir}/{srcroot}
+# This section starts us in directory {_builddir}/{projectroot}
 %if %{clientSourceIsBinary} && %{serverSourceIsBinary}
   exit 0
 %endif
@@ -549,7 +549,7 @@ cd %{sourcetree}
 
 
 %install
-# This section starts us in directory {_builddir}/{srcroot}
+# This section starts us in directory {_builddir}/{projectroot}
 
 %if 0%{?buildFromSource:1}
   cd %{sourcetree}
