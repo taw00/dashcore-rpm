@@ -34,8 +34,8 @@ Summary: Manage and collateralize a Dash Masternode with a hardware wallet
 #BuildArch: noarch
 
 %define targetIsProduction 0
-%define sourceIsPrebuilt 0
-%define buildQualifier hotfix5
+%define sourceIsBinary 0
+%define buildQualifier hotfix6
 #%%undefine buildQualifier
 
 # Package (RPM) name-version-release.
@@ -69,8 +69,8 @@ Version: %{vermajor}.%{verminor}
 %endif
 
 # have to use _variables because rpm spec macros are easily recursive and break.
-%define _snapinfo THIS_WILL_BE_REPLACED
-%if %{sourceIsPrebuilt}
+%define _snapinfo THIS_VALUE_WILL_BE_REPLACED
+%if %{sourceIsBinary}
   %if 0%{?snapinfo:1}
     %define _snapinfo %{snapinfo}.rp
   %else
@@ -106,12 +106,12 @@ Release: %{_release}
 
 # Extracted source tree structure (extracted in .../BUILD)
 # (sourcetree and binaryarchivename will be mutually exclusive)
-#   srcroot                      dash-masternode-tool-0.9
+#   projectroot                      dash-masternode-tool-0.9
 #      \_sourcetree                \_dash-masternode-tool-0.9.22
 #      \_binaryarchivename         \_DashMasternodeTool (file)
 #      \_sourcetree_btchip_python  \_btchip-python-SOME_VERSION
 #      \_sourcetree_contrib        \_dash-masternode-tool-0.9-contrib
-%define srcroot %{name}-%{vermajor}
+%define projectroot %{name}-%{vermajor}
 %if 0%{?buildQualifier:1}
 %define sourcetree %{name}-%{version}-%{buildQualifier}
 %define binaryarchivename %{_name2}_%{version}.%{buildQualifier}.linux
@@ -129,7 +129,7 @@ Release: %{_release}
 %define sourcetree_contrib %{name}-%{vermajor}-contrib
 
 # dash-masternode-tool-0.9.z
-%if %{sourceIsPrebuilt}
+%if %{sourceIsBinary}
 Source0: https://github.com/Bertrand256/dash-masternode-tool/archive/v%{version}/%{binaryarchivename}.tar.gz
 %else
 Source0: https://github.com/Bertrand256/dash-masternode-tool/archive/v%{version}/%{sourcetree}.tar.gz
@@ -140,7 +140,7 @@ Source1: https://github.com/taw00/dashcore-rpm/blob/master/SOURCES/%{sourcetree_
 #Source2: https://github.com/Bertrand256/btchip-python/archive/v%%{btchip_python_version}/%%{sourcetree_btchip_python}.tar.gz
 Source2: https://github.com/taw00/dashcore-rpm/blob/master/SOURCES/%{archivename_btchip_python}.tar.gz
 
-%if ! %{sourceIsPrebuilt}
+%if ! %{sourceIsBinary}
 Requires: zenity
 BuildRequires: python3-devel python3-virtualenv
 BuildRequires: libusbx-devel libudev-devel
@@ -208,25 +208,25 @@ Supported hardware wallets: Trezor (model One and T), KeepKey, Ledger Nano S
 #
 # I create a root dir and place the source and contribution trees under it.
 # Extracted source tree structure (extracted in .../BUILD)
-#   srcroot                      dash-masternode-tool-0.9
+#   projectroot                 dash-masternode-tool-0.9
 #      \_sourcetree               \_dash-masternode-tool-0.9.22
 #      \_sourcetree_btchip_python \_btchip-python-SOME_VERSION
 #      \_sourcetree_contrib       \_dash-masternode-tool-0.9-contrib
 
-mkdir -p %{srcroot}
+mkdir -p %{projectroot}
 # sourcecode or DashMasternodeTool (binary)
-%setup -q -T -D -a 0 -n %{srcroot}
+%setup -q -T -D -a 0 -n %{projectroot}
 # contrib
-%setup -q -T -D -a 1 -n %{srcroot}
+%setup -q -T -D -a 1 -n %{projectroot}
 # btchip-python
-%setup -q -T -D -a 2 -n %{srcroot}
+%setup -q -T -D -a 2 -n %{projectroot}
 
 # For debugging purposes...
 %if ! %{targetIsProduction}
 cd ../.. ; /usr/bin/tree -df -L 2 BUILD ; cd -
 %endif
 
-%if ! %{sourceIsPrebuilt}
+%if ! %{sourceIsBinary}
   # My modified requirements a tad since we use the native QT libraries
   # and include btchip-python
   cp %{sourcetree_contrib}/build/requirements.txt %{sourcetree}/
@@ -258,9 +258,9 @@ cd ../.. ; /usr/bin/tree -df -L 2 BUILD ; cd -
 
 
 %build
-# This section starts us in directory {_builddir}/{srcroot}
+# This section starts us in directory {_builddir}/{projectroot}
 
-%if ! %{sourceIsPrebuilt}
+%if ! %{sourceIsBinary}
   cd %{sourcetree}
   ../venv/bin/pyinstaller --distpath=../dist/linux --workpath=../dist/linux/build dash_masternode_tool.spec
   cd ..
@@ -274,7 +274,7 @@ cd ../.. ; /usr/bin/tree -df -L 2 BUILD ; cd -
 #   {buildroot}, therefore mirroring the final directory and file structure of
 #   an installed RPM.
 #
-# This section starts us in directory {_builddir}/{srcroot}
+# This section starts us in directory {_builddir}/{projectroot}
 
 # Cheatsheet for built-in RPM macros:
 #   _bindir = /usr/bin
@@ -301,7 +301,7 @@ install -d %{buildroot}%{_datadir}/%{name}
 
 # Binaries
 install -D -m755 -p %{sourcetree_contrib}/desktop/%{name}-desktop-script.sh %{buildroot}%{_datadir}/%{name}/
-%if ! %{sourceIsPrebuilt}
+%if ! %{sourceIsBinary}
 install -D -m755 -p ./dist/linux/%{_name2} %{buildroot}%{_datadir}/%{name}/%{_name2}
 %else
 install -D -m755 -p %{sourcetree}/%{_name2} %{buildroot}%{_datadir}/%{name}/%{_name2}
@@ -368,7 +368,7 @@ cd ../../
 %license %{sourcetree_contrib}/LICENSE
 %doc %{sourcetree_contrib}/README.about-this-rpm.md
 %doc %{sourcetree_contrib}/README.changelog.md
-%if ! %{sourceIsPrebuilt}
+%if ! %{sourceIsBinary}
 %doc %{sourcetree}/README.md
 %else
 %doc %{sourcetree_contrib}/build/README.md
@@ -392,7 +392,7 @@ cd ../../
 # - pre section (runs before the install process)
 # - system users are added if needed. Any other roadbuilding.
 #
-# This section starts us in directory .../BUILD/<srcroot>
+# This section starts us in directory .../BUILD/{projectroot}
 #
 
 
@@ -421,6 +421,9 @@ cd ../../
 
 
 %changelog
+* Mon Apr 15 2019 Todd Warner <t0dd_at_protonmail.com> 0.9.22-3.1.hotfix6.taw
+  - hotfix6
+
 * Fri Mar 08 2019 Todd Warner <t0dd_at_protonmail.com> 0.9.22-3.1.hotfix5.taw
   - hotfix5 - keepkey issue fix
   - refreshed btchip-python sourcetree
