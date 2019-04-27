@@ -47,9 +47,9 @@ Summary: Manage and collateralize a Dash Masternode with a hardware wallet
 Version: %{vermajor}.%{verminor}
 
 # RELEASE
-%define _pkgrel 1
+%define _pkgrel 2
 %if ! %{targetIsProduction}
-  %define _pkgrel 0.1
+  %define _pkgrel 1.1
 %endif
 
 # MINORBUMP
@@ -116,7 +116,8 @@ Release: %{_release}
 %define sourcetree %{name}-%{version}-%{buildQualifier}
 %define binaryarchivename %{_name2}_%{version}.%{buildQualifier}.linux
 %else
-%define sourcetree %{name}-%{version}
+# XXX -a is temporary -- remove this in next version
+%define sourcetree %{name}-%{version}-a
 %define binaryarchivename %{_name2}_%{version}.linux
 %endif
 #%%define btchip_python_version 0.1.26
@@ -367,6 +368,11 @@ cd ../../
 
 
 %changelog
+* Sat Apr 27 2019 Todd Warner <t0dd_at_protonmail.com> 0.9.23-2.taw
+* Sat Apr 27 2019 Todd Warner <t0dd_at_protonmail.com> 0.9.23-1.1.testing.taw
+  - 0.9.23, but with a versioning fix (aka 0.9.23-a)
+
+* Sat Apr 27 2019 Todd Warner <t0dd_at_protonmail.com> 0.9.23-1.taw
 * Sat Apr 27 2019 Todd Warner <t0dd_at_protonmail.com> 0.9.23-0.1.testing.taw
   - 0.9.23
 
