@@ -35,21 +35,21 @@ Summary: Manage and collateralize a Dash Masternode with a hardware wallet
 
 %define targetIsProduction 0
 %define sourceIsBinary 0
-%define buildQualifier hotfix6
-#%%undefine buildQualifier
+#%%define buildQualifier hotfix6
+%undefine buildQualifier
 
 # Package (RPM) name-version-release.
 # <name>-<vermajor.<verminor>-<pkgrel>[.<extraver>][.<snapinfo>].DIST[.<minorbump>]
 
 # VERSION
 %define vermajor 0.9
-%define verminor 22
+%define verminor 23
 Version: %{vermajor}.%{verminor}
 
 # RELEASE
-%define _pkgrel 4
+%define _pkgrel 1
 %if ! %{targetIsProduction}
-  %define _pkgrel 3.1
+  %define _pkgrel 0.1
 %endif
 
 # MINORBUMP
@@ -171,7 +171,7 @@ URL: https://github.com/taw00/dashcore-rpm
 ExclusiveArch: x86_64
 
 
-# How debug info and build_ids managed (I only halfway understand this):
+# How debug info and build_ids are managed (I only halfway understand this):
 # https://github.com/rpm-software-management/rpm/blob/master/macros.in
 # I turn everything off by default avoid any packaging conflicts. This
 # is not correct packaging, but... it's what I do for now.
@@ -192,10 +192,11 @@ This tool will allow you to..
 
 * Send the start masternode command if the collateral is controlled by a
   hardware wallet
-* Transfer masternode earnings safely, without touching the 1000 Dash
-  funding transaction
+* Transfer any potential masternode earnings safely, without touching the 1000
+  Dash funding transaction (assuming collatoral key and payout key are the
+  same)
 * Sign messages with a hardware wallet
-* Vote on proposals
+* Vote on proposals (if HW maintains voting key)
 * Initialize/recover hardware wallets seeds
 * Update hardware wallets firmware (Trezor/KeepKey)
 * Participate on Dash Testnet
@@ -268,12 +269,6 @@ cd ../.. ; /usr/bin/tree -df -L 2 BUILD ; cd -
 
 
 %install
-# CREATING RPM:
-# - install step (comes before files step)
-# - This step moves anything needing to be part of the package into the
-#   {buildroot}, therefore mirroring the final directory and file structure of
-#   an installed RPM.
-#
 # This section starts us in directory {_builddir}/{projectroot}
 
 # Cheatsheet for built-in RPM macros:
@@ -346,23 +341,8 @@ install -D -m644 -p %{name}.appdata.xml %{buildroot}%{_metainfodir}/%{name}.appd
 appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/*.appdata.xml
 cd ../../
 
-## Man Pages - not used as of yet
-#install -d %%{buildroot}%%{_mandir}
-#install -D -m644 %%{sourcetree}/share/man/man1/* %%{buildroot}%%{_mandir}/man1/
-
-## Bash completion
-#install -D -m644 %%{sourcetree_contrib}/bash/%%{name}.bash-completion  %%{buildroot}%%{_datadir}/bash-completion/completions/%%{name}
-#install -D -m644 %%{sourcetree_contrib}/bash/%%{name}d.bash-completion %%{buildroot}%%{_datadir}/bash-completion/completions/%%{name}d
-
 
 %files
-# CREATING RPM:
-# - files step (final step)
-# - This step makes a declaration of ownership of any listed directories
-#   or files
-# - The install step should have set permissions and ownership correctly,
-#   but of final tweaking is often done in this section
-#
 %defattr(-,root,root,-)
 #%%license %%{sourcetree}/LICENSE
 %license %{sourcetree_contrib}/LICENSE
@@ -386,41 +366,11 @@ cd ../../
 #%%{_metainfodir}/%%{name}.metainfo.xml
 
 
-
-%pre
-# INSTALLING THE RPM:
-# - pre section (runs before the install process)
-# - system users are added if needed. Any other roadbuilding.
-#
-# This section starts us in directory .../BUILD/{projectroot}
-#
-
-
-%post
-# INSTALLING THE RPM:
-# - post section (runs after the install process is complete)
-#
-#umask 007
-## refresh library context
-#/sbin/ldconfig > /dev/null 2>&1
-## refresh systemd context
-#test -e %%{_sysconfdir}/%%{name}/%%{name}.conf && %%systemd_post %%{name}d.service
-## refresh firewalld context
-#test -f %%{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
-
-
-%postun
-# UNINSTALLING THE RPM:
-# - postun section (runs after an RPM has been removed)
-#
-#umask 007
-## refresh library context
-#/sbin/ldconfig > /dev/null 2>&1
-## refresh firewalld context
-#test -f %%{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
-
-
 %changelog
+* Sat Apr 27 2019 Todd Warner <t0dd_at_protonmail.com> 0.9.23-0.1.testing.taw
+  - 0.9.23
+
+* Mon Apr 15 2019 Todd Warner <t0dd_at_protonmail.com> 0.9.22-4.hotfix6.taw
 * Mon Apr 15 2019 Todd Warner <t0dd_at_protonmail.com> 0.9.22-3.1.hotfix6.taw
   - hotfix6
 
