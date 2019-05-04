@@ -35,8 +35,8 @@ Summary: Manage and collateralize a Dash Masternode with a hardware wallet
 
 %define targetIsProduction 1
 %define sourceIsBinary 0
-#%%define buildQualifier hotfix6
-%undefine buildQualifier
+%define buildQualifier hotfix2
+#%%undefine buildQualifier
 
 # Package (RPM) name-version-release.
 # <name>-<vermajor.<verminor>-<pkgrel>[.<extraver>][.<snapinfo>].DIST[.<minorbump>]
@@ -47,9 +47,9 @@ Summary: Manage and collateralize a Dash Masternode with a hardware wallet
 Version: %{vermajor}.%{verminor}
 
 # RELEASE
-%define _pkgrel 2
+%define _pkgrel 3
 %if ! %{targetIsProduction}
-  %define _pkgrel 1.1
+  %define _pkgrel 2.1
 %endif
 
 # MINORBUMP
@@ -116,15 +116,14 @@ Release: %{_release}
 %define sourcetree %{name}-%{version}-%{buildQualifier}
 %define binaryarchivename %{_name2}_%{version}.%{buildQualifier}.linux
 %else
-# XXX -a is temporary -- remove this in next version
-%define sourcetree %{name}-%{version}-a
+%define sourcetree %{name}-%{version}
 %define binaryarchivename %{_name2}_%{version}.linux
 %endif
 #%%define btchip_python_version 0.1.26
 %define btchip_python_vermajor master-branch
 %define btchip_python_verminor 2019-03-08
 %define btchip_python_version %{btchip_python_vermajor}-%{btchip_python_verminor}
-#%%define sourcetree_btchip_python btchip-python-%{btchip_python_version}
+#%%define sourcetree_btchip_python btchip-python-%%{btchip_python_version}
 %define archivename_btchip_python btchip-python-%{btchip_python_version}
 %define sourcetree_btchip_python btchip-python-%{btchip_python_vermajor}
 %define sourcetree_contrib %{name}-%{vermajor}-contrib
@@ -368,6 +367,10 @@ cd ../../
 
 
 %changelog
+* Sat May 04 2019 Todd Warner <t0dd_at_protonmail.com> 0.9.23-3.hotfix2.taw
+* Sat May 04 2019 Todd Warner <t0dd_at_protonmail.com> 0.9.23-2.1.hotfix2.taw
+  - 0.9.23 hotfix2
+
 * Sat Apr 27 2019 Todd Warner <t0dd_at_protonmail.com> 0.9.23-2.taw
 * Sat Apr 27 2019 Todd Warner <t0dd_at_protonmail.com> 0.9.23-1.1.testing.taw
   - 0.9.23, but with a versioning fix (aka 0.9.23-a)
