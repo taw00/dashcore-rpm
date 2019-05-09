@@ -36,7 +36,7 @@ Summary: Peer-to-peer, fungible, digital currency, protocol, and platform for pa
 
 # ie. if the dev team includes things like rc3 in the filename
 %undefine buildQualifier
-%define buildQualifier rc4
+%define buildQualifier rc5
 
 # VERSION
 %define vermajor 0.14
@@ -128,8 +128,8 @@ Release: %{_release}
 
 # Extracted source tree structure (extracted in .../BUILD)
 #   projectroot           dashcore-0.14.0
-#      \_sourcetree         \_dash-0.14.0.0 or dashcore-0.14.0 or dash-0.14.0.0-rc1...
-#      \_binarytree         \_dashcore-0.14.0 or dash-0.14.0-rc1...
+#      \_sourcetree         \_dash-0.14.0.0 or dash-0.14.0.0-rc1...
+#      \_binarytree         \_dashcore-0.14.0
 #      \_srccontribtree     \_dashcore-0.14.0-contrib
 #      \_patch_files        \_dash-0.14.0-...patch
 #      \_blsarchive         \_bls-signatures-20181101.tar.gz
@@ -1087,6 +1087,9 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
+* Thu May 09 2019 Todd Warner <t0dd_at_protonmail.com> 0.14.0.0-0.2.rc5.taw
+  - 0.14 rc5
+
 * Sun Apr 14 2019 Todd Warner <t0dd_at_protonmail.com> 0.14.0.0-0.2.rc4.taw
   - 0.14 rc4
 
