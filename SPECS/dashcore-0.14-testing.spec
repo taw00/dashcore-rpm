@@ -36,7 +36,7 @@ Summary: Peer-to-peer, fungible, digital currency, protocol, and platform for pa
 
 # ie. if the dev team includes things like rc3 in the filename
 %undefine buildQualifier
-%define buildQualifier rc5
+%define buildQualifier rc6
 
 # VERSION
 %define vermajor 0.14
@@ -1087,6 +1087,9 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
+* Sun May 19 2019 Todd Warner <t0dd_at_protonmail.com> 0.14.0.0-0.2.rc6.taw
+  - 0.14 rc6
+
 * Thu May 09 2019 Todd Warner <t0dd_at_protonmail.com> 0.14.0.0-0.2.rc5.taw
   - 0.14 rc5
 
