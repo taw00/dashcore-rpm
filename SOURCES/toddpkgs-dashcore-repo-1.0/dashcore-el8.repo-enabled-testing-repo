@@ -9,39 +9,37 @@
 #
 # Install the RPM that will keep this file current:
 #   sudo rpm --import https://keybase.io/toddwarner/key.asc
-#   sudo yum install -y https://raw.githubusercontent.com/taw00/dashcore-rpm/master/toddpkgs-dashcore-repo-[...].rpm
+#   sudo dnf install -y https://raw.githubusercontent.com/taw00/dashcore-rpm/master/toddpkgs-dashcore-repo-[...].rpm
 #
 # List the dashcore packages now available
 #   sudo dnf list | grep dashcore
 #
 # To install, for example the GUI client, you would do this at the commandline:
-#   sudo yum install dashcore-client
+#   sudo dnf install dashcore-client
 #
 # To update already existing software
 # Note: check dash.org to see if there are special upgrade steps that need to be taken.
-#   sudo yum update
+#   sudo dnf upgrade
 #
-# To switch from one repository version to the next (example, testing to stable-12.3)...
-#   sudo yum repolist | grep dashcore
-#   sudo yum list | grep dashcore
-#   sudo yum-config-manager --disable dashcore-testing
-#   sudo yum-config-manager --enable dashcore-stable-12.3
+# To switch from one repository version to the next (example, testing to stable-0.14)...
+#   sudo dnf repolist | grep dashcore
+#   sudo dnf list | grep dashcore
+#   sudo dnf config-manager --disable dashcore-testing
+#   sudo dnf config-manager --enable dashcore-stable-0.14
+
 #
 # Feedback: t0dd_at_protonmail.com
 
-# Be aware... EL7 is currently unsupported as of 0.13.0. Migrate to Fedora.
-# This may change with EL8 later in 2019
-[dashcore-unsupported]
+# EL8 is currently unsupported. Migrate to Fedora.
+# This may change sometime in 2019
+[dashcore-unsupported-0.14]
 enabled=0
-name=Dash Core 0.13.0 - NOT SUPPORTED FOR THIS VERSION, MIGRATE TO FEDORA - epel-8-$basearch
-# Note: The testing repository always provides the latest packages regardless
-# of how major the upgrade. In contrast, release quality packages are divided
-# into their own per-major version repositories.
-baseurl=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-0.13.0/epel-8-$basearch/
+name=Dash Core 0.14 - NOT CURRENTLY SUPPORTED FOR THIS VERSION, MIGRATE TO FEDORA - epel-8-$basearch
+baseurl=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-0.14/epel-8-$basearch/
 type=rpm-md
 skip_if_unavailable=True
 gpgcheck=1
-gpgkey=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-0.13.0/pubkey.gpg
+gpgkey=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-0.14/pubkey.gpg
 repo_gpgcheck=0
 # Default metadata_expire is typically 2d (2 days)
 metadata_expire=60
@@ -72,19 +70,36 @@ enabled_metadata=0
 ## DEPRECATED or DECOMMISSIONED - don't use these anymore
 ##
 
-[dashcore-stable-12.3]
-enabled=0
-name=Dash Core 12.3 - stable, but deprecated - epel-8-$basearch
-baseurl=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.3/epel-8-$basearch/
-type=rpm-md
-skip_if_unavailable=True
-gpgcheck=1
-gpgkey=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.3/pubkey.gpg
-repo_gpgcheck=0
-metadata_expire=1d
-# leave this off, see
-# https://srvfail.com/packagekit-cant-find-file-in-var-cache-packagekit/
-enabled_metadata=0
+## RHEL/CentOS is unsupported as of 0.13.0. Migrate to Fedora.
+## This may change with EL8 later in 2019
+#[dashcore-unsupported-0.13]
+#enabled=0
+#name=Dash Core 0.13.0 - NOT SUPPORTED FOR THIS VERSION, MIGRATE TO FEDORA - epel-8-$basearch
+#baseurl=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-0.13.0/epel-8-$basearch/
+#type=rpm-md
+#skip_if_unavailable=True
+#gpgcheck=1
+#gpgkey=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-0.13.0/pubkey.gpg
+#repo_gpgcheck=0
+## Default metadata_expire is typically 2d (2 days)
+#metadata_expire=60
+## leave this off, see
+## https://srvfail.com/packagekit-cant-find-file-in-var-cache-packagekit/
+#enabled_metadata=0
+
+#[dashcore-stable-12.3]
+#enabled=1
+#name=Dash Core 12.3 - stable, but deprecated - epel-8-$basearch
+#baseurl=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.3/epel-8-$basearch/
+#type=rpm-md
+#skip_if_unavailable=True
+#gpgcheck=1
+#gpgkey=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.3/pubkey.gpg
+#repo_gpgcheck=0
+#metadata_expire=1d
+## leave this off, see
+## https://srvfail.com/packagekit-cant-find-file-in-var-cache-packagekit/
+#enabled_metadata=0
 
 #[dashcore-stable-12.2]
 #enabled=0

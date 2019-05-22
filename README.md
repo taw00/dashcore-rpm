@@ -1,22 +1,20 @@
 # Dash Core for Fedora Linux<br />_...wallet, node, and masternode_
 
-**Important notice (as of 2018-11-28):<br />EL7 and Fedora Linux 27 users need
-to migrate to Fedora Linux 29:**
+**Important notice:<br />EL7 and Fedora Linux 28 and older users need
+to migrate to Fedora Linux 29 or 30:**
 
-Dash Core 0.13.0 was released on January 14, 2019. As of that release, I will
-not be building Dash Core for EL7-based linuxes (CentOS7 and RHEL7) nor
-for Fedora Linux 27.
+Dash Core 0.14 was released on May 22, 2019.
 
-* EL7 is being dropped because the OS supplied libraries are simply far too
-  dated. Once EL8 comes out (May-ish 2019), Dash Core builds _should_ be
-  available on those platforms (currently EL8-beta is not building -- missing
-  packages)
-* As for Fedora Linux 27, it's EOL (end-of-life) as of November 30th, 2018.
+* RHEL7/CentOS7 were dropped because the OS supplied libraries are simply far too
+  dated. Once the build trees for EL8 comes out (sometime in 2019), Dash Core
+  builds _should_ be available on those platforms (EL8-beta is not building --
+  missing packages)
+* Fedora Linux 27 and 28 are EOL (end-of-life).
 
 Please move to the latest version of Fedora (as of today, that is Fedora Linux
-29 though 30 is in beta). Fedora upgrades are easy (see available documentation
+29 though 30). Fedora upgrades are easy (see available documentation
 in the "documentation" folder). RHEL/CentOS to Fedora migrations should be
-performed as fresh installs.
+performed as fresh installs (once and if available).
 
 ---
 

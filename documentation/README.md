@@ -40,7 +40,7 @@ the occasional update or upgrade.
 - Discussion about security: [Configure firewalld and fail2ban on a Dash Masternode](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.dashcore-node-security.md)
 - Troubleshooting: [Dash Core Troubleshooting Guide](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.dashcore-troubleshooting.md)
 - Updating: [How to update your wallet, node, or masternode](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.update-a-wallet-node-or-masternode.md)
-- Upgrading Major Versions: [How to upgrade from version 0.12.3 to 0.13.0](https://github.com/taw00/dashcore-rpm/blob/master/documentation/testing/howto.dashcore-upgrade-from-0.12.3-to-0.13.0.md)
+- Upgrading Major Versions: [How to upgrade from version 0.13 to 0.14](https://github.com/taw00/dashcore-rpm/blob/master/documentation/testing/howto.dashcore-upgrade-from-0.13-to-0.14.md)
 - Upgrading OS: [How to upgrade your masternode's operating system](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.upgrade-the-operating-system.md)
 
 

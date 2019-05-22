@@ -35,24 +35,25 @@ Summary: Peer-to-peer, fungible, digital currency, protocol, and platform for pa
 %define serverSourceIsBinary 0
 
 # ie. if the dev team includes things like rc3 in the filename
-%define buildQualifier rc11
+%define buildQualifier rc6
 %undefine buildQualifier
 
 # VERSION
-%define vermajor 0.13
-%define _verminor1 3
+%define vermajor 0.14
+%define _verminor1 0
 %define _verminor2 0
 %define verminor %{_verminor1}.%{_verminor2}
 Version: %{vermajor}.%{verminor}
 
 # RELEASE
-%define _pkgrel 2
+# package release (and for testing only, extrarel)
+%define _pkgrel 1
 %if ! %{targetIsProduction}
-  %define _pkgrel 1.1
+  %define _pkgrel 0.3
 %endif
 
 # MINORBUMP
-%define minorbump taw2
+%define minorbump taw
 #%%undefine minorbump
 
 #
@@ -116,21 +117,21 @@ Release: %{_release}
 # ----------- end of release building section
 
 # the archive name and directory tree can have some variances
-# v0.13.0.0
+# v0.14.0.0
 %define _archivename_alt1 v%{version}
-# dash-0.13.0.0
+# dash-0.14.0.0
 %define _archivename_alt2 %{_name_d}-%{version}
-# dashcore-0.13.0
+# dashcore-0.14.0
 %define _archivename_alt3 %{_name_dc}-%{vermajor}.%{_verminor1}
-# dashcore-0.13.0.0
+# dashcore-0.14.0.0
 %define _archivename_alt4 %{_name_dc}-%{version}
 
 # Extracted source tree structure (extracted in .../BUILD)
-#   projectroot           dashcore-0.13.2
-#      \_sourcetree         \_dash-0.13.2.0 or dashcore-0.13.2 or dash-0.13.2.0-rc2...
-#      \_binarytree         \_dashcore-0.13.2 or dash-0.13.2-rc2...
-#      \_srccontribtree     \_dashcore-0.13.2-contrib
-#      \_patch_files        \_dash-0.13.2-...patch
+#   projectroot           dashcore-0.14.0
+#      \_sourcetree         \_dash-0.14.0.0 or dash-0.14.0.0-rc1...
+#      \_binarytree         \_dashcore-0.14.0
+#      \_srccontribtree     \_dashcore-0.14.0-contrib
+#      \_patch_files        \_dash-0.14.0-...patch
 #      \_blsarchive         \_bls-signatures-20181101.tar.gz
 
 # our selection for this build - edit this
@@ -429,15 +430,16 @@ Learn more at www.dash.org.
 
 mkdir -p %{projectroot}
 # Source0: dashcore (source)
-## {_builddir}/dashcore-0.12.3/dashcore-0.12.3.0/  ..or something like..
-## {_builddir}/dash-0.13.0/dash-0.13.0.0-rc1/
+## {_builddir}/dashcore-0.14.0/dashcore-0.14.0.0/  ..or something like..
+## {_builddir}/dash-0.14.0/dash-0.14.0.0-rc1/
 %setup -q -T -D -a 0 -n %{projectroot}
 
 # Source1: contributions
-## {_builddir}/dashcore-0.12.3/dashcore-0.12.3-contrib/
+## {_builddir}/dashcore-0.14.0/dashcore-0.14.0-contrib/
 %setup -q -T -D -a 1 -n %{projectroot}
 
 # Source2: bls archive
+# Original: https://github.com/codablock/bls-signatures
 mkdir -p %{sourcetree}/depends/sources/
 # ---- rpmlint hates the use of {_sourcedir}, therefore...
 # OPTION 1 -- do it anyway...
@@ -1068,22 +1070,46 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Documentation: https://github.com/taw00/dashcore-rpm/tree/master/documentation
 #
 # The last major testnet effort...
-#   * Announcement: https://www.dash.org/forum/threads/v13-0-testing.41945/
+#   * Announcement: https://www.dash.org/forum/threads/v14-0-testing.44047/
 #   * Documentation:  
 #     https://docs.dash.org/en/latest/developers/testnet.html
 #     https://docs.dash.org/en/latest/masternodes/dip3-upgrade.html
+#     https://thephez.github.io/en/developer-reference
 #
 # Source snapshots...
 #     https://github.com/dashpay/dash/tags
 #     https://github.com/dashpay/dash/releases
-#     test example: dash-0.13.0.0-rc6.tar.gz
-#     release example: dash-0.13.0.0.tar.gz
+#     test example: dash-0.14.0.0-rc1.tar.gz
+#     release example: dash-0.14.0.0.tar.gz
 #
 # Dash Core git repos...
 #   * Dash: https://github.com/dashpay/dash
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
+* Wed May 22 2019 Todd Warner <t0dd_at_protonmail.com> 0.14.0.0-0.3.testing.taw
+  - 0.14
+
+* Sun May 19 2019 Todd Warner <t0dd_at_protonmail.com> 0.14.0.0-0.2.rc6.taw
+  - 0.14 rc6
+
+* Thu May 09 2019 Todd Warner <t0dd_at_protonmail.com> 0.14.0.0-0.2.rc5.taw
+  - 0.14 rc5
+
+* Sun Apr 14 2019 Todd Warner <t0dd_at_protonmail.com> 0.14.0.0-0.2.rc4.taw
+  - 0.14 rc4
+
+* Fri Apr 05 2019 Todd Warner <t0dd_at_protonmail.com> 0.14.0.0-0.2.rc3.taw
+  - 0.14 rc3
+
+* Thu Apr 04 2019 Todd Warner <t0dd_at_protonmail.com> 0.14.0.0-0.2.rc2.taw
+  - vermajor and verminor shifted a decimal point
+  - specfile cleanup
+  - patch management more correct in the case building client from binaries
+  - minor changes to prep for EL8 testing
+  - adjustments to allow rp (repackaged) binary builds to work again.
+
+* Thu Apr 04 2019 Todd Warner <t0dd_at_protonmail.com> 0.13.3.0-2.taw
 * Thu Apr 04 2019 Todd Warner <t0dd_at_protonmail.com> 0.13.3.0-1.1.testing.taw
   - adjustments to allow rp (repackaged) binary builds to work again.
 
@@ -1094,6 +1120,12 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
   - specfile cleanup
   - patch management more correct in the case building client from binaries
   - minor changes to prep for EL8 testing
+
+* Mon Apr 01 2019 Todd Warner <t0dd_at_protonmail.com> 0.14.0.0-0.1.rc2.taw
+  - 0.14.0.0-rc2
+
+* Thu Mar 28 2019 Todd Warner <t0dd_at_protonmail.com> 0.14.0.0-0.1.rc1.taw
+  - 0.14.0.0-rc1
 
 * Sat Mar 16 2019 Todd Warner <t0dd_at_protonmail.com> 0.13.2.0-1.taw
 * Sat Mar 16 2019 Todd Warner <t0dd_at_protonmail.com> 0.13.2.0-0.2.testing.taw

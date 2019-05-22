@@ -1,7 +1,7 @@
 # Dash Core for Fedora Linux<br />_...wallet, node, and masternode_
 
-**Important notice (as of 2018-11-28):<br />EL7 and Fedora Linux 27 users need
-to migrate to Fedora Linux 29:**
+**Important notice:<br />EL7 and Fedora Linux 28 and older users need
+to migrate to Fedora Linux 29 or 30:**
 
 This document describes what is available to Fedora Linux users seeking natively
 compiled Dash Core software. This document will also guide those users through
@@ -22,30 +22,11 @@ Assuming you are logging in as a normal user who has `sudo` priviledges.<br />
 At the terminal command line...
 
 ```bash
-# My system is Fedora...
 sudo rpm --import https://keybase.io/toddwarner/key.asc
 sudo dnf install -y https://raw.githubusercontent.com/taw00/dashcore-rpm/master/toddpkgs-dashcore-repo.fedora.rpm
 sudo dnf install -y dashcore-client --refresh
 dash-qt
 ```
-
-<!--
-...if using CentOS or RHEL
-
-Note: You have to first ensure you have the EPEL repositories configured: `sudo yum repolist enabled`  
-If you do not, browse to the [EPEL community page](https://fedoraproject.org/wiki/EPEL) and follow their installation instructions (it's easy).
-
-Then...
-
-```bash
-# My system is CentOS or RHEL
-sudo rpm --import https://keybase.io/toddwarner/key.asc
-sudo yum install -y https://raw.githubusercontent.com/taw00/dashcore-rpm/master/toddpkgs-dashcore-repo.el7.rpm
-sudo yum clean expire-cache
-sudo yum install -y dashcore-client
-dash-qt # Or browse your menuing system and look for "Dash"
-```
--->
 
 **Boom! Done!** You should now see a Dash Core Wallet graphical application
 open up on your screen and a reference to it in your desktop menus.
@@ -197,9 +178,10 @@ sudo dnf upgrade
 ```
 
 And then after the refreshed packages were updated, restart the wallet or
-`dashd`. Please note that for major upgrades, more actions may have to be taken
-for example, a masternode going from 0.12.3 to 0.13.0 requires a masternode
-restart (protocol change from 70210 to 70213).
+`dashd`. Please note that for SOME major upgrades, more actions may have to be
+taken for example, a masternode going from 0.12 to 0.13 requires a masternode
+restart (protocol change from 70210 to 70213). 0.13 to 0.14 does not need a
+masternode restart.
 
 
 #### Good luck!
@@ -241,7 +223,7 @@ you know what you are doing, I do not recommend you enable that repository.
 #### Q: What are all these packages?
 
 * **toddpkgs-dashcore-repo** -- this package enables automation of installation
-  and update of all the packages listed below via dnf or yum repository
+  and update of all the packages listed below via dnf repository
   configuration.
 
 * **dash-masternode-tool** -- A graphical desktop application that enables
