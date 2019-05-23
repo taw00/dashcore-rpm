@@ -35,17 +35,13 @@ sudo tail -f /var/lib/dashcore/debug.log
 sudo tail -f /var/lib/dashcore/testnet3/debug.log
 ```
 
-Watch these..
-```
-# General info
-watch -n10 "sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf getnetworkinfo"
-```
-
+Watch this..
 ```
 # Masternode sync status
 watch -n10 "sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf -datadir=/var/lib/dashcore mnsync status"
 ```
 
+<!--
 ```
 # What does the network think the status of your masternode is?
 # "ENABLED" is good.
@@ -53,6 +49,28 @@ watch -n10 "sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf -datadir=/va
 #   If you masternode is not fully synced and not communicating correctly, it
 #   will likely give you false information.
 sudo -u dashcore watch -n10 "dash-cli -conf=/etc/dashcore/dash.conf -datadir=/var/lib/dashcore masternode list full | grep <MASTERNODE_IP_ADDRESS>"
+```
+-->
+
+General info
+```
+sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf getnetworkinfo
+```
+
+General masternode status
+```
+sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf masternode status
+```
+
+
+Is your masternode "valid?"
+```
+sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf  protx list valid | grep <the 'proTxHash' value from 'dash-cli masternode status'>
+```
+
+How many masternodes are valid at the moment?
+```
+sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf protx list valid | wc -l
 ```
 
 Finally, watch the system journal. If `dashd` crashes, this is where you will really notice.
@@ -81,20 +99,16 @@ tail -f ~/.dashcore/debug.log
 tail -f ~/.dashcore/testnet3/debug.log
 ```
 
-Watch these..
-```
-# General info
-watch dash-cli getnetworkinfo
-```
-
+Watch this..
 ```
 # Masternode sync status
 watch dash-cli mnsync status
 ```
 
+<!--
+What does the network think the status of your masternode is?  
+"ENABLED" is good.
 ```
-# What does the network think the status of your masternode is?
-# "ENABLED" is good.
 # WARNING: It's better to verify this with a fully-synced wallet or other node.
 #   If you masternode is not fully synced and not communicating correctly, it
 #   will likely give you false information.
@@ -104,6 +118,27 @@ dash-cli masternode list full | grep <MASTERNODE_IP_ADDRESS>"
 How many masternodes are enabled at the moment?
 ```
 sudo -u dashcore watch -n15 "dash-cli -conf=/etc/dashcore/dash.conf masternode list full| grep ENABLED|grep -v PRE_ENABLED|wc -l"
+```
+-->
+
+General info
+```
+dash-cli getnetworkinfo
+```
+
+Masternode general status
+```
+dash-cli masternode status
+```
+
+Is your masternode "valid?"
+```
+dash-cli protx list valid | grep <the 'proTxHash' value from 'dash-cli masternode status'>
+```
+
+How many masternodes are valid at the moment?
+```
+dash-cli protx list valid | wc -l
 ```
 
 ---
