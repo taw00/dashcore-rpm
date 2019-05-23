@@ -65,7 +65,12 @@ sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf masternode status
 
 Is your masternode "valid?"
 ```
-sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf  protx list valid | grep <the 'proTxHash' value from 'dash-cli masternode status'>
+sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf protx list valid | grep <the 'proTxHash' value from 'dash-cli masternode status'>
+```
+
+More info on your masternode
+```
+sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf protx info <the 'proTxHash' value from 'dash-cli masternode status'>
 ```
 
 How many masternodes are valid at the moment?
@@ -78,6 +83,12 @@ Finally, watch the system journal. If `dashd` crashes, this is where you will re
 ```
 sudo journalctl -u dashd.service -f
 ```
+
+> **PROTIP:**  
+> Tired of typing that long `sudo -u dashcore` string? Add this to your `~/.bashrc` file:  
+> `alias dashcli="sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf -datadir=/var/lib/dashcore"`  
+> . . Do that, logout and log back in, and you can then do things like `dashcli masternode status`  
+> :)
 
 
 #### If configured for and operated by a "normal" user on the system...
