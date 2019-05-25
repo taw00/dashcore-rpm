@@ -36,20 +36,20 @@ Summary: Manage and collateralize a Dash Masternode with a hardware wallet
 %define targetIsProduction 1
 %define sourceIsBinary 0
 %define buildQualifier hotfix2
-#%%undefine buildQualifier
+%undefine buildQualifier
 
 # Package (RPM) name-version-release.
 # <name>-<vermajor.<verminor>-<pkgrel>[.<extraver>][.<snapinfo>].DIST[.<minorbump>]
 
 # VERSION
 %define vermajor 0.9
-%define verminor 23
+%define verminor 24
 Version: %{vermajor}.%{verminor}
 
 # RELEASE
-%define _pkgrel 3
+%define _pkgrel 1
 %if ! %{targetIsProduction}
-  %define _pkgrel 2.1
+  %define _pkgrel 0.1
 %endif
 
 # MINORBUMP
@@ -132,7 +132,8 @@ Release: %{_release}
 %if %{sourceIsBinary}
 Source0: https://github.com/Bertrand256/dash-masternode-tool/archive/v%{version}/%{binaryarchivename}.tar.gz
 %else
-Source0: https://github.com/Bertrand256/dash-masternode-tool/archive/v%{version}/%{sourcetree}.tar.gz
+# XXX: The "a" is temporary
+Source0: https://github.com/Bertrand256/dash-masternode-tool/archive/v%{version}/%{sourcetree}a.tar.gz
 %endif
 # dash-masternode-tool-0.9-contrib
 Source1: https://github.com/taw00/dashcore-rpm/blob/master/SOURCES/%{sourcetree_contrib}.tar.gz
@@ -228,6 +229,8 @@ cd ../.. ; /usr/bin/tree -df -L 2 BUILD ; cd -
 %endif
 
 %if ! %{sourceIsBinary}
+  # XXX: The "a" is temporary
+  mv %{sourcetree}a %{sourcetree}
   # My modified requirements a tad since we use the native QT libraries
   # and include btchip-python
   cp %{sourcetree_contrib}/build/requirements.txt %{sourcetree}/
@@ -367,6 +370,10 @@ cd ../../
 
 
 %changelog
+* Fri May 24 2019 Todd Warner <t0dd_at_protonmail.com> 0.9.24-1.taw
+* Fri May 24 2019 Todd Warner <t0dd_at_protonmail.com> 0.9.24-0.1.taw
+  - 0.9.24 (using 0.9.24a source tarball)
+
 * Sat May 04 2019 Todd Warner <t0dd_at_protonmail.com> 0.9.23-3.hotfix2.taw
 * Sat May 04 2019 Todd Warner <t0dd_at_protonmail.com> 0.9.23-2.1.hotfix2.taw
   - 0.9.23 hotfix2
