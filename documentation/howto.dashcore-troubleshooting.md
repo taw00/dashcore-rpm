@@ -65,12 +65,12 @@ sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf masternode status
 
 Is your masternode "valid?"
 ```
-sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf protx list valid | grep <the 'proTxHash' value from 'dash-cli masternode status'>
+sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf protx list valid | grep <the value of 'proTxHash' from 'dash-cli masternode status'>
 ```
 
 More info on your masternode
 ```
-sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf protx info <the 'proTxHash' value from 'dash-cli masternode status'>
+sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf protx info <the value of 'proTxHash' from 'dash-cli masternode status'>
 ```
 
 How many masternodes are valid at the moment?
@@ -148,7 +148,7 @@ dash-cli masternode status
 
 Is your masternode "valid?"
 ```
-dash-cli protx list valid | grep <the 'proTxHash' value from 'dash-cli masternode status'>
+dash-cli protx list valid | grep <the value of 'proTxHash' from 'dash-cli masternode status'>
 ```
 
 How many masternodes are valid at the moment?

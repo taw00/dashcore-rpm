@@ -32,7 +32,7 @@ sudo dnf list --refresh | grep dashcore
 - [[2] Update your repo configuration - switch to the new "stable" repo](#2-update-your-repo-configuration---switch-to-the-new-stable-repo)
 - [[3] Upgrade Dash Core binary packages](#3-upgrade-dash-core-binary-packages)
 - [[4] Start everything back up](#4-start-everything-back-up)
-- [[5] Masternodes: Monitor your status](#7-masternodes-monitor-your-status)
+- [[5] Masternodes: Monitor your status](#5-masternodes-monitor-your-status)
 - [Good luck! Comments and Feedback...](#good-luck-comments-and-feedback)
 
 <!-- TOC END -->
@@ -129,9 +129,10 @@ talk to me.
 
 ### [3] Upgrade Dash Core binary packages
 
+Dash Core and Sentinel
+
 ```
-# Upgrade Dash Core and Sentinel
-sudo dnf upgrade -y
+sudo dnf upgrade -y --refresh
 ```
 
 ### [4] Start everything back up
@@ -190,18 +191,17 @@ sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf -datadir=/var/lib/dashco
 ```
 # On masternode (systemd managed in these examples)...
 sudo systemctl status dashd
-sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf -datadir=/var/lib/dashcore getnetworkinfo
 sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf -datadir=/var/lib/dashcore mnsync status
-sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf -datadir=/var/lib/dashcore masternode debug
+sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf -datadir=/var/lib/dashcore getnetworkinfo
+sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf -datadir=/var/lib/dashcore masternode status
 sudo tail -f /var/log/dashcore/sentinel.log
 sudo tail -f /var/log/dashcore/debug.log
 ```
 
 ```
 # On collateralizing wallet (open Tools > Debug console)...
-protx list
 protx list valid
-protx info "<value of 'protx list'>"
+protx info "<the value of 'proTxHash' from 'dash-cli masternode status>"
 masternode list-conf
 ```
 
@@ -210,6 +210,17 @@ masternode list-conf
 
 It really isn't hard. It's all about attention to detail. If you mess up. Just
 try again.
+
+
+## PROTIP
+
+Tired of typing that long `sudo -u dashcore` string? Add this to your `~/.bashrc` file:  
+```
+alias dashcli="sudo -u dashcore dash-cli -conf=/etc/dashcore/dash.conf -datadir=/var/lib/dashcore"`  
+```  
+Do that, then logout and log back in (or `source ~/.bashrc`) and then you can do things like: `dashcli masternode status`  
+:)
+
 
 ---
 
