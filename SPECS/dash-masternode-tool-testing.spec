@@ -43,7 +43,7 @@ Summary: Manage and collateralize a Dash Masternode with a hardware wallet
 
 # VERSION
 %define vermajor 0.9
-%define verminor 24
+%define verminor 25
 Version: %{vermajor}.%{verminor}
 
 # RELEASE
@@ -133,7 +133,8 @@ Release: %{_release}
 Source0: https://github.com/Bertrand256/dash-masternode-tool/archive/v%{version}/%{binaryarchivename}.tar.gz
 %else
 # XXX: The "a" is temporary
-Source0: https://github.com/Bertrand256/dash-masternode-tool/archive/v%{version}/%{sourcetree}a.tar.gz
+#Source0: https://github.com/Bertrand256/dash-masternode-tool/archive/v%%{version}/%%{sourcetree}a.tar.gz
+Source0: https://github.com/Bertrand256/dash-masternode-tool/archive/v%{version}/%{sourcetree}.tar.gz
 %endif
 # dash-masternode-tool-0.9-contrib
 Source1: https://github.com/taw00/dashcore-rpm/blob/master/SOURCES/%{sourcetree_contrib}.tar.gz
@@ -230,7 +231,8 @@ cd ../.. ; /usr/bin/tree -df -L 2 BUILD ; cd -
 
 %if ! %{sourceIsBinary}
   # XXX: The "a" is temporary
-  mv %{sourcetree}a %{sourcetree}
+  #mv %%{sourcetree}a %%{sourcetree}
+
   # My modified requirements a tad since we use the native QT libraries
   # and include btchip-python
   cp %{sourcetree_contrib}/build/requirements.txt %{sourcetree}/
@@ -370,6 +372,9 @@ cd ../../
 
 
 %changelog
+* Tue Jul 02 2019 Todd Warner <t0dd_at_protonmail.com> 0.9.25-0.1.taw
+  - 0.9.25
+
 * Fri May 24 2019 Todd Warner <t0dd_at_protonmail.com> 0.9.24-1.taw
 * Fri May 24 2019 Todd Warner <t0dd_at_protonmail.com> 0.9.24-0.1.taw
   - 0.9.24 (using 0.9.24a source tarball)
