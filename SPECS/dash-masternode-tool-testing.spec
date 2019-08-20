@@ -36,21 +36,21 @@ Summary: Manage and collateralize a Dash Masternode with a hardware wallet
 %define targetIsProduction 1
 %define sourceIsBinary 0
 
-%undefine buildQualifier
 %define buildQualifier hotfix2
+%undefine buildQualifier
 
 # Package (RPM) name-version-release.
 # <name>-<vermajor.<verminor>-<pkgrel>[.<extraver>][.<snapinfo>].DIST[.<minorbump>]
 
 # VERSION
 %define vermajor 0.9
-%define verminor 25
+%define verminor 26
 Version: %{vermajor}.%{verminor}
 
 # RELEASE
-%define _pkgrel 3
+%define _pkgrel 1
 %if ! %{targetIsProduction}
-  %define _pkgrel 2.1
+  %define _pkgrel 0.1
 %endif
 
 # MINORBUMP
@@ -373,8 +373,12 @@ cd ../../
 
 
 %changelog
-* Thu Jul 18 2019 Todd Warner <t0dd_at_protonmail.com> 0.9.25-3.hotfix1.taw
-* Thu Jul 18 2019 Todd Warner <t0dd_at_protonmail.com> 0.9.25-2.1.hotfix1.taw
+* Tue Aug 20 2019 Todd Warner <t0dd_at_protonmail.com> 0.9.26-1.taw
+* Tue Aug 20 2019 Todd Warner <t0dd_at_protonmail.com> 0.9.26-0.1.testing.taw
+  - 0.9.26
+
+* Thu Jul 18 2019 Todd Warner <t0dd_at_protonmail.com> 0.9.25-3.hotfix2.taw
+* Thu Jul 18 2019 Todd Warner <t0dd_at_protonmail.com> 0.9.25-2.1.hotfix2.taw
   - 0.9.25 hotfix2
 
 * Fri Jul 12 2019 Todd Warner <t0dd_at_protonmail.com> 0.9.25-2.hotfix1.taw
