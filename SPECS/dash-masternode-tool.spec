@@ -48,9 +48,9 @@ Summary: Manage and collateralize a Dash Masternode with a hardware wallet
 Version: %{vermajor}.%{verminor}
 
 # RELEASE
-%define _pkgrel 3
+%define _pkgrel 4
 %if ! %{targetIsProduction}
-  %define _pkgrel 2.1
+  %define _pkgrel 3.1
 %endif
 
 # MINORBUMP
@@ -237,6 +237,7 @@ cd ../.. ; /usr/bin/tree -df -L 2 BUILD ; cd -
   # My modified requirements a tad since we use the native QT libraries
   # and include btchip-python
   cp %{sourcetree_contrib}/build/requirements.txt %{sourcetree}/
+  cp %{sourcetree_contrib}/build/version.txt %{sourcetree}/
 
   [ -f /usr/bin/virtualenv-3 ] && /usr/bin/virtualenv-3 -p python3 ./venv || /usr/bin/virtualenv -p python3 ./venv
   . ./venv/bin/activate
@@ -373,6 +374,13 @@ cd ../../
 
 
 %changelog
+* Thu Oct 03 2019 Todd Warner <t0dd_at_protonmail.com> 0.9.26-4.hotfix2.taw
+* Thu Oct 03 2019 Todd Warner <t0dd_at_protonmail.com> 0.9.26-3.1.hotfix2.taw
+  - updated requirements.txt
+  - version.txt file is always unreliable so I update it manually with this  
+    version build. In the future, I need to edit this in place with sed. But  
+    not today.
+
 * Thu Oct 03 2019 Todd Warner <t0dd_at_protonmail.com> 0.9.26-3.hotfix2.taw
 * Thu Oct 03 2019 Todd Warner <t0dd_at_protonmail.com> 0.9.26-2.1.hotfix2.taw
 * Thu Aug 22 2019 Todd Warner <t0dd_at_protonmail.com> 0.9.26-2.hotfix1.taw
@@ -380,6 +388,10 @@ cd ../../
 * Tue Aug 20 2019 Todd Warner <t0dd_at_protonmail.com> 0.9.26-1.taw
 * Tue Aug 20 2019 Todd Warner <t0dd_at_protonmail.com> 0.9.26-0.1.testing.taw
   - 0.9.26
+  - 0.9.26-3.1 and -4 hotfix2 builds: updated requirements.txt
+  - 0.9.26-3.1 and -4 hotfix2 builds: version.txt file is always unreliable  
+    so I update it manually with this version build. In the future, I need to
+    edit this in place with sed. But not today.
 
 * Thu Jul 18 2019 Todd Warner <t0dd_at_protonmail.com> 0.9.25-3.hotfix2.taw
 * Thu Jul 18 2019 Todd Warner <t0dd_at_protonmail.com> 0.9.25-2.1.hotfix2.taw
