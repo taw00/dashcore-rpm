@@ -1,13 +1,16 @@
 # Dash Core for Fedora Linux<br />_...wallet, node, and masternode_
 
-**Important notice:<br />EL7 and Fedora Linux 28 and older users need
-to migrate to Fedora Linux 29 or 30:**
+**Important notice:**
+* Dash Core RPMs: EL7 and Fedora Linux 28 and older users need to migrate to
+  Fedora Linux 29 or 30. EL8 is currently being tested (and fails). Fedora
+  Linux 31 is currently in beta but things _seem_ to be stable.
+* Dash Masternode Tool: DMT will remain Fedora-only! except for test builds.
 
-This document describes what is available to Fedora Linux users seeking natively
-compiled Dash Core software. This document will also guide those users through
-the process of configuring their systems to easily install, verify, and update
-that software. Once configured, updating Dash Core software will be just as
-trivial as updating the rest of their system.
+This document describes what is available to Fedora and RHEL8/CentOS8 Linux
+users seeking natively compiled Dash Core software. This document will also
+guide those users through the process of configuring their systems to easily
+install, verify, and update that software. Once configured, updating Dash Core
+software will be just as trivial as updating the rest of their system.
 
 > What is Dash? [dash.org](https://dash.org/), [official documentation](https://docs.dash.org)<br />
 > What is a Masternode? <https://docs.dash.org/en/latest/masternodes/index.html><br />
@@ -22,6 +25,7 @@ Assuming you are logging in as a normal user who has `sudo` priviledges.<br />
 At the terminal command line...
 
 ```bash
+# Fedora only at the moment
 sudo rpm --import https://keybase.io/toddwarner/key.asc
 sudo dnf install -y https://raw.githubusercontent.com/taw00/dashcore-rpm/master/toddpkgs-dashcore-repo.fedora.rpm
 sudo dnf install -y dashcore-client --refresh
@@ -45,6 +49,7 @@ who has `sudo` priviledges.
 At the terminal command line...
 
 ```bash
+# Fedora only at the moment
 sudo rpm --import https://keybase.io/toddwarner/key.asc
 sudo dnf install -y https://raw.githubusercontent.com/taw00/dashcore-rpm/master/toddpkgs-dashcore-repo.fedora.rpm
 sudo dnf install -y dash-masternode-tool --refresh
