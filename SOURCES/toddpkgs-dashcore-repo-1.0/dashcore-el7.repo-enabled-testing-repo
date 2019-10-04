@@ -53,10 +53,10 @@ enabled_metadata=0
 ## DEPRECATED or DECOMMISSIONED - don't use these 
 ##
 
-## EL7 is unsupported. Migrate to Fedora.
+## EL7 is unsupported. Migrate to Fedora or EL8 if available.
 #[dashcore-unsupported-0.14]
 #enabled=0
-#name=Dash Core 0.14 - NOT CURRENTLY SUPPORTED FOR THIS VERSION, MIGRATE TO FEDORA - epel-7-$basearch
+#name=Dash Core 0.14 - NOT CURRENTLY SUPPORTED FOR THIS VERSION - epel-7-$basearch
 #baseurl=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-0.14/epel-8-$basearch/
 #type=rpm-md
 #skip_if_unavailable=True
@@ -69,11 +69,10 @@ enabled_metadata=0
 ## https://srvfail.com/packagekit-cant-find-file-in-var-cache-packagekit/
 #enabled_metadata=0
 
-## EL7 is unsupported as of 0.13.0. Migrate to Fedora.
-## This may change with EL8 later in 2019
+## EL7 is unsupported. Migrate to Fedora or EL8 if available.
 #[dashcore-unsupported-0.13]
 #enabled=0
-#name=Dash Core 0.13.0 - NOT SUPPORTED FOR THIS VERSION, MIGRATE TO FEDORA - epel-7-$basearch
+#name=Dash Core 0.13.0 - NOT SUPPORTED FOR THIS VERSION - epel-7-$basearch
 #baseurl=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-0.13.0/epel-7-$basearch/
 #type=rpm-md
 #skip_if_unavailable=True
@@ -154,5 +153,4 @@ enabled_metadata=0
 #gpgkey=https://keybase.io/toddwarner/key.asc
 #skip_if_unavailable=True
 #enabled=0
-
 

@@ -30,11 +30,9 @@
 #
 # Feedback: t0dd_at_protonmail.com
 
-# EL8 is currently unsupported. Migrate to Fedora.
-# This may change sometime in 2019
 [dashcore-unsupported-0.14]
 enabled=0
-name=Dash Core 0.14 - NOT CURRENTLY SUPPORTED FOR THIS VERSION, MIGRATE TO FEDORA - epel-8-$basearch
+name=Dash Core 0.14 - NOT CURRENTLY SUPPORTED FOR THIS VERSION - epel-8-$basearch
 baseurl=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-0.14/epel-8-$basearch/
 type=rpm-md
 skip_if_unavailable=True
@@ -70,12 +68,11 @@ enabled_metadata=0
 ## DEPRECATED or DECOMMISSIONED - don't use these anymore
 ##
 
-## RHEL/CentOS is unsupported as of 0.13.0. Migrate to Fedora.
-## This may change with EL8 later in 2019
+## RHEL7/CentOS7 is unsupported as of 0.13.0. Migrate to Fedora or EL8 if available.
 #[dashcore-unsupported-0.13]
 #enabled=0
-#name=Dash Core 0.13.0 - NOT SUPPORTED FOR THIS VERSION, MIGRATE TO FEDORA - epel-8-$basearch
-#baseurl=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-0.13.0/epel-8-$basearch/
+#name=Dash Core 0.13.0 - NOT SUPPORTED FOR THIS VERSION - epel-7-$basearch
+#baseurl=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-0.13.0/epel-7-$basearch/
 #type=rpm-md
 #skip_if_unavailable=True
 #gpgcheck=1
@@ -89,8 +86,8 @@ enabled_metadata=0
 
 #[dashcore-stable-12.3]
 #enabled=1
-#name=Dash Core 12.3 - stable, but deprecated - epel-8-$basearch
-#baseurl=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.3/epel-8-$basearch/
+#name=Dash Core 12.3 - stable, but deprecated - epel-7-$basearch
+#baseurl=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.3/epel-7-$basearch/
 #type=rpm-md
 #skip_if_unavailable=True
 #gpgcheck=1
@@ -103,8 +100,8 @@ enabled_metadata=0
 
 #[dashcore-stable-12.2]
 #enabled=0
-#name=Dash Core 12.2 - stable-deprecated - epel-8-$basearch
-#baseurl=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.2/epel-8-$basearch/
+#name=Dash Core 12.2 - stable-deprecated - epel-7-$basearch
+#baseurl=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.2/epel-7-$basearch/
 #type=rpm-md
 #skip_if_unavailable=True
 #gpgcheck=1
@@ -117,9 +114,9 @@ enabled_metadata=0
 #enabled_metadata=0
 
 #[dashcore-stable-12.1]
-#name=Dash Core 12.1 - deprecated - epel-8-$basearch
+#name=Dash Core 12.1 - deprecated - epel-7-$basearch
 ## Note: SRPMs (*.src.rpm files) are mingled with the binaries. It's just how Copr does it.
-#baseurl=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.1/epel-8-$basearch/
+#baseurl=https://copr-be.cloud.fedoraproject.org/results/taw/dashcore-12.1/epel-7-$basearch/
 #type=rpm-md
 #skip_if_unavailable=True
 #gpgcheck=1
@@ -133,7 +130,7 @@ enabled_metadata=0
 #enabled_metadata=0
 
 #[dashcore-testing-old]
-#name=Dash Core - NOT USED ANYMORE - TESTING from Keybase Repos - epel-8-$basearch
+#name=Dash Core - NOT USED ANYMORE - TESTING from Keybase Repos - epel-7-$basearch
 #baseurl=https://toddwarner.keybase.pub/repo/dashcore/testing/epel/8/$basearch/
 #type=rpm-md
 ## Checks for new test packages more often than the default 2d (2 days)
@@ -145,7 +142,7 @@ enabled_metadata=0
 #enabled=0
 
 #[dashcore-testing-source-old]
-#name=Dash Core - NOT USED ANYMORE - TESTING source from Keybase Repos - epel-8-$basearch
+#name=Dash Core - NOT USED ANYMORE - TESTING source from Keybase Repos - epel-7-$basearch
 #baseurl=https://toddwarner.keybase.pub/repo/dashcore/testing/epel/8/source/
 #type=rpm-md
 ## Checks for new test packages more often than the default 2d (2 days)
