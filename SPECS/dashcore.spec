@@ -41,7 +41,7 @@ Summary: Peer-to-peer, fungible, digital currency, protocol, and platform for pa
 # VERSION
 %define vermajor 0.14
 %define _verminor1 0
-%define _verminor2 3
+%define _verminor2 4
 %define verminor %{_verminor1}.%{_verminor2}
 Version: %{vermajor}.%{verminor}
 
@@ -1087,6 +1087,12 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
+* Fri Nov 22 2019 Todd Warner <t0dd_at_protonmail.com> 0.14.0.4-1.taw
+* Fri Nov 22 2019 Todd Warner <t0dd_at_protonmail.com> 0.14.0.4-1.rp.taw
+* Fri Nov 22 2019 Todd Warner <t0dd_at_protonmail.com> 0.14.0.4-0.1.testing.taw
+* Fri Nov 22 2019 Todd Warner <t0dd_at_protonmail.com> 0.14.0.4-0.1.testing.rp.taw
+  - 0.14.0.4
+
 * Thu Aug 15 2019 Todd Warner <t0dd_at_protonmail.com> 0.14.0.3-1.taw
 * Thu Aug 15 2019 Todd Warner <t0dd_at_protonmail.com> 0.14.0.3-0.1.testing.rp.taw
 * Thu Aug 15 2019 Todd Warner <t0dd_at_protonmail.com> 0.14.0.3-0.1.testing.taw
