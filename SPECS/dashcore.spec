@@ -41,7 +41,7 @@ Summary: Peer-to-peer, fungible, digital currency, protocol, and platform for pa
 # VERSION
 %define vermajor 0.14
 %define _verminor1 0
-%define _verminor2 4
+%define _verminor2 5
 %define verminor %{_verminor1}.%{_verminor2}
 Version: %{vermajor}.%{verminor}
 
@@ -1087,21 +1087,26 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
+* Mon Dec 9 2019 Todd Warner <t0dd_at_protonmail.com> 0.14.0.5-1.taw
+* Mon Dec 9 2019 Todd Warner <t0dd_at_protonmail.com> 0.14.0.5-1.rp.taw
+* Mon Dec 9 2019 Todd Warner <t0dd_at_protonmail.com> 0.14.0.5-0.1.testing.taw
+* Mon Dec 9 2019 Todd Warner <t0dd_at_protonmail.com> 0.14.0.5-0.1.testing.rp.taw
+  - 0.14.0.5 -- repackaged (rp) builds are EL8 only.
+
 * Fri Nov 22 2019 Todd Warner <t0dd_at_protonmail.com> 0.14.0.4-1.taw
-* Fri Nov 22 2019 Todd Warner <t0dd_at_protonmail.com> 0.14.0.4-1.rp.taw
 * Fri Nov 22 2019 Todd Warner <t0dd_at_protonmail.com> 0.14.0.4-0.1.testing.taw
 * Fri Nov 22 2019 Todd Warner <t0dd_at_protonmail.com> 0.14.0.4-0.1.testing.rp.taw
-  - 0.14.0.4
+  - 0.14.0.4 -- repackaged (rp) builds are EL8 only.
 
 * Thu Aug 15 2019 Todd Warner <t0dd_at_protonmail.com> 0.14.0.3-1.taw
 * Thu Aug 15 2019 Todd Warner <t0dd_at_protonmail.com> 0.14.0.3-0.1.testing.rp.taw
 * Thu Aug 15 2019 Todd Warner <t0dd_at_protonmail.com> 0.14.0.3-0.1.testing.taw
-  - 0.14.0.3
+  - 0.14.0.3 -- repackaged (rp) builds are EL8 only.
 
 * Thu Jul 04 2019 Todd Warner <t0dd_at_protonmail.com> 0.14.0.2-1.taw
 * Thu Jul 04 2019 Todd Warner <t0dd_at_protonmail.com> 0.14.0.2-0.1.testing.rp.taw
 * Thu Jul 04 2019 Todd Warner <t0dd_at_protonmail.com> 0.14.0.2-0.1.testing.taw
-  - 0.14.0.2
+  - 0.14.0.2 -- repackaged (rp) builds are EL8 only.
 
 * Fri May 31 2019 Todd Warner <t0dd_at_protonmail.com> 0.14.0.1-1.taw
 * Fri May 31 2019 Todd Warner <t0dd_at_protonmail.com> 0.14.0.1-0.1.testing.taw
