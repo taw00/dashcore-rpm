@@ -37,7 +37,7 @@ schedule time to upgrade keeping up with the latest.
 
 Upgrading the operating system from one major version to the next takes me
 approximately 5 minutes to perform (speed of internet connection dependent). And
-the instructions can't be much simpler. This example uses Fedora 29 as the
+the instructions can't be much simpler. This example uses Fedora 31 as the
 target version of the upgrade.
 
 1. Update your current version of Fedora to all its latest packages.
@@ -50,28 +50,17 @@ sudo flatpak update
 sudo dnf clean packages
 ```
 
-2. Perform the upgrade (Example: upgrading to Fedora Linux 29)
+2. Perform the upgrade (Example: upgrading to Fedora Linux 31)
 
 ```
 # Download upgrade package.
 sudo dnf install dnf-plugin-system-upgrade -y
-# Download upgraded packages (using F29 as the example target OS version)
-sudo dnf system-upgrade download --refresh -y --releasever=29
-# Upgrade!
+# Download upgraded packages (using F31 as the example target OS version)
+sudo dnf system-upgrade download --refresh -y --releasever=31
+# Upgrade (after stopping the masternode (pedantic and not required))
+#sudo systemctl stop dashcore
 sudo dnf system-upgrade reboot
 ```
-<!-- pedantic version.
-```
-# Download upgrade package.
-sudo dnf install dnf-plugin-system-upgrade -y
-# Download upgraded packages (using F29 as the example target OS version)
-sudo dnf system-upgrade download --refresh -y --releasever=29
-# Stop the masternode -- not really needed, but we are being pedantic
-sudo systemctl stop dashcore
-# Upgrade!
-sudo dnf system-upgrade reboot
-```
--->
 
 3. Log back in and check the status.
 
