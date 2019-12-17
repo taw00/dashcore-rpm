@@ -16,9 +16,9 @@
    id="svg2176"
    inkscape:version="0.92.4 (unknown)"
    sodipodi:docname="dash-HighContrast-scalable.svg"
-   inkscape:export-filename="dash-HighContrast-256.png"
-   inkscape:export-xdpi="92.389999"
-   inkscape:export-ydpi="92.389999">
+   inkscape:export-filename="dash-HighContrast-64.png"
+   inkscape:export-xdpi="23.1"
+   inkscape:export-ydpi="23.1">
   <defs
      id="defs2170">
     <clipPath
@@ -38,8 +38,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="3.2460671"
-     inkscape:cx="121.18379"
-     inkscape:cy="143.93631"
+     inkscape:cx="24.451347"
+     inkscape:cy="143.32018"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -58,7 +58,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
