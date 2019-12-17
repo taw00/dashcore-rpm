@@ -1,5 +1,5 @@
 # Replaces packages.mk in core depends tree.
-# E.g. dash-0.13.0.0/depends/packages/packages.mk
+# E.g. dash-0.14.0.0/depends/packages/packages.mk
 # We are attempting to force the build to use OS supplied packages.
 #t0dd: we replace all packages with OS delivered packages except for chia_bls
 packages := chia_bls
