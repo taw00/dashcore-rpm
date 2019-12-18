@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- dashcore-rpc.xml
+     Location if installed by an rpm: /usr/lib/firewalld/
+     Location if installed by a human: /etc/firewalld/services/ -->
+<service>
+  <short>Dash Core Full Node or Masternode - default RPC Port</short>
+  <description>Dash (Digital Cash) is an open source peer-to-peer
+  cryptocurrency that offers instant transactions (InstantSend), private
+  transactions (PrivateSend) and token fungibility.
+  
+  A Dash Full Node is a un-collatoralized member of a decentralized network of
+  servers that validate transactions and blocks. A Dash Masternode is a member
+  of a network of incentivized servers that perform expanded critical services
+  for the Dash cryptocurrency protocol.</description>
+  <port protocol="tcp" port="9998"/>
+</service>

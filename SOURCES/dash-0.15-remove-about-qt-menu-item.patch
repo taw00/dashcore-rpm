@@ -1,0 +1,13 @@
+diff -urN dash-0.14.0.4.orig/src/qt/bitcoingui.cpp dash-0.14.0.4/src/qt/bitcoingui.cpp
+--- dash-0.14.0.4.orig/src/qt/bitcoingui.cpp	2019-11-21 09:45:44.000000000 -0500
++++ dash-0.14.0.4/src/qt/bitcoingui.cpp	2019-11-22 16:02:02.527821292 -0500
+@@ -552,7 +552,8 @@
+     help->addAction(showPrivateSendHelpAction);
+     help->addSeparator();
+     help->addAction(aboutAction);
+-    help->addAction(aboutQtAction);
++    // "About QT" is "implementation detail" -- commenting out -t0dd
++    //help->addAction(aboutQtAction);
+ }
+ 
+ void BitcoinGUI::createToolBars()
