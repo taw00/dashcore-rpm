@@ -1,16 +1,15 @@
 # Dash Core for Fedora Linux<br />_...wallet, node, and masternode_
 
 **Important notice:**
-* Dash Core RPMs: EL7 and Fedora Linux 28 and older users need to migrate to
-  Fedora Linux 29 or 30. EL8 is currently being tested (and fails). Fedora
-  Linux 31 is currently in beta but things _seem_ to be stable.
+* Dash Core RPMs: EL7 and Fedora Linux 29 and older users need to migrate to
+  Fedora Linux 31 or later. EL8 is currently being tested.
 * Dash Masternode Tool: DMT will remain Fedora-only! except for test builds.
 
-This document describes what is available to Fedora and RHEL8/CentOS8 Linux
-users seeking natively compiled Dash Core software. This document will also
-guide those users through the process of configuring their systems to easily
-install, verify, and update that software. Once configured, updating Dash Core
-software will be just as trivial as updating the rest of their system.
+This document describes what is available to Fedora and EL8 Linux users seeking
+natively compiled Dash Core software. This document will also guide those users
+through the process of configuring their systems to easily install, verify, and
+update that software. Once configured, updating Dash Core software will be just
+as trivial as updating the rest of their system.
 
 > What is Dash? [dash.org](https://dash.org/), [official documentation](https://docs.dash.org)<br />
 > What is a Masternode? <https://docs.dash.org/en/latest/masternodes/index.html><br />
@@ -184,8 +183,8 @@ sudo dnf upgrade
 
 And then after the refreshed packages were updated, restart the wallet or
 `dashd`. Please note that for SOME major upgrades, more actions may have to be
-taken for example, a masternode going from 0.12 to 0.13 requires a masternode
-restart (protocol change from 70210 to 70213). 0.13 to 0.14 does not need a
+taken for example, a masternode going from 0.12 to 0.13 required a masternode
+restart (protocol change from 70210 to 70213). 0.13 to 0.14 did not need a
 masternode restart.
 
 
