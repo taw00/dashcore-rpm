@@ -40,8 +40,10 @@ Summary: Peer-to-peer, fungible, digital currency, protocol, and platform for pa
 # Include bls-signatures (chia_bls) from https://github.com/codablock/bls-signatures
 # and libbacktrace (backtrace) from https://github.com/rust-lang-nursery/libbacktrace
 # as source and included in the src tarball?
+# miniupnpc source is only for EL8 builds
 %define useBLSSignatureSource 1
 %define useLibBacktraceSource 1
+%define useMiniUPNPCSource 1
 
 # ie. if the dev team includes things like rc3 in the filename
 %undefine buildQualifier
@@ -63,7 +65,7 @@ Version: %{vermajor}.%{verminor}
 # package release (and for testing only, extrarel)
 %define _pkgrel 1
 %if ! %{targetIsProduction}
-  %define _pkgrel 0.1
+  %define _pkgrel 0.2
 %endif
 
 # MINORBUMP
@@ -178,6 +180,10 @@ Release: %{_release}
 %define blsarchivename bls-signatures-%{blsarchivedate}
 %define libbacktracearchiveversion rust-snapshot-2018-05-22
 %define libbacktracearchivename libbacktrace-%{libbacktracearchiveversion}
+%define miniupnpcversion 2.0.20170509
+%define miniupnpcarchivename miniupnpc-%{miniupnpcversion}
+%define bdbarchiveversion 4.8.30.NC
+%define bdbarchivename db-%{bdbarchiveversion}
 
 %define projectroot %{name}-%{vermajor}
 %define srccontribtree %{name}-%{vermajor}-contrib
@@ -187,8 +193,11 @@ Source0: https://github.com/dashpay/dash/archive/v%{versionqualified}/%{sourcear
 Source1: https://github.com/taw00/dashcore-rpm/blob/master/SOURCES/%{srccontribtree}.tar.gz
 Source2: https://github.com/taw00/dashcore-rpm/blob/master/SOURCES/%{blsarchivename}.tar.gz
 Source3: https://github.com/rust-lang-nursery/libbacktrace/archive/%{libbacktracearchiveversion}/%{libbacktracearchivename}.tar.gz
+# Source4 and Source5 are for EL8 only
+Source4: http://miniupnp.free.fr/files/%{miniupnpcarchivename}.tar.gz
+Source5: https://download.oracle.com/berkeley-db/%{bdbarchivename}.tar.gz
 %if %{clientSourceIsBinary} || %{serverSourceIsBinary}
-Source4: https://github.com/dashpay/dash/archive/v%{versionqualified}/%{binaryarchivename}-x86_64-linux-gnu.tar.gz
+Source6: https://github.com/dashpay/dash/archive/v%{versionqualified}/%{binaryarchivename}-x86_64-linux-gnu.tar.gz
 %endif
 %if %{buildFromSource}
 # nuke "About QT" in the client source.
@@ -235,11 +244,15 @@ BuildRequires: python3
 #
 # these avoid unneccessary fetching of libraries from the internet
 # which is a packaging no-no:
-BuildRequires: libdb4-cxx-devel gettext
+BuildRequires: gettext
 BuildRequires: openssl-devel boost-devel libevent-devel
-BuildRequires: miniupnpc-devel ccache
+BuildRequires: ccache
 # t0dd: added to satisfy chia_bls. still needed for 0.15???
 BuildRequires: gmp-devel
+%if 0%{?fedora}
+# Note, EL8 uses a downloaded dependency since EL8 does not provide this pkg.
+BuildRequires: libdb4-cxx-devel miniupnpc-devel
+%endif
 %endif
 %endif
 
@@ -463,6 +476,8 @@ mkdir -p %{projectroot}
 
 # Source2: bls (chai_bls) archive
 # Source3: libbacktrace (backtrace) archive
+# Source4: miniupnpc archive
+# Source5: bdb archive
 # {_sourcedir} == ../../SOURCES/ but rpmlint hates use of {_sourcedir}
 # Moving the supplied tarballs from {_sourcedir} to their desired locations
 %if %{buildFromSource}
@@ -474,11 +489,16 @@ mv ../../SOURCES/%{blsarchivename}.tar.gz %{sourcetree}/depends/sources/v%{blsar
 mkdir -p %{sourcetree}/depends/sources/
 mv ../../SOURCES/%{libbacktracearchivename}.tar.gz %{sourcetree}/depends/sources/%{libbacktracearchiveversion}.tar.gz
 %endif
+%if %{useMiniUPNPCSource} && 0%{?rhel:1}
+mkdir -p %{sourcetree}/depends/sources/
+mv ../../SOURCES/%{miniupnpcarchivename}.tar.gz %{sourcetree}/depends/sources/%{miniupnpcarchivename}.tar.gz
+mv ../../SOURCES/%{bdbarchivename}.tar.gz %{sourcetree}/depends/sources/%{bdbarchivename}.tar.gz
+%endif
 %endif
 
-# Source4: dashcore (binary)
+# Source6: dashcore (binary)
 %if ! %{buildFromSource}
-%setup -q -T -D -a 4 -n %{projectroot}
+%setup -q -T -D -a 6 {projectroot}
 %endif
 
 # Patch0: get rid of that annoying "About QT" menu option
@@ -502,6 +522,9 @@ cp -a %{srccontribtree}/extras/pixmaps/*.??? %{sourcetree}/share/pixmaps/
 # Swap out packages.mk and chia_bls.mk makefiles in order to force usage of
 # OS native devel libraries and tools.
 cp -a %{srccontribtree}/build/depends/packages/*.mk %{sourcetree}/depends/packages/
+%if 0%{?rhel:1}
+cp -a %{srccontribtree}/build/depends/packages/packages.mk--EL8 %{sourcetree}/depends/packages/packages.mk
+%endif
 %endif
 %endif
 
@@ -538,9 +561,9 @@ cd ..
   # NOTE!!! THIS METHOD NOT WORKING JUST YET.
   %define _FLAGS CPPFLAGS="$CPPFLAGS -I%{_targettree}/include -I%{_includedir}" LDFLAGS="$LDFLAGS -L%{_targettree}/lib"
   %define _FLAGS CPPFLAGS="$CPPFLAGS -I%{_targettree}/include -I%{_includedir}"
-  #./configure --libdir=%{_targettree}/lib --prefix=%{_targettree} --enable-reduce-exports %{_disable_tests} --disable-zmq
-  #./configure --prefix=%{_targettree} --enable-reduce-exports %{_disable_tests} --disable-zmq --disable-stacktraces
-  %{_FLAGS} ./configure --libdir=%{_targettree}/lib --prefix=%{_targettree} --disable-stacktraces
+  #./configure --libdir=%%{_targettree}/lib --prefix=%%{_targettree} --enable-reduce-exports %%{_disable_tests} --disable-zmq
+  #./configure --prefix=%%{_targettree} --enable-reduce-exports %%{_disable_tests} --disable-zmq --disable-stacktraces
+  %{_FLAGS} ./configure --libdir=%{_targettree}/lib --prefix=%{_targettree}
 %endif
 
 make 
@@ -727,8 +750,8 @@ install -D -m644 dash-hicolor-scalable.svg %{buildroot}%{_datadir}/icons/hicolor
 # Desktop elements - HighContrast icons
 install -D -m644 dash-HighContrast-128.png      %{buildroot}%{_datadir}/icons/HighContrast/128x128/apps/dash.png
 install -D -m644 dash-HighContrast-16.png       %{buildroot}%{_datadir}/icons/HighContrast/16x16/apps/dash.png
-#install -D -m644 dash-HighContrast-22.png       %{buildroot}%{_datadir}/icons/HighContrast/22x22/apps/dash.png
-#install -D -m644 dash-HighContrast-24.png       %{buildroot}%{_datadir}/icons/HighContrast/24x24/apps/dash.png
+#install -D -m644 dash-HighContrast-22.png       %%{buildroot}%%{_datadir}/icons/HighContrast/22x22/apps/dash.png
+#install -D -m644 dash-HighContrast-24.png       %%{buildroot}%%{_datadir}/icons/HighContrast/24x24/apps/dash.png
 install -D -m644 dash-HighContrast-256.png      %{buildroot}%{_datadir}/icons/HighContrast/256x256/apps/dash.png
 install -D -m644 dash-HighContrast-32.png       %{buildroot}%{_datadir}/icons/HighContrast/32x32/apps/dash.png
 install -D -m644 dash-HighContrast-48.png       %{buildroot}%{_datadir}/icons/HighContrast/48x48/apps/dash.png
@@ -1116,7 +1139,8 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
-* Mon Dec 16 2019 Todd Warner <t0dd_at_protonmail.com> 0.15.0.0-0.1.rc1.taw
+* Wed Dec 18 2019 Todd Warner <t0dd_at_protonmail.com> 0.15.0.0-0.2.rc1.taw
+* Wed Dec 18 2019 Todd Warner <t0dd_at_protonmail.com> 0.15.0.0-0.1.rc1.taw
   - 0.15.0.0-rc1
   - Tried to simplify the "is this a source build or not" logic
   - Added flag to tell the build system whether to use the system OS  
@@ -1127,6 +1151,13 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
     their project and I will defer on this point for the moment. It just  
     means that dash will never ever be distributed by Fedora or RH proper.
   - We now supply libbacktrace source tarball as well.
+  - We now supply miniupnpc and db4 source tarballs for EL8 builds.
+  - Oddity: miniupnpc-2.0.20170509.tar.gz as downloaded by the depends system  
+    versus from the same URL by browser produces a tarball with two different  
+    sha256sums:  
+    By browser: b0dbfeafb674b7e2dbb53b9ae071031c34258d94f6224ddb6c17cc20b0f9b3d2  
+    By depends: d3c368627f5cdfb66d3ebd64ca39ba54d6ff14a61966dbecb8dd296b7039f16a  
+    The dashcore build expects the second. Just strange.
 
 * Mon Dec 9 2019 Todd Warner <t0dd_at_protonmail.com> 0.14.0.5-1.taw
 * Mon Dec 9 2019 Todd Warner <t0dd_at_protonmail.com> 0.14.0.5-1.rp.taw
