@@ -31,19 +31,20 @@ Name: %{_name_dc}
 Summary: Peer-to-peer, fungible, digital currency, protocol, and platform for payments and decentralized applications
 
 %define targetIsProduction 0
+
+# Leave these off.
+# If you want to delivery the packages where the source is an upstream binary,
+# check these. Note: the src.rpm must be built with this or these on as well.
+# Recommendation: only use if you can't get the source to build for your
+# RPM-based platform (used to have all kinds of issues with EL7, for example).
 %define clientSourceIsBinary 0
 %define serverSourceIsBinary 0
 
-# Dash Core Group prefers this off
-# I prefer it on -- for now, off
+# Leave this on (i.e., set to 1)
+# Building without leaning on the system libraries for the build of the build
+# is currently not supported (I can't get it to do a full depends-based build
+# yet). Please leave this on.
 %define useSystemLibraries 1
-# Include bls-signatures (chia_bls) from https://github.com/codablock/bls-signatures
-# and libbacktrace (backtrace) from https://github.com/rust-lang-nursery/libbacktrace
-# as source and included in the src tarball?
-# miniupnpc source is only for EL8 builds
-%define useBLSSignatureSource 1
-%define useLibBacktraceSource 1
-%define useMiniUPNPCSource 1
 
 # ie. if the dev team includes things like rc3 in the filename
 %undefine buildQualifier
@@ -65,7 +66,7 @@ Version: %{vermajor}.%{verminor}
 # package release (and for testing only, extrarel)
 %define _pkgrel 1
 %if ! %{targetIsProduction}
-  %define _pkgrel 0.2
+  %define _pkgrel 0.3
 %endif
 
 # MINORBUMP
@@ -132,13 +133,30 @@ Version: %{vermajor}.%{verminor}
 Release: %{_release}
 # ----------- end of release building section
 
-# don't manually edit these!
+# (flags for experimentation)
+# Don't manually edit these.
 %define buildFromSource 0
 %define testing_extras 0
 %if ! %{clientSourceIsBinary} || ! %{serverSourceIsBinary}
   %define buildFromSource 1
   #%%define testing_extras 1 -- turn off for now
 %endif
+
+# (flag for experimentation)
+# Don't disable the wallet build (leave it 0).
+# Note, if you do disable it, an empty dashcore-client RPM will be built.
+%define disable_wallet 0
+
+# (flag for experimentation)
+# Don't turn off the useExtraSources flag.
+# The src.rpm includes pre-downloaded extra source archives that satisfy
+# source expectations for the depends tree during the build. They are:
+# bls-signatures (chia_bls) from https://github.com/codablock/bls-signatures
+# libbacktrace (backtrace) from https://github.com/rust-lang-nursery/libbacktrace
+# The next two are for EL8 builds only.
+# miniupnpc from http://miniupnp.free.fr/files/miniupnpc-2.0.20170509.tar.gz
+# bdb v4 from https://download.oracle.com/berkeley-db/db-4.8.30.NC.tar.gz
+%define useExtraSources 1
 
 # the archive name and directory tree can have some variances
 # v0.15.0.0
@@ -239,18 +257,15 @@ BuildRequires: cmake libstdc++-static
 BuildRequires: python3
 
 %if %{useSystemLibraries}
-# Note that the dash team DOES NOT like us using system libraries for
-# bdb, boost, and qt -- I disagree with them, but ... you have the option now
-#
-# these avoid unneccessary fetching of libraries from the internet
-# which is a packaging no-no:
+# These avoid unneccessary fetching of libraries from the internet.
+# Packaging is supposed to be performable with an airgapped system.
 BuildRequires: gettext
 BuildRequires: openssl-devel boost-devel libevent-devel
 BuildRequires: ccache
-# t0dd: added to satisfy chia_bls. still needed for 0.15???
+# Added to satisfy chia_bls.
 BuildRequires: gmp-devel
 %if 0%{?fedora}
-# Note, EL8 uses a downloaded dependency since EL8 does not provide this pkg.
+# Note, EL8 uses in-src.rpm dependencies since EL8 does not provide these pkgs.
 BuildRequires: libdb4-cxx-devel miniupnpc-devel
 %endif
 %endif
@@ -275,24 +290,26 @@ Requires: dashcore-utils = %{version}-%{release}
 Requires: firewalld-filesystem
 Requires(post): firewalld-filesystem
 Requires(postun): firewalld-filesystem
+
 %if 0%{?fedora} || 0%{?rhel} >= 8
+%if ! %{disable_wallet}
 Requires: qt5-qtwayland
-%endif
 # Required for installing desktop applications on linux
 BuildRequires: libappstream-glib desktop-file-utils
-%if %{buildFromSource}
-%if %{useSystemLibraries}
-# Note that the dash team DOES NOT like us using system libraries for
-# bdb, boost, and qt -- I disagree with them, but ... you have the option now
-#
-# These avoid unneccessary fetching of libraries from the internet
-# which is a packaging no-no
-BuildRequires: qrencode-devel protobuf-devel
+%endif
+
+%if %{buildFromSource} && %{useSystemLibraries}
+# These avoid unneccessary fetching of libraries from the internet.
+# Packaging is supposed to be performable with an airgapped system.
+BuildRequires: protobuf-devel
+%if ! %{disable_wallet}
+BuildRequires: qrencode-devel
 BuildRequires: qt5-qtbase-devel qt5-linguist
-%if 0%{?fedora} || 0%{?rhel} >= 8
 BuildRequires: qt5-qtwayland-devel
 %endif
+# endif build from source and use system libraries
 %endif
+# endif fedora or el8
 %endif
 
 # dashcore-server
@@ -461,6 +478,11 @@ Learn more at www.dash.org.
 %{error: "EL7-based platforms (CentOS7/RHEL7) are not supportable build targets."}
 %endif
 
+%define _disable_wallet --disable-wallet --without-gui
+%if ! %{disable_wallet}
+  %define _disable_wallet %{nil}
+%endif
+
 mkdir -p %{projectroot}
 
 # Source0: dashcore (source)
@@ -480,16 +502,12 @@ mkdir -p %{projectroot}
 # Source5: bdb archive
 # {_sourcedir} == ../../SOURCES/ but rpmlint hates use of {_sourcedir}
 # Moving the supplied tarballs from {_sourcedir} to their desired locations
-%if %{buildFromSource}
-%if %{useBLSSignatureSource}
+%if %{buildFromSource} && %{useExtraSources}
 mkdir -p %{sourcetree}/depends/sources/
 mv ../../SOURCES/%{blsarchivename}.tar.gz %{sourcetree}/depends/sources/v%{blsarchivedate}.tar.gz
-%endif
-%if %{useLibBacktraceSource}
 mkdir -p %{sourcetree}/depends/sources/
 mv ../../SOURCES/%{libbacktracearchivename}.tar.gz %{sourcetree}/depends/sources/%{libbacktracearchiveversion}.tar.gz
-%endif
-%if %{useMiniUPNPCSource} && 0%{?rhel:1}
+%if 0%{?rhel:1}
 mkdir -p %{sourcetree}/depends/sources/
 mv ../../SOURCES/%{miniupnpcarchivename}.tar.gz %{sourcetree}/depends/sources/%{miniupnpcarchivename}.tar.gz
 mv ../../SOURCES/%{bdbarchivename}.tar.gz %{sourcetree}/depends/sources/%{bdbarchivename}.tar.gz
@@ -509,7 +527,7 @@ cd ..
 %endif
 
 #t0dd: Prep SELinux policy -- NOT USED YET
-# Done here to prep for action taken in the %%build step
+# Done here to prep for action taken in the build step
 # At this moment, we are in the projectroot directory
 mkdir -p selinux-tmp
 cp -p %{srccontribtree}/linux/selinux/dash.{te,if,fc} selinux-tmp/
@@ -535,16 +553,36 @@ cp -a %{srccontribtree}/build/depends/packages/packages.mk--EL8 %{sourcetree}/de
   exit 0
 %endif
 
+## A note about the _target_platform (RPM) and AC_CANONICAL_HOST (Makefile)
+## macros.
+## 
+## _target_platform for Fedora/EL8 on X86_64 is x86_64-redhat-linux-gnu
+## AC_CANONICAL_HOST in the makefile will result in x86_64-pc-linux-gnu.
+## Regardless, config.sub in the depends directory will result in this
+## target host being set as such (...pc-linux-gnu) unless we force it to
+## something different.
+##
+## This is a bit baffling. If we don't add HOST= to the makefile, it will
+## default to x86_64-pc-linux-gnu. RPM though wants us to use _target_platform.
+## What is the "right way?" I don't know. I experiment with both.
+##
+## Read more:
+## http://ftp.rpm.org/api/4.4.2.2/config_macros.html
+## https://www.gnu.org/software/autoconf/manual/autoconf-2.69/html_node/Canonicalizing.html
+
 cd %{sourcetree}
 
 # build dependencies
 cd depends
+#%%define _target_platformX x86_64-pc-linux-gnu
+%define _target_platformX %{_target_platform}
 # example: make HOST=x86_64-redhat-linux-gnu -j4
-make HOST=%{_target_platform} -j$(nproc)
+make HOST=%{_target_platformX} -j$(nproc)
 cd ..
 
 # build code
-%define _targettree %{_builddir}/%{projectroot}/%{sourcetree}/depends/%{_target_platform}
+%define _targettree %{_builddir}/%{projectroot}/%{sourcetree}/depends/%{_target_platformX}
+
 %define _disable_tests --disable-tests --disable-gui-tests
 %if %{testing_extras}
   %define _disable_tests %{nil}
@@ -552,21 +590,31 @@ cd ..
 
 ./autogen.sh
 
+## Notes for next step:
+## - for building on ARM (which I do not do) you may have to add
+##   --enable-reduce-exports
+## - --enable-hardening is likely redundant since the RPM build instructions
+##   sets it already, but adding anyway.
+## - building without system libraries replacing most libraries represented in
+##   the depends tree currently does not work. For whatever reason, the QT
+##   libraries don't get picked up in the make step after the configure step.
+
 %if %{useSystemLibraries}
-  # Note that the dash team DOES NOT like us using system libraries for
-  # bdb, boost, and qt -- I disagree with them, but ... you have the option now
-  %define _FLAGS CPPFLAGS="$CPPFLAGS -I%{_targettree}/include -I%{_includedir}" LDFLAGS="$LDFLAGS -L%{_targettree}/lib -L%{_libdir}"
-  %{_FLAGS} ./configure --libdir=%{_targettree}/lib --prefix=%{_targettree} --enable-reduce-exports %{_disable_tests} --disable-zmq
+  %define _FLAGS CXXFLAGS="-I%{_targettree}/include -I%{_includedir} $CXXFLAGS -O" CPPFLAGS="-I%{_targettree}/include -I%{_includedir} $CPPFLAGS" LDFLAGS="-L%{_targettree}/lib -L%{_libdir} $LDFLAGS"
+  %{_FLAGS} ./configure --libdir=%{_targettree}/lib --includedir=%{_targettree}/include --prefix=%{_targettree} --enable-hardening %{_disable_tests} %{_disable_wallet}
+  make
 %else
   # NOTE!!! THIS METHOD NOT WORKING JUST YET.
-  %define _FLAGS CPPFLAGS="$CPPFLAGS -I%{_targettree}/include -I%{_includedir}" LDFLAGS="$LDFLAGS -L%{_targettree}/lib"
-  %define _FLAGS CPPFLAGS="$CPPFLAGS -I%{_targettree}/include -I%{_includedir}"
-  #./configure --libdir=%%{_targettree}/lib --prefix=%%{_targettree} --enable-reduce-exports %%{_disable_tests} --disable-zmq
-  #./configure --prefix=%%{_targettree} --enable-reduce-exports %%{_disable_tests} --disable-zmq --disable-stacktraces
-  %{_FLAGS} ./configure --libdir=%{_targettree}/lib --prefix=%{_targettree}
+  %define _FLAGS CXXFLAGS="-I%{_targettree}/include -I%{_includedir} $CXXFLAGS -O" CPPFLAGS="-I%{_targettree}/include -I%{_includedir} $CPPFLAGS" LDFLAGS="-L%{_targettree}/lib -L%{_libdir} $LDFLAGS"
+  %define _PKGCONFIG PKG_CONFIG_PATH="%{_targettree}/lib/pkgconfig:%{_targettree}/share/pkgconfig:%{_libdir}/pkgconfig"
+  %define _QTSTUFF "--with-qt-plugindir=%{_targettree}/plugins --with-qt-translationdir=%{_targettree}/translations --with-qt-libdir=%{_targettree}/lib --with-qt-incdir=%{_targettree}/include --with-qt-bindir=%{_targettree}/bin"
+  # This does nothing, commenting out
+  #cd %%{_targettree} && cp $(find ./plugins | grep "\.a$") ./lib/
+  #cd ../..
+  %{_FLAGS} %{_PKGCONFIG} ./configure --libdir=%{_targettree}/lib --includedir=%{_targettree}/include --with-boost-libdir=%{_targettree}/lib --prefix=%{_targettree} --enable-hardening %{_disable_tests} %{_disable_wallet} %{_QTSTUFF}
+  %{_PKGCONFIG} make 
 %endif
 
-make 
 cd ..
 
 #t0dd Not using for now.
@@ -608,7 +656,7 @@ cd %{sourcetree}
 # This section starts us in directory {_builddir}/{projectroot}
 %if %{buildFromSource}
   cd %{sourcetree}
-  # make install deploys to {_targettree}/ (defined in %%build)
+  # make install deploys to {_targettree}/ (defined in build step)
   #make INSTALL="install -p" CP="cp -p" DESTDIR=%%{buildroot} install
   make install
   cd ..
@@ -656,7 +704,7 @@ install -d -m755 -p %{buildroot}%{_includedir}
 install -d -m755 -p %{buildroot}%{_libdir}
 
 %if %{buildFromSource}
-  mv %{_targettree}/bin/* %{buildroot}%{_bindir}/
+  mv %{_targettree}/bin/dash* %{buildroot}%{_bindir}/
   mv %{_targettree}/include/dash* %{buildroot}%{_includedir}/
   mv %{_targettree}/lib/libdash* %{buildroot}%{_libdir}/
   install -d -m755 -p %{buildroot}%{_libdir}/pkgconfig
@@ -664,7 +712,7 @@ install -d -m755 -p %{buildroot}%{_libdir}
 %endif
 
 %if %{clientSourceIsBinary} && %{serverSourceIsBinary}
-  mv %{binarytree}/bin/* %{buildroot}%{_bindir}/
+  mv %{binarytree}/bin/dash* %{buildroot}%{_bindir}/
   mv %{binarytree}/include/dash* %{buildroot}%{_includedir}/
   mv %{binarytree}/lib/libdash* %{buildroot}%{_libdir}/
 %else
@@ -712,10 +760,17 @@ ln -s %{_sysconfdir}/dashcore/dash.conf %{buildroot}%{_sharedstatedir}/dashcore/
 install -D -m644 %{srccontribtree}/linux/man/man5/* %{buildroot}%{_mandir}/man5/
 # Man Pages (from upstream) - likely to overwrite ones from contrib (which is fine)
 install -D -m644 %{sourcetree}/doc/man/*.1* %{buildroot}%{_mandir}/man1/
+
 %if %{clientSourceIsBinary} || %{serverSourceIsBinary}
-  # probably the same. I haven't checked.
+  # probably the same as above. I haven't checked.
   install -D -m644 %{binarytree}/share/man/man1/*.1* %{buildroot}%{_mandir}/man1/
 %endif
+
+%if %{disable_wallet}
+  rm -f %{buildroot}%{_mandir}/man1/dash-qt*
+  rm -f %{buildroot}%{_bindir}/dash-qt
+%endif
+
 gzip -f %{buildroot}%{_mandir}/man1/*.1
 gzip -f %{buildroot}%{_mandir}/man5/*.5
 
@@ -724,6 +779,8 @@ install -D -m644 %{sourcetree}/contrib/dash-cli.bash-completion %{buildroot}%{_d
 install -D -m644 %{sourcetree}/contrib/dash-tx.bash-completion %{buildroot}%{_datadir}/bash-completion/completions/dash-tx
 install -D -m644 %{sourcetree}/contrib/dashd.bash-completion %{buildroot}%{_datadir}/bash-completion/completions/dashd
 
+## DESKTOP STUFF
+%if ! %{disable_wallet}
 # Desktop elements - desktop file and kde protocol file (from contrib)
 cd %{srccontribtree}/linux/desktop/
 # dash-qt.desktop
@@ -760,6 +817,7 @@ cd ../../..
 
 # Misc pixmaps - unsure if they are even used... (from contrib)
 #install -D -m644 %%{srccontribtree}/extras/pixmaps/*.??? %%{buildroot}%%{_datadir}/pixmaps/
+%endif
 
 # Config
 # Install default configuration file (from contrib)
@@ -993,13 +1051,14 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 # dashcore-client
 %files client
 %defattr(-,root,root,-)
+%if ! %{disable_wallet}
 %license %{sourcetree}/COPYING
 %doc %{sourcetree}/doc/*.md %{srccontribtree}/extras/dash.conf.example
 %{_bindir}/dash-qt
 %{_bindir}/dash-qt.wrapper.sh
 %{_datadir}/applications/dash-qt.desktop
 %{_metainfodir}/dash-qt.appdata.xml
-# XXX Removing this unless someone bitches
+# XXX Removing this unless someone gripes
 #%%{_datadir}/kde4/services/dash-qt.protocol
 %{_datadir}/icons/*
 %{_mandir}/man1/dash-qt.1.gz
@@ -1012,6 +1071,7 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #%%config(noreplace) %%attr(640,dashcore,dashcore) %%{_sysconfdir}/dashcore/dash.conf
 %if %{testing_extras}
   %{_bindir}/test_dash-qt
+%endif
 %endif
 
 
@@ -1139,6 +1199,21 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
+* Sun Dec 22 2019 Todd Warner <t0dd_at_protonmail.com> 0.15.0.0-0.3.rc1.taw
+  - Simplified the "extra sources" logic.
+  - There is some discrepancy in the Makefile's version of the target  
+    platform (x86_64-pc-linux-gnu) and the RPM specfile's result  
+    (x86_64-redhat-linux-gnu). We will use RPM's version since we then don't  
+    need to hardcode a value in the specfile.
+  - Note: For the life of me, I CANNOT get the build to work with the depends  
+    system completely. For whatever reason, libqminimal (and I am sure other  
+    QT libraries simply no longer can be found. Why? I don't get it. RPM  
+    washes the environment clean and I, apparently, can't seem to rebuild it  
+    from  scratch. Additionally, things are lost from process to process during  
+    a build. So . . . Moral of the story: We use system-supplied libraries for  
+    builds except for a few particulars (miniupnpc, etc). This is how a package  
+    should be built anyway.
+
 * Wed Dec 18 2019 Todd Warner <t0dd_at_protonmail.com> 0.15.0.0-0.2.rc1.taw
 * Wed Dec 18 2019 Todd Warner <t0dd_at_protonmail.com> 0.15.0.0-0.1.rc1.taw
   - 0.15.0.0-rc1
@@ -1152,12 +1227,6 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
     means that dash will never ever be distributed by Fedora or RH proper.
   - We now supply libbacktrace source tarball as well.
   - We now supply miniupnpc and db4 source tarballs for EL8 builds.
-  - Oddity: miniupnpc-2.0.20170509.tar.gz as downloaded by the depends system  
-    versus from the same URL by browser produces a tarball with two different  
-    sha256sums:  
-    By browser: b0dbfeafb674b7e2dbb53b9ae071031c34258d94f6224ddb6c17cc20b0f9b3d2  
-    By depends: d3c368627f5cdfb66d3ebd64ca39ba54d6ff14a61966dbecb8dd296b7039f16a  
-    The dashcore build expects the second. Just strange.
 
 * Mon Dec 9 2019 Todd Warner <t0dd_at_protonmail.com> 0.14.0.5-1.taw
 * Mon Dec 9 2019 Todd Warner <t0dd_at_protonmail.com> 0.14.0.5-1.rp.taw
