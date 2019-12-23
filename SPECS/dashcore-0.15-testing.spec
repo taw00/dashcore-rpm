@@ -600,6 +600,10 @@ cd ..
 ##   libraries don't get picked up in the make step after the configure step.
 
 %if %{useSystemLibraries}
+  # old configuration
+  #%%define _FLAGS CPPFLAGS="$CPPFLAGS -I%%{_targettree}/include -I%%{_includedir}" LDFLAGS="$LDFLAGS -L%%{_targettree}/lib -L%%{_libdir}"
+  #%%{_FLAGS} ./configure --libdir=%%{_targettree}/lib --prefix=%%{_targettree} --enable-reduce-exports %%{_disable_tests} --disable-zmq
+  # current configuration
   %define _FLAGS CXXFLAGS="-I%{_includedir} -I%{_targettree}/include $CXXFLAGS -O" CPPFLAGS="-I%{_includedir} -I%{_targettree}/include $CPPFLAGS" LDFLAGS="-L%{_libdir} -L%{_targettree}/lib $LDFLAGS"
   %{_FLAGS} ./configure --libdir=%{_targettree}/lib --includedir=%{_targettree}/include --prefix=%{_targettree} --enable-hardening %{_disable_tests} %{_disable_wallet}
   make
@@ -1199,9 +1203,11 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
-* Sun Dec 22 2019 Todd Warner <t0dd_at_protonmail.com> 0.15.0.0-0.4.rc1.taw
+* Mon Dec 23 2019 Todd Warner <t0dd_at_protonmail.com> 0.15.0.0-0.4.rc1.taw
   - re-ordered how libraries and includes are examined upon build. Previous  
-    ordering resulted in a missing libQT5Core.so.5 dependency. Fixed.
+    ordering resulted in a missing libQT5Core.so.5 dependency. Fixed.  
+    ...i.e...  
+    nothing provides libQt5Core.so.5(Qt_5.13)(64bit) needed by dashcore-client...
 
 * Sun Dec 22 2019 Todd Warner <t0dd_at_protonmail.com> 0.15.0.0-0.3.rc1.taw
   - Simplified the "extra sources" logic.
