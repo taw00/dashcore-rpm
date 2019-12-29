@@ -14,8 +14,8 @@ These images and files are to be installed by a package management system, for
 example RPM/DNF or DEB/APT.
 
 For more information about "the standards" please check out these pages...
-<https://fedoraproject.org/wiki/Packaging:Guidelines?rd=PackagingGuidelines#Desktop_files>
-<https://fedoraproject.org/wiki/Packaging:AppData>
+<https://docs.fedoraproject.org/en-US/packaging-guidelines/#_desktop_files>
+<https://docs.fedoraproject.org/en-US/packaging-guidelines/AppData/>
 <https://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard>
 
 Please note this is not Fedora specific (other distributions should all follow
