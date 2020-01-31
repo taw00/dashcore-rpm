@@ -48,7 +48,7 @@ Summary: Peer-to-peer, fungible, digital currency, protocol, and platform for pa
 
 # ie. if the dev team includes things like rc3 in the filename
 %undefine buildQualifier
-%define buildQualifier rc1
+%define buildQualifier rc2
 
 # VERSION
 %define vermajor 0.15
@@ -66,7 +66,7 @@ Version: %{vermajor}.%{verminor}
 # package release (and for testing only, extrarel)
 %define _pkgrel 1
 %if ! %{targetIsProduction}
-  %define _pkgrel 0.4
+  %define _pkgrel 0.5
 %endif
 
 # MINORBUMP
@@ -805,22 +805,18 @@ install -D -m644 dash16.png       %{buildroot}%{_datadir}/icons/hicolor/16x16/ap
 install -D -m644 dash256.png      %{buildroot}%{_datadir}/icons/hicolor/256x256/apps/dash.png
 install -D -m644 dash32.png       %{buildroot}%{_datadir}/icons/hicolor/32x32/apps/dash.png
 install -D -m644 dash64.png       %{buildroot}%{_datadir}/icons/hicolor/64x64/apps/dash.png
-cd ../../..
-cd %{srccontribtree}/linux/desktop/
 install -D -m644 dash-hicolor-scalable.svg %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/dash.svg
 # Desktop elements - HighContrast icons
-install -D -m644 dash-HighContrast-128.png      %{buildroot}%{_datadir}/icons/HighContrast/128x128/apps/dash.png
-install -D -m644 dash-HighContrast-16.png       %{buildroot}%{_datadir}/icons/HighContrast/16x16/apps/dash.png
-#install -D -m644 dash-HighContrast-22.png       %%{buildroot}%%{_datadir}/icons/HighContrast/22x22/apps/dash.png
-#install -D -m644 dash-HighContrast-24.png       %%{buildroot}%%{_datadir}/icons/HighContrast/24x24/apps/dash.png
-install -D -m644 dash-HighContrast-256.png      %{buildroot}%{_datadir}/icons/HighContrast/256x256/apps/dash.png
-install -D -m644 dash-HighContrast-32.png       %{buildroot}%{_datadir}/icons/HighContrast/32x32/apps/dash.png
-install -D -m644 dash-HighContrast-48.png       %{buildroot}%{_datadir}/icons/HighContrast/48x48/apps/dash.png
+install -D -m644 dash-HighContrast-128.png  %{buildroot}%{_datadir}/icons/HighContrast/128x128/apps/dash.png
+install -D -m644 dash-HighContrast-16.png   %{buildroot}%{_datadir}/icons/HighContrast/16x16/apps/dash.png
+install -D -m644 dash-HighContrast-22.png   %{buildroot}%{_datadir}/icons/HighContrast/22x22/apps/dash.png
+install -D -m644 dash-HighContrast-24.png   %{buildroot}%{_datadir}/icons/HighContrast/24x24/apps/dash.png
+install -D -m644 dash-HighContrast-256.png  %{buildroot}%{_datadir}/icons/HighContrast/256x256/apps/dash.png
+install -D -m644 dash-HighContrast-32.png   %{buildroot}%{_datadir}/icons/HighContrast/32x32/apps/dash.png
+install -D -m644 dash-HighContrast-48.png   %{buildroot}%{_datadir}/icons/HighContrast/48x48/apps/dash.png
 install -D -m644 dash-HighContrast-scalable.svg %{buildroot}%{_datadir}/icons/HighContrast/scalable/apps/dash.svg
 cd ../../..
-
-# Misc pixmaps - unsure if they are even used... (from contrib)
-#install -D -m644 %%{srccontribtree}/extras/pixmaps/*.??? %%{buildroot}%%{_datadir}/pixmaps/
+# endif not disabled wallet
 %endif
 
 # Config
@@ -1203,6 +1199,13 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
+* Fri Jan 31 2020 Todd Warner <t0dd_at_protonmail.com> 0.15.0.0-0.5.rc2.taw
+  - 0.15 RC2
+  - Using desktop icon images from the shipped tarball (instead of a  
+    separate tarball) to be deployed with the desktop client. I.e. My  
+    contributions were included in this release:  
+    https://github.com/dashpay/dash/pull/3209
+
 * Mon Dec 23 2019 Todd Warner <t0dd_at_protonmail.com> 0.15.0.0-0.4.rc1.taw
   - re-ordered how libraries and includes are examined upon build. Previous  
     ordering resulted in a missing libQT5Core.so.5 dependency. Fixed.  
