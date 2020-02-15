@@ -48,7 +48,7 @@ Summary: Peer-to-peer, fungible, digital currency, protocol, and platform for pa
 
 # ie. if the dev team includes things like rc3 in the filename
 %undefine buildQualifier
-%define buildQualifier rc3
+%define buildQualifier rc4
 
 # VERSION
 %define vermajor 0.15
@@ -66,7 +66,7 @@ Version: %{vermajor}.%{verminor}
 # package release (and for testing only, extrarel)
 %define _pkgrel 1
 %if ! %{targetIsProduction}
-  %define _pkgrel 0.6
+  %define _pkgrel 0.7
 %endif
 
 # MINORBUMP
@@ -1199,6 +1199,9 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
+* Sat Feb 15 2020 Todd Warner <t0dd_at_protonmail.com> 0.15.0.0-0.7.rc4.taw
+  - 0.15 RC4
+
 * Thu Feb 06 2020 Todd Warner <t0dd_at_protonmail.com> 0.15.0.0-0.6.rc3.taw
   - 0.15 RC3
 
