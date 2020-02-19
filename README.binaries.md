@@ -1,8 +1,12 @@
 # Dash Core for Fedora Linux<br />_...wallet, node, and masternode_
 
 **Important notice:**
-* Dash Core RPMs: EL7 and Fedora Linux 29 and older users need to migrate to
-  Fedora Linux 31 or later. EL8 is currently being tested.
+* Dash Core RPMs:
+  - EL7 and Fedora Linux 29 and older users: migrate to Fedora Linux 31 or later.
+  - EL8 is currently functional, but I'm not targeting that build any time
+    soon. Fedora is stable enough, and if you use the systemd configurations I
+    provide, nodes become near bullet proof.
+  - Keep current with the latest Fedora.
 * Dash Masternode Tool: DMT will remain Fedora-only! except for test builds.
 
 This document describes what is available to Fedora and EL8 Linux users seeking
@@ -184,8 +188,8 @@ sudo dnf upgrade
 And then after the refreshed packages were updated, restart the wallet or
 `dashd`. Please note that for SOME major upgrades, more actions may have to be
 taken for example, a masternode going from 0.12 to 0.13 required a masternode
-restart (protocol change from 70210 to 70213). 0.13 to 0.14 did not need a
-masternode restart.
+restart (protocol change from 70210 to 70213). 0.13 to 0.14 and then to 0.15
+did not need a masternode restart.
 
 
 #### Good luck!

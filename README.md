@@ -1,33 +1,35 @@
 # Dash Core for Fedora Linux<br />_...wallet, node, and masternode_
 
 **Important notice:**
-* Dash Core RPMs: EL7 and Fedora Linux 29 and older users need to migrate to
-  Fedora Linux 31 or later. EL8 is currently being tested.
+* Dash Core RPMs:
+  - EL7 and Fedora Linux 29 and older users: migrate to Fedora Linux 31 or later.
+  - EL8 is currently functional, but I'm not targeting that build any time
+    soon. Fedora is stable enough, and if you use the systemd configurations I
+    provide, nodes become near bullet proof.
+  - Keep current with the latest Fedora.
 * Dash Masternode Tool: DMT will remain Fedora-only! except for test builds.
 
-Dash Core 0.14 was released on May 22, 2019.
+Dash Core 0.15 was released on Feb 19, 2020.
 
+* Fedora Linux 29 and older are EOL (end-of-life).
 * RHEL7/CentOS7 were dropped because the OS supplied libraries are simply far too
   dated.
-* RHEL8/CentOS8 RPMs are currently being testing, but failing due to missing packages.
-* Fedora Linux 29 and older are EOL (end-of-life).
 
-Please move to the latest version of Fedora. Fedora upgrades are easy (see
-available documentation in the "documentation" folder). RHEL/CentOS to Fedora
-and El7 to EL8 migrations should be performed as fresh
-installs.
+Fedora upgrades are easy (see available documentation in the "documentation"
+folder). RHEL/CentOS to Fedora or newer RHEL/CentOS should be performed as
+fresh installs.
 
 ---
 
 **Dash (Digital Cash)** is an open source peer-to-peer cryptocurrency with an
-emphasis on serving as an efficient platform for payments. Dash offers a form of
-money that is portable, inexpensive, divisible and fast. It can be spent
-securely both online and in person with minimal transaction fees. Dash offers
-instant transactions **(InstantSend)**, private / more-fungible transactions
-**(PrivateSend)**, and operates a self-governing and self-funding model. This
-decentralized governance and budgeting system makes it the first ever successful
-decentralized autonomous organization (DAO). Dash is also a platform for
-innovative decentralized crypto-tech.
+emphasis on serving as an efficient platform for payments and decentralized
+applications. Dash offers a form of money that is portable, inexpensive,
+divisible and fast. It can be spent securely both online and in person with
+minimal transaction fees. Dash offers instant transactions **(InstantSend)**,
+private / more-fungible transactions **(PrivateSend)**, and operates a
+self-governing and self-funding model. This decentralized governance and
+budgeting system makes it the first ever successful decentralized autonomous
+organization (DAO).
 
 Dash is open source and the name of the overarching project. Learn more
 at https://www.dash.org/
