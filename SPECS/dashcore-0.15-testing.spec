@@ -16,10 +16,6 @@
 # * dashcore-devel
 # * dashcore-debuginfo
 #
-# Note about edits within the spec: Any comments beginning with #t0dd are
-# associated to future work or experimental elements of this spec file and
-# build.
-#
 # Enjoy. -t0dd
 
 # Package (RPM) name-version-release.
@@ -28,27 +24,28 @@
 %define _name_d dash
 %define _name_dc dashcore
 Name: %{_name_dc}
-Summary: Peer-to-peer, fungible, digital currency, protocol, and platform for payments and decentralized applications
+Summary: Peer-to-peer, fungible digital currency, protocol, and platform for payments and decentralized applications
 
 %define targetIsProduction 0
 
 # Leave these off.
-# If you want to delivery the packages where the source is an upstream binary,
-# check these. Note: the src.rpm must be built with this or these on as well.
-# Recommendation: only use if you can't get the source to build for your
-# RPM-based platform (used to have all kinds of issues with EL7, for example).
+# These settings are used if you wan to deliver packages where the application
+# is developed from pre-built binaries instead of from source code. These are
+# last resort settings if there are problems building the application
+# appropriately. For example, we used to have a terrible time building to a
+# EPEL/RHEL 7 target. That has since been fixed.
 %define clientSourceIsBinary 0
 %define serverSourceIsBinary 0
 
-# Leave this on (i.e., set to 1)
+# Leave this on
 # Building without leaning on the system libraries for the build of the build
 # is currently not supported (I can't get it to do a full depends-based build
-# yet). Please leave this on.
+# yet). Please leave this on. It's poor packaging anyway to build from depends.
 %define useSystemLibraries 1
 
-# ie. if the dev team includes things like rc3 in the filename
-%undefine buildQualifier
+# Use if the dev team includes things like rc3 in the filename
 %define buildQualifier rc4
+%undefine buildQualifier
 
 # VERSION
 %define vermajor 0.15
@@ -66,7 +63,7 @@ Version: %{vermajor}.%{verminor}
 # package release (and for testing only, extrarel)
 %define _pkgrel 1
 %if ! %{targetIsProduction}
-  %define _pkgrel 0.7
+  %define _pkgrel 0.8
 %endif
 
 # MINORBUMP
@@ -273,7 +270,7 @@ BuildRequires: libdb4-cxx-devel miniupnpc-devel
 
 # NOTE: other BuildRequires listed per package below
 
-#t0dd: SELinux stuff that I just haven't addressed yet...
+#t0dd: SELinux stuff that I just haven't addressed yet and probably never will...
 #BuildRequires: checkpolicy selinux-policy-devel selinux-policy-doc
 
 # tree, vim-enhanced, and less for mock build environment introspection
@@ -284,7 +281,7 @@ BuildRequires: tree vim-enhanced less findutils
 
 # dashcore-client
 %package client
-Summary: Peer-to-peer, fungible, digital currency, protocol, and platform for payments and decentralized applications (desktop reference client)
+Summary: Decentralized digital currency, protocol, and platform for payments and applications (desktop reference client)
 Requires: dashcore-utils = %{version}-%{release}
 # https://fedoraproject.org/wiki/PackagingDrafts/ScriptletSnippets/Firewalld
 Requires: firewalld-filesystem
@@ -314,7 +311,7 @@ BuildRequires: qt5-qtwayland-devel
 
 # dashcore-server
 %package server
-Summary: Peer-to-peer, fungible, digital currency, protocol, and platform for payments and decentralized applications (reference server)
+Summary: Decentralized digital currency, protocol, and platform for payments and applications (reference server)
 # https://fedoraproject.org/wiki/PackagingDrafts/ScriptletSnippets/Firewalld
 Requires: firewalld-filesystem
 Requires(post): firewalld-filesystem
@@ -337,18 +334,18 @@ Requires: dashcore-sentinel
 
 # dashcore-libs
 %package libs
-Summary: Peer-to-peer, fungible, digital currency, protocol, and platform for payments and decentralized applications (consensus libraries)
+Summary: Decentralized digital currency, protocol, and platform for payments and applications (consensus libraries)
 
 
 # dashcore-devel
 %package devel
-Summary: Peer-to-peer, fungible, digital currency, protocol, and platform for payments and decentralized applications (dev libraries and headers)
+Summary: Decentralized digital currency, protocol, and platform for payments and applications (dev libraries and headers)
 Requires: dashcore-libs = %{version}-%{release}
 
 
 # dashcore-utils
 %package utils
-Summary: Peer-to-peer, fungible, digital currency, protocol, and platform for payments and decentralized applications (commandline utilities)
+Summary: Decentralized digital currency, protocol, and platform for payments and applications (commandline utilities)
 
 
 # dashcore src.rpm
@@ -526,15 +523,13 @@ cd %{sourcetree}
 cd ..
 %endif
 
-#t0dd: Prep SELinux policy -- NOT USED YET
+#t0dd: Prep SELinux policy -- NOT USED YET and probably never will
 # Done here to prep for action taken in the build step
 # At this moment, we are in the projectroot directory
 mkdir -p selinux-tmp
 cp -p %{srccontribtree}/linux/selinux/dash.{te,if,fc} selinux-tmp/
 
 %if %{buildFromSource}
-# pixmap contributions
-cp -a %{srccontribtree}/extras/pixmaps/*.??? %{sourcetree}/share/pixmaps/
 
 %if %{useSystemLibraries}
 # Swap out packages.mk and chia_bls.mk makefiles in order to force usage of
@@ -621,7 +616,7 @@ cd ..
 
 cd ..
 
-#t0dd Not using for now.
+#t0dd Not using for now. Probably will never get to this.
 #t0dd # Build SELinux policy
 #t0dd pushd selinux-tmp
 #t0dd for selinuxvariant in %%{selinux_variants}
@@ -852,7 +847,7 @@ disablewallet=1
 # Only localhost allowed to connect to make RPC calls.
 rpcallowip=127.0.0.1
 " >> %{buildroot}%{_sysconfdir}/dashcore/dash.conf
-install -D -m644 %{buildroot}%{_sysconfdir}/dashcore/dash.conf %{srccontribtree}/extras/dash.conf.example
+install -D -m644 %{buildroot}%{_sysconfdir}/dashcore/dash.conf %{srccontribtree}/dash.conf.example
 
 # Add the rpcuser name and rpcpassword, but really need to be different for the
 # working dash.conf and the example, just in case the user decides to not
@@ -869,7 +864,7 @@ echo "\
 # Example RPC username and password.
 rpcuser=rpcuser-CHANGEME-`head -c 32 /dev/urandom | base64 | head -c 4`
 rpcpassword=CHANGEME`head -c 32 /dev/urandom | base64`
-" >> %{srccontribtree}/extras/dash.conf.example
+" >> %{srccontribtree}/dash.conf.example
 
 # ...message about the convenience symlink:
 echo "\
@@ -903,7 +898,7 @@ install -D -m644 -p %{srccontribtree}/linux/firewalld/usr-lib-firewalld-services
 install -D -m644 -p %{srccontribtree}/linux/firewalld/usr-lib-firewalld-services_dashcore-rpc.xml %{buildroot}%{_usr_lib}/firewalld/services/dashcore-rpc.xml
 install -D -m644 -p %{srccontribtree}/linux/firewalld/usr-lib-firewalld-services_dashcore-testnet-rpc.xml %{buildroot}%{_usr_lib}/firewalld/services/dashcore-testnet-rpc.xml
 
-# Not ng for now.
+#t0dd Not using for now. Probably will never get to this.
 #t0dd # Install SELinux policy
 #t0dd for selinuxvariant in %%{selinux_variants}
 #t0dd do
@@ -1053,7 +1048,7 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 %defattr(-,root,root,-)
 %if ! %{disable_wallet}
 %license %{sourcetree}/COPYING
-%doc %{sourcetree}/doc/*.md %{srccontribtree}/extras/dash.conf.example
+%doc %{sourcetree}/doc/*.md %{srccontribtree}/dash.conf.example
 %{_bindir}/dash-qt
 %{_bindir}/dash-qt.wrapper.sh
 %{_datadir}/applications/dash-qt.desktop
@@ -1079,7 +1074,7 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 %files server
 %defattr(-,root,root,-)
 %license %{sourcetree}/COPYING
-%doc %{sourcetree}/doc/*.md %{srccontribtree}/extras/dash.conf.example
+%doc %{sourcetree}/doc/*.md %{srccontribtree}/dash.conf.example
 
 # Application as systemd service directory structure
 %defattr(-,dashcore,dashcore,-)
@@ -1199,6 +1194,13 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
+* Wed Feb 19 2020 Todd Warner <t0dd_at_protonmail.com> 0.15.0.0-0.8.testing.taw
+  - 0.15
+  - changed how dash.conf.example is constructed. I don't like it, but it is  
+    what it is.
+  - removed contributed pixmaps (no longer needed -- provided by upstream)
+  - package summaries were too long. Shortened.
+
 * Sat Feb 15 2020 Todd Warner <t0dd_at_protonmail.com> 0.15.0.0-0.7.rc4.taw
   - 0.15 RC4
 

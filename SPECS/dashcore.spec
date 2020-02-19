@@ -16,10 +16,6 @@
 # * dashcore-devel
 # * dashcore-debuginfo
 #
-# Note about edits within the spec: Any comments beginning with #t0dd are
-# associated to future work or experimental elements of this spec file and
-# build.
-#
 # Enjoy. -t0dd
 
 # Package (RPM) name-version-release.
@@ -28,28 +24,46 @@
 %define _name_d dash
 %define _name_dc dashcore
 Name: %{_name_dc}
-Summary: Peer-to-peer, fungible, digital currency, protocol, and platform for payments and decentralized applications
+Summary: Peer-to-peer, fungible digital currency, protocol, and platform for payments and decentralized applications
 
 %define targetIsProduction 1
+
+# Leave these off.
+# These settings are used if you wan to deliver packages where the application
+# is developed from pre-built binaries instead of from source code. These are
+# last resort settings if there are problems building the application
+# appropriately. For example, we used to have a terrible time building to a
+# EPEL/RHEL 7 target. That has since been fixed.
 %define clientSourceIsBinary 0
 %define serverSourceIsBinary 0
 
-# ie. if the dev team includes things like rc3 in the filename
-%define buildQualifier rc6
+# Leave this on
+# Building without leaning on the system libraries for the build of the build
+# is currently not supported (I can't get it to do a full depends-based build
+# yet). Please leave this on. It's poor packaging anyway to build from depends.
+%define useSystemLibraries 1
+
+# Use if the dev team includes things like rc3 in the filename
+%define buildQualifier rc4
 %undefine buildQualifier
 
 # VERSION
-%define vermajor 0.14
+%define vermajor 0.15
 %define _verminor1 0
-%define _verminor2 5
+%define _verminor2 0
 %define verminor %{_verminor1}.%{_verminor2}
 Version: %{vermajor}.%{verminor}
+%define versionqualified %{version}
+%if 0%{?buildQualifier:1}
+  %define versionqualified %{version}-%{buildQualifier}
+%endif
+
 
 # RELEASE
 # package release (and for testing only, extrarel)
 %define _pkgrel 1
 %if ! %{targetIsProduction}
-  %define _pkgrel 0.1
+  %define _pkgrel 0.8
 %endif
 
 # MINORBUMP
@@ -116,23 +130,50 @@ Version: %{vermajor}.%{verminor}
 Release: %{_release}
 # ----------- end of release building section
 
+# (flags for experimentation)
+# Don't manually edit these.
+%define buildFromSource 0
+%define testing_extras 0
+%if ! %{clientSourceIsBinary} || ! %{serverSourceIsBinary}
+  %define buildFromSource 1
+  #%%define testing_extras 1 -- turn off for now
+%endif
+
+# (flag for experimentation)
+# Don't disable the wallet build (leave it 0).
+# Note, if you do disable it, an empty dashcore-client RPM will be built.
+%define disable_wallet 0
+
+# (flag for experimentation)
+# Don't turn off the useExtraSources flag.
+# The src.rpm includes pre-downloaded extra source archives that satisfy
+# source expectations for the depends tree during the build. They are:
+# bls-signatures (chia_bls) from https://github.com/codablock/bls-signatures
+# libbacktrace (backtrace) from https://github.com/rust-lang-nursery/libbacktrace
+# The next two are for EL8 builds only.
+# miniupnpc from http://miniupnp.free.fr/files/miniupnpc-2.0.20170509.tar.gz
+# bdb v4 from https://download.oracle.com/berkeley-db/db-4.8.30.NC.tar.gz
+%define useExtraSources 1
+
 # the archive name and directory tree can have some variances
-# v0.14.0.0
+# v0.15.0.0
 %define _archivename_alt1 v%{version}
-# dash-0.14.0.0
+# dash-0.15.0.0
 %define _archivename_alt2 %{_name_d}-%{version}
-# dashcore-0.14.0
+# dashcore-0.15.0
 %define _archivename_alt3 %{_name_dc}-%{vermajor}.%{_verminor1}
-# dashcore-0.14.0.0
+# dashcore-0.15.0.0
 %define _archivename_alt4 %{_name_dc}-%{version}
 
 # Extracted source tree structure (extracted in .../BUILD)
-#   projectroot           dashcore-0.14.0
-#      \_sourcetree         \_dash-0.14.0.0 or dash-0.14.0.0-rc1...
-#      \_binarytree         \_dashcore-0.14.0
-#      \_srccontribtree     \_dashcore-0.14.0-contrib
-#      \_patch_files        \_dash-0.14.0-...patch
-#      \_blsarchive         \_bls-signatures-20181101.tar.gz
+#   projectroot           dashcore-0.15.0
+#      \_sourcetree         \_dash-0.15.0.0 or dash-0.15.0.0-rc1...
+#      \_binarytree         \_dashcore-0.15.0
+#      \_srccontribtree     \_dashcore-0.15.0-contrib
+#      \_patch_files        \_dash-0.15.0-...patch
+# Supplied but only "moved":
+#   bls-signatures-20181101.tar.gz
+#                           --> {sourcetree}/depends/sources/v20181101.tar.gz
 
 # our selection for this build - edit this
 %define _sourcearchivename %{_archivename_alt2}
@@ -152,34 +193,33 @@ Release: %{_release}
 %endif
 %define blsarchivedate 20181101
 %define blsarchivename bls-signatures-%{blsarchivedate}
+%define libbacktracearchiveversion rust-snapshot-2018-05-22
+%define libbacktracearchivename libbacktrace-%{libbacktracearchiveversion}
+%define miniupnpcversion 2.0.20170509
+%define miniupnpcarchivename miniupnpc-%{miniupnpcversion}
+%define bdbarchiveversion 4.8.30.NC
+%define bdbarchivename db-%{bdbarchiveversion}
 
 %define projectroot %{name}-%{vermajor}
 %define srccontribtree %{name}-%{vermajor}-contrib
 
 
-%if 0%{?buildQualifier:1}
-Source0: https://github.com/dashpay/dash/archive/v%{version}-%{buildQualifier}/%{sourcearchivename}.tar.gz
-%else
-Source0: https://github.com/dashpay/dash/archive/v%{version}/%{sourcearchivename}.tar.gz
-%endif
-
+Source0: https://github.com/dashpay/dash/archive/v%{versionqualified}/%{sourcearchivename}.tar.gz
 Source1: https://github.com/taw00/dashcore-rpm/blob/master/SOURCES/%{srccontribtree}.tar.gz
 Source2: https://github.com/taw00/dashcore-rpm/blob/master/SOURCES/%{blsarchivename}.tar.gz
-
+Source3: https://github.com/rust-lang-nursery/libbacktrace/archive/%{libbacktracearchiveversion}/%{libbacktracearchivename}.tar.gz
+# Source4 and Source5 are for EL8 only
+Source4: http://miniupnp.free.fr/files/%{miniupnpcarchivename}.tar.gz
+Source5: https://download.oracle.com/berkeley-db/%{bdbarchivename}.tar.gz
 %if %{clientSourceIsBinary} || %{serverSourceIsBinary}
-%if 0%{?buildQualifier:1}
-Source3: https://github.com/dashpay/dash/archive/v%{version}-%{buildQualifier}/%{binaryarchivename}-x86_64-linux-gnu.tar.gz
-%else
-Source3: https://github.com/dashpay/dash/archive/v%{version}/%{binaryarchivename}-x86_64-linux-gnu.tar.gz
+Source6: https://github.com/dashpay/dash/archive/v%{versionqualified}/%{binaryarchivename}-x86_64-linux-gnu.tar.gz
 %endif
-%endif
-
-%if ! %{clientSourceIsBinary}
+%if %{buildFromSource}
+# nuke "About QT" in the client source.
 Patch0: https://github.com/taw00/dashcore-rpm/blob/master/SOURCES/%{_name_d}-%{vermajor}-remove-about-qt-menu-item.patch
 %endif
 
 %global selinux_variants mls strict targeted
-%define testing_extras 0
 
 # If you comment out "debug_package" RPM will create additional RPMs that can
 # be used for debugging purposes. I am not an expert at this, BUT ".build_ids"
@@ -206,31 +246,31 @@ URL: http://dash.org/
 # I'm ditching i386 and i686 platform choices. Sorry.
 ExclusiveArch: x86_64
 
-%if ! %{clientSourceIsBinary} || ! %{serverSourceIsBinary}
-  %define buildFromSource 1
-%endif
-
-
-%if 0%{?buildFromSource:1}
+%if %{buildFromSource}
 # As recommended by...
 # https://github.com/dashpay/dash/blob/develop/doc/build-unix.md
 BuildRequires: libtool make autoconf automake patch
-#BuildRequires: gcc-c++ >= 4.9 cmake libstdc++-static
 BuildRequires: cmake libstdc++-static
 BuildRequires: python3
-BuildRequires: libdb4-cxx-devel gettext
-BuildRequires: gettext
-# t0dd: added to avoid unneccessary fetching of libraries from the internet
-#       which is a packaging no-no
-BuildRequires: openssl-devel boost-devel libevent-devel
-BuildRequires: miniupnpc-devel ccache
-#BuildRequires: python3-zmq zeromq-devel
-# t0dd: added to satisfy chia_bls.
-BuildRequires: gmp-devel
-%endif
-# Other BuildRequires listed per package below
 
-#t0dd: SELinux stuff that I just haven't addressed yet...
+%if %{useSystemLibraries}
+# These avoid unneccessary fetching of libraries from the internet.
+# Packaging is supposed to be performable with an airgapped system.
+BuildRequires: gettext
+BuildRequires: openssl-devel boost-devel libevent-devel
+BuildRequires: ccache
+# Added to satisfy chia_bls.
+BuildRequires: gmp-devel
+%if 0%{?fedora}
+# Note, EL8 uses in-src.rpm dependencies since EL8 does not provide these pkgs.
+BuildRequires: libdb4-cxx-devel miniupnpc-devel
+%endif
+%endif
+%endif
+
+# NOTE: other BuildRequires listed per package below
+
+#t0dd: SELinux stuff that I just haven't addressed yet and probably never will...
 #BuildRequires: checkpolicy selinux-policy-devel selinux-policy-doc
 
 # tree, vim-enhanced, and less for mock build environment introspection
@@ -241,30 +281,37 @@ BuildRequires: tree vim-enhanced less findutils
 
 # dashcore-client
 %package client
-Summary: Peer-to-peer, fungible, digital currency, protocol, and platform for payments and decentralized applications (desktop reference client)
+Summary: Decentralized digital currency, protocol, and platform for payments and applications (desktop reference client)
 Requires: dashcore-utils = %{version}-%{release}
 # https://fedoraproject.org/wiki/PackagingDrafts/ScriptletSnippets/Firewalld
 Requires: firewalld-filesystem
 Requires(post): firewalld-filesystem
 Requires(postun): firewalld-filesystem
+
 %if 0%{?fedora} || 0%{?rhel} >= 8
+%if ! %{disable_wallet}
 Requires: qt5-qtwayland
-%endif
 # Required for installing desktop applications on linux
 BuildRequires: libappstream-glib desktop-file-utils
-%if 0%{?buildFromSource:1}
-# t0dd: added to avoid unneccessary fetching of libraries from the internet
-#       which is a packaging no-no
-BuildRequires: qrencode-devel protobuf-devel
+%endif
+
+%if %{buildFromSource} && %{useSystemLibraries}
+# These avoid unneccessary fetching of libraries from the internet.
+# Packaging is supposed to be performable with an airgapped system.
+BuildRequires: protobuf-devel
+%if ! %{disable_wallet}
+BuildRequires: qrencode-devel
 BuildRequires: qt5-qtbase-devel qt5-linguist
-%if 0%{?fedora} || 0%{?rhel} >= 8
 BuildRequires: qt5-qtwayland-devel
 %endif
+# endif build from source and use system libraries
+%endif
+# endif fedora or el8
 %endif
 
 # dashcore-server
 %package server
-Summary: Peer-to-peer, fungible, digital currency, protocol, and platform for payments and decentralized applications (reference server)
+Summary: Decentralized digital currency, protocol, and platform for payments and applications (reference server)
 # https://fedoraproject.org/wiki/PackagingDrafts/ScriptletSnippets/Firewalld
 Requires: firewalld-filesystem
 Requires(post): firewalld-filesystem
@@ -287,18 +334,18 @@ Requires: dashcore-sentinel
 
 # dashcore-libs
 %package libs
-Summary: Peer-to-peer, fungible, digital currency, protocol, and platform for payments and decentralized applications (consensus libraries)
+Summary: Decentralized digital currency, protocol, and platform for payments and applications (consensus libraries)
 
 
 # dashcore-devel
 %package devel
-Summary: Peer-to-peer, fungible, digital currency, protocol, and platform for payments and decentralized applications (dev libraries and headers)
+Summary: Decentralized digital currency, protocol, and platform for payments and applications (dev libraries and headers)
 Requires: dashcore-libs = %{version}-%{release}
 
 
 # dashcore-utils
 %package utils
-Summary: Peer-to-peer, fungible, digital currency, protocol, and platform for payments and decentralized applications (commandline utilities)
+Summary: Decentralized digital currency, protocol, and platform for payments and applications (commandline utilities)
 
 
 # dashcore src.rpm
@@ -425,83 +472,111 @@ Learn more at www.dash.org.
 
 # Message if EL7 found (probably should check for other unsupported OSes as well)
 %if 0%{?rhel} && 0%{?rhel} < 8
-  %{error: "EL7-based platforms (CentOS7/RHEL7) are not supportable build targets."}
+%{error: "EL7-based platforms (CentOS7/RHEL7) are not supportable build targets."}
+%endif
+
+%define _disable_wallet --disable-wallet --without-gui
+%if ! %{disable_wallet}
+  %define _disable_wallet %{nil}
 %endif
 
 mkdir -p %{projectroot}
+
 # Source0: dashcore (source)
-## {_builddir}/dashcore-0.14.0/dashcore-0.14.0.0/  ..or something like..
-## {_builddir}/dash-0.14.0/dash-0.14.0.0-rc1/
+%if %{buildFromSource}
+## {_builddir}/dashcore-0.15.0/dashcore-0.15.0.0/  ..or something like..
+## {_builddir}/dash-0.15.0/dash-0.15.0.0-rc1/
 %setup -q -T -D -a 0 -n %{projectroot}
-
-# Source1: contributions
-## {_builddir}/dashcore-0.14.0/dashcore-0.14.0-contrib/
-%setup -q -T -D -a 1 -n %{projectroot}
-
-# Source2: bls archive
-# Original: https://github.com/codablock/bls-signatures
-mkdir -p %{sourcetree}/depends/sources/
-# ---- rpmlint hates the use of {_sourcedir}, therefore...
-# OPTION 1 -- do it anyway...
-#mv %%{_sourcedir}/%%{blsarchivename}.tar.gz %%{sourcetree}/depends/sources/v%%{blsarchivedate}.tar.gz
-# OPTION 2 -- repack the archive...
-# Man, there has to got be a better way.
-#%%setup -q -T -D -a 2 -n %%{projectroot}
-#tar czf %%{blsarchivename}.tar.gz %%{blsarchivename}
-#mv %%{blsarchivename}.tar.gz %%{sourcetree}/depends/sources/v%%{blsarchivedate}.tar.gz
-# Option 2 update: The build doesn't like me messing with the archive (it does
-# an integrity check on the tarball). So, without editing the build scripts
-# that's a no-go.
-# OPTION 3 -- brute force method - so ugly...
-# Moving the supplied tarball from SOURCES to the desired location
-mv ../../SOURCES/%{blsarchivename}.tar.gz %{sourcetree}/depends/sources/v%{blsarchivedate}.tar.gz
-
-# Source3: dashcore (binary)
-%if %{clientSourceIsBinary} || %{serverSourceIsBinary}
-%setup -q -T -D -a 3 -n %{projectroot}
 %endif
 
+# Source1: contributions
+# {_builddir}/dashcore-0.15.0/dashcore-0.15.0-contrib/
+%setup -q -T -D -a 1 -n %{projectroot}
+
+# Source2: bls (chai_bls) archive
+# Source3: libbacktrace (backtrace) archive
+# Source4: miniupnpc archive
+# Source5: bdb archive
+# {_sourcedir} == ../../SOURCES/ but rpmlint hates use of {_sourcedir}
+# Moving the supplied tarballs from {_sourcedir} to their desired locations
+%if %{buildFromSource} && %{useExtraSources}
+mkdir -p %{sourcetree}/depends/sources/
+mv ../../SOURCES/%{blsarchivename}.tar.gz %{sourcetree}/depends/sources/v%{blsarchivedate}.tar.gz
+mkdir -p %{sourcetree}/depends/sources/
+mv ../../SOURCES/%{libbacktracearchivename}.tar.gz %{sourcetree}/depends/sources/%{libbacktracearchiveversion}.tar.gz
+%if 0%{?rhel:1}
+mkdir -p %{sourcetree}/depends/sources/
+mv ../../SOURCES/%{miniupnpcarchivename}.tar.gz %{sourcetree}/depends/sources/%{miniupnpcarchivename}.tar.gz
+mv ../../SOURCES/%{bdbarchivename}.tar.gz %{sourcetree}/depends/sources/%{bdbarchivename}.tar.gz
+%endif
+%endif
+
+# Source6: dashcore (binary)
+%if ! %{buildFromSource}
+%setup -q -T -D -a 6 {projectroot}
+%endif
+
+# Patch0: get rid of that annoying "About QT" menu option
 %if ! %{clientSourceIsBinary}
 cd %{sourcetree}
 %patch0 -p1
 cd ..
 %endif
 
-#t0dd: Prep SELinux policy -- NOT USED YET
-# Done here to prep for action taken in the %%build step
+#t0dd: Prep SELinux policy -- NOT USED YET and probably never will
+# Done here to prep for action taken in the build step
 # At this moment, we are in the projectroot directory
 mkdir -p selinux-tmp
 cp -p %{srccontribtree}/linux/selinux/dash.{te,if,fc} selinux-tmp/
 
-%if 0%{?buildFromSource:1}
-  # pixmap contributions
-  cp -a %{srccontribtree}/extras/pixmaps/*.??? %{sourcetree}/share/pixmaps/
-  
-  # Swap out packages.mk makefile in order to force usage of OS native devel
-  # libraries and tools. Swap out chia_bls.mk because it asks for a dependency to
-  # gmp that is satisfied via the OS (via BuildRequires) instead.
-  cp -a %{srccontribtree}/build/depends/packages/*.mk %{sourcetree}/depends/packages/
+%if %{buildFromSource}
+
+%if %{useSystemLibraries}
+# Swap out packages.mk and chia_bls.mk makefiles in order to force usage of
+# OS native devel libraries and tools.
+cp -a %{srccontribtree}/build/depends/packages/*.mk %{sourcetree}/depends/packages/
+%if 0%{?rhel:1}
+cp -a %{srccontribtree}/build/depends/packages/packages.mk--EL8 %{sourcetree}/depends/packages/packages.mk
+%endif
+%endif
 %endif
 
 
 %build
 # This section starts us in directory {_builddir}/{projectroot}
-
-%if %{clientSourceIsBinary} && %{serverSourceIsBinary}
+%if ! %{buildFromSource}
   exit 0
 %endif
+
+## A note about the _target_platform (RPM) and AC_CANONICAL_HOST (Makefile)
+## macros.
+## 
+## _target_platform for Fedora/EL8 on X86_64 is x86_64-redhat-linux-gnu
+## AC_CANONICAL_HOST in the makefile will result in x86_64-pc-linux-gnu.
+## Regardless, config.sub in the depends directory will result in this
+## target host being set as such (...pc-linux-gnu) unless we force it to
+## something different.
+##
+## This is a bit baffling. If we don't add HOST= to the makefile, it will
+## default to x86_64-pc-linux-gnu. RPM though wants us to use _target_platform.
+## What is the "right way?" I don't know. I experiment with both.
+##
+## Read more:
+## http://ftp.rpm.org/api/4.4.2.2/config_macros.html
+## https://www.gnu.org/software/autoconf/manual/autoconf-2.69/html_node/Canonicalizing.html
 
 cd %{sourcetree}
 
 # build dependencies
 cd depends
+#%%define _target_platformX x86_64-pc-linux-gnu
+%define _target_platformX %{_target_platform}
 # example: make HOST=x86_64-redhat-linux-gnu -j4
-make HOST=%{_target_platform} -j$(nproc)
+make HOST=%{_target_platformX} -j$(nproc)
 cd ..
 
 # build code
-%define _targettree %{_builddir}/%{projectroot}/%{sourcetree}/depends/%{_target_platform}
-%define _FLAGS CPPFLAGS="$CPPFLAGS -I%{_targettree}/include -I%{_includedir}" LDFLAGS="$LDFLAGS -L%{_targettree}/lib -L%{_libdir}"
+%define _targettree %{_builddir}/%{projectroot}/%{sourcetree}/depends/%{_target_platformX}
 
 %define _disable_tests --disable-tests --disable-gui-tests
 %if %{testing_extras}
@@ -510,12 +585,38 @@ cd ..
 
 ./autogen.sh
 
-%{_FLAGS} ./configure --libdir=%{_targettree}/lib --prefix=%{_targettree} --enable-reduce-exports %{_disable_tests} --disable-zmq
-make 
+## Notes for next step:
+## - for building on ARM (which I do not do) you may have to add
+##   --enable-reduce-exports
+## - --enable-hardening is likely redundant since the RPM build instructions
+##   sets it already, but adding anyway.
+## - building without system libraries replacing most libraries represented in
+##   the depends tree currently does not work. For whatever reason, the QT
+##   libraries don't get picked up in the make step after the configure step.
+
+%if %{useSystemLibraries}
+  # old configuration
+  #%%define _FLAGS CPPFLAGS="$CPPFLAGS -I%%{_targettree}/include -I%%{_includedir}" LDFLAGS="$LDFLAGS -L%%{_targettree}/lib -L%%{_libdir}"
+  #%%{_FLAGS} ./configure --libdir=%%{_targettree}/lib --prefix=%%{_targettree} --enable-reduce-exports %%{_disable_tests} --disable-zmq
+  # current configuration
+  %define _FLAGS CXXFLAGS="-I%{_includedir} -I%{_targettree}/include $CXXFLAGS -O" CPPFLAGS="-I%{_includedir} -I%{_targettree}/include $CPPFLAGS" LDFLAGS="-L%{_libdir} -L%{_targettree}/lib $LDFLAGS"
+  %{_FLAGS} ./configure --libdir=%{_targettree}/lib --includedir=%{_targettree}/include --prefix=%{_targettree} --enable-hardening %{_disable_tests} %{_disable_wallet}
+  make
+%else
+  # NOTE!!! THIS METHOD NOT WORKING JUST YET.
+  %define _FLAGS CXXFLAGS="-I%{_targettree}/include -I%{_includedir} $CXXFLAGS -O" CPPFLAGS="-I%{_targettree}/include -I%{_includedir} $CPPFLAGS" LDFLAGS="-L%{_targettree}/lib -L%{_libdir} $LDFLAGS"
+  %define _PKGCONFIG PKG_CONFIG_PATH="%{_targettree}/lib/pkgconfig:%{_targettree}/share/pkgconfig:%{_libdir}/pkgconfig"
+  %define _QTSTUFF "--with-qt-plugindir=%{_targettree}/plugins --with-qt-translationdir=%{_targettree}/translations --with-qt-libdir=%{_targettree}/lib --with-qt-incdir=%{_targettree}/include --with-qt-bindir=%{_targettree}/bin"
+  # This does nothing, commenting out
+  #cd %%{_targettree} && cp $(find ./plugins | grep "\.a$") ./lib/
+  #cd ../..
+  %{_FLAGS} %{_PKGCONFIG} ./configure --libdir=%{_targettree}/lib --includedir=%{_targettree}/include --with-boost-libdir=%{_targettree}/lib --prefix=%{_targettree} --enable-hardening %{_disable_tests} %{_disable_wallet} %{_QTSTUFF}
+  %{_PKGCONFIG} make 
+%endif
 
 cd ..
 
-#t0dd Not using for now.
+#t0dd Not using for now. Probably will never get to this.
 #t0dd # Build SELinux policy
 #t0dd pushd selinux-tmp
 #t0dd for selinuxvariant in %%{selinux_variants}
@@ -531,7 +632,7 @@ cd ..
 
 %check
 # This section starts us in directory {_builddir}/{projectroot}
-%if %{clientSourceIsBinary} && %{serverSourceIsBinary}
+%if ! %{buildFromSource}
   exit 0
 %endif
 
@@ -552,10 +653,9 @@ cd %{sourcetree}
 
 %install
 # This section starts us in directory {_builddir}/{projectroot}
-
-%if 0%{?buildFromSource:1}
+%if %{buildFromSource}
   cd %{sourcetree}
-  # make install deploys to {_targettree}/ (defined in %%build)
+  # make install deploys to {_targettree}/ (defined in build step)
   #make INSTALL="install -p" CP="cp -p" DESTDIR=%%{buildroot} install
   make install
   cd ..
@@ -602,15 +702,16 @@ install -d -m755 -p %{buildroot}%{_bindir}
 install -d -m755 -p %{buildroot}%{_includedir}
 install -d -m755 -p %{buildroot}%{_libdir}
 
-%if 0%{?buildFromSource:1}
-  mv %{_targettree}/bin/* %{buildroot}%{_bindir}/
+%if %{buildFromSource}
+  mv %{_targettree}/bin/dash* %{buildroot}%{_bindir}/
   mv %{_targettree}/include/dash* %{buildroot}%{_includedir}/
   mv %{_targettree}/lib/libdash* %{buildroot}%{_libdir}/
   install -d -m755 -p %{buildroot}%{_libdir}/pkgconfig
   mv %{_targettree}/lib/pkgconfig/libdash* %{buildroot}%{_libdir}/pkgconfig/
 %endif
+
 %if %{clientSourceIsBinary} && %{serverSourceIsBinary}
-  mv %{binarytree}/bin/* %{buildroot}%{_bindir}/
+  mv %{binarytree}/bin/dash* %{buildroot}%{_bindir}/
   mv %{binarytree}/include/dash* %{buildroot}%{_includedir}/
   mv %{binarytree}/lib/libdash* %{buildroot}%{_libdir}/
 %else
@@ -658,10 +759,17 @@ ln -s %{_sysconfdir}/dashcore/dash.conf %{buildroot}%{_sharedstatedir}/dashcore/
 install -D -m644 %{srccontribtree}/linux/man/man5/* %{buildroot}%{_mandir}/man5/
 # Man Pages (from upstream) - likely to overwrite ones from contrib (which is fine)
 install -D -m644 %{sourcetree}/doc/man/*.1* %{buildroot}%{_mandir}/man1/
+
 %if %{clientSourceIsBinary} || %{serverSourceIsBinary}
-  # probably the same. I haven't checked.
+  # probably the same as above. I haven't checked.
   install -D -m644 %{binarytree}/share/man/man1/*.1* %{buildroot}%{_mandir}/man1/
 %endif
+
+%if %{disable_wallet}
+  rm -f %{buildroot}%{_mandir}/man1/dash-qt*
+  rm -f %{buildroot}%{_bindir}/dash-qt
+%endif
+
 gzip -f %{buildroot}%{_mandir}/man1/*.1
 gzip -f %{buildroot}%{_mandir}/man5/*.5
 
@@ -670,6 +778,8 @@ install -D -m644 %{sourcetree}/contrib/dash-cli.bash-completion %{buildroot}%{_d
 install -D -m644 %{sourcetree}/contrib/dash-tx.bash-completion %{buildroot}%{_datadir}/bash-completion/completions/dash-tx
 install -D -m644 %{sourcetree}/contrib/dashd.bash-completion %{buildroot}%{_datadir}/bash-completion/completions/dashd
 
+## DESKTOP STUFF
+%if ! %{disable_wallet}
 # Desktop elements - desktop file and kde protocol file (from contrib)
 cd %{srccontribtree}/linux/desktop/
 # dash-qt.desktop
@@ -681,29 +791,28 @@ desktop-file-validate %{buildroot}%{_datadir}/applications/dash-qt.desktop
 # https://docs.fedoraproject.org/en-US/packaging-guidelines/AppData/
 install -D -m644 -p dash-qt.appdata.xml %{buildroot}%{_metainfodir}/dash-qt.appdata.xml
 appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/*.appdata.xml
-
-# Desktop elements - hicolor icons
-install -D -m644 dash-hicolor-128.png      %{buildroot}%{_datadir}/icons/hicolor/128x128/apps/dash.png
-install -D -m644 dash-hicolor-16.png       %{buildroot}%{_datadir}/icons/hicolor/16x16/apps/dash.png
-install -D -m644 dash-hicolor-22.png       %{buildroot}%{_datadir}/icons/hicolor/22x22/apps/dash.png
-install -D -m644 dash-hicolor-24.png       %{buildroot}%{_datadir}/icons/hicolor/24x24/apps/dash.png
-install -D -m644 dash-hicolor-256.png      %{buildroot}%{_datadir}/icons/hicolor/256x256/apps/dash.png
-install -D -m644 dash-hicolor-32.png       %{buildroot}%{_datadir}/icons/hicolor/32x32/apps/dash.png
-install -D -m644 dash-hicolor-48.png       %{buildroot}%{_datadir}/icons/hicolor/48x48/apps/dash.png
-install -D -m644 dash-hicolor-scalable.svg %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/dash.svg
-# Desktop elements - HighContrast icons
-install -D -m644 dash-HighContrast-128.png      %{buildroot}%{_datadir}/icons/HighContrast/128x128/apps/dash.png
-install -D -m644 dash-HighContrast-16.png       %{buildroot}%{_datadir}/icons/HighContrast/16x16/apps/dash.png
-install -D -m644 dash-HighContrast-22.png       %{buildroot}%{_datadir}/icons/HighContrast/22x22/apps/dash.png
-install -D -m644 dash-HighContrast-24.png       %{buildroot}%{_datadir}/icons/HighContrast/24x24/apps/dash.png
-install -D -m644 dash-HighContrast-256.png      %{buildroot}%{_datadir}/icons/HighContrast/256x256/apps/dash.png
-install -D -m644 dash-HighContrast-32.png       %{buildroot}%{_datadir}/icons/HighContrast/32x32/apps/dash.png
-install -D -m644 dash-HighContrast-48.png       %{buildroot}%{_datadir}/icons/HighContrast/48x48/apps/dash.png
-install -D -m644 dash-HighContrast-scalable.svg %{buildroot}%{_datadir}/icons/HighContrast/scalable/apps/dash.svg
 cd ../../..
 
-# Misc pixmaps - unsure if they are even used... (from contrib)
-#install -D -m644 %%{srccontribtree}/extras/pixmaps/*.??? %%{buildroot}%%{_datadir}/pixmaps/
+cd %{sourcetree}/share/pixmaps/
+# Desktop elements - hicolor icons
+install -D -m644 dash128.png      %{buildroot}%{_datadir}/icons/hicolor/128x128/apps/dash.png
+install -D -m644 dash16.png       %{buildroot}%{_datadir}/icons/hicolor/16x16/apps/dash.png
+install -D -m644 dash256.png      %{buildroot}%{_datadir}/icons/hicolor/256x256/apps/dash.png
+install -D -m644 dash32.png       %{buildroot}%{_datadir}/icons/hicolor/32x32/apps/dash.png
+install -D -m644 dash64.png       %{buildroot}%{_datadir}/icons/hicolor/64x64/apps/dash.png
+install -D -m644 dash-hicolor-scalable.svg %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/dash.svg
+# Desktop elements - HighContrast icons
+install -D -m644 dash-HighContrast-128.png  %{buildroot}%{_datadir}/icons/HighContrast/128x128/apps/dash.png
+install -D -m644 dash-HighContrast-16.png   %{buildroot}%{_datadir}/icons/HighContrast/16x16/apps/dash.png
+install -D -m644 dash-HighContrast-22.png   %{buildroot}%{_datadir}/icons/HighContrast/22x22/apps/dash.png
+install -D -m644 dash-HighContrast-24.png   %{buildroot}%{_datadir}/icons/HighContrast/24x24/apps/dash.png
+install -D -m644 dash-HighContrast-256.png  %{buildroot}%{_datadir}/icons/HighContrast/256x256/apps/dash.png
+install -D -m644 dash-HighContrast-32.png   %{buildroot}%{_datadir}/icons/HighContrast/32x32/apps/dash.png
+install -D -m644 dash-HighContrast-48.png   %{buildroot}%{_datadir}/icons/HighContrast/48x48/apps/dash.png
+install -D -m644 dash-HighContrast-scalable.svg %{buildroot}%{_datadir}/icons/HighContrast/scalable/apps/dash.svg
+cd ../../..
+# endif not disabled wallet
+%endif
 
 # Config
 # Install default configuration file (from contrib)
@@ -738,7 +847,7 @@ disablewallet=1
 # Only localhost allowed to connect to make RPC calls.
 rpcallowip=127.0.0.1
 " >> %{buildroot}%{_sysconfdir}/dashcore/dash.conf
-install -D -m644 %{buildroot}%{_sysconfdir}/dashcore/dash.conf %{srccontribtree}/extras/dash.conf.example
+install -D -m644 %{buildroot}%{_sysconfdir}/dashcore/dash.conf %{srccontribtree}/dash.conf.example
 
 # Add the rpcuser name and rpcpassword, but really need to be different for the
 # working dash.conf and the example, just in case the user decides to not
@@ -755,7 +864,7 @@ echo "\
 # Example RPC username and password.
 rpcuser=rpcuser-CHANGEME-`head -c 32 /dev/urandom | base64 | head -c 4`
 rpcpassword=CHANGEME`head -c 32 /dev/urandom | base64`
-" >> %{srccontribtree}/extras/dash.conf.example
+" >> %{srccontribtree}/dash.conf.example
 
 # ...message about the convenience symlink:
 echo "\
@@ -789,7 +898,7 @@ install -D -m644 -p %{srccontribtree}/linux/firewalld/usr-lib-firewalld-services
 install -D -m644 -p %{srccontribtree}/linux/firewalld/usr-lib-firewalld-services_dashcore-rpc.xml %{buildroot}%{_usr_lib}/firewalld/services/dashcore-rpc.xml
 install -D -m644 -p %{srccontribtree}/linux/firewalld/usr-lib-firewalld-services_dashcore-testnet-rpc.xml %{buildroot}%{_usr_lib}/firewalld/services/dashcore-testnet-rpc.xml
 
-# Not using for now.
+#t0dd Not using for now. Probably will never get to this.
 #t0dd # Install SELinux policy
 #t0dd for selinuxvariant in %%{selinux_variants}
 #t0dd do
@@ -937,13 +1046,14 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 # dashcore-client
 %files client
 %defattr(-,root,root,-)
+%if ! %{disable_wallet}
 %license %{sourcetree}/COPYING
-%doc %{sourcetree}/doc/*.md %{srccontribtree}/extras/dash.conf.example
+%doc %{sourcetree}/doc/*.md %{srccontribtree}/dash.conf.example
 %{_bindir}/dash-qt
 %{_bindir}/dash-qt.wrapper.sh
 %{_datadir}/applications/dash-qt.desktop
 %{_metainfodir}/dash-qt.appdata.xml
-# XXX Removing this unless someone bitches
+# XXX Removing this unless someone gripes
 #%%{_datadir}/kde4/services/dash-qt.protocol
 %{_datadir}/icons/*
 %{_mandir}/man1/dash-qt.1.gz
@@ -955,9 +1065,8 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #%%dir %%attr(750,dashcore,dashcore) %%{_sysconfdir}/dashcore
 #%%config(noreplace) %%attr(640,dashcore,dashcore) %%{_sysconfdir}/dashcore/dash.conf
 %if %{testing_extras}
-  %if 0%{?buildFromSource:1}
-    %{_bindir}/test_dash-qt
-  %endif
+  %{_bindir}/test_dash-qt
+%endif
 %endif
 
 
@@ -965,7 +1074,7 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 %files server
 %defattr(-,root,root,-)
 %license %{sourcetree}/COPYING
-%doc %{sourcetree}/doc/*.md %{srccontribtree}/extras/dash.conf.example
+%doc %{sourcetree}/doc/*.md %{srccontribtree}/dash.conf.example
 
 # Application as systemd service directory structure
 %defattr(-,dashcore,dashcore,-)
@@ -1024,10 +1133,8 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #t0dd %%{_datadir}/selinux/*/dash.pp
 
 %if %{testing_extras}
-  %if 0%{?buildFromSource:1}
-    %{_bindir}/test_dash
-    %{_bindir}/bench_dash
-  %endif
+  %{_bindir}/test_dash
+  %{_bindir}/bench_dash
 %endif
 
 
@@ -1079,14 +1186,70 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 # Source snapshots...
 #     https://github.com/dashpay/dash/tags
 #     https://github.com/dashpay/dash/releases
-#     test example: dash-0.14.0.0-rc1.tar.gz
-#     release example: dash-0.14.0.0.tar.gz
+#     test example: dash-0.15.0.0-rc1.tar.gz
+#     release example: dash-0.15.0.0.tar.gz
 #
 # Dash Core git repos...
 #   * Dash: https://github.com/dashpay/dash
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
+* Wed Feb 19 2020 Todd Warner <t0dd_at_protonmail.com> 0.15.0.0-1.taw
+* Wed Feb 19 2020 Todd Warner <t0dd_at_protonmail.com> 0.15.0.0-0.8.testing.taw
+  - 0.15
+  - changed how dash.conf.example is constructed. I don't like it, but it is  
+    what it is.
+  - removed contributed pixmaps (no longer needed -- provided by upstream)
+  - package summaries were too long. Shortened.
+
+* Sat Feb 15 2020 Todd Warner <t0dd_at_protonmail.com> 0.15.0.0-0.7.rc4.taw
+  - 0.15 RC4
+
+* Thu Feb 06 2020 Todd Warner <t0dd_at_protonmail.com> 0.15.0.0-0.6.rc3.taw
+  - 0.15 RC3
+
+* Fri Jan 31 2020 Todd Warner <t0dd_at_protonmail.com> 0.15.0.0-0.5.rc2.taw
+  - 0.15 RC2
+  - Using desktop icon images from the shipped tarball (instead of a  
+    separate tarball) to be deployed with the desktop client. I.e. My  
+    contributions were included in this release:  
+    https://github.com/dashpay/dash/pull/3209
+
+* Mon Dec 23 2019 Todd Warner <t0dd_at_protonmail.com> 0.15.0.0-0.4.rc1.taw
+  - re-ordered how libraries and includes are examined upon build. Previous  
+    ordering resulted in a missing libQT5Core.so.5 dependency. Fixed.  
+    ...i.e...  
+    nothing provides libQt5Core.so.5(Qt_5.13)(64bit) needed by dashcore-client...
+
+* Sun Dec 22 2019 Todd Warner <t0dd_at_protonmail.com> 0.15.0.0-0.3.rc1.taw
+  - Simplified the "extra sources" logic.
+  - There is some discrepancy in the Makefile's version of the target  
+    platform (x86_64-pc-linux-gnu) and the RPM specfile's result  
+    (x86_64-redhat-linux-gnu). We will use RPM's version since we then don't  
+    need to hardcode a value in the specfile.
+  - Note: For the life of me, I CANNOT get the build to work with the depends  
+    system completely. For whatever reason, libqminimal (and I am sure other  
+    QT libraries simply no longer can be found. Why? I don't get it. RPM  
+    washes the environment clean and I, apparently, can't seem to rebuild it  
+    from  scratch. Additionally, things are lost from process to process during  
+    a build. So . . . Moral of the story: We use system-supplied libraries for  
+    builds except for a few particulars (miniupnpc, etc). This is how a package  
+    should be built anyway.
+
+* Wed Dec 18 2019 Todd Warner <t0dd_at_protonmail.com> 0.15.0.0-0.2.rc1.taw
+* Wed Dec 18 2019 Todd Warner <t0dd_at_protonmail.com> 0.15.0.0-0.1.rc1.taw
+  - 0.15.0.0-rc1
+  - Tried to simplify the "is this a source build or not" logic
+  - Added flag to tell the build system whether to use the system OS  
+    libraries or not. Ie, . . .
+  - Note, for 0.15, the dash core development team stressed that they do not  
+    prefer packagers to depend on certain system libraries. Though I  
+    sympathize with their position on this, I don't agree. HOWEVER, it's  
+    their project and I will defer on this point for the moment. It just  
+    means that dash will never ever be distributed by Fedora or RH proper.
+  - We now supply libbacktrace source tarball as well.
+  - We now supply miniupnpc and db4 source tarballs for EL8 builds.
+
 * Mon Dec 9 2019 Todd Warner <t0dd_at_protonmail.com> 0.14.0.5-1.taw
 * Mon Dec 9 2019 Todd Warner <t0dd_at_protonmail.com> 0.14.0.5-1.rp.taw
 * Mon Dec 9 2019 Todd Warner <t0dd_at_protonmail.com> 0.14.0.5-0.1.testing.taw
