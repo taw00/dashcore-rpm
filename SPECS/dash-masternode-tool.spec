@@ -48,9 +48,9 @@ Summary: Manage and collateralize a Dash Masternode with a hardware wallet
 Version: %{vermajor}.%{verminor}
 
 # RELEASE
-%define _pkgrel 4
+%define _pkgrel 5
 %if ! %{targetIsProduction}
-  %define _pkgrel 3.1
+  %define _pkgrel 4.1
 %endif
 
 # MINORBUMP
@@ -147,7 +147,8 @@ Source2: https://github.com/taw00/dashcore-rpm/blob/master/SOURCES/%{archivename
 Requires: zenity
 BuildRequires: python3-devel python3-virtualenv
 BuildRequires: libusbx-devel libudev-devel
-BuildRequires: gcc-c++ cmake
+BuildRequires: python3-pyqt5-sip python3-pyqtchart
+BuildRequires: gcc-c++ cmake gmp-devel
 # All these python requirements were an attempt to reduce the python upstream
 # fetches by the build. Unfortunately, DMT doesn't attempt to use
 # system-installed packages.
@@ -246,7 +247,7 @@ cd ../.. ; /usr/bin/tree -df -L 2 BUILD ; cd -
   # Next pip3 command line is to address a bug in pyinstaller, see
   # https://github.com/pyinstaller/pyinstaller/issues/4003  
   # https://stackoverflow.com/questions/54338714/pip-install-pyinstaller-no-module-named-pyinstaller
-  ./venv/bin/pip3 install pip==18.1
+  #./venv/bin/pip3 install pip==18.1
   ./venv/bin/pip3 install pyinstaller
   ./venv/bin/pip3 install --upgrade setuptools
   ./venv/bin/pip3 install ./%{sourcetree_btchip_python}
@@ -374,6 +375,14 @@ cd ../../
 
 
 %changelog
+* Tue May 19 2020 Todd Warner <t0dd_at_protonmail.com> 0.9.26-5.hotfix2.taw
+* Tue May 19 2020 Todd Warner <t0dd_at_protonmail.com> 0.9.26-4.1.hotfix2.taw
+  - pip 19.0 bug is supposedly fixed via upgrade to 20.1+ (see 0.9.21 release  
+    below) so can remove workaround.
+  - Using pyqt5 and such from the OS versus whatever was being fetched from  
+    the internet
+  - BuildRequires: python3-pyqt5-sip python3-pyqtchart gmp-devel
+
 * Thu Oct 03 2019 Todd Warner <t0dd_at_protonmail.com> 0.9.26-4.hotfix2.taw
 * Thu Oct 03 2019 Todd Warner <t0dd_at_protonmail.com> 0.9.26-3.1.hotfix2.taw
   - updated requirements.txt
@@ -447,7 +456,7 @@ cd ../../
 
 * Tue Feb 05 2019 Todd Warner <t0dd_at_protonmail.com> 0.9.21-1.1.testing.taw
   - Fixed my broken config file sniffing logic in the .sh wrapper script
-  - pyinstaller has a bug, therefore I had to add...  
+  - pip 19.0 associated to pyinstaller has a bug, therefore I had to add...  
       ./venv/bin/pip3 install pip==18.1  
     The bug is: https://github.com/pyinstaller/pyinstaller/issues/4003  
     Associated: https://stackoverflow.com/questions/54338714/pip-install-pyinstaller-no-module-named-pyinstaller
