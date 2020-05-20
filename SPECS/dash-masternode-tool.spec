@@ -115,7 +115,7 @@ Release: %{_release}
 %define projectroot %{name}-%{vermajor}
 %if 0%{?buildQualifier:1}
 %define sourcetree %{name}-%{version}-%{buildQualifier}
-%define binaryarchivename %{_name2}_%{version}.%{buildQualifier}.linux
+%define binaryarchivename %{_name2}_%{version}-%{buildQualifier}.linux
 %else
 %define sourcetree %{name}-%{version}
 %define binaryarchivename %{_name2}_%{version}.linux
@@ -147,8 +147,10 @@ Source2: https://github.com/taw00/dashcore-rpm/blob/master/SOURCES/%{archivename
 Requires: zenity
 BuildRequires: python3-devel python3-virtualenv
 BuildRequires: libusbx-devel libudev-devel
-BuildRequires: python3-pyqt5-sip python3-pyqtchart
+# Can't use OS-level qt bits for some reason.
+#BuildRequires: python3-qt5 python3-pyqt5-sip python3-pyqtchart
 BuildRequires: gcc-c++ cmake gmp-devel
+BuildRequires: sed
 # All these python requirements were an attempt to reduce the python upstream
 # fetches by the build. Unfortunately, DMT doesn't attempt to use
 # system-installed packages.
@@ -237,7 +239,17 @@ cd ../.. ; /usr/bin/tree -df -L 2 BUILD ; cd -
 
   # My modified requirements a tad since we use the native QT libraries
   # and include btchip-python
-  cp %{sourcetree_contrib}/build/requirements.txt %{sourcetree}/
+  #cp %%{sourcetree_contrib}/build/requirements.txt %%{sourcetree}/
+  # UPDATE (20200520): instead of slapping a state requirements.txt file
+  # replace in place, just edit the existing one with sed.
+  sed -i.previous '{s/'"libusb1"'/'"#libusb1"'/}' %{sourcetree}/requirements.txt
+  sed -i.previous '{s/'"pyinstaller"'/'"#pyinstaller"'/}' %{sourcetree}/requirements.txt
+  sed -i.previous '{s/''-e git+https:\/\/github''/''#-e git+https:\/\/github''/}' %{sourcetree}/requirements.txt
+  #sed -i.previous '{s/'"PyQt5==5.9.2"'/'"PyQt5==5.13.2"'/}' %{sourcetree}/requirements.txt
+  #sed -i.previous '{s/'"PyQtChart==5.9.2"'/'"PyQtChart==5.14.0"'/}' %{sourcetree}/requirements.txt
+  # NOPE
+  #sed -i.previous '{s/'"PyQt5==5.9.2"'/'"PyQt5==5.9.2"'/}' %{sourcetree}/requirements.txt
+  #sed -i.previous '{s/'"PyQtChart==5.9.2"'/''PyQtChart==5.9.2\nsip==4.19.8''/}' %{sourcetree}/requirements.txt
   cp %{sourcetree_contrib}/build/version.txt %{sourcetree}/
 
   [ -f /usr/bin/virtualenv-3 ] && /usr/bin/virtualenv-3 -p python3 ./venv || /usr/bin/virtualenv -p python3 ./venv
@@ -248,10 +260,16 @@ cd ../.. ; /usr/bin/tree -df -L 2 BUILD ; cd -
   # https://github.com/pyinstaller/pyinstaller/issues/4003  
   # https://stackoverflow.com/questions/54338714/pip-install-pyinstaller-no-module-named-pyinstaller
   #./venv/bin/pip3 install pip==18.1
-  ./venv/bin/pip3 install pyinstaller
-  ./venv/bin/pip3 install --upgrade setuptools
-  ./venv/bin/pip3 install ./%{sourcetree_btchip_python}
+  ./venv/bin/pip3 install 'pyinstaller==3.3'
+  # To solve https://github.com/taw00/dashcore-rpm/issues/1 either force version downgrade or see other solution below
+  #./venv/bin/pip3 install --upgrade setuptools
+  ./venv/bin/pip3 install --upgrade 'setuptools<45.0.0'
   cd %{sourcetree}
+  #../venv/bin/pip3 install pip-download
+  #../venv/bin/pip-download --show-config
+  #../venv/bin/pip-download -r requirements.txt
+  #exit 1
+  ../venv/bin/pip3 install ../%{sourcetree_btchip_python}
   ../venv/bin/pip3 install -r requirements.txt
   cd ..
 %else
@@ -271,7 +289,10 @@ cd ../.. ; /usr/bin/tree -df -L 2 BUILD ; cd -
 
 %if ! %{sourceIsBinary}
   cd %{sourcetree}
+  # To solve https://github.com/taw00/dashcore-rpm/issues/1 either force add hidden import or see other solution above
+  # ...but... this didn't seem to work.
   ../venv/bin/pyinstaller --distpath=../dist/linux --workpath=../dist/linux/build dash_masternode_tool.spec
+  #../venv/bin/pyinstaller --hidden-import='pkg_resources.py2_warn' --distpath=../dist/linux --workpath=../dist/linux/build dash_masternode_tool.spec
   cd ..
 %endif
 
@@ -355,7 +376,6 @@ cd ../../
 #%%license %%{sourcetree}/LICENSE
 %license %{sourcetree_contrib}/LICENSE
 %doc %{sourcetree_contrib}/README.about-this-rpm.md
-%doc %{sourcetree_contrib}/README.changelog.md
 %if ! %{sourceIsBinary}
 %doc %{sourcetree}/README.md
 %else
@@ -377,11 +397,14 @@ cd ../../
 %changelog
 * Tue May 19 2020 Todd Warner <t0dd_at_protonmail.com> 0.9.26-5.hotfix2.taw
 * Tue May 19 2020 Todd Warner <t0dd_at_protonmail.com> 0.9.26-4.1.hotfix2.taw
-  - pip 19.0 bug is supposedly fixed via upgrade to 20.1+ (see 0.9.21 release  
-    below) so can remove workaround.
-  - Using pyqt5 and such from the OS versus whatever was being fetched from  
-    the internet
-  - BuildRequires: python3-pyqt5-sip python3-pyqtchart gmp-devel
+  - Removed pip 19.0 bug workaround cuz it was fixed in more recent pip  
+    versions (see 0.9.21 release  
+  - Forced usage of older setuptools (v44) because of issue  
+    https://github.com/taw00/dashcore-rpm/issues/1
+  - Removed static requirements.txt replacement from contrib tree. Using sed  
+    tool to do the same work.
+  - Fedora 32 has to use a binary build from a prior version because it will  
+    build with Python 3.8 or newer PyQT, etc etc.
 
 * Thu Oct 03 2019 Todd Warner <t0dd_at_protonmail.com> 0.9.26-4.hotfix2.taw
 * Thu Oct 03 2019 Todd Warner <t0dd_at_protonmail.com> 0.9.26-3.1.hotfix2.taw

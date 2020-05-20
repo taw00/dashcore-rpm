@@ -1,3 +1,7 @@
+## OUTDATED
+Please note that currently the documentation lags behind the development of the program, in particular in the area 
+related to starting masternodes. It will be improved according to the resources available. 
+
 # Dash Masternode Tool (DMT)
 
 ## Contents
@@ -18,6 +22,7 @@
    * [Command line parameters](#command-line-parameters)
  * [Features](#features)
    * [Starting a masternode](#starting-a-masternode)
+   * [Registration of a deterministic masternode](doc/deterministic-mn-migration.md)
    * [Transferring masternode earnings](#transferring-masternode-earnings)
    * [Signing messages with a hardware wallet](#signing-messages-with-a-hardware-wallet)
    * [Changing a hardware wallet PIN/passphrase](#changing-a-hardware-wallet-pinpassphrase)
@@ -84,7 +89,7 @@ Depending on your preferences (and skills) you can choose one of three possible 
 ## Masternode setup
 
 Here we make the following assumptions:
-  * You already have a server running the Dash daemon software (*dashd*) that you want to use as a masternode. If you don't, you will need to install and configure one first by following the guide on the [Dash Wiki](https://dashpay.atlassian.net/wiki/spaces/DOC/pages/113934340).
+  * You already have a server running the Dash daemon software (*dashd*) that you want to use as a masternode. If you don't, you will need to install and configure one first by following the guide on the [Dash Wiki](https://docs.dash.org/en/stable/masternodes/setup.html).
   * We occasionally refer to the *dashd* configuration file, so it is assumed that *dashd* is running under a Linux operating system (OS), which is the most popular and recommended OS for this purpose.
   * Your server has a public IP address that will be visible on the Internet.
   * You have set up a TCP port on which your *dashd* listens for incoming connections (usually 9999).
@@ -117,7 +122,7 @@ This section describes the steps taken by the application while starting the mas
 
 The steps are as follows:
 
-1. Verification that all the required fields are filled with correct values. These fields are: `IP`, `port`, `MN private key`, `Collateral`, `Collateral TX ID` and `TX index`.
+1. Verification that all the required fields are filled with correct values. These fields are: `IP`, `port`, `MN private key`, `Collateral`, `Collateral TX hash` and `TX index`.
   An example message in case of errors:  
   ![Invalid collateral transaction id](doc/img/startmn-fields-validation-error.png)
 
