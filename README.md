@@ -1,23 +1,15 @@
 # Dash Core for Fedora Linux<br />_...wallet, node, and masternode_
 
-**Important notice:**
-* Dash Core RPMs:
-  - EL7 and Fedora Linux 29 and older users: migrate to Fedora Linux 31 or later.
-  - EL8 is currently functional, but I'm not targeting that build any time
-    soon. Fedora is stable enough, and if you use the systemd configurations I
-    provide, nodes become near bullet proof.
-  - Keep current with the latest Fedora.
+**Important notices:**
+* For both Dash Core and Dash Masternode Tool (DMT), I no longer supply packages for RHEL/CentOS.
+* For Dash Core, use the provided systemd configuration. This makes nodes near bullet-proof, even on Fedora.
 * Dash Masternode Tool: DMT will remain Fedora-only! except for test builds.
-
-Dash Core 0.15 was released on Feb 19, 2020.
-
-* Fedora Linux 29 and older are EOL (end-of-life).
-* RHEL7/CentOS7 were dropped because the OS supplied libraries are simply far too
-  dated.
+* Dash Core 0.15 was released on Feb 19, 2020.
+* Keep up with Fedora's release schedule: <https://fedoraproject.org/wiki/Releases>
 
 Fedora upgrades are easy (see available documentation in the "documentation"
-folder). RHEL/CentOS to Fedora or newer RHEL/CentOS should be performed as
-fresh installs.
+folder). Legacy comment: RHEL/CentOS to Fedora or newer RHEL/CentOS should be
+performed as fresh installs.
 
 ---
 
@@ -72,16 +64,10 @@ loss of funds or damages associated to this software.
 
 ### Send comment and feedback - <https://keybase.io/toddwarner>
 
-_Come say hello to me. I am **t0dd** or **taw** in various forums: [Dash Nation
-on Discord](https://dashchat.org/), [Dash Talk on
-Discord](http://staydashy.com/), [dash.org's
-forum](https://www.dash.org/forum/), [#dashpay on freenode
+_Come say hello to me. I am **t0dd** in various forums: [Dash Nation on
+Discord](https://dashchat.org/), [Dash Talk on Discord](http://staydashy.com/),
+[dash.org's forum](https://www.dash.org/forum/), [#dashpay on freenode
 IRC](http://freenode.net/), [Official Dash Chat on
 Telegram](https://web.telegram.org/#/im?p=@dash_chat), and
 [/r/dashpay/](https://www.reddit.com/r/dashpay) on Reddit._
 
-_If you like my Dash stuff, also check out the packages I maintain for a couple
-other projects. Namely [ZCash](https://github.com/taw00/zcash-rpm) and
-[BEAM](https://github.com/taw00/beam-rpm). I'm most bullish on Dash and the
-direction that project is taking, but I am a fan of what Zcash and the two
-primary Mimblewimble implementation teams are doing. Don't troll me. :)_
