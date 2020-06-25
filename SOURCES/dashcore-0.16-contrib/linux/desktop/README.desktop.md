@@ -18,6 +18,8 @@ These images and files are to be installed by a package management system, for
 example RPM/DNF or DEB/APT.
 
 For more information about "the standards" please check out these pages...
+<https://specifications.freedesktop.org/desktop-entry-spec/desktop-entry-spec-latest.html>
+<https://www.freedesktop.org/software/appstream/docs/chap-Metadata.html>
 <https://docs.fedoraproject.org/en-US/packaging-guidelines/#_desktop_files>
 <https://docs.fedoraproject.org/en-US/packaging-guidelines/AppData/>
 <https://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard>
@@ -37,10 +39,8 @@ The desktop images are all installed to these file trees...
 
 And they will follow this pattern...
 ```
-/usr/share/icons/hicolor/128x128/apps/dash.png
-/usr/share/icons/hicolor/64x64/apps/dash.png
-/usr/share/icons/hicolor/48x48/apps/dash.png
-/usr/share/icons/hicolor/scalable/apps/dash.svg
+/usr/share/icons/hicolor/XXXxYYY/apps/org.dash.Dashcore.dash-qt.png
+/usr/share/icons/hicolor/scalable/apps/org.dash.Dashcore.dash-qt.svg
 ```
 
 The HighContrast icons follow the same pattern.
@@ -65,8 +65,8 @@ For the dash-qt.desktop file you do this...
 ```
 cp dash-qt.desktop /usr/share/applications/
 cp dash-qt.wrapper.sh /usr/bin/ ; chmod +x /usr/bin/dash-qt.wrapper.sh
-desktop-file-install --dir=/usr/share/applications dash-qt.desktop
-desktop-file-validate /usr/share/applications/dash-qt.desktop
+desktop-file-install --dir=/usr/share/applications org.dash.Dashcore.dash-qt.desktop
+desktop-file-validate /usr/share/applications/org.dash.Dashcore.dash-qt.desktop
 ```
 
 Note: The `dash-qt.desktop` file directs the desktop to call a wrapper script
@@ -76,7 +76,7 @@ that sets some needed environment variables instead of just calling the raw
 For the dash-qt.appdata.xml file you do this...
 ```
 cp dash.appdata.xml /usr/share/metainfo/
-appstream-util validate-relax --nonet /usr/share/metainfo/dash.appdata.xml
+appstream-util validate-relax --nonet /usr/share/metainfo/org.dash.Dashcore.dash-qt.appdata.xml
 ```
 
 Note to packagers: Translators are needed. Editors of the text are needed. And

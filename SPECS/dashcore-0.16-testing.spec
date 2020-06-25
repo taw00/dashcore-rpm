@@ -23,6 +23,7 @@
 
 %define _name_d dash
 %define _name_dc dashcore
+%define tld_vendor_product_id org.dash.Dashcore
 Name: %{_name_dc}
 Summary: A global payments network and decentralized application (dapp) platform: a peer-to-peer, fungible, digital currency, protocol, and platform.
 
@@ -63,7 +64,7 @@ Version: %{vermajor}.%{verminor}
 # package release (and for testing only, extrarel)
 %define _pkgrel 1
 %if ! %{targetIsProduction}
-  %define _pkgrel 0.1
+  %define _pkgrel 0.2
 %endif
 
 # MINORBUMP
@@ -817,41 +818,41 @@ install -D -m644 %{srccontribtree}/linux/binary-build-contribs/bash-completion/d
 %if ! %{disable_wallet}
 # Desktop elements - desktop file and kde protocol file (from contrib)
 cd %{srccontribtree}/linux/desktop/
-# dash-qt.desktop
+# org.dash.Dashcore.dash-qt.desktop
 # https://docs.fedoraproject.org/en-US/packaging-guidelines/#_desktop_files
 install -m755  dash-qt.wrapper.sh %{buildroot}%{_bindir}/
-desktop-file-install --dir=%{buildroot}%{_datadir}/applications dash-qt.desktop
-desktop-file-validate %{buildroot}%{_datadir}/applications/dash-qt.desktop
-# dash-qt.appdata.xml
+desktop-file-install --dir=%{buildroot}%{_datadir}/applications %{tld_vendor_product_id}.dash-qt.desktop
+desktop-file-validate %{buildroot}%{_datadir}/applications/%{tld_vendor_product_id}.dash-qt.desktop
+# org.dash.Dashcore.dash-qt.appdata.xml
 # https://docs.fedoraproject.org/en-US/packaging-guidelines/AppData/
-install -D -m644 -p dash-qt.appdata.xml %{buildroot}%{_metainfodir}/dash-qt.appdata.xml
+install -D -m644 -p %{tld_vendor_product_id}.dash-qt.appdata.xml %{buildroot}%{_metainfodir}/%{tld_vendor_product_id}.dash-qt.appdata.xml
 appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/*.appdata.xml
 cd ../../..
 
 %if %{buildFromSource}
 cd %{sourcetree}/share/pixmaps/
 # Desktop elements - hicolor icons
-install -D -m644 dash128.png      %{buildroot}%{_datadir}/icons/hicolor/128x128/apps/dash.png
-install -D -m644 dash16.png       %{buildroot}%{_datadir}/icons/hicolor/16x16/apps/dash.png
-install -D -m644 dash256.png      %{buildroot}%{_datadir}/icons/hicolor/256x256/apps/dash.png
-install -D -m644 dash32.png       %{buildroot}%{_datadir}/icons/hicolor/32x32/apps/dash.png
-install -D -m644 dash64.png       %{buildroot}%{_datadir}/icons/hicolor/64x64/apps/dash.png
-install -D -m644 dash-hicolor-scalable.svg %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/dash.svg
+install -D -m644 dash128.png                %{buildroot}%{_datadir}/icons/hicolor/128x128/apps/%{tld_vendor_product_id}.dash-qt.png
+install -D -m644 dash16.png                   %{buildroot}%{_datadir}/icons/hicolor/16x16/apps/%{tld_vendor_product_id}.dash-qt.png
+install -D -m644 dash256.png                %{buildroot}%{_datadir}/icons/hicolor/256x256/apps/%{tld_vendor_product_id}.dash-qt.png
+install -D -m644 dash32.png                   %{buildroot}%{_datadir}/icons/hicolor/32x32/apps/%{tld_vendor_product_id}.dash-qt.png
+install -D -m644 dash64.png                   %{buildroot}%{_datadir}/icons/hicolor/64x64/apps/%{tld_vendor_product_id}.dash-qt.png
+install -D -m644 dash-hicolor-scalable.svg %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/%{tld_vendor_product_id}.dash-qt.svg
 # Desktop elements - HighContrast icons
-install -D -m644 dash-HighContrast-128.png  %{buildroot}%{_datadir}/icons/HighContrast/128x128/apps/dash.png
-install -D -m644 dash-HighContrast-16.png   %{buildroot}%{_datadir}/icons/HighContrast/16x16/apps/dash.png
-install -D -m644 dash-HighContrast-22.png   %{buildroot}%{_datadir}/icons/HighContrast/22x22/apps/dash.png
-install -D -m644 dash-HighContrast-24.png   %{buildroot}%{_datadir}/icons/HighContrast/24x24/apps/dash.png
-install -D -m644 dash-HighContrast-256.png  %{buildroot}%{_datadir}/icons/HighContrast/256x256/apps/dash.png
-install -D -m644 dash-HighContrast-32.png   %{buildroot}%{_datadir}/icons/HighContrast/32x32/apps/dash.png
-install -D -m644 dash-HighContrast-48.png   %{buildroot}%{_datadir}/icons/HighContrast/48x48/apps/dash.png
-install -D -m644 dash-HighContrast-scalable.svg %{buildroot}%{_datadir}/icons/HighContrast/scalable/apps/dash.svg
+install -D -m644 dash-HighContrast-128.png       %{buildroot}%{_datadir}/icons/HighContrast/128x128/apps/%{tld_vendor_product_id}.dash-qt.png
+install -D -m644 dash-HighContrast-16.png          %{buildroot}%{_datadir}/icons/HighContrast/16x16/apps/%{tld_vendor_product_id}.dash-qt.png
+install -D -m644 dash-HighContrast-22.png          %{buildroot}%{_datadir}/icons/HighContrast/22x22/apps/%{tld_vendor_product_id}.dash-qt.png
+install -D -m644 dash-HighContrast-24.png          %{buildroot}%{_datadir}/icons/HighContrast/24x24/apps/%{tld_vendor_product_id}.dash-qt.png
+install -D -m644 dash-HighContrast-256.png       %{buildroot}%{_datadir}/icons/HighContrast/256x256/apps/%{tld_vendor_product_id}.dash-qt.png
+install -D -m644 dash-HighContrast-32.png          %{buildroot}%{_datadir}/icons/HighContrast/32x32/apps/%{tld_vendor_product_id}.dash-qt.png
+install -D -m644 dash-HighContrast-48.png          %{buildroot}%{_datadir}/icons/HighContrast/48x48/apps/%{tld_vendor_product_id}.dash-qt.png
+install -D -m644 dash-HighContrast-scalable.svg %{buildroot}%{_datadir}/icons/HighContrast/scalable/apps/%{tld_vendor_product_id}.dash-qt.svg
 cd -
 %endif
 %if %{clientSourceIsBinary}
 cd %{srccontribtree}/linux/binary-build-contribs/desktop/
-install -D -m644 dash-hicolor-scalable.svg %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/dash.svg
-install -D -m644 dash-HighContrast-scalable.svg %{buildroot}%{_datadir}/icons/HighContrast/scalable/apps/dash.svg
+install -D -m644 dash-hicolor-scalable.svg           %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/%{tld_vendor_product_id}.dash-qt.svg
+install -D -m644 dash-HighContrast-scalable.svg %{buildroot}%{_datadir}/icons/HighContrast/scalable/apps/%{tld_vendor_product_id}.dash-qt.svg
 cd -
 %endif
 # endif not disabled wallet
@@ -1101,8 +1102,8 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 %endif
 %{_bindir}/dash-qt
 %{_bindir}/dash-qt.wrapper.sh
-%{_datadir}/applications/dash-qt.desktop
-%{_metainfodir}/dash-qt.appdata.xml
+%{_datadir}/applications/%{tld_vendor_product_id}.dash-qt.desktop
+%{_metainfodir}/%{tld_vendor_product_id}.dash-qt.appdata.xml
 # XXX Removing this unless someone gripes
 #%%{_datadir}/kde4/services/dash-qt.protocol
 %{_datadir}/icons/*
@@ -1261,6 +1262,10 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
+* Thu Jun 25 2020 Todd Warner <t0dd_at_protonmail.com> 0.16.0.0-0.2.rc1.taw
+  - updated appdata.xml, .desktop files, and icons to desktop spec naming  
+    and ID standards.
+
 * Fri Jun 12 2020 Todd Warner <t0dd_at_protonmail.com> 0.16.0.0-0.1.rc1.taw
   - 0.16 RC1 — https://github.com/dashpay/dash/releases/tag/v0.16.0.0-rc1
   - Product brief: https://blog.dash.org/product-brief-dash-core-release-v0-16-0-now-on-testnet-55c7ac5ff768
