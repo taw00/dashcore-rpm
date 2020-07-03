@@ -46,7 +46,7 @@ Summary: A global payments network and decentralized application (dapp) platform
 
 # Use if the dev team includes things like rc3 in the filename
 %undefine buildQualifier
-%define buildQualifier rc1
+%define buildQualifier rc2
 
 # VERSION
 %define vermajor 0.16
@@ -64,7 +64,7 @@ Version: %{vermajor}.%{verminor}
 # package release (and for testing only, extrarel)
 %define _pkgrel 1
 %if ! %{targetIsProduction}
-  %define _pkgrel 0.2
+  %define _pkgrel 0.3
 %endif
 
 # MINORBUMP
@@ -289,7 +289,7 @@ Requires: firewalld-filesystem
 Requires(post): firewalld-filesystem
 Requires(postun): firewalld-filesystem
 
-%if 0%{?fedora} || 0%{?rhel} >= 8
+%if 0%{?fedora} || 0%{?rhel} >= 8 || 0%{?centos_ver} >= 8
 %if ! %{disable_wallet}
 Requires: qt5-qtwayland
 # Required for installing desktop applications on linux
@@ -495,9 +495,30 @@ Learn more at www.dash.org.
 %prep
 # Prep section starts us in directory .../BUILD (aka {_builddir})
 
+%if 0%{?suse_version:1}
+  echo "======== OpenSUSE version: %{suse_version} %{sle_version}"
+  echo "-------- Leap 15.1  will report as 1500 150100"
+  echo "-------- Leap 15.2  will report as 1500 150200"
+  echo "-------- Tumbleweed will report as 1550 undefined"
+  %{error: "OpenSUSE (Leap or Tumbleweed) are not supported build targets."}
+%endif
+
+%if 0%{?rhel}
+  echo "======== RHEL version: %{rhel}"
+%endif
+%if 0%{?centos}
+  echo "======== Centos version — {centos}: %{centos} {centos_ver}: %{centos_ver}"
+%endif
+%if 0%{?fedora:1}
+  echo "======== Fedora version: %{fedora}"
+%endif
+
 # Message if EL7 found (probably should check for other unsupported OSes as well)
 %if 0%{?rhel} && 0%{?rhel} < 8
-%{error: "EL7-based platforms (CentOS7/RHEL7) are not supportable build targets."}
+%{error: "EL7-based platforms (CentOS7/RHEL7) are not supported build targets."}
+%endif
+%if 0%{?centos} && 0%{?centos_ver} < 8
+%{error: "EL7-based platforms (CentOS7/RHEL7) are not supported build targets."}
 %endif
 
 %define _disable_wallet --disable-wallet --without-gui
@@ -533,7 +554,7 @@ mkdir -p %{sourcetree}/depends/sources/
 mv ../../SOURCES/%{blsarchivename}.tar.gz %{sourcetree}/depends/sources/v%{blsarchivedate}.tar.gz
 mkdir -p %{sourcetree}/depends/sources/
 mv ../../SOURCES/%{libbacktracearchivename}.tar.gz %{sourcetree}/depends/sources/%{libbacktracearchiveversion}.tar.gz
-%if 0%{?rhel:1}
+%if 0%{?rhel:1} || 0%{?centos:1}
 mkdir -p %{sourcetree}/depends/sources/
 mv ../../SOURCES/%{miniupnpcarchivename}.tar.gz %{sourcetree}/depends/sources/%{miniupnpcarchivename}.tar.gz
 mv ../../SOURCES/%{bdbarchivename}.tar.gz %{sourcetree}/depends/sources/%{bdbarchivename}.tar.gz
@@ -557,7 +578,7 @@ cp -p %{srccontribtree}/linux/selinux/dash.{te,if,fc} selinux-tmp/
 # Swap out packages.mk and chia_bls.mk makefiles in order to force usage of
 # OS native devel libraries and tools.
 cp -a %{srccontribtree}/build/depends/packages/*.mk %{sourcetree}/depends/packages/
-%if 0%{?rhel:1}
+%if 0%{?rhel:1} || 0%{?centos:1}
 cp -a %{srccontribtree}/build/depends/packages/packages.mk--EL8 %{sourcetree}/depends/packages/packages.mk
 %endif
 %endif
@@ -706,6 +727,7 @@ cd %{sourcetree}
 %define _rawlib lib
 %define _usr_lib /usr/%{_rawlib}
 # These three are already defined in newer versions of RPM, but not in el7
+# Leaving here for posterity because EL7 is no longer being built.
 %if 0%{?rhel} && 0%{?rhel} < 8
   %define _tmpfilesdir %{_usr_lib}/tmpfiles.d
   %define _unitdir %{_usr_lib}/systemd/system
@@ -1262,6 +1284,15 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
+* Fri Jul 03 2020 Todd Warner <t0dd_at_protonmail.com> 0.16.0.0-0.3.rc2.taw
+  - added CentOS distro checks, though to be frank, EPEL and CentOS have  
+    matching macros. You can't tell if you are building for RHEL or CentOS by  
+    evaluating RPM macros. Which is a PITA.
+  - added some distro versioning output into the build log
+
+* Thu Jul 02 2020 Todd Warner <t0dd_at_protonmail.com> 0.16.0.0-0.2.rc2.taw
+  - 0.16 RC2 - https://github.com/dashpay/dash/releases/tag/v0.16.0.0-rc2
+
 * Thu Jun 25 2020 Todd Warner <t0dd_at_protonmail.com> 0.16.0.0-0.2.rc1.taw
   - updated appdata.xml, .desktop files, and icons to desktop spec naming  
     and ID standards.
