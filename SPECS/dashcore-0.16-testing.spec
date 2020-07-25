@@ -21,11 +21,14 @@
 # Package (RPM) name-version-release.
 # <name>-<vermajor.<verminor>-<pkgrel>[.<extraver>][.<snapinfo>].DIST[.<minorbump>]
 
-%define _name_d dash
-%define _name_dc dashcore
-%define tld_vendor_product_id org.dash.Dashcore
-Name: %{_name_dc}
+
+Name: dashcore
 Summary: A global payments network and decentralized application (dapp) platform: a peer-to-peer, fungible, digital currency, protocol, and platform.
+
+%define _name_short dash
+%define appid org.dash.dash_core
+%define appid_wallet %{appid}.wallet
+%define appid_node %{appid}.node
 
 %define targetIsProduction 0
 
@@ -64,7 +67,7 @@ Version: %{vermajor}.%{verminor}
 # package release (and for testing only, extrarel)
 %define _pkgrel 1
 %if ! %{targetIsProduction}
-  %define _pkgrel 0.3
+  %define _pkgrel 0.5
 %endif
 
 # MINORBUMP
@@ -160,11 +163,11 @@ Release: %{_release}
 # v0.16.0.0
 %define _archivename_alt1 v%{version}
 # dash-0.16.0.0
-%define _archivename_alt2 %{_name_d}-%{version}
+%define _archivename_alt2 %{_name_short}-%{version}
 # dashcore-0.16.0
-%define _archivename_alt3 %{_name_dc}-%{vermajor}.%{_verminor1}
+%define _archivename_alt3 %{name}-%{vermajor}.%{_verminor1}
 # dashcore-0.16.0.0
-%define _archivename_alt4 %{_name_dc}-%{version}
+%define _archivename_alt4 %{name}-%{version}
 
 # Extracted source tree structure (extracted in .../BUILD)
 #   projectroot           dashcore-0.16.0
@@ -217,7 +220,7 @@ Source6: https://github.com/dashpay/dash/archive/v%{versionqualified}/%{binaryar
 %endif
 %if %{buildFromSource}
 # nuke "About QT" in the client source.
-Patch0: https://github.com/taw00/dashcore-rpm/blob/master/SOURCES/%{_name_d}-%{vermajor}-remove-about-qt-menu-item.patch
+Patch0: https://github.com/taw00/dashcore-rpm/blob/master/SOURCES/%{_name_short}-%{vermajor}-remove-about-qt-menu-item.patch
 %endif
 
 %global selinux_variants mls strict targeted
@@ -271,9 +274,6 @@ BuildRequires: libdb4-cxx-devel miniupnpc-devel
 
 # NOTE: other BuildRequires listed per package below
 
-#t0dd: SELinux stuff that I just haven't addressed yet and probably never will...
-#BuildRequires: checkpolicy selinux-policy-devel selinux-policy-doc
-
 # tree, vim-enhanced, and less for mock build environment introspection
 %if ! %{targetIsProduction}
 BuildRequires: tree vim-enhanced less findutils
@@ -281,6 +281,7 @@ BuildRequires: tree vim-enhanced less findutils
 
 
 # dashcore-client
+# XXX Consider renaming dashcore-wallet
 %package client
 Summary: A global payments network and decentralized application (dapp) platform: a peer-to-peer, fungible, digital currency, protocol, and platform. (desktop reference client)
 Requires: dashcore-utils = %{version}-%{release}
@@ -329,8 +330,6 @@ Requires(postun): /usr/sbin/semodule, /sbin/restorecon, /sbin/fixfiles
 Requires: openssl-libs
 Requires: dashcore-utils = %{version}-%{release}
 Requires: dashcore-sentinel
-#t0dd Requires: selinux-policy
-#t0dd Requires: policycoreutils-python
 
 
 # dashcore-libs
@@ -568,11 +567,7 @@ cd %{sourcetree}
 cd ..
 %endif
 
-#t0dd: Prep SELinux policy -- NOT USED YET and probably never will
-# Done here to prep for action taken in the build step
 # At this moment, we are in the projectroot directory
-mkdir -p selinux-tmp
-cp -p %{srccontribtree}/linux/selinux/dash.{te,if,fc} selinux-tmp/
 
 %if %{buildFromSource} && %{useSystemLibraries}
 # Swap out packages.mk and chia_bls.mk makefiles in order to force usage of
@@ -663,19 +658,6 @@ cd ..
 
 cd ..
 
-#t0dd Not using for now. Probably will never get to this.
-#t0dd # Build SELinux policy
-#t0dd pushd selinux-tmp
-#t0dd for selinuxvariant in %%{selinux_variants}
-#t0dd do
-#t0dd   # FIXME: Create and debug SELinux policy
-#t0dd   make NAME=${selinuxvariant} -f /usr/share/selinux/devel/Makefile
-#t0dd   mv dash.pp dash.pp.${selinuxvariant}
-#t0dd   make NAME=${selinuxvariant} -f /usr/share/selinux/devel/Makefile clean
-#t0dd done
-#t0dd popd
-
-
 
 %check
 # This section starts us in directory {_builddir}/{projectroot}
@@ -736,7 +718,6 @@ cd %{sourcetree}
 
 # Create directories
 install -d %{buildroot}%{_datadir}
-install -d %{buildroot}%{_datadir}/pixmaps
 install -d %{buildroot}%{_mandir}
 install -d %{buildroot}%{_mandir}/man1
 install -d %{buildroot}%{_mandir}/man5
@@ -752,6 +733,7 @@ install -d -m755 -p %{buildroot}%{_libdir}
 
 %if %{buildFromSource}
   mv %{_targettree}/bin/dash* %{buildroot}%{_bindir}/
+  ln -s %{_bindir}/dash-qt %{buildroot}%{_bindir}/dash-wallet
   mv %{_targettree}/include/dash* %{buildroot}%{_includedir}/
   mv %{_targettree}/lib/libdash* %{buildroot}%{_libdir}/
   install -d -m755 -p %{buildroot}%{_libdir}/pkgconfig
@@ -760,11 +742,13 @@ install -d -m755 -p %{buildroot}%{_libdir}
 
 %if %{clientSourceIsBinary} && %{serverSourceIsBinary}
   mv %{binarytree}/bin/dash* %{buildroot}%{_bindir}/
+  ln -s %{_bindir}/dash-qt %{buildroot}%{_bindir}/dash-wallet
   mv %{binarytree}/include/dash* %{buildroot}%{_includedir}/
   mv %{binarytree}/lib/libdash* %{buildroot}%{_libdir}/
 %else
   %if %{clientSourceIsBinary}
     mv %{binarytree}/bin/dash-qt %{buildroot}%{_bindir}/
+    ln -s %{_bindir}/dash-qt %{buildroot}%{_bindir}/dash-wallet
   %endif
   %if %{serverSourceIsBinary}
     mv %{binarytree}/bin/dashd %{buildroot}%{_bindir}/
@@ -838,43 +822,39 @@ install -D -m644 %{srccontribtree}/linux/binary-build-contribs/bash-completion/d
 
 ## DESKTOP STUFF
 %if ! %{disable_wallet}
-# Desktop elements - desktop file and kde protocol file (from contrib)
+# Desktop elements - desktop file (from contrib)
 cd %{srccontribtree}/linux/desktop/
-# org.dash.Dashcore.dash-qt.desktop
+# org.dash.dashcore.dash-qt.desktop
 # https://docs.fedoraproject.org/en-US/packaging-guidelines/#_desktop_files
-install -m755  dash-qt.wrapper.sh %{buildroot}%{_bindir}/
-desktop-file-install --dir=%{buildroot}%{_datadir}/applications %{tld_vendor_product_id}.dash-qt.desktop
-desktop-file-validate %{buildroot}%{_datadir}/applications/%{tld_vendor_product_id}.dash-qt.desktop
-# org.dash.Dashcore.dash-qt.appdata.xml
+install -m755  dash-wallet.wrapper.sh %{buildroot}%{_bindir}/
+desktop-file-install --dir=%{buildroot}%{_datadir}/applications %{appid_wallet}.desktop
+desktop-file-validate %{buildroot}%{_datadir}/applications/%{appid_wallet}.desktop
+# org.dash.dashcore.dash-qt.metainfo.xml
 # https://docs.fedoraproject.org/en-US/packaging-guidelines/AppData/
-install -D -m644 -p %{tld_vendor_product_id}.dash-qt.appdata.xml %{buildroot}%{_metainfodir}/%{tld_vendor_product_id}.dash-qt.appdata.xml
-appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/*.appdata.xml
+install -D -m644 -p %{appid_wallet}.metainfo.xml %{buildroot}%{_metainfodir}/%{appid_wallet}.metainfo.xml
+appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/*.metainfo.xml
 cd ../../..
 
 %if %{buildFromSource}
 cd %{sourcetree}/share/pixmaps/
-# Desktop elements - hicolor icons
-install -D -m644 dash128.png                %{buildroot}%{_datadir}/icons/hicolor/128x128/apps/%{tld_vendor_product_id}.dash-qt.png
-install -D -m644 dash16.png                   %{buildroot}%{_datadir}/icons/hicolor/16x16/apps/%{tld_vendor_product_id}.dash-qt.png
-install -D -m644 dash256.png                %{buildroot}%{_datadir}/icons/hicolor/256x256/apps/%{tld_vendor_product_id}.dash-qt.png
-install -D -m644 dash32.png                   %{buildroot}%{_datadir}/icons/hicolor/32x32/apps/%{tld_vendor_product_id}.dash-qt.png
-install -D -m644 dash64.png                   %{buildroot}%{_datadir}/icons/hicolor/64x64/apps/%{tld_vendor_product_id}.dash-qt.png
-install -D -m644 dash-hicolor-scalable.svg %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/%{tld_vendor_product_id}.dash-qt.svg
-# Desktop elements - HighContrast icons
-install -D -m644 dash-HighContrast-128.png       %{buildroot}%{_datadir}/icons/HighContrast/128x128/apps/%{tld_vendor_product_id}.dash-qt.png
-install -D -m644 dash-HighContrast-16.png          %{buildroot}%{_datadir}/icons/HighContrast/16x16/apps/%{tld_vendor_product_id}.dash-qt.png
-install -D -m644 dash-HighContrast-22.png          %{buildroot}%{_datadir}/icons/HighContrast/22x22/apps/%{tld_vendor_product_id}.dash-qt.png
-install -D -m644 dash-HighContrast-24.png          %{buildroot}%{_datadir}/icons/HighContrast/24x24/apps/%{tld_vendor_product_id}.dash-qt.png
-install -D -m644 dash-HighContrast-256.png       %{buildroot}%{_datadir}/icons/HighContrast/256x256/apps/%{tld_vendor_product_id}.dash-qt.png
-install -D -m644 dash-HighContrast-32.png          %{buildroot}%{_datadir}/icons/HighContrast/32x32/apps/%{tld_vendor_product_id}.dash-qt.png
-install -D -m644 dash-HighContrast-48.png          %{buildroot}%{_datadir}/icons/HighContrast/48x48/apps/%{tld_vendor_product_id}.dash-qt.png
-install -D -m644 dash-HighContrast-scalable.svg %{buildroot}%{_datadir}/icons/HighContrast/scalable/apps/%{tld_vendor_product_id}.dash-qt.svg
+# desktop icons
+install -D -m644 dash64.png                   %{buildroot}%{_datadir}/icons/hicolor/64x64/apps/%{appid}.png
+install -D -m644 dash128.png                %{buildroot}%{_datadir}/icons/hicolor/128x128/apps/%{appid}.png
+install -D -m644 dash256.png                %{buildroot}%{_datadir}/icons/hicolor/256x256/apps/%{appid}.png
+install -D -m644 dash-hicolor-scalable.svg %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/%{appid}.svg
+# desktop icons
+install -D -m644 ../../../%{srccontribtree}/linux/desktop/dash-HighContrast-64.png %{buildroot}%{_datadir}/icons/HighContrast/64x64/apps/%{appid}.png
+install -D -m644 dash-HighContrast-128.png       %{buildroot}%{_datadir}/icons/HighContrast/128x128/apps/%{appid}.png
+install -D -m644 dash-HighContrast-256.png       %{buildroot}%{_datadir}/icons/HighContrast/256x256/apps/%{appid}.png
+install -D -m644 dash-HighContrast-scalable.svg %{buildroot}%{_datadir}/icons/HighContrast/scalable/apps/%{appid}.svg
 cd -
 %endif
 %if %{clientSourceIsBinary}
 cd %{srccontribtree}/linux/binary-build-contribs/desktop/
-install -D -m644 dash-hicolor-scalable.svg           %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/%{tld_vendor_product_id}.dash-qt.svg
-install -D -m644 dash-HighContrast-scalable.svg %{buildroot}%{_datadir}/icons/HighContrast/scalable/apps/%{tld_vendor_product_id}.dash-qt.svg
+install -D -m644 dash-hicolor-64.png       %{buildroot}%{_datadir}/icons/hicolor/64x64/apps/%{appid}.png
+install -D -m644 dash-HighContrast-64.png       %{buildroot}%{_datadir}/icons/HighContrast/64x64/apps/%{appid}.png
+install -D -m644 dash-hicolor-scalable.svg           %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/%{appid}.svg
+install -D -m644 dash-HighContrast-scalable.svg %{buildroot}%{_datadir}/icons/HighContrast/scalable/apps/%{appid}.svg
 cd -
 %endif
 # endif not disabled wallet
@@ -966,16 +946,6 @@ install -D -m644 -p %{srccontribtree}/linux/firewalld/usr-lib-firewalld-services
 install -D -m644 -p %{srccontribtree}/linux/firewalld/usr-lib-firewalld-services_dashcore-rpc.xml %{buildroot}%{_usr_lib}/firewalld/services/dashcore-rpc.xml
 install -D -m644 -p %{srccontribtree}/linux/firewalld/usr-lib-firewalld-services_dashcore-testnet-rpc.xml %{buildroot}%{_usr_lib}/firewalld/services/dashcore-testnet-rpc.xml
 
-#t0dd Not using for now. Probably will never get to this.
-#t0dd # Install SELinux policy
-#t0dd for selinuxvariant in %%{selinux_variants}
-#t0dd do
-#t0dd   install -d %%{buildroot}%%{_datadir}/selinux/${selinuxvariant}
-#t0dd   install -p -m 644 SELinux/dash.pp.${selinuxvariant} \
-#t0dd     %%{buildroot}%%{_datadir}/selinux/${selinuxvariant}/dash.pp
-#t0dd done
-
-
 
 # dashcore-client
 %post client
@@ -1055,21 +1025,6 @@ exit 0
 #%%firewalld_reload
 test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 
-# Not using for now.
-#t0dd for selinuxvariant in %%{selinux_variants}
-#t0dd do
-#t0dd   /usr/sbin/semodule -s ${selinuxvariant} -i \
-#t0dd     %%{_datadir}/selinux/${selinuxvariant}/dash.pp \
-#t0dd       &> /dev/null || :
-#t0dd done
-#t0dd # FIXME This is less than ideal, but until dwalsh gives me a better way...
-#t0dd /usr/sbin/semanage port -a -t dash_port_t -p tcp 9999
-#t0dd /usr/sbin/semanage port -a -t dash_port_t -p tcp 9998
-#t0dd /usr/sbin/semanage port -a -t dash_port_t -p tcp 19999
-#t0dd /usr/sbin/semanage port -a -t dash_port_t -p tcp 19998
-#t0dd /sbin/fixfiles -R dashcore-server restore &> /dev/null || :
-#t0dd /sbin/restorecon -R %%{_sharedstatedir}/dashcore || :
-
 
 # dashcore-server
 %posttrans server
@@ -1090,26 +1045,6 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #%%firewalld_reload
 test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 
-# Not using for now.
-#t0dd# Do this upon uninstall (not upgrades)
-#t0dd if [ $1 -eq 0 ] ; then
-#t0dd   # FIXME This is less than ideal, but until dwalsh gives me a better way...
-#t0dd   /usr/sbin/semanage port -d -p tcp 9999
-#t0dd   /usr/sbin/semanage port -d -p tcp 9998
-#t0dd   /usr/sbin/semanage port -d -p tcp 19999
-#t0dd   /usr/sbin/semanage port -d -p tcp 19998
-#t0dd   for selinuxvariant in %%{selinux_variants}
-#t0dd   do
-#t0dd     /usr/sbin/semodule -s ${selinuxvariant} -r dash \
-#t0dd       &> /dev/null || :
-#t0dd   done
-#t0dd   /sbin/fixfiles -R dashcore-server restore &> /dev/null || :
-#t0dd     [ -d %%{_sharedstatedir}/dashcore ] && \
-#t0dd     /sbin/restorecon -R %%{_sharedstatedir}/dashcore \
-#t0dd     &> /dev/null || :
-#t0dd fi
-
-
 
 # dashcore-client
 %files client
@@ -1123,11 +1058,11 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 %doc %{srccontribtree}/linux/binary-build-contribs/doc/*.md %{srccontribtree}/dash.conf.example
 %endif
 %{_bindir}/dash-qt
-%{_bindir}/dash-qt.wrapper.sh
-%{_datadir}/applications/%{tld_vendor_product_id}.dash-qt.desktop
-%{_metainfodir}/%{tld_vendor_product_id}.dash-qt.appdata.xml
+%{_bindir}/dash-wallet
+%{_bindir}/dash-wallet.wrapper.sh
+%{_datadir}/applications/%{appid_wallet}.desktop
+%{_metainfodir}/%{appid_wallet}.metainfo.xml
 # XXX Removing this unless someone gripes
-#%%{_datadir}/kde4/services/dash-qt.protocol
 %{_datadir}/icons/*
 %{_mandir}/man1/dash-qt.1.gz
 #%%{_mandir}/man5/masternode.conf.5.gz
@@ -1201,14 +1136,12 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 %{_usr_lib}/firewalld/services/dashcore-testnet.xml
 %{_usr_lib}/firewalld/services/dashcore-rpc.xml
 %{_usr_lib}/firewalld/services/dashcore-testnet-rpc.xml
-%doc selinux-tmp/*
 %{_bindir}/dashd
 %{_tmpfilesdir}/dashd.conf
 %{_datadir}/bash-completion/completions/dashd
 %{_mandir}/man1/dashd.1.gz
 #%%{_mandir}/man5/dash.conf.5.gz
 #%%{_mandir}/man5/masternode.conf.5.gz
-#t0dd %%{_datadir}/selinux/*/dash.pp
 
 %if %{testing_extras}
   %{_bindir}/test_dash
@@ -1262,11 +1195,11 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Project documentation: https://docs.dash.org/
 #   * Developer documentation: https://dash-docs.github.io/
 #
-# Dash Core on Fedora/CentOS/RHEL...
+# Dash Core on Fedora
 #   * Git Repo: https://github.com/taw00/dashcore-rpm
 #   * Documentation: https://github.com/taw00/dashcore-rpm/tree/master/documentation
 #
-# The last major testnet effort...
+# The last very involved testnet effort...
 #   * Announcement: https://www.dash.org/forum/threads/v14-0-testing.44047/
 #   * Documentation:  
 #     https://docs.dash.org/en/latest/developers/testnet.html
@@ -1276,14 +1209,39 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 # Source snapshots...
 #     https://github.com/dashpay/dash/tags
 #     https://github.com/dashpay/dash/releases
-#     test example: dash-0.16.0.0-rc1.tar.gz
+#     test example: dash-0.16.0.0-rc2.tar.gz
 #     release example: dash-0.16.0.0.tar.gz
 #
-# Dash Core git repos...
-#   * Dash: https://github.com/dashpay/dash
-#   * Sentinel: https://github.com/dashpay/sentinel
+# Dash Core (and related) git repos (a curated selection)...
+#   * Dash Core: https://github.com/dashpay
+#     - https://github.com/dashpay/dash
+#     - https://github.com/dashpay/sentinel
+#     - https://github.com/dashpay/dips
+#     - https://github.com/dashpay/docs
+#   * Dash Evolution: https://github.com/dashevo
+#   * Dash Masternode Tool: https://github.com/Bertrand256/dash-masternode-tool
+#   * Dash Electrum: https://github.com/akhavr/electrum-dash
 
 %changelog
+* Fri Jul 24 2020 Todd Warner <t0dd_at_protonmail.com> 0.16.0.0-0.5.rc2.taw
+  - appid is more correctly org.dash.dash_core  
+    I was in debate on whether to do it as dashcore or dash_core. The appstream  
+    spec leans towards dash_core so I went with that. I'll change my mind five  
+    times in the next month.
+  - appid for the wallet (dash-qt) is org.dash.dash_core.wallet
+  - appid for the node/server (dashd) is org.dash.dash_core.node (or will be)
+  - renamed dash-qt.wrapper.sh to dash-wallet.wrapper.sh and added a softlink  
+    to dash-qt called dash-wallet
+  - removed all the selinux stuff. I simply will never get to it.
+
+* Thu Jul 23 2020 Todd Warner <t0dd_at_protonmail.com> 0.16.0.0-0.4.rc2.taw
+  - s/tld_vendor_product_id/appid/
+  - s/appdata/metainfo/
+  - trimmed down the number of png icons to the ones truly needed.
+  - added a 64px HighContrast (64px is the size recommended as most practical)
+  - in the contrib I moved the desktop file to [appid].dash-qt.desktop and the  
+    same for the .metainfo.xml file.
+
 * Fri Jul 03 2020 Todd Warner <t0dd_at_protonmail.com> 0.16.0.0-0.3.rc2.taw
   - added CentOS distro checks, though to be frank, EPEL and CentOS have  
     matching macros. You can't tell if you are building for RHEL or CentOS by  

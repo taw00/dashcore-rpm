@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- https://www.freedesktop.org/software/appstream/docs/ -->
+<component type="desktop-application">
+  <id>org.dash.dash_core.wallet.desktop</id>
+  <!-- please note that the correct ID tag value should be just the appid
+      https://bugzilla.redhat.com/show_bug.cgi?id=1860130
+  <id>org.dash.dash_core.wallet</id>
+  -->
+
+  <name>Dash Core Wallet</name>
+  <summary>Peer-to-peer, payments-focused, fungible digital currency, protocol, and platform for payments and decentralized applications (desktop reference client)</summary>
+
+  <metadata_license>MIT</metadata_license>
+  <project_license>MIT</project_license>
+
+  <description>
+   <p>Dash Core reference implementation. This package provides a user-friendly(er) graphical wallet manager  for personal use.</p>
+   <p>Dash (Digital Cash) is a global payments network with its own cryptocurrency offering businesses and individuals instant payments to anyone, anywhere in the world. Payments are instant, easy and secure, with near-zero fees. Dash uses peer-to-peer technology to operate with no central authority, managing transactions and issuing money carried out collectively by the network. Additionally, the Dash Network operates with a self-governing and self-funding model. The Dash Network is the first ever successful decentralized autonomous organizations (DAO). Dash Core is the name of the open source software which enables the use of this currency. Dash has introduced many industry-first innovations including masternodes, LLMQs, ChainLocks, and InstantSend. Dash is digital cash that offers financial freedom to anyone.</p>
+  </description>
+
+  <launchable type="desktop-id">org.dash.dash_core.wallet.desktop</launchable>
+  <!-- does not validate <icon type="stock">org.dash.dash_core.wallet</icon> -->
+
+  <screenshots>
+    <screenshot type="default">
+      <caption>Dashboard</caption>
+      <image>https://docs.dash.org/en/stable/_images/106329009.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>A received transaction</caption>
+      <image>https://docs.dash.org/en/stable/_images/received.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>A received transaction notification</caption>
+      <image>https://docs.dash.org/en/stable/_images/received-notification.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>The Send tab filled out for a transaction</caption>
+      <image>https://docs.dash.org/en/stable/_images/sendready.png</image>
+    </screenshot>
+  </screenshots>
+
+  <url type="homepage">https://dash.org/</url>
+  <update_contact>t0dd_at_protonmail.com</update_contact>
+
+  <provides>
+    <binary>dash-qt</binary>
+  </provides>
+
+  <releases>
+      <release version="0.16.0.0-rc2" date="2020-07-02" />
+      <release version="0.16.0.0-rc1" date="2020-06-11" />
+      <release version="0.15.0.0" date="2020-02-19" />
+      <release version="0.14.0.5" date="2019-12-07" />
+      <release version="0.14.0.4" date="2019-11-22" />
+      <release version="0.14.0.3" date="2019-08-15" />
+      <release version="0.14.0.2" date="2019-07-04" />
+      <release version="0.14.0.1" date="2019-05-31" />
+      <release version="0.14.0.0" date="2019-05-22" />
+      <release version="0.13.3.0" date="2019-04-04" />
+      <release version="0.13.2.0" date="2019-03-15" />
+      <release version="0.13.1.0" date="2019-02-08" />
+      <release version="0.13.0.0" date="2019-01-14" />
+      <release version="0.12.3.4" date="2018-12-14" />
+      <release version="0.12.3.3" date="2018-09-19" />
+      <release version="0.12.3.2" date="2018-07-09" />
+      <release version="0.12.3.1" date="2018-07-03" />
+      <release version="0.12.2.3" date="2018-01-11" />
+      <release version="0.12.2.2" date="2017-12-18" />
+      <release version="0.12.2.1" date="2017-11-11" />
+      <release version="0.12.2.0" date="2017-11-07" />
+      <release version="0.12.1.5" date="2017-04-11" />
+      <release version="0.12.1.4" date="2017-03-22" />
+      <release version="0.12.1.3" date="2017-03-02" />
+      <release version="0.12.1.2" date="2017-02-24" />
+      <release version="0.12.1.1" date="2017-02-19" />
+      <release version="0.12.1.0" date="2017-02-05" />
+      <release version="0.12.0.58" date="2016-06-09" />
+      <release version="0.12.0.57" date="2016-06-03" />
+      <release version="0.12.0.0" date="2015-04-04">
+          <description>
+              <p>This is the earliest release noted in this document. Please visit the project website for more information surrounding release history and milestones.</p>
+          </description>
+      </release>
+  </releases>
+</component>
