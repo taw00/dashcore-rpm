@@ -49,7 +49,7 @@ Summary: A global payments network and decentralized application (dapp) platform
 
 # Use if the dev team includes things like rc3 in the filename
 %undefine buildQualifier
-%define buildQualifier rc2
+%define buildQualifier rc3
 
 # VERSION
 %define vermajor 0.16
@@ -1223,6 +1223,9 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Dash Electrum: https://github.com/akhavr/electrum-dash
 
 %changelog
+* Mon Sep 14 2020 Todd Warner <t0dd_at_protonmail.com> 0.16.0.0-0.5.rc3.taw
+  - 0.16.0.0 RC3
+
 * Fri Jul 24 2020 Todd Warner <t0dd_at_protonmail.com> 0.16.0.0-0.5.rc2.taw
   - appid is more correctly org.dash.dash_core  
     I was in debate on whether to do it as dashcore or dash_core. The appstream  
