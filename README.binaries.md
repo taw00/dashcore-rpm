@@ -188,8 +188,8 @@ sudo dnf upgrade
 And then after the refreshed packages were updated, restart the wallet or
 `dashd`. Please note that for SOME major upgrades, more actions may have to be
 taken for example, a masternode going from 0.12 to 0.13 required a masternode
-restart (protocol change from 70210 to 70213). 0.13 to 0.14 and then to 0.15
-did not need a masternode restart.
+restart (protocol change from 70210 to 70213). 0.13 to 0.14 to 0.15 and then to
+0.16 did not need a masternode restart. A server restart, yes; a masternode restart no.
 
 
 #### Good luck!

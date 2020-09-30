@@ -21,10 +21,14 @@
 # Package (RPM) name-version-release.
 # <name>-<vermajor.<verminor>-<pkgrel>[.<extraver>][.<snapinfo>].DIST[.<minorbump>]
 
-%define _name_d dash
-%define _name_dc dashcore
-Name: %{_name_dc}
-Summary: Peer-to-peer, fungible digital currency, protocol, and platform for payments and decentralized applications
+
+Name: dashcore
+Summary: A global payments network and decentralized application (dapp) platform: a peer-to-peer, fungible, digital currency, protocol, and platform.
+
+%define _name_short dash
+%define appid org.dash.dash_core
+%define appid_wallet %{appid}.wallet
+%define appid_node %{appid}.node
 
 %define targetIsProduction 1
 
@@ -44,13 +48,13 @@ Summary: Peer-to-peer, fungible digital currency, protocol, and platform for pay
 %define useSystemLibraries 1
 
 # Use if the dev team includes things like rc3 in the filename
-%define buildQualifier rc4
+%define buildQualifier rc3
 %undefine buildQualifier
 
 # VERSION
-%define vermajor 0.15
+%define vermajor 0.16
 %define _verminor1 0
-%define _verminor2 0
+%define _verminor2 1
 %define verminor %{_verminor1}.%{_verminor2}
 Version: %{vermajor}.%{verminor}
 %define versionqualified %{version}
@@ -63,7 +67,7 @@ Version: %{vermajor}.%{verminor}
 # package release (and for testing only, extrarel)
 %define _pkgrel 1
 %if ! %{targetIsProduction}
-  %define _pkgrel 0.8
+  %define _pkgrel 0.1
 %endif
 
 # MINORBUMP
@@ -156,21 +160,21 @@ Release: %{_release}
 %define useExtraSources 1
 
 # the archive name and directory tree can have some variances
-# v0.15.0.0
+# v0.16.0.0
 %define _archivename_alt1 v%{version}
-# dash-0.15.0.0
-%define _archivename_alt2 %{_name_d}-%{version}
-# dashcore-0.15.0
-%define _archivename_alt3 %{_name_dc}-%{vermajor}.%{_verminor1}
-# dashcore-0.15.0.0
-%define _archivename_alt4 %{_name_dc}-%{version}
+# dash-0.16.0.0
+%define _archivename_alt2 %{_name_short}-%{version}
+# dashcore-0.16.0
+%define _archivename_alt3 %{name}-%{vermajor}.%{_verminor1}
+# dashcore-0.16.0.0
+%define _archivename_alt4 %{name}-%{version}
 
 # Extracted source tree structure (extracted in .../BUILD)
-#   projectroot           dashcore-0.15.0
-#      \_sourcetree         \_dash-0.15.0.0 or dash-0.15.0.0-rc1...
-#      \_binarytree         \_dashcore-0.15.0
-#      \_srccontribtree     \_dashcore-0.15.0-contrib
-#      \_patch_files        \_dash-0.15.0-...patch
+#   projectroot           dashcore-0.16.0
+#      \_sourcetree         \_dash-0.16.0.0 or dash-0.16.0.0-rc1...
+#      \_binarytree         \_dashcore-0.16.0
+#      \_srccontribtree     \_dashcore-0.16.0-contrib
+#      \_patch_files        \_dash-0.16.0-...patch
 # Supplied but only "moved":
 #   bls-signatures-20181101.tar.gz
 #                           --> {sourcetree}/depends/sources/v20181101.tar.gz
@@ -216,7 +220,7 @@ Source6: https://github.com/dashpay/dash/archive/v%{versionqualified}/%{binaryar
 %endif
 %if %{buildFromSource}
 # nuke "About QT" in the client source.
-Patch0: https://github.com/taw00/dashcore-rpm/blob/master/SOURCES/%{_name_d}-%{vermajor}-remove-about-qt-menu-item.patch
+Patch0: https://github.com/taw00/dashcore-rpm/blob/master/SOURCES/%{_name_short}-%{vermajor}-remove-about-qt-menu-item.patch
 %endif
 
 %global selinux_variants mls strict targeted
@@ -270,9 +274,6 @@ BuildRequires: libdb4-cxx-devel miniupnpc-devel
 
 # NOTE: other BuildRequires listed per package below
 
-#t0dd: SELinux stuff that I just haven't addressed yet and probably never will...
-#BuildRequires: checkpolicy selinux-policy-devel selinux-policy-doc
-
 # tree, vim-enhanced, and less for mock build environment introspection
 %if ! %{targetIsProduction}
 BuildRequires: tree vim-enhanced less findutils
@@ -280,15 +281,16 @@ BuildRequires: tree vim-enhanced less findutils
 
 
 # dashcore-client
+# XXX Consider renaming dashcore-wallet
 %package client
-Summary: Decentralized digital currency, protocol, and platform for payments and applications (desktop reference client)
+Summary: A global payments network and decentralized application (dapp) platform: a peer-to-peer, fungible, digital currency, protocol, and platform. (desktop reference client)
 Requires: dashcore-utils = %{version}-%{release}
 # https://fedoraproject.org/wiki/PackagingDrafts/ScriptletSnippets/Firewalld
 Requires: firewalld-filesystem
 Requires(post): firewalld-filesystem
 Requires(postun): firewalld-filesystem
 
-%if 0%{?fedora} || 0%{?rhel} >= 8
+%if 0%{?fedora} || 0%{?rhel} >= 8 || 0%{?centos_ver} >= 8
 %if ! %{disable_wallet}
 Requires: qt5-qtwayland
 # Required for installing desktop applications on linux
@@ -311,7 +313,7 @@ BuildRequires: qt5-qtwayland-devel
 
 # dashcore-server
 %package server
-Summary: Decentralized digital currency, protocol, and platform for payments and applications (reference server)
+Summary: A global payments network and decentralized application (dapp) platform: a peer-to-peer, fungible, digital currency, protocol, and platform. (reference server)
 # https://fedoraproject.org/wiki/PackagingDrafts/ScriptletSnippets/Firewalld
 Requires: firewalld-filesystem
 Requires(post): firewalld-filesystem
@@ -328,24 +330,22 @@ Requires(postun): /usr/sbin/semodule, /sbin/restorecon, /sbin/fixfiles
 Requires: openssl-libs
 Requires: dashcore-utils = %{version}-%{release}
 Requires: dashcore-sentinel
-#t0dd Requires: selinux-policy
-#t0dd Requires: policycoreutils-python
 
 
 # dashcore-libs
 %package libs
-Summary: Decentralized digital currency, protocol, and platform for payments and applications (consensus libraries)
+Summary: A global payments network and decentralized application (dapp) platform: a peer-to-peer, fungible, digital currency, protocol, and platform. (consensus libraries)
 
 
 # dashcore-devel
 %package devel
-Summary: Decentralized digital currency, protocol, and platform for payments and applications (dev libraries and headers)
+Summary: A global payments network and decentralized application (dapp) platform: a peer-to-peer, fungible, digital currency, protocol, and platform. (dev libraries and headers)
 Requires: dashcore-libs = %{version}-%{release}
 
 
 # dashcore-utils
 %package utils
-Summary: Decentralized digital currency, protocol, and platform for payments and applications (commandline utilities)
+Summary: A global payments network and decentralized application (dapp) platform: a peer-to-peer, fungible, digital currency, protocol, and platform. (commandline utilities)
 
 
 # dashcore src.rpm
@@ -354,13 +354,17 @@ Dash Core reference implementation. This is the source package for building
 most of the Dash Core set of binary packages.  It will build
 dashcore-{client,server,utils,libs,devel,debuginfo}.
 
-Dash (Digital Cash) is a digital currency that enables anonymous, instant
-payments to anyone, anywhere in the world. Dash uses peer-to-peer technology to
-operate with no central authority: managing transactions and issuing money are
-carried out collectively by the network. Additionally, the Dash Network
-operates with a self-governing and self-funding model. The Dash Network is the
-first ever successful decentralized autonomous organizations (DAO). Dash Core
-is the name of the open source software which enables the use of this currency.
+Dash (Digital Cash) is a global payments network with its own cryptocurrency
+offering businesses and individuals instant payments to anyone, anywhere in the
+world. Payments are instant, easy and secure, with near-zero fees. Dash uses
+peer-to-peer technology to operate with no central authority, managing
+transactions and issuing money carried out collectively by the network.
+Additionally, the Dash Network operates with a self-governing and self-funding
+model. The Dash Network is the first ever successful decentralized autonomous
+organizations (DAO). Dash Core is the name of the open source software which
+enables the use of this currency. Dash has introduced many industry-first
+innovations including masternodes, LLMQs, ChainLocks, and InstantSend. Dash is
+digital cash that offers financial freedom to anyone.
 
 Learn more at www.dash.org.
 
@@ -373,13 +377,17 @@ Dash Core reference implementation. This package provides a user-friendly(er)
 graphical wallet manager (dash-qt) for personal use. This package requires the
 dashcore-utils RPM package to be installed as well.
 
-Dash (Digital Cash) is a digital currency that enables anonymous, instant
-payments to anyone, anywhere in the world. Dash uses peer-to-peer technology to
-operate with no central authority: managing transactions and issuing money are
-carried out collectively by the network. Additionally, the Dash Network
-operates with a self-governing and self-funding model. The Dash Network is the
-first ever successful decentralized autonomous organizations (DAO). Dash Core
-is the name of the open source software which enables the use of this currency.
+Dash (Digital Cash) is a global payments network with its own cryptocurrency
+offering businesses and individuals instant payments to anyone, anywhere in the
+world. Payments are instant, easy and secure, with near-zero fees. Dash uses
+peer-to-peer technology to operate with no central authority, managing
+transactions and issuing money carried out collectively by the network.
+Additionally, the Dash Network operates with a self-governing and self-funding
+model. The Dash Network is the first ever successful decentralized autonomous
+organizations (DAO). Dash Core is the name of the open source software which
+enables the use of this currency. Dash has introduced many industry-first
+innovations including masternodes, LLMQs, ChainLocks, and InstantSend. Dash is
+digital cash that offers financial freedom to anyone.
 
 Learn more at www.dash.org.
 
@@ -403,13 +411,17 @@ servers that validate transactions and blocks. A Dash Masternode is a member
 of a network of incentivized servers that perform expanded critical services
 for the Dash cryptocurrency protocol.
 
-Dash (Digital Cash) is a digital currency that enables anonymous, instant
-payments to anyone, anywhere in the world. Dash uses peer-to-peer technology to
-operate with no central authority: managing transactions and issuing money are
-carried out collectively by the network. Additionally, the Dash Network
-operates with a self-governing and self-funding model. The Dash Network is the
-first ever successful decentralized autonomous organizations (DAO). Dash Core
-is the name of the open source software which enables the use of this currency.
+Dash (Digital Cash) is a global payments network with its own cryptocurrency
+offering businesses and individuals instant payments to anyone, anywhere in the
+world. Payments are instant, easy and secure, with near-zero fees. Dash uses
+peer-to-peer technology to operate with no central authority, managing
+transactions and issuing money carried out collectively by the network.
+Additionally, the Dash Network operates with a self-governing and self-funding
+model. The Dash Network is the first ever successful decentralized autonomous
+organizations (DAO). Dash Core is the name of the open source software which
+enables the use of this currency. Dash has introduced many industry-first
+innovations including masternodes, LLMQs, ChainLocks, and InstantSend. Dash is
+digital cash that offers financial freedom to anyone.
 
 Learn more at www.dash.org.
 
@@ -420,13 +432,17 @@ Learn more at www.dash.org.
 This package provides libdashconsensus, which is used by third party
 applications to verify scripts (and other functionality in the future).
 
-Dash (Digital Cash) is a digital currency that enables anonymous, instant
-payments to anyone, anywhere in the world. Dash uses peer-to-peer technology to
-operate with no central authority: managing transactions and issuing money are
-carried out collectively by the network. Additionally, the Dash Network
-operates with a self-governing and self-funding model. The Dash Network is the
-first ever successful decentralized autonomous organizations (DAO). Dash Core
-is the name of the open source software which enables the use of this currency.
+Dash (Digital Cash) is a global payments network with its own cryptocurrency
+offering businesses and individuals instant payments to anyone, anywhere in the
+world. Payments are instant, easy and secure, with near-zero fees. Dash uses
+peer-to-peer technology to operate with no central authority, managing
+transactions and issuing money carried out collectively by the network.
+Additionally, the Dash Network operates with a self-governing and self-funding
+model. The Dash Network is the first ever successful decentralized autonomous
+organizations (DAO). Dash Core is the name of the open source software which
+enables the use of this currency. Dash has introduced many industry-first
+innovations including masternodes, LLMQs, ChainLocks, and InstantSend. Dash is
+digital cash that offers financial freedom to anyone.
 
 Learn more at www.dash.org.
 
@@ -436,13 +452,17 @@ Learn more at www.dash.org.
 This package provides the libraries and header files necessary to compile
 programs which use libdashconsensus.
 
-Dash (Digital Cash) is a digital currency that enables anonymous, instant
-payments to anyone, anywhere in the world. Dash uses peer-to-peer technology to
-operate with no central authority: managing transactions and issuing money are
-carried out collectively by the network. Additionally, the Dash Network
-operates with a self-governing and self-funding model. The Dash Network is the
-first ever successful decentralized autonomous organizations (DAO). Dash Core
-is the name of the open source software which enables the use of this currency.
+Dash (Digital Cash) is a global payments network with its own cryptocurrency
+offering businesses and individuals instant payments to anyone, anywhere in the
+world. Payments are instant, easy and secure, with near-zero fees. Dash uses
+peer-to-peer technology to operate with no central authority, managing
+transactions and issuing money carried out collectively by the network.
+Additionally, the Dash Network operates with a self-governing and self-funding
+model. The Dash Network is the first ever successful decentralized autonomous
+organizations (DAO). Dash Core is the name of the open source software which
+enables the use of this currency. Dash has introduced many industry-first
+innovations including masternodes, LLMQs, ChainLocks, and InstantSend. Dash is
+digital cash that offers financial freedom to anyone.
 
 Learn more at www.dash.org.
 
@@ -455,13 +475,17 @@ This package provides dash-cli, a utility to communicate with and control a
 Dash server via its RPC protocol, and dash-tx, a utility to create custom
 Dash transactions.
 
-Dash (Digital Cash) is a digital currency that enables anonymous, instant
-payments to anyone, anywhere in the world. Dash uses peer-to-peer technology to
-operate with no central authority: managing transactions and issuing money are
-carried out collectively by the network. Additionally, the Dash Network
-operates with a self-governing and self-funding model. The Dash Network is the
-first ever successful decentralized autonomous organizations (DAO). Dash Core
-is the name of the open source software which enables the use of this currency.
+Dash (Digital Cash) is a global payments network with its own cryptocurrency
+offering businesses and individuals instant payments to anyone, anywhere in the
+world. Payments are instant, easy and secure, with near-zero fees. Dash uses
+peer-to-peer technology to operate with no central authority, managing
+transactions and issuing money carried out collectively by the network.
+Additionally, the Dash Network operates with a self-governing and self-funding
+model. The Dash Network is the first ever successful decentralized autonomous
+organizations (DAO). Dash Core is the name of the open source software which
+enables the use of this currency. Dash has introduced many industry-first
+innovations including masternodes, LLMQs, ChainLocks, and InstantSend. Dash is
+digital cash that offers financial freedom to anyone.
 
 Learn more at www.dash.org.
 
@@ -470,9 +494,30 @@ Learn more at www.dash.org.
 %prep
 # Prep section starts us in directory .../BUILD (aka {_builddir})
 
+%if 0%{?suse_version:1}
+  echo "======== OpenSUSE version: %{suse_version} %{sle_version}"
+  echo "-------- Leap 15.1  will report as 1500 150100"
+  echo "-------- Leap 15.2  will report as 1500 150200"
+  echo "-------- Tumbleweed will report as 1550 undefined"
+  %{error: "OpenSUSE (Leap or Tumbleweed) are not supported build targets."}
+%endif
+
+%if 0%{?rhel}
+  echo "======== RHEL version: %{rhel}"
+%endif
+%if 0%{?centos}
+  echo "======== Centos version — {centos}: %{centos} {centos_ver}: %{centos_ver}"
+%endif
+%if 0%{?fedora:1}
+  echo "======== Fedora version: %{fedora}"
+%endif
+
 # Message if EL7 found (probably should check for other unsupported OSes as well)
 %if 0%{?rhel} && 0%{?rhel} < 8
-%{error: "EL7-based platforms (CentOS7/RHEL7) are not supportable build targets."}
+%{error: "EL7-based platforms (CentOS7/RHEL7) are not supported build targets."}
+%endif
+%if 0%{?centos} && 0%{?centos_ver} < 8
+%{error: "EL7-based platforms (CentOS7/RHEL7) are not supported build targets."}
 %endif
 
 %define _disable_wallet --disable-wallet --without-gui
@@ -483,14 +528,18 @@ Learn more at www.dash.org.
 mkdir -p %{projectroot}
 
 # Source0: dashcore (source)
+# {_builddir}/dashcore-0.16/dash-0.16.0.0/
 %if %{buildFromSource}
-## {_builddir}/dashcore-0.15.0/dashcore-0.15.0.0/  ..or something like..
-## {_builddir}/dash-0.15.0/dash-0.15.0.0-rc1/
 %setup -q -T -D -a 0 -n %{projectroot}
+
+# Source6: dashcore (binary)
+# {_builddir}/dashcore-0.16/dashcore-0.16.0/
+%else
+%setup -q -T -D -a 6 -n %{projectroot}
 %endif
 
 # Source1: contributions
-# {_builddir}/dashcore-0.15.0/dashcore-0.15.0-contrib/
+# {_builddir}/dashcore-0.16.0/dashcore-0.16.0-contrib/
 %setup -q -T -D -a 1 -n %{projectroot}
 
 # Source2: bls (chai_bls) archive
@@ -504,16 +553,11 @@ mkdir -p %{sourcetree}/depends/sources/
 mv ../../SOURCES/%{blsarchivename}.tar.gz %{sourcetree}/depends/sources/v%{blsarchivedate}.tar.gz
 mkdir -p %{sourcetree}/depends/sources/
 mv ../../SOURCES/%{libbacktracearchivename}.tar.gz %{sourcetree}/depends/sources/%{libbacktracearchiveversion}.tar.gz
-%if 0%{?rhel:1}
+%if 0%{?rhel:1} || 0%{?centos:1}
 mkdir -p %{sourcetree}/depends/sources/
 mv ../../SOURCES/%{miniupnpcarchivename}.tar.gz %{sourcetree}/depends/sources/%{miniupnpcarchivename}.tar.gz
 mv ../../SOURCES/%{bdbarchivename}.tar.gz %{sourcetree}/depends/sources/%{bdbarchivename}.tar.gz
 %endif
-%endif
-
-# Source6: dashcore (binary)
-%if ! %{buildFromSource}
-%setup -q -T -D -a 6 {projectroot}
 %endif
 
 # Patch0: get rid of that annoying "About QT" menu option
@@ -523,22 +567,20 @@ cd %{sourcetree}
 cd ..
 %endif
 
-#t0dd: Prep SELinux policy -- NOT USED YET and probably never will
-# Done here to prep for action taken in the build step
 # At this moment, we are in the projectroot directory
-mkdir -p selinux-tmp
-cp -p %{srccontribtree}/linux/selinux/dash.{te,if,fc} selinux-tmp/
 
-%if %{buildFromSource}
-
-%if %{useSystemLibraries}
+%if %{buildFromSource} && %{useSystemLibraries}
 # Swap out packages.mk and chia_bls.mk makefiles in order to force usage of
 # OS native devel libraries and tools.
 cp -a %{srccontribtree}/build/depends/packages/*.mk %{sourcetree}/depends/packages/
-%if 0%{?rhel:1}
+%if 0%{?rhel:1} || 0%{?centos:1}
 cp -a %{srccontribtree}/build/depends/packages/packages.mk--EL8 %{sourcetree}/depends/packages/packages.mk
 %endif
 %endif
+# For debugging purposes...
+
+%if ! %{targetIsProduction}
+  cd %{_builddir} ; tree -df -L 1 %{projectroot} ; cd -
 %endif
 
 
@@ -616,19 +658,6 @@ cd ..
 
 cd ..
 
-#t0dd Not using for now. Probably will never get to this.
-#t0dd # Build SELinux policy
-#t0dd pushd selinux-tmp
-#t0dd for selinuxvariant in %%{selinux_variants}
-#t0dd do
-#t0dd   # FIXME: Create and debug SELinux policy
-#t0dd   make NAME=${selinuxvariant} -f /usr/share/selinux/devel/Makefile
-#t0dd   mv dash.pp dash.pp.${selinuxvariant}
-#t0dd   make NAME=${selinuxvariant} -f /usr/share/selinux/devel/Makefile clean
-#t0dd done
-#t0dd popd
-
-
 
 %check
 # This section starts us in directory {_builddir}/{projectroot}
@@ -680,6 +709,7 @@ cd %{sourcetree}
 %define _rawlib lib
 %define _usr_lib /usr/%{_rawlib}
 # These three are already defined in newer versions of RPM, but not in el7
+# Leaving here for posterity because EL7 is no longer being built.
 %if 0%{?rhel} && 0%{?rhel} < 8
   %define _tmpfilesdir %{_usr_lib}/tmpfiles.d
   %define _unitdir %{_usr_lib}/systemd/system
@@ -688,7 +718,6 @@ cd %{sourcetree}
 
 # Create directories
 install -d %{buildroot}%{_datadir}
-install -d %{buildroot}%{_datadir}/pixmaps
 install -d %{buildroot}%{_mandir}
 install -d %{buildroot}%{_mandir}/man1
 install -d %{buildroot}%{_mandir}/man5
@@ -704,6 +733,7 @@ install -d -m755 -p %{buildroot}%{_libdir}
 
 %if %{buildFromSource}
   mv %{_targettree}/bin/dash* %{buildroot}%{_bindir}/
+  ln -s %{_bindir}/dash-qt %{buildroot}%{_bindir}/dash-wallet
   mv %{_targettree}/include/dash* %{buildroot}%{_includedir}/
   mv %{_targettree}/lib/libdash* %{buildroot}%{_libdir}/
   install -d -m755 -p %{buildroot}%{_libdir}/pkgconfig
@@ -712,11 +742,13 @@ install -d -m755 -p %{buildroot}%{_libdir}
 
 %if %{clientSourceIsBinary} && %{serverSourceIsBinary}
   mv %{binarytree}/bin/dash* %{buildroot}%{_bindir}/
+  ln -s %{_bindir}/dash-qt %{buildroot}%{_bindir}/dash-wallet
   mv %{binarytree}/include/dash* %{buildroot}%{_includedir}/
   mv %{binarytree}/lib/libdash* %{buildroot}%{_libdir}/
 %else
   %if %{clientSourceIsBinary}
     mv %{binarytree}/bin/dash-qt %{buildroot}%{_bindir}/
+    ln -s %{_bindir}/dash-qt %{buildroot}%{_bindir}/dash-wallet
   %endif
   %if %{serverSourceIsBinary}
     mv %{binarytree}/bin/dashd %{buildroot}%{_bindir}/
@@ -754,11 +786,15 @@ ln -s %{_localstatedir}/log/dashcore/testnet3/debug.log %{buildroot}%{_sharedsta
 #   -> /etc/dashcore/dash.conf (convenience symlink)
 ln -s %{_sysconfdir}/dashcore/dash.conf %{buildroot}%{_sharedstatedir}/dashcore/.dashcore/dash.conf
 
-# Man Pages (from contrib)
-#install -D -m644 %%{srccontribtree}/linux/man/man1/* %%{buildroot}%%{_mandir}/man1/
-install -D -m644 %{srccontribtree}/linux/man/man5/* %{buildroot}%{_mandir}/man5/
+# Man Pages (from contrib) -- man5 documents now defunct
+install -D -m644 %{srccontribtree}/linux/man/man1/* %{buildroot}%{_mandir}/man1/
+#install -D -m644 %%{srccontribtree}/linux/man/man5/* %%{buildroot}%%{_mandir}/man5/
 # Man Pages (from upstream) - likely to overwrite ones from contrib (which is fine)
+%if %{buildFromSource}
 install -D -m644 %{sourcetree}/doc/man/*.1* %{buildroot}%{_mandir}/man1/
+%else
+install -D -m644 %{binarytree}/share/man/man1/*.1* %{buildroot}%{_mandir}/man1/
+%endif
 
 %if %{clientSourceIsBinary} || %{serverSourceIsBinary}
   # probably the same as above. I haven't checked.
@@ -771,46 +807,56 @@ install -D -m644 %{sourcetree}/doc/man/*.1* %{buildroot}%{_mandir}/man1/
 %endif
 
 gzip -f %{buildroot}%{_mandir}/man1/*.1
-gzip -f %{buildroot}%{_mandir}/man5/*.5
+#gzip -f %%{buildroot}%%{_mandir}/man5/*.5
 
 # Bash completion
+%if %{buildFromSource}
 install -D -m644 %{sourcetree}/contrib/dash-cli.bash-completion %{buildroot}%{_datadir}/bash-completion/completions/dash-cli
 install -D -m644 %{sourcetree}/contrib/dash-tx.bash-completion %{buildroot}%{_datadir}/bash-completion/completions/dash-tx
 install -D -m644 %{sourcetree}/contrib/dashd.bash-completion %{buildroot}%{_datadir}/bash-completion/completions/dashd
+%else
+install -D -m644 %{srccontribtree}/linux/binary-build-contribs/bash-completion/dash-cli.bash-completion %{buildroot}%{_datadir}/bash-completion/completions/dash-cli
+install -D -m644 %{srccontribtree}/linux/binary-build-contribs/bash-completion/dash-tx.bash-completion %{buildroot}%{_datadir}/bash-completion/completions/dash-tx
+install -D -m644 %{srccontribtree}/linux/binary-build-contribs/bash-completion/dashd.bash-completion %{buildroot}%{_datadir}/bash-completion/completions/dashd
+%endif
 
 ## DESKTOP STUFF
 %if ! %{disable_wallet}
-# Desktop elements - desktop file and kde protocol file (from contrib)
+# Desktop elements - desktop file (from contrib)
 cd %{srccontribtree}/linux/desktop/
-# dash-qt.desktop
+# org.dash.dashcore.dash-qt.desktop
 # https://docs.fedoraproject.org/en-US/packaging-guidelines/#_desktop_files
-install -m755  dash-qt.wrapper.sh %{buildroot}%{_bindir}/
-desktop-file-install --dir=%{buildroot}%{_datadir}/applications dash-qt.desktop
-desktop-file-validate %{buildroot}%{_datadir}/applications/dash-qt.desktop
-# dash-qt.appdata.xml
+install -m755  dash-wallet.wrapper.sh %{buildroot}%{_bindir}/
+desktop-file-install --dir=%{buildroot}%{_datadir}/applications %{appid_wallet}.desktop
+desktop-file-validate %{buildroot}%{_datadir}/applications/%{appid_wallet}.desktop
+# org.dash.dashcore.dash-qt.metainfo.xml
 # https://docs.fedoraproject.org/en-US/packaging-guidelines/AppData/
-install -D -m644 -p dash-qt.appdata.xml %{buildroot}%{_metainfodir}/dash-qt.appdata.xml
-appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/*.appdata.xml
+install -D -m644 -p %{appid_wallet}.metainfo.xml %{buildroot}%{_metainfodir}/%{appid_wallet}.metainfo.xml
+appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/*.metainfo.xml
 cd ../../..
 
+%if %{buildFromSource}
 cd %{sourcetree}/share/pixmaps/
-# Desktop elements - hicolor icons
-install -D -m644 dash128.png      %{buildroot}%{_datadir}/icons/hicolor/128x128/apps/dash.png
-install -D -m644 dash16.png       %{buildroot}%{_datadir}/icons/hicolor/16x16/apps/dash.png
-install -D -m644 dash256.png      %{buildroot}%{_datadir}/icons/hicolor/256x256/apps/dash.png
-install -D -m644 dash32.png       %{buildroot}%{_datadir}/icons/hicolor/32x32/apps/dash.png
-install -D -m644 dash64.png       %{buildroot}%{_datadir}/icons/hicolor/64x64/apps/dash.png
-install -D -m644 dash-hicolor-scalable.svg %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/dash.svg
-# Desktop elements - HighContrast icons
-install -D -m644 dash-HighContrast-128.png  %{buildroot}%{_datadir}/icons/HighContrast/128x128/apps/dash.png
-install -D -m644 dash-HighContrast-16.png   %{buildroot}%{_datadir}/icons/HighContrast/16x16/apps/dash.png
-install -D -m644 dash-HighContrast-22.png   %{buildroot}%{_datadir}/icons/HighContrast/22x22/apps/dash.png
-install -D -m644 dash-HighContrast-24.png   %{buildroot}%{_datadir}/icons/HighContrast/24x24/apps/dash.png
-install -D -m644 dash-HighContrast-256.png  %{buildroot}%{_datadir}/icons/HighContrast/256x256/apps/dash.png
-install -D -m644 dash-HighContrast-32.png   %{buildroot}%{_datadir}/icons/HighContrast/32x32/apps/dash.png
-install -D -m644 dash-HighContrast-48.png   %{buildroot}%{_datadir}/icons/HighContrast/48x48/apps/dash.png
-install -D -m644 dash-HighContrast-scalable.svg %{buildroot}%{_datadir}/icons/HighContrast/scalable/apps/dash.svg
-cd ../../..
+# desktop icons
+install -D -m644 dash64.png                   %{buildroot}%{_datadir}/icons/hicolor/64x64/apps/%{appid}.png
+install -D -m644 dash128.png                %{buildroot}%{_datadir}/icons/hicolor/128x128/apps/%{appid}.png
+install -D -m644 dash256.png                %{buildroot}%{_datadir}/icons/hicolor/256x256/apps/%{appid}.png
+install -D -m644 dash-hicolor-scalable.svg %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/%{appid}.svg
+# desktop icons
+install -D -m644 ../../../%{srccontribtree}/linux/desktop/dash-HighContrast-64.png %{buildroot}%{_datadir}/icons/HighContrast/64x64/apps/%{appid}.png
+install -D -m644 dash-HighContrast-128.png       %{buildroot}%{_datadir}/icons/HighContrast/128x128/apps/%{appid}.png
+install -D -m644 dash-HighContrast-256.png       %{buildroot}%{_datadir}/icons/HighContrast/256x256/apps/%{appid}.png
+install -D -m644 dash-HighContrast-scalable.svg %{buildroot}%{_datadir}/icons/HighContrast/scalable/apps/%{appid}.svg
+cd -
+%endif
+%if %{clientSourceIsBinary}
+cd %{srccontribtree}/linux/binary-build-contribs/desktop/
+install -D -m644 dash-hicolor-64.png       %{buildroot}%{_datadir}/icons/hicolor/64x64/apps/%{appid}.png
+install -D -m644 dash-HighContrast-64.png       %{buildroot}%{_datadir}/icons/HighContrast/64x64/apps/%{appid}.png
+install -D -m644 dash-hicolor-scalable.svg           %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/%{appid}.svg
+install -D -m644 dash-HighContrast-scalable.svg %{buildroot}%{_datadir}/icons/HighContrast/scalable/apps/%{appid}.svg
+cd -
+%endif
 # endif not disabled wallet
 %endif
 
@@ -821,7 +867,9 @@ cd ../../..
 %else
 %define testnet 1
 %endif
+
 install -D -m640 %{srccontribtree}/linux/systemd/etc-dashcore_dash.conf %{buildroot}%{_sysconfdir}/dashcore/dash.conf
+
 echo "\
 # ---------------------------------------------------------------------------
 # Example of a minimalistic configuration. Change the password. Additionally,
@@ -897,16 +945,6 @@ install -D -m644 -p %{srccontribtree}/linux/firewalld/usr-lib-firewalld-services
 install -D -m644 -p %{srccontribtree}/linux/firewalld/usr-lib-firewalld-services_dashcore-testnet.xml %{buildroot}%{_usr_lib}/firewalld/services/dashcore-testnet.xml
 install -D -m644 -p %{srccontribtree}/linux/firewalld/usr-lib-firewalld-services_dashcore-rpc.xml %{buildroot}%{_usr_lib}/firewalld/services/dashcore-rpc.xml
 install -D -m644 -p %{srccontribtree}/linux/firewalld/usr-lib-firewalld-services_dashcore-testnet-rpc.xml %{buildroot}%{_usr_lib}/firewalld/services/dashcore-testnet-rpc.xml
-
-#t0dd Not using for now. Probably will never get to this.
-#t0dd # Install SELinux policy
-#t0dd for selinuxvariant in %%{selinux_variants}
-#t0dd do
-#t0dd   install -d %%{buildroot}%%{_datadir}/selinux/${selinuxvariant}
-#t0dd   install -p -m 644 SELinux/dash.pp.${selinuxvariant} \
-#t0dd     %%{buildroot}%%{_datadir}/selinux/${selinuxvariant}/dash.pp
-#t0dd done
-
 
 
 # dashcore-client
@@ -987,21 +1025,6 @@ exit 0
 #%%firewalld_reload
 test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 
-# Not using for now.
-#t0dd for selinuxvariant in %%{selinux_variants}
-#t0dd do
-#t0dd   /usr/sbin/semodule -s ${selinuxvariant} -i \
-#t0dd     %%{_datadir}/selinux/${selinuxvariant}/dash.pp \
-#t0dd       &> /dev/null || :
-#t0dd done
-#t0dd # FIXME This is less than ideal, but until dwalsh gives me a better way...
-#t0dd /usr/sbin/semanage port -a -t dash_port_t -p tcp 9999
-#t0dd /usr/sbin/semanage port -a -t dash_port_t -p tcp 9998
-#t0dd /usr/sbin/semanage port -a -t dash_port_t -p tcp 19999
-#t0dd /usr/sbin/semanage port -a -t dash_port_t -p tcp 19998
-#t0dd /sbin/fixfiles -R dashcore-server restore &> /dev/null || :
-#t0dd /sbin/restorecon -R %%{_sharedstatedir}/dashcore || :
-
 
 # dashcore-server
 %posttrans server
@@ -1022,42 +1045,27 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #%%firewalld_reload
 test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 
-# Not using for now.
-#t0dd# Do this upon uninstall (not upgrades)
-#t0dd if [ $1 -eq 0 ] ; then
-#t0dd   # FIXME This is less than ideal, but until dwalsh gives me a better way...
-#t0dd   /usr/sbin/semanage port -d -p tcp 9999
-#t0dd   /usr/sbin/semanage port -d -p tcp 9998
-#t0dd   /usr/sbin/semanage port -d -p tcp 19999
-#t0dd   /usr/sbin/semanage port -d -p tcp 19998
-#t0dd   for selinuxvariant in %%{selinux_variants}
-#t0dd   do
-#t0dd     /usr/sbin/semodule -s ${selinuxvariant} -r dash \
-#t0dd       &> /dev/null || :
-#t0dd   done
-#t0dd   /sbin/fixfiles -R dashcore-server restore &> /dev/null || :
-#t0dd     [ -d %%{_sharedstatedir}/dashcore ] && \
-#t0dd     /sbin/restorecon -R %%{_sharedstatedir}/dashcore \
-#t0dd     &> /dev/null || :
-#t0dd fi
-
-
 
 # dashcore-client
 %files client
 %defattr(-,root,root,-)
 %if ! %{disable_wallet}
+%if %{buildFromSource}
 %license %{sourcetree}/COPYING
 %doc %{sourcetree}/doc/*.md %{srccontribtree}/dash.conf.example
+%else
+%license %{srccontribtree}/linux/binary-build-contribs/license/COPYING
+%doc %{srccontribtree}/linux/binary-build-contribs/doc/*.md %{srccontribtree}/dash.conf.example
+%endif
 %{_bindir}/dash-qt
-%{_bindir}/dash-qt.wrapper.sh
-%{_datadir}/applications/dash-qt.desktop
-%{_metainfodir}/dash-qt.appdata.xml
+%{_bindir}/dash-wallet
+%{_bindir}/dash-wallet.wrapper.sh
+%{_datadir}/applications/%{appid_wallet}.desktop
+%{_metainfodir}/%{appid_wallet}.metainfo.xml
 # XXX Removing this unless someone gripes
-#%%{_datadir}/kde4/services/dash-qt.protocol
 %{_datadir}/icons/*
 %{_mandir}/man1/dash-qt.1.gz
-%{_mandir}/man5/masternode.conf.5.gz
+#%%{_mandir}/man5/masternode.conf.5.gz
 %{_usr_lib}/firewalld/services/dashcore.xml
 %{_usr_lib}/firewalld/services/dashcore-testnet.xml
 %{_usr_lib}/firewalld/services/dashcore-rpc.xml
@@ -1073,8 +1081,13 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 # dashcore-server
 %files server
 %defattr(-,root,root,-)
+%if %{buildFromSource}
 %license %{sourcetree}/COPYING
 %doc %{sourcetree}/doc/*.md %{srccontribtree}/dash.conf.example
+%else
+%license %{srccontribtree}/linux/binary-build-contribs/license/COPYING
+%doc %{srccontribtree}/linux/binary-build-contribs/doc/*.md %{srccontribtree}/dash.conf.example
+%endif
 
 # Application as systemd service directory structure
 %defattr(-,dashcore,dashcore,-)
@@ -1123,14 +1136,12 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 %{_usr_lib}/firewalld/services/dashcore-testnet.xml
 %{_usr_lib}/firewalld/services/dashcore-rpc.xml
 %{_usr_lib}/firewalld/services/dashcore-testnet-rpc.xml
-%doc selinux-tmp/*
 %{_bindir}/dashd
 %{_tmpfilesdir}/dashd.conf
 %{_datadir}/bash-completion/completions/dashd
 %{_mandir}/man1/dashd.1.gz
-%{_mandir}/man5/dash.conf.5.gz
-%{_mandir}/man5/masternode.conf.5.gz
-#t0dd %%{_datadir}/selinux/*/dash.pp
+#%%{_mandir}/man5/dash.conf.5.gz
+#%%{_mandir}/man5/masternode.conf.5.gz
 
 %if %{testing_extras}
   %{_bindir}/test_dash
@@ -1141,14 +1152,22 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 # dashcore-libs
 %files libs
 %defattr(-,root,root,-)
+%if %{buildFromSource}
 %license %{sourcetree}/COPYING
+%else
+%license %{srccontribtree}/linux/binary-build-contribs/license/COPYING
+%endif
 %{_libdir}/*
 
 
 # dashcore-devel
 %files devel
 %defattr(-,root,root,-)
+%if %{buildFromSource}
 %license %{sourcetree}/COPYING
+%else
+%license %{srccontribtree}/linux/binary-build-contribs/license/COPYING
+%endif
 %{_includedir}/*
 %{_libdir}/*
 
@@ -1156,7 +1175,11 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 # dashcore-utils
 %files utils
 %defattr(-,root,root,-)
+%if %{buildFromSource}
 %license %{sourcetree}/COPYING
+%else
+%license %{srccontribtree}/linux/binary-build-contribs/license/COPYING
+%endif
 %{_bindir}/dash-cli
 %{_bindir}/dash-tx
 %{_datadir}/bash-completion/completions/dash-cli
@@ -1172,11 +1195,11 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Project documentation: https://docs.dash.org/
 #   * Developer documentation: https://dash-docs.github.io/
 #
-# Dash Core on Fedora/CentOS/RHEL...
+# Dash Core on Fedora
 #   * Git Repo: https://github.com/taw00/dashcore-rpm
 #   * Documentation: https://github.com/taw00/dashcore-rpm/tree/master/documentation
 #
-# The last major testnet effort...
+# The last very involved testnet effort...
 #   * Announcement: https://www.dash.org/forum/threads/v14-0-testing.44047/
 #   * Documentation:  
 #     https://docs.dash.org/en/latest/developers/testnet.html
@@ -1186,17 +1209,77 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 # Source snapshots...
 #     https://github.com/dashpay/dash/tags
 #     https://github.com/dashpay/dash/releases
-#     test example: dash-0.15.0.0-rc1.tar.gz
-#     release example: dash-0.15.0.0.tar.gz
+#     test example: dash-0.16.0.0-rc2.tar.gz
+#     release example: dash-0.16.0.0.tar.gz
 #
-# Dash Core git repos...
-#   * Dash: https://github.com/dashpay/dash
-#   * Sentinel: https://github.com/dashpay/sentinel
+# Dash Core (and related) git repos (a curated selection)...
+#   * Dash Core: https://github.com/dashpay
+#     - https://github.com/dashpay/dash
+#     - https://github.com/dashpay/sentinel
+#     - https://github.com/dashpay/dips
+#     - https://github.com/dashpay/docs
+#   * Dash Evolution: https://github.com/dashevo
+#   * Dash Masternode Tool: https://github.com/Bertrand256/dash-masternode-tool
+#   * Dash Electrum: https://github.com/akhavr/electrum-dash
 
 %changelog
+* Wed Sep 30 2020 Todd Warner <t0dd_at_protonmail.com> 0.16.0.1-1.taw
+* Wed Sep 30 2020 Todd Warner <t0dd_at_protonmail.com> 0.16.0.1-0.1.taw
+  - 0.16.0.1 - https://github.com/dashpay/dash/releases/tag/v0.16.0.1
+
+* Mon Sep 14 2020 Todd Warner <t0dd_at_protonmail.com> 0.16.0.0-0.5.rc3.taw
+  - 0.16 RC3 - https://github.com/dashpay/dash/releases/tag/v0.16.0.0-rc3
+
+* Fri Jul 24 2020 Todd Warner <t0dd_at_protonmail.com> 0.16.0.0-0.5.rc2.taw
+  - appid is more correctly org.dash.dash_core  
+    I was in debate on whether to do it as dashcore or dash_core. The appstream  
+    spec leans towards dash_core so I went with that. I'll change my mind five  
+    times in the next month.
+  - appid for the wallet (dash-qt) is org.dash.dash_core.wallet
+  - appid for the node/server (dashd) is org.dash.dash_core.node (or will be)
+  - renamed dash-qt.wrapper.sh to dash-wallet.wrapper.sh and added a softlink  
+    to dash-qt called dash-wallet
+  - removed all the selinux stuff. I simply will never get to it.
+
+* Thu Jul 23 2020 Todd Warner <t0dd_at_protonmail.com> 0.16.0.0-0.4.rc2.taw
+  - s/tld_vendor_product_id/appid/
+  - s/appdata/metainfo/
+  - trimmed down the number of png icons to the ones truly needed.
+  - added a 64px HighContrast (64px is the size recommended as most practical)
+  - in the contrib I moved the desktop file to [appid].dash-qt.desktop and the  
+    same for the .metainfo.xml file.
+
+* Fri Jul 03 2020 Todd Warner <t0dd_at_protonmail.com> 0.16.0.0-0.3.rc2.taw
+  - added CentOS distro checks, though to be frank, EPEL and CentOS have  
+    matching macros. You can't tell if you are building for RHEL or CentOS by  
+    evaluating RPM macros. Which is a PITA.
+  - added some distro versioning output into the build log
+
+* Thu Jul 02 2020 Todd Warner <t0dd_at_protonmail.com> 0.16.0.0-0.2.rc2.taw
+  - 0.16 RC2 - https://github.com/dashpay/dash/releases/tag/v0.16.0.0-rc2
+
+* Thu Jun 25 2020 Todd Warner <t0dd_at_protonmail.com> 0.16.0.0-0.2.rc1.taw
+  - updated appdata.xml, .desktop files, and icons to desktop spec naming  
+    and ID standards.
+
+* Fri Jun 12 2020 Todd Warner <t0dd_at_protonmail.com> 0.16.0.0-0.1.rc1.taw
+  - 0.16 RC1 — https://github.com/dashpay/dash/releases/tag/v0.16.0.0-rc1
+  - Product brief: https://blog.dash.org/product-brief-dash-core-release-v0-16-0-now-on-testnet-55c7ac5ff768
+  - Release highlights: Quorum Signing Optimizations, Network Threading Improvement, Minimum Protocol Check, Bitcoin Backports
+  - Code cleanups: PrivateSend Code Refactoring, PrivateSend Create Denominations Improvement, Core Wallet Enhancements, many smaller updates.
+  - spec: simply making EL8 packages from prebuilt binaries now. I am  
+    tired of fighting.
+  - spec: had to pull icons, bash-competion files, docs, and license from  
+    the contribs archive when doing binary builds since the binary tarball    
+    does not supply them. For icons, we're only suppling the SVGs in that case.
+  - specfile: binary builds have been broken for awhile. Fixed.
+  - spec: man pages refresh from upstream. May need to look back at old  
+    manpages and PR some updates back upstream (e.g. description is lacking).
+  - spec: updated package descriptions to more align with upstream messaging. 
+
 * Wed Feb 19 2020 Todd Warner <t0dd_at_protonmail.com> 0.15.0.0-1.taw
 * Wed Feb 19 2020 Todd Warner <t0dd_at_protonmail.com> 0.15.0.0-0.8.testing.taw
-  - 0.15
+  - 0.15 — https://github.com/dashpay/dash/releases/tag/v0.15.0.0
   - changed how dash.conf.example is constructed. I don't like it, but it is  
     what it is.
   - removed contributed pixmaps (no longer needed -- provided by upstream)

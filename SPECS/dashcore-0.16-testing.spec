@@ -48,13 +48,13 @@ Summary: A global payments network and decentralized application (dapp) platform
 %define useSystemLibraries 1
 
 # Use if the dev team includes things like rc3 in the filename
-%undefine buildQualifier
 %define buildQualifier rc3
+%undefine buildQualifier
 
 # VERSION
 %define vermajor 0.16
 %define _verminor1 0
-%define _verminor2 0
+%define _verminor2 1
 %define verminor %{_verminor1}.%{_verminor2}
 Version: %{vermajor}.%{verminor}
 %define versionqualified %{version}
@@ -67,7 +67,7 @@ Version: %{vermajor}.%{verminor}
 # package release (and for testing only, extrarel)
 %define _pkgrel 1
 %if ! %{targetIsProduction}
-  %define _pkgrel 0.5
+  %define _pkgrel 0.1
 %endif
 
 # MINORBUMP
@@ -1223,8 +1223,11 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Dash Electrum: https://github.com/akhavr/electrum-dash
 
 %changelog
+* Wed Sep 30 2020 Todd Warner <t0dd_at_protonmail.com> 0.16.0.1-0.1.taw
+  - 0.16.0.1 - https://github.com/dashpay/dash/releases/tag/v0.16.0.1
+
 * Mon Sep 14 2020 Todd Warner <t0dd_at_protonmail.com> 0.16.0.0-0.5.rc3.taw
-  - 0.16.0.0 RC3
+  - 0.16 RC3 - https://github.com/dashpay/dash/releases/tag/v0.16.0.0-rc3
 
 * Fri Jul 24 2020 Todd Warner <t0dd_at_protonmail.com> 0.16.0.0-0.5.rc2.taw
   - appid is more correctly org.dash.dash_core  

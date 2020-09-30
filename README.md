@@ -4,7 +4,7 @@
 * For both Dash Core and Dash Masternode Tool (DMT), I no longer supply packages for RHEL/CentOS.
 * For Dash Core, use the provided systemd configuration. This makes nodes near bullet-proof, even on Fedora.
 * Dash Masternode Tool: DMT will remain Fedora-only! except for test builds.
-* Dash Core 0.15 was released on Feb 19, 2020.
+* Dash Core 0.16 was released on Sep 30, 2020.
 * Keep up with Fedora's release schedule: <https://fedoraproject.org/wiki/Releases>
 
 Fedora upgrades are easy (see available documentation in the "documentation"
@@ -66,8 +66,6 @@ loss of funds or damages associated to this software.
 
 _Come say hello to me. I am **t0dd** in various forums: [Dash Nation on
 Discord](https://dashchat.org/), [Dash Talk on Discord](http://staydashy.com/),
-[dash.org's forum](https://www.dash.org/forum/), [#dashpay on freenode
-IRC](http://freenode.net/), [Official Dash Chat on
-Telegram](https://web.telegram.org/#/im?p=@dash_chat), and
-[/r/dashpay/](https://www.reddit.com/r/dashpay) on Reddit._
+[dash.org's forum](https://www.dash.org/forum/), and [#dashpay on freenode
+IRC](http://freenode.net/)._
 
