@@ -26,7 +26,7 @@
 Name: %{_name_dc}
 Summary: Peer-to-peer, fungible digital currency, protocol, and platform for payments and decentralized applications
 
-%define targetIsProduction 0
+%define targetIsProduction 1
 
 # Leave these off.
 # These settings are used if you wan to deliver packages where the application
@@ -1194,8 +1194,9 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
+* Wed Feb 19 2020 Todd Warner <t0dd_at_protonmail.com> 0.15.0.0-1.taw
 * Wed Feb 19 2020 Todd Warner <t0dd_at_protonmail.com> 0.15.0.0-0.8.testing.taw
-  - 0.15
+  - 0.15 — https://github.com/dashpay/dash/releases/tag/v0.15.0.0
   - changed how dash.conf.example is constructed. I don't like it, but it is  
     what it is.
   - removed contributed pixmaps (no longer needed -- provided by upstream)
