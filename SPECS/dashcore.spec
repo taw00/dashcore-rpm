@@ -65,9 +65,9 @@ Version: %{vermajor}.%{verminor}
 
 # RELEASE
 # package release (and for testing only, extrarel)
-%define _pkgrel 2
+%define _pkgrel 3
 %if ! %{targetIsProduction}
-  %define _pkgrel 1.1
+  %define _pkgrel 2.1
 %endif
 
 # MINORBUMP
@@ -886,10 +886,6 @@ server=1
 # We participate peer-to-peer
 listen=1
 logtimestamps=1
-# Maximum number of inbound+outbound connections. 125 is the minimum for masternodes.
-#maxconnections=8
-maxconnections=125
-
 
 # A systemd managed masternode probably not going to be a wallet as well
 # Set to 0 if you also want it to be a wallet.
@@ -1226,6 +1222,12 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Dash Electrum: https://github.com/akhavr/electrum-dash
 
 %changelog
+* Thu Oct 1 2020 Todd Warner <t0dd_at_protonmail.com> 0.16.0.1-3.taw
+* Thu Oct 1 2020 Todd Warner <t0dd_at_protonmail.com> 0.16.0.1-2.1.taw
+  - removed maxconnections setting manipulation in the spec and in the  
+    contrib stuff. The default is 125 (the minimum requirement for  
+    masternodes) and is fine in almost all cases.
+
 * Wed Sep 30 2020 Todd Warner <t0dd_at_protonmail.com> 0.16.0.1-2.taw
 * Wed Sep 30 2020 Todd Warner <t0dd_at_protonmail.com> 0.16.0.1-1.1.taw
   - Increased default maxconnections to 125 (the minimum required for  

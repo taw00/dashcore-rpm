@@ -32,6 +32,9 @@ blocks and transactions to fewer nodes.
 
 ## 3. Reduce maximum connections (`-maxconnections=<num>`)
 
+> NOTE: this has to be set to 125 or greater (the default) for masternodes.
+> Only wallets and ordinary nodes should even consider altering this value.
+
 Reducing the maximum connected nodes to a minimum could be desirable if traffic
 limits are tiny. Keep in mind that dash's trustless model works best if you are
 connected to a handful of nodes.
