@@ -181,7 +181,9 @@ testnet=0
 # Listening mode, enabled by default except when 'connect' is being used
 listen=1
 logtimestamps=1
-maxconnections=8
+# Maximum number of inbound+outbound connections. 125 is the minimum for masternodes.
+#maxconnections=8
+maxconnections=125
 
 # Remote Procedure Call access configuration...
 # server=1 tells Dash-QT and dashd to accept JSON-RPC commands

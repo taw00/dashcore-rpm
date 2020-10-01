@@ -21,7 +21,7 @@ Version 0.13.0 merges two models of registering a masternode on the network. The
   - [[1.3] Deploy and configure a Dash Core node](#13-deploy-and-configure-a-dash-core-node)
   - [[1.4] Configure Dash Sentinel on the Dash Core node](#14-configure-dash-sentinel-on-the-dash-core-node)
   - [[1.5] Generate a private "masternode key" via the wallet (a shared secret)](#15-generate-a-private-masternode-key-via-the-wallet-a-shared-secret)
-  - [[1.6] Set `masternode=1` and `externalip=...` and `masternodeprivkey=...` values in the Dash Core node's `dash.conf` configuration file](#16-set-masternode1-and-externalip-and-masternodeprivkey-values-in-the-dash-core-nodes-dashconf-configuration-file)
+  - [[1.6] Increase `maxconnections` and set `externalip` and `masternodeprivkey` values in the Dash Core node's `dash.conf` configuration file](#16-increase-maxconnections-and-set-externalip-and-masternodeprivkey-values-in-the-dash-core-nodes-dashconf-configuration-file)
 - [PART 2: Configure the wallet and masternode (pre-DIP003)](#part-2-configure-the-wallet-and-masternode-pre-dip003)
   - [[2.1] Configure the wallet to talk to the masternode (pre-DIP003)](#21-configure-the-wallet-to-talk-to-the-masternode-pre-dip003)
   - [[2.2] Issue a remote start command from the wallet to the masternode (pre-DIP003)](#22-issue-a-remote-start-command-from-the-wallet-to-the-masternode-pre-dip003)
@@ -153,7 +153,7 @@ Set this value in the masternode-to-be configuration file: Edit `/etc/dashcore/d
 
 Write down that value, you'll need it later as well.
 
-### [1.6] Set `masternode=1` and `externalip=...` and `masternodeprivkey=...` values in the Dash Core node's `dash.conf` configuration file
+### [1.6] Increase `maxconnections` and set `externalip` and `masternodeprivkey` values in the Dash Core node's `dash.conf` configuration file
 
 We're not a masternode yet, but will be. Edit `dash.conf` (ether
 `~/.dashcore/dash.conf` if you are running the node as a "normal" user or
@@ -162,7 +162,7 @@ uncomment and set those three values as such (IP address and masternode shared
 private key are examples only, of course):
 
 ```
-masternode=1
+maxconnections=125
 externalip=93.184.216.34
 masternodeprivkey=92yZY5b8bYD5G2Qh1C7Un6Tf3TG3mH4LUZha2rdj3QUDGHNg4W9
 ```

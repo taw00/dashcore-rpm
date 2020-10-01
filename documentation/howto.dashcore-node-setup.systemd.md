@@ -135,7 +135,9 @@ daemon=1
 # Listening mode, enabled by default except when 'connect' is being used
 listen=1
 logtimestamps=1
+# Maximum number of inbound+outbound connections. 125 is the minimum for masternodes.
 maxconnections=8
+#maxconnections=125
 
 # Remote Procedure Call access configuration...
 # server=1 tells Dash-QT and dashd to accept JSON-RPC commands
@@ -154,7 +156,7 @@ rpcport=9998
 # or with a subnet specification.
 rpcallowip=127.0.0.1
 
-#masternode=1
+#maxconnections=125
 #externalip=<results of "dig +short myip.opendns.com @resolver1.opendns.com">
 #masternodeprivkey=<setting described in a separate document>
 #masternodeblsprivkey=<new v0.13 setting described in a separate document>
