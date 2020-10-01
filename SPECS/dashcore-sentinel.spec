@@ -24,8 +24,7 @@ Summary: A required helper agent for Dash Core Masternodes
 
 
 # VERSION
-# eg. 1.3.0
-%define vermajor 1.4
+%define vermajor 1.5
 %define verminor 0
 Version: %{vermajor}.%{verminor}
 
@@ -83,7 +82,7 @@ Source1: https://github.com/taw00/dashcore-rpm/blob/master/SOURCES/%{sourcetree_
 
 # Most of the time, the build system can figure out the requires.
 # But if you need something specific...
-Requires: dashcore-server >= 0.14.0
+Requires: dashcore-server >= 0.16.0
 
 # Force Python3 as __python default even if Python2 is present (and it usually is).
 # Note, this is going away as an advised path.
@@ -326,9 +325,13 @@ exit 0
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
+* Thu Oct 1 2019 Todd Warner <t0dd_at_protonmail.com> 1.5.0-1.taw
+* Thu Oct 1 2019 Todd Warner <t0dd_at_protonmail.com> 1.5.0-0.1.testing.taw
+  - 1.5 in support of dashcore 0.16
+
 * Wed May 22 2019 Todd Warner <t0dd_at_protonmail.com> 1.4.0-1.taw
 * Wed May 22 2019 Todd Warner <t0dd_at_protonmail.com> 1.4.0-0.1.testing.taw
-  - 1.4 in support of dashcore 0.14
+  - 1.4 in support of dashcore 0.14 and 0.15
 
 * Mon Jan 14 2019 Todd Warner <t0dd_at_protonmail.com> 1.3.0-2.1.testing.taw
   - some minor-ish specfile cleanup
