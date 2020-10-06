@@ -31,13 +31,15 @@
 Name: dash-masternode-tool
 %define _name2 DashMasternodeTool
 Summary: Manage and collateralize a Dash Masternode with a hardware wallet
+%define appid org.dash.dash_core.dash_masternode_tool
+
 #BuildArch: noarch
 
 %define targetIsProduction 1
-%define sourceIsBinary 0
+%define sourceIsBinary 1
 
 %undefine buildQualifier
-%define buildQualifier hotfix2
+%define buildQualifier hotfix3
 
 # Package (RPM) name-version-release.
 # <name>-<vermajor.<verminor>-<pkgrel>[.<extraver>][.<snapinfo>].DIST[.<minorbump>]
@@ -48,9 +50,9 @@ Summary: Manage and collateralize a Dash Masternode with a hardware wallet
 Version: %{vermajor}.%{verminor}
 
 # RELEASE
-%define _pkgrel 5
+%define _pkgrel 6
 %if ! %{targetIsProduction}
-  %define _pkgrel 4.1
+  %define _pkgrel 5.1
 %endif
 
 # MINORBUMP
@@ -128,6 +130,8 @@ Release: %{_release}
 %define archivename_btchip_python btchip-python-%{btchip_python_version}
 %define sourcetree_btchip_python btchip-python-%{btchip_python_vermajor}
 %define sourcetree_contrib %{name}-%{vermajor}-contrib
+# /usr/share/org.dash.dash_core.dash_masternode_tool
+%define installtree %{_datadir}/%{appid}
 
 # dash-masternode-tool-0.9.z
 %if %{sourceIsBinary}
@@ -260,7 +264,7 @@ cd ../.. ; /usr/bin/tree -df -L 2 BUILD ; cd -
   # https://github.com/pyinstaller/pyinstaller/issues/4003  
   # https://stackoverflow.com/questions/54338714/pip-install-pyinstaller-no-module-named-pyinstaller
   #./venv/bin/pip3 install pip==18.1
-  ./venv/bin/pip3 install 'pyinstaller==3.3'
+  ./venv/bin/pip3 install 'pyinstaller>=3.3'
   # To solve https://github.com/taw00/dashcore-rpm/issues/1 either force version downgrade or see other solution below
   #./venv/bin/pip3 install --upgrade setuptools
   ./venv/bin/pip3 install --upgrade 'setuptools<45.0.0'
@@ -321,16 +325,16 @@ cd ../.. ; /usr/bin/tree -df -L 2 BUILD ; cd -
 install -d %{buildroot}%{_libdir}/%{name}
 install -d -m755 -p %{buildroot}%{_bindir}
 install -d %{buildroot}%{_datadir}/applications
-install -d %{buildroot}%{_datadir}/%{name}
+install -d %{buildroot}%{installtree}
 
 # Binaries
-install -D -m755 -p %{sourcetree_contrib}/desktop/%{name}-desktop-script.sh %{buildroot}%{_datadir}/%{name}/
+install -D -m755 -p %{sourcetree_contrib}/desktop/%{name}-desktop-script.sh %{buildroot}%{installtree}/
 %if ! %{sourceIsBinary}
-install -D -m755 -p ./dist/linux/%{_name2} %{buildroot}%{_datadir}/%{name}/%{_name2}
+install -D -m755 -p ./dist/linux/%{_name2} %{buildroot}%{installtree}/%{_name2}
 %else
-install -D -m755 -p %{sourcetree}/%{_name2} %{buildroot}%{_datadir}/%{name}/%{_name2}
+install -D -m755 -p %{sourcetree}/%{_name2} %{buildroot}%{installtree}/%{_name2}
 %endif
-ln -s %{_datadir}/%{name}/%{_name2} %{buildroot}%{_bindir}/%{name}
+ln -s %{installtree}/%{_name2} %{buildroot}%{_bindir}/%{name}
 
 # Most use LICENSE or COPYING... not LICENSE.txt
 # Now using the copy in sourcetree_contrib
@@ -338,36 +342,36 @@ ln -s %{_datadir}/%{name}/%{_name2} %{buildroot}%{_bindir}/%{name}
 
 # Desktop
 cd %{sourcetree_contrib}/desktop/
-install -D -m644 -p %{name}.hicolor.16x16.png        %{buildroot}%{_datadir}/icons/hicolor/16x16/apps/%{name}.png
-install -D -m644 -p %{name}.hicolor.22x22.png        %{buildroot}%{_datadir}/icons/hicolor/22x22/apps/%{name}.png
-install -D -m644 -p %{name}.hicolor.24x24.png        %{buildroot}%{_datadir}/icons/hicolor/24x24/apps/%{name}.png
-install -D -m644 -p %{name}.hicolor.32x32.png        %{buildroot}%{_datadir}/icons/hicolor/32x32/apps/%{name}.png
-install -D -m644 -p %{name}.hicolor.48x48.png        %{buildroot}%{_datadir}/icons/hicolor/48x48/apps/%{name}.png
-install -D -m644 -p %{name}.hicolor.128x128.png      %{buildroot}%{_datadir}/icons/hicolor/128x128/apps/%{name}.png
-install -D -m644 -p %{name}.hicolor.256x256.png      %{buildroot}%{_datadir}/icons/hicolor/256x256/apps/%{name}.png
-install -D -m644 -p %{name}.hicolor.512x512.png      %{buildroot}%{_datadir}/icons/hicolor/512x512/apps/%{name}.png
-install -D -m644 -p %{name}.hicolor.svg              %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/%{name}.svg
+install -D -m644 -p %{name}.hicolor.16x16.png        %{buildroot}%{_datadir}/icons/hicolor/16x16/apps/%{appid}.png
+install -D -m644 -p %{name}.hicolor.22x22.png        %{buildroot}%{_datadir}/icons/hicolor/22x22/apps/%{appid}.png
+install -D -m644 -p %{name}.hicolor.24x24.png        %{buildroot}%{_datadir}/icons/hicolor/24x24/apps/%{appid}.png
+install -D -m644 -p %{name}.hicolor.32x32.png        %{buildroot}%{_datadir}/icons/hicolor/32x32/apps/%{appid}.png
+install -D -m644 -p %{name}.hicolor.48x48.png        %{buildroot}%{_datadir}/icons/hicolor/48x48/apps/%{appid}.png
+install -D -m644 -p %{name}.hicolor.128x128.png      %{buildroot}%{_datadir}/icons/hicolor/128x128/apps/%{appid}.png
+install -D -m644 -p %{name}.hicolor.256x256.png      %{buildroot}%{_datadir}/icons/hicolor/256x256/apps/%{appid}.png
+install -D -m644 -p %{name}.hicolor.512x512.png      %{buildroot}%{_datadir}/icons/hicolor/512x512/apps/%{appid}.png
+install -D -m644 -p %{name}.hicolor.svg              %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/%{appid}.svg
 
-install -D -m644 -p %{name}.highcontrast.16x16.png   %{buildroot}%{_datadir}/icons/HighContrast/16x16/apps/%{name}.png
-install -D -m644 -p %{name}.highcontrast.22x22.png   %{buildroot}%{_datadir}/icons/HighContrast/22x22/apps/%{name}.png
-install -D -m644 -p %{name}.highcontrast.24x24.png   %{buildroot}%{_datadir}/icons/HighContrast/24x24/apps/%{name}.png
-install -D -m644 -p %{name}.highcontrast.32x32.png   %{buildroot}%{_datadir}/icons/HighContrast/32x32/apps/%{name}.png
-install -D -m644 -p %{name}.highcontrast.48x48.png   %{buildroot}%{_datadir}/icons/HighContrast/48x48/apps/%{name}.png
-install -D -m644 -p %{name}.highcontrast.128x128.png %{buildroot}%{_datadir}/icons/HighContrast/128x128/apps/%{name}.png
-install -D -m644 -p %{name}.highcontrast.256x256.png %{buildroot}%{_datadir}/icons/HighContrast/256x256/apps/%{name}.png
-install -D -m644 -p %{name}.highcontrast.512x512.png %{buildroot}%{_datadir}/icons/HighContrast/512x512/apps/%{name}.png
-install -D -m644 -p %{name}.highcontrast.svg         %{buildroot}%{_datadir}/icons/HighContrast/scalable/apps/%{name}.svg
+install -D -m644 -p %{name}.highcontrast.16x16.png   %{buildroot}%{_datadir}/icons/HighContrast/16x16/apps/%{appid}.png
+install -D -m644 -p %{name}.highcontrast.22x22.png   %{buildroot}%{_datadir}/icons/HighContrast/22x22/apps/%{appid}.png
+install -D -m644 -p %{name}.highcontrast.24x24.png   %{buildroot}%{_datadir}/icons/HighContrast/24x24/apps/%{appid}.png
+install -D -m644 -p %{name}.highcontrast.32x32.png   %{buildroot}%{_datadir}/icons/HighContrast/32x32/apps/%{appid}.png
+install -D -m644 -p %{name}.highcontrast.48x48.png   %{buildroot}%{_datadir}/icons/HighContrast/48x48/apps/%{appid}.png
+install -D -m644 -p %{name}.highcontrast.128x128.png %{buildroot}%{_datadir}/icons/HighContrast/128x128/apps/%{appid}.png
+install -D -m644 -p %{name}.highcontrast.256x256.png %{buildroot}%{_datadir}/icons/HighContrast/256x256/apps/%{appid}.png
+install -D -m644 -p %{name}.highcontrast.512x512.png %{buildroot}%{_datadir}/icons/HighContrast/512x512/apps/%{appid}.png
+install -D -m644 -p %{name}.highcontrast.svg         %{buildroot}%{_datadir}/icons/HighContrast/scalable/apps/%{appid}.svg
 
-# dash-masternode-tool.desktop
-# https://fedoraproject.org/wiki/Packaging:Guidelines?rd=PackagingGuidelines#Desktop_files
-#install -D -m644 -p %%{name}.desktop %%{buildroot}%%{_datadir}/applications/%%{name}.desktop
-desktop-file-install --dir=%{buildroot}%{_datadir}/applications/ %{name}.desktop
-desktop-file-validate %{buildroot}%{_datadir}/applications/%{name}.desktop
+# org.dash.dash_core.dash_masternode_tool.desktop
+# https://docs.fedoraproject.org/en-US/packaging-guidelines/
+#install -D -m644 -p %%{appid}.desktop %%{buildroot}%%{_datadir}/applications/%%{appid}.desktop
+desktop-file-install --dir=%{buildroot}%{_datadir}/applications/ %{appid}.desktop
+desktop-file-validate %{buildroot}%{_datadir}/applications/%{appid}.desktop
 
-# dash-masternode-tool.appdata.xml
-# https://fedoraproject.org/wiki/Packaging:AppData
-install -D -m644 -p %{name}.appdata.xml %{buildroot}%{_metainfodir}/%{name}.appdata.xml
-appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/*.appdata.xml
+# org.dash.dash_core.dash_masternode_tool.metainfo.xml
+# https://docs.fedoraproject.org/en-US/packaging-guidelines/AppData/
+install -D -m644 -p %{appid}.metainfo.xml %{buildroot}%{_metainfodir}/%{appid}.metainfo.xml
+appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/*.metainfo.xml
 cd ../../
 
 
@@ -384,17 +388,22 @@ cd ../../
 
 # Binaries
 %{_bindir}/%{name}
-%{_datadir}/%{name}/%{_name2}
-%{_datadir}/%{name}/%{name}-desktop-script.sh
+%{installtree}/%{_name2}
+%{installtree}/%{name}-desktop-script.sh
 
 ## Desktop
 %{_datadir}/icons/*
-%{_datadir}/applications/%{name}.desktop
-%{_metainfodir}/%{name}.appdata.xml
-#%%{_metainfodir}/%%{name}.metainfo.xml
+%{_datadir}/applications/%{appid}.desktop
+%{_metainfodir}/%{appid}.metainfo.xml
 
 
 %changelog
+* Tue Oct 6 2020 Todd Warner <t0dd_at_protonmail.com> 0.9.26-6.hotfix3.taw
+* Tue Oct 6 2020 Todd Warner <t0dd_at_protonmail.com> 0.9.26-5.1.hotfix3.taw
+  - supports Dash Core 0.16
+  - using appid in most places
+  - desktop RPM packaging is moving to metainfo instead of appdata
+
 * Tue May 19 2020 Todd Warner <t0dd_at_protonmail.com> 0.9.26-5.hotfix2.taw
 * Tue May 19 2020 Todd Warner <t0dd_at_protonmail.com> 0.9.26-4.1.hotfix2.taw
   - Removed pip 19.0 bug workaround cuz it was fixed in more recent pip  

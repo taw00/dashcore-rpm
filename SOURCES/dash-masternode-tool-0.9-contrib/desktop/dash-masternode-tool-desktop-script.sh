@@ -62,6 +62,6 @@ else
   _options="$_options --config $_config"
 fi
 
-echo "Running /usr/share/dash-masternode-tool/DashMasternodeTool $_options"
-/usr/share/dash-masternode-tool/DashMasternodeTool $_options
+echo "Running /usr/share/org.dash.dash_core.dash_masternode_tool/DashMasternodeTool $_options"
+/usr/share/org.dash.dash_core.dash_masternode_tool/DashMasternodeTool $_options
 cd - 1> /dev/null

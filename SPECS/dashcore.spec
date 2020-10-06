@@ -824,12 +824,12 @@ install -D -m644 %{srccontribtree}/linux/binary-build-contribs/bash-completion/d
 %if ! %{disable_wallet}
 # Desktop elements - desktop file (from contrib)
 cd %{srccontribtree}/linux/desktop/
-# org.dash.dashcore.dash-qt.desktop
+# org.dash.dash_core.dash-qt.desktop
 # https://docs.fedoraproject.org/en-US/packaging-guidelines/#_desktop_files
 install -m755  dash-wallet.wrapper.sh %{buildroot}%{_bindir}/
 desktop-file-install --dir=%{buildroot}%{_datadir}/applications %{appid_wallet}.desktop
 desktop-file-validate %{buildroot}%{_datadir}/applications/%{appid_wallet}.desktop
-# org.dash.dashcore.dash-qt.metainfo.xml
+# org.dash.dash_core.dash-qt.metainfo.xml
 # https://docs.fedoraproject.org/en-US/packaging-guidelines/AppData/
 install -D -m644 -p %{appid_wallet}.metainfo.xml %{buildroot}%{_metainfodir}/%{appid_wallet}.metainfo.xml
 appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/*.metainfo.xml
