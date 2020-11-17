@@ -48,6 +48,7 @@
   </provides>
 
   <releases>
+      <release version="0.16.1.1" date="2020-11-17" />
       <release version="0.16.1.0" date="2020-11-14" />
       <release version="0.16.0.1" date="2020-09-30" />
       <release version="0.16.0.0-rc3" date="2020-09-14" />

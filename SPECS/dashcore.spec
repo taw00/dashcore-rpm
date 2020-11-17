@@ -54,7 +54,7 @@ Summary: A global payments network and decentralized application (dapp) platform
 # VERSION
 %define vermajor 0.16
 %define _verminor1 1
-%define _verminor2 0
+%define _verminor2 1
 %define verminor %{_verminor1}.%{_verminor2}
 Version: %{vermajor}.%{verminor}
 %define versionqualified %{version}
@@ -221,6 +221,8 @@ Source6: https://github.com/dashpay/dash/archive/v%{versionqualified}/%{binaryar
 %if %{buildFromSource}
 # nuke "About QT" in the client source.
 Patch0: https://github.com/taw00/dashcore-rpm/blob/master/SOURCES/%{_name_short}-%{vermajor}-remove-about-qt-menu-item.patch
+# fix a problem with one specific build. This needs to go away in next version
+#Patch1: https://github.com/taw00/dashcore-rpm/blob/master/SOURCES/dash-0.16.1.0-httpserver.cpp.patch
 %endif
 
 %global selinux_variants mls strict targeted
@@ -561,9 +563,11 @@ mv ../../SOURCES/%{bdbarchivename}.tar.gz %{sourcetree}/depends/sources/%{bdbarc
 %endif
 
 # Patch0: get rid of that annoying "About QT" menu option
+# Patch1: fix issue only in v0.16.1.0
 %if ! %{clientSourceIsBinary}
 cd %{sourcetree}
 %patch0 -p1
+#%%patch1 -p1
 cd ..
 %endif
 
@@ -1222,9 +1226,16 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Dash Electrum: https://github.com/akhavr/electrum-dash
 
 %changelog
+* Sat Nov 14 2020 Todd Warner <t0dd_at_protonmail.com> 0.16.1.1-1.taw
+* Sat Nov 14 2020 Todd Warner <t0dd_at_protonmail.com> 0.16.1.1-0.1.taw
+  - 0.16.1.1 - https://github.com/dashpay/dash/releases/tag/v0.16.1.1
+  - commented out the patch for now. will experiment in a test version later.
+
+* Sat Nov 14 2020 Todd Warner <t0dd_at_protonmail.com> 0.16.1.0-1.1.taw
 * Sat Nov 14 2020 Todd Warner <t0dd_at_protonmail.com> 0.16.1.0-1.taw
 * Sat Nov 14 2020 Todd Warner <t0dd_at_protonmail.com> 0.16.1.0-0.1.taw
   - 0.16.1.0 - https://github.com/dashpay/dash/releases/tag/v0.16.1.0
+  - patch added to fix builds on Fedora 33+ (newer boost) -- attempt failed :(
 
 * Thu Oct 1 2020 Todd Warner <t0dd_at_protonmail.com> 0.16.0.1-3.taw
 * Thu Oct 1 2020 Todd Warner <t0dd_at_protonmail.com> 0.16.0.1-2.1.taw
