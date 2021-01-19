@@ -5,9 +5,9 @@ Summary:    Repository configuration to enable management of Dash Cryptocurrency
 %define targetIsProduction 1
 
 # RELEASE
-%define _rel 9
+%define _rel 10
 %if ! %{targetIsProduction}
-%define _rel 8.1
+%define _rel 9.1
 %endif
 
 %define _snapinfo testing
@@ -110,6 +110,10 @@ install -D -m644 todd-694673ED-public-2030-01-04.2016-11-07.asc %{buildroot}%{_s
 
 
 %changelog
+* Tue Jan 19 2021 Todd Warner <t0dd_at_protonmail.com> 1.0-10.taw
+* Tue Jan 19 2021 Todd Warner <t0dd_at_protonmail.com> 1.0-9.1.testing.taw
+  - commented out Dash Core 0.13 since it is no longer relevant in the least
+
 * Wed May 22 2019 Todd Warner <t0dd_at_protonmail.com> 1.0-9.taw
 * Wed May 22 2019 Todd Warner <t0dd_at_protonmail.com> 1.0-8.1.testing.taw
   - in support of Dash Core 0.14
