@@ -1,0 +1,11 @@
+diff -ruN dash-0.16.1.1/src/httpserver.cpp dash-0.16.1.1.fixmissingimport/src/httpserver.cpp
+--- dash-0.16.1.1/src/httpserver.cpp	2020-11-15 16:41:25.000000000 -0500
++++ dash-0.16.1.1.fixmissingimport/src/httpserver.cpp	2021-01-19 17:40:44.420405846 -0500
+@@ -14,6 +14,7 @@
+ #include <sync.h>
+ #include <ui_interface.h>
+ 
++#include <deque>
+ #include <memory>
+ #include <stdio.h>
+ #include <stdlib.h>
