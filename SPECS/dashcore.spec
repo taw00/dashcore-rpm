@@ -65,9 +65,9 @@ Version: %{vermajor}.%{verminor}
 
 # RELEASE
 # package release (and for testing only, extrarel)
-%define _pkgrel 1
+%define _pkgrel 2
 %if ! %{targetIsProduction}
-  %define _pkgrel 0.1
+  %define _pkgrel 1.1
 %endif
 
 # MINORBUMP
@@ -222,7 +222,10 @@ Source6: https://github.com/dashpay/dash/archive/v%{versionqualified}/%{binaryar
 # nuke "About QT" in the client source.
 Patch0: https://github.com/taw00/dashcore-rpm/blob/master/SOURCES/%{_name_short}-%{vermajor}-remove-about-qt-menu-item.patch
 # fix a problem with one specific build. This needs to go away in next version
-#Patch1: https://github.com/taw00/dashcore-rpm/blob/master/SOURCES/dash-0.16.1.0-httpserver.cpp.patch
+# See also github.com/litecoin-project/litecoin/commit/a5929130223973636f3fd25fbfaf2953f2ec96a9
+Patch1: https://github.com/taw00/dashcore-rpm/blob/master/SOURCES/%{_name_short}-%{vermajor}-fix01-missing-deque-import.patch
+Patch2: https://github.com/taw00/dashcore-rpm/blob/master/SOURCES/%{_name_short}-%{vermajor}-fix02-bind-namespace-errors.patch
+Patch3: https://github.com/taw00/dashcore-rpm/blob/master/SOURCES/%{_name_short}-%{vermajor}-fix03-QPainterPath-issue.patch
 %endif
 
 %global selinux_variants mls strict targeted
@@ -567,7 +570,11 @@ mv ../../SOURCES/%{bdbarchivename}.tar.gz %{sourcetree}/depends/sources/%{bdbarc
 %if ! %{clientSourceIsBinary}
 cd %{sourcetree}
 %patch0 -p1
-#%%patch1 -p1
+%if 0%{?fedora} && 0%{?fedora} > 32
+%patch1 -p1
+%patch2 -p1
+%patch3 -p1
+%endif
 cd ..
 %endif
 
@@ -1226,6 +1233,11 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Dash Electrum: https://github.com/akhavr/electrum-dash
 
 %changelog
+* Tue Jan 19 2021 Todd Warner <t0dd_at_protonmail.com> 0.16.1.1-2.taw
+* Tue Jan 19 2021 Todd Warner <t0dd_at_protonmail.com> 0.16.1.1-1.1.taw
+  - patches added to fix build errors due to the newer boost 1.73
+  - patch added to fix build errors due to the newer QT 5.15
+
 * Sat Nov 14 2020 Todd Warner <t0dd_at_protonmail.com> 0.16.1.1-1.taw
 * Sat Nov 14 2020 Todd Warner <t0dd_at_protonmail.com> 0.16.1.1-0.1.taw
   - 0.16.1.1 - https://github.com/dashpay/dash/releases/tag/v0.16.1.1
