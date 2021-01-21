@@ -570,11 +570,11 @@ mv ../../SOURCES/%{bdbarchivename}.tar.gz %{sourcetree}/depends/sources/%{bdbarc
 %if ! %{clientSourceIsBinary}
 cd %{sourcetree}
 %patch0 -p1
-%if 0%{?fedora} && 0%{?fedora} > 32
+#%%if 0%%{?fedora} && 0%%{?fedora} > 32
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
-%endif
+#%%endif
 cd ..
 %endif
 
@@ -1233,6 +1233,10 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Dash Electrum: https://github.com/akhavr/electrum-dash
 
 %changelog
+* Wed Jan 20 2021 Todd Warner <t0dd_at_protonmail.com> 0.16.1.1-3.taw
+* Wed Jan 20 2021 Todd Warner <t0dd_at_protonmail.com> 0.16.1.1-2.1.taw
+  - patches resolving Boost and QT issuesapplied to all versions of fedora builds
+
 * Tue Jan 19 2021 Todd Warner <t0dd_at_protonmail.com> 0.16.1.1-2.taw
 * Tue Jan 19 2021 Todd Warner <t0dd_at_protonmail.com> 0.16.1.1-1.1.taw
   - patches added to fix build errors due to the newer boost 1.73
