@@ -1,6 +1,16 @@
 # Dash Core for Fedora Linux<br />_...wallet, node, and masternode_
 
-**Important notices:**
+> IMPORTANT REPOSITORY NOTICE  
+>   
+> Due to github quotas, I am ending storage of the `.src.rpm` convenience files
+> in all (or most) of my build repositories. You can duplicate my builds with
+> files provided within this repository and with upstream source `.tar.gz`
+> files. If you can read an RPM spec file you should be good to go.  
+>   
+> For the rest of you who simply want to use the application, follow the
+> instructions for installation of the binary package and enjoy.
+
+**Supported builds and other notices:**
 * For both Dash Core and Dash Masternode Tool (DMT), I no longer supply packages for RHEL/CentOS.
 * For Dash Core, use the provided systemd configuration. This makes nodes near bullet-proof, even on Fedora.
 * Dash Masternode Tool: DMT will remain Fedora-only! except for test builds.
