@@ -64,8 +64,7 @@ loss of funds or damages associated to this software.
 
 ### Send comment and feedback - <https://keybase.io/toddwarner>
 
-_Come say hello to me. I am **t0dd** in various forums: [Dash Nation on
-Discord](https://dashchat.org/), [Dash Talk on Discord](http://staydashy.com/),
+_Come say hello to me. I am **t0dd** in various forums: [Dash Talk on Discord](https://discord.com/invite/PXbUxJB),
 [dash.org's forum](https://www.dash.org/forum/), and [#dashpay on freenode
 IRC](http://freenode.net/)._
 
