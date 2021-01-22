@@ -20,7 +20,7 @@
 Name: %{_name_dcs}
 Summary: A required helper agent for Dash Core Masternodes
 
-%define targetIsProduction 0
+%define targetIsProduction 1
 
 
 # VERSION
@@ -79,6 +79,7 @@ Release: %{_release}
 
 Source0: https://github.com/taw00/dashcore-rpm/blob/master/SOURCES/%{sourcetree}.tar.gz
 Source1: https://github.com/taw00/dashcore-rpm/blob/master/SOURCES/%{sourcetree_contrib}.tar.gz
+Patch0: https://github.com/taw00/dashcore-rpm/blob/master/SOURCES/%{_name_s}-%{vermajor}-fix-SyntaxWarning.patch
 
 # Most of the time, the build system can figure out the requires.
 # But if you need something specific...
@@ -151,6 +152,11 @@ mkdir -p %{projectroot}
 %setup -q -T -D -a 0 -n %{projectroot}
 # contrib
 %setup -q -T -D -a 1 -n %{projectroot}
+# patch
+cd %{sourcetree}
+%patch0 -p1
+cd ..
+
 
 
 %build
