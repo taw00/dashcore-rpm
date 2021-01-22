@@ -20,7 +20,7 @@
 Name: %{_name_dcs}
 Summary: A required helper agent for Dash Core Masternodes
 
-%define targetIsProduction 1
+%define targetIsProduction 0
 
 
 # VERSION
@@ -29,9 +29,9 @@ Summary: A required helper agent for Dash Core Masternodes
 Version: %{vermajor}.%{verminor}
 
 # RELEASE
-%define _pkgrel 1
+%define _pkgrel 2
 %if ! %{targetIsProduction}
-  %define _pkgrel 0.1
+  %define _pkgrel 1.1
 %endif
 
 # MINORBUMP
@@ -303,10 +303,15 @@ exit 0
 #  fi
 #fi
 
+
 %preun
 # Nuke the database and then uninstall the thing. This will ensure the sentinel
 # directory is properly cleaned up as well if need be.
 /usr/bin/rm -f %{_sharedstatedir}/dashcore/sentinel/database/sentinel.db >> /dev/null 2>&1
+# There have been conflicts associated to the
+# /var/lib/dashcore/sentinel/venv/lib* directory and lib64 symlink
+# For now, nuke the whole venv directory and investigate later.
+/usr/bin/rm -f %{_sharedstatedir}/dashcore/sentinel/venv >> /dev/null 2>&1
 
 
 # Dash Core Information
@@ -325,8 +330,14 @@ exit 0
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
-* Thu Oct 1 2019 Todd Warner <t0dd_at_protonmail.com> 1.5.0-1.taw
-* Thu Oct 1 2019 Todd Warner <t0dd_at_protonmail.com> 1.5.0-0.1.testing.taw
+* Thu Jan 21 2021 Todd Warner <t0dd_at_protonmail.com> 1.5.0-2.taw
+* Thu Jan 21 2021 Todd Warner <t0dd_at_protonmail.com> 1.5.0-1.1.testing.taw
+  - fix prior release date in this spec file (2020, not 2019)
+  - cleanup a little more directly the venv tree upon uninstall and upgrades
+  - hopefully resolving https://github.com/taw00/dashcore-rpm/issues/5
+
+* Thu Oct 1 2020 Todd Warner <t0dd_at_protonmail.com> 1.5.0-1.taw
+* Thu Oct 1 2020 Todd Warner <t0dd_at_protonmail.com> 1.5.0-0.1.testing.taw
   - 1.5 in support of dashcore 0.16
 
 * Wed May 22 2019 Todd Warner <t0dd_at_protonmail.com> 1.4.0-1.taw
