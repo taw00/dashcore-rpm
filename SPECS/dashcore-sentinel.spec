@@ -314,10 +314,6 @@ exit 0
 # Nuke the database and then uninstall the thing. This will ensure the sentinel
 # directory is properly cleaned up as well if need be.
 /usr/bin/rm -f %{_sharedstatedir}/dashcore/sentinel/database/sentinel.db >> /dev/null 2>&1
-# There have been conflicts associated to the
-# /var/lib/dashcore/sentinel/venv/lib* directory and lib64 symlink
-# For now, nuke the whole venv directory and investigate later.
-/usr/bin/rm -rf %{_sharedstatedir}/dashcore/sentinel/venv >> /dev/null 2>&1
 
 
 # Dash Core Information
@@ -338,7 +334,7 @@ exit 0
 %changelog
 * Fri Jan 22 2021 Todd Warner <t0dd_at_protonmail.com> 1.5.0-3.taw
 * Fri Jan 22 2021 Todd Warner <t0dd_at_protonmail.com> 1.5.0-2.1.testing.taw
-  - Fix broken rm command in the preun
+  - remove broken rm command in the preun -- it wasn't the right solution anyway
 
 * Thu Jan 21 2021 Todd Warner <t0dd_at_protonmail.com> 1.5.0-2.taw
 * Thu Jan 21 2021 Todd Warner <t0dd_at_protonmail.com> 1.5.0-1.1.testing.taw
