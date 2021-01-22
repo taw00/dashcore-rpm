@@ -29,9 +29,9 @@ Summary: A required helper agent for Dash Core Masternodes
 Version: %{vermajor}.%{verminor}
 
 # RELEASE
-%define _pkgrel 2
+%define _pkgrel 3
 %if ! %{targetIsProduction}
-  %define _pkgrel 1.1
+  %define _pkgrel 2.1
 %endif
 
 # MINORBUMP
@@ -317,7 +317,7 @@ exit 0
 # There have been conflicts associated to the
 # /var/lib/dashcore/sentinel/venv/lib* directory and lib64 symlink
 # For now, nuke the whole venv directory and investigate later.
-/usr/bin/rm -f %{_sharedstatedir}/dashcore/sentinel/venv >> /dev/null 2>&1
+/usr/bin/rm -rf %{_sharedstatedir}/dashcore/sentinel/venv >> /dev/null 2>&1
 
 
 # Dash Core Information
@@ -336,6 +336,10 @@ exit 0
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
+* Fri Jan 22 2021 Todd Warner <t0dd_at_protonmail.com> 1.5.0-3.taw
+* Fri Jan 22 2021 Todd Warner <t0dd_at_protonmail.com> 1.5.0-2.1.testing.taw
+  - Fix broken rm command in the preun
+
 * Thu Jan 21 2021 Todd Warner <t0dd_at_protonmail.com> 1.5.0-2.taw
 * Thu Jan 21 2021 Todd Warner <t0dd_at_protonmail.com> 1.5.0-1.1.testing.taw
   - fix prior release date in this spec file (2020, not 2019)
