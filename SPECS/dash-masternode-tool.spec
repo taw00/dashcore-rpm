@@ -39,7 +39,7 @@ Summary: Manage and collateralize a Dash Masternode with a hardware wallet
 %define sourceIsBinary 1
 
 %undefine buildQualifier
-%define buildQualifier hotfix3
+%define buildQualifier hotfix4
 
 # Package (RPM) name-version-release.
 # <name>-<vermajor.<verminor>-<pkgrel>[.<extraver>][.<snapinfo>].DIST[.<minorbump>]
@@ -50,9 +50,9 @@ Summary: Manage and collateralize a Dash Masternode with a hardware wallet
 Version: %{vermajor}.%{verminor}
 
 # RELEASE
-%define _pkgrel 6
+%define _pkgrel 7
 %if ! %{targetIsProduction}
-  %define _pkgrel 5.1
+  %define _pkgrel 6.1
 %endif
 
 # MINORBUMP
@@ -398,6 +398,11 @@ cd ../../
 
 
 %changelog
+* Thu Feb 18 2021 Todd Warner <t0dd_at_protonmail.com> 0.9.26-7.hotfix4.taw
+* Thu Feb 18 2021 Todd Warner <t0dd_at_protonmail.com> 0.9.26-6.1.hotfix4.taw
+  - update
+  - repackaged binary (.rp.) instead of a build—too many problems at the moment
+
 * Tue Oct 6 2020 Todd Warner <t0dd_at_protonmail.com> 0.9.26-6.hotfix3.taw
 * Tue Oct 6 2020 Todd Warner <t0dd_at_protonmail.com> 0.9.26-5.1.hotfix3.taw
   - supports Dash Core 0.16
