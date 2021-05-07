@@ -20,18 +20,18 @@
 Name: %{_name_dcs}
 Summary: A required helper agent for Dash Core Masternodes
 
-%define targetIsProduction 1
+%define targetIsProduction 0
 
 
 # VERSION
 %define vermajor 1.5
-%define verminor 0
+%define verminor 1
 Version: %{vermajor}.%{verminor}
 
 # RELEASE
-%define _pkgrel 3
+%define _pkgrel 1
 %if ! %{targetIsProduction}
-  %define _pkgrel 2.1
+  %define _pkgrel 0.1
 %endif
 
 # MINORBUMP
@@ -332,6 +332,9 @@ exit 0
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
+* Thu May 6 2021 Todd Warner <t0dd_at_protonmail.com> 1.5.1-0.1.testing.taw
+  - https://github.com/dashpay/sentinel/releases/tag/v1.5.1
+
 * Fri Jan 22 2021 Todd Warner <t0dd_at_protonmail.com> 1.5.0-3.taw
 * Fri Jan 22 2021 Todd Warner <t0dd_at_protonmail.com> 1.5.0-2.1.testing.taw
   - remove broken rm command in the preun -- it wasn't the right solution anyway
