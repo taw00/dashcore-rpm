@@ -23,38 +23,38 @@
 
 
 Name: dashcore
+%define name_ dash
 Summary: A global payments network and decentralized application (dapp) platform: a peer-to-peer, fungible, digital currency, protocol, and platform.
 
-%define _name_short dash
 %define appid org.dash.dash_core
 %define appid_wallet %{appid}.wallet
 %define appid_node %{appid}.node
 
-%define targetIsProduction 1
+%define targetIsProduction 0
 
 # Leave these off.
-# These settings are used if you wan to deliver packages where the application
-# is developed from pre-built binaries instead of from source code. These are
-# last resort settings if there are problems building the application
-# appropriately. For example, we used to have a terrible time building to a
-# EPEL/RHEL 7 target. That has since been fixed.
+# These settings are used if you want to deliver packages sourced from upstream
+# pre-builds instead of from source code. This is a last resort for scenarios
+# where an RPM is desired, but we could not successfully build from source.
+# E.g., we often have had a terrible time building to a EPEL/RHEL target.
 %define clientSourceIsBinary 0
 %define serverSourceIsBinary 0
 
 # Leave this on
-# Building without leaning on the system libraries for the build of the build
-# is currently not supported (I can't get it to do a full depends-based build
-# yet). Please leave this on. It's poor packaging anyway to build from depends.
+# Building without leaning on the system libraries for the build is currently
+# not supported (I have not been successful at a full depends-based build
+# yet). Please leave this on. It's poor packaging anyway to rely on a depends-
+# tree of libraries if those libraries are not maintained by the project.
 %define useSystemLibraries 1
 
-# Use if the dev team includes things like rc3 in the filename
-%define buildQualifier rc3
+# Use if the dev team includes things like rc4 in the filename
 %undefine buildQualifier
+%define buildQualifier rc5
 
 # VERSION
-%define vermajor 0.16
-%define _verminor1 1
-%define _verminor2 1
+%define vermajor 0.17
+%define _verminor1 0
+%define _verminor2 0
 %define verminor %{_verminor1}.%{_verminor2}
 Version: %{vermajor}.%{verminor}
 %define versionqualified %{version}
@@ -65,9 +65,9 @@ Version: %{vermajor}.%{verminor}
 
 # RELEASE
 # package release (and for testing only, extrarel)
-%define _pkgrel 2
+%define _pkgrel 1
 %if ! %{targetIsProduction}
-  %define _pkgrel 1.1
+  %define _pkgrel 0.1
 %endif
 
 # MINORBUMP
@@ -152,7 +152,8 @@ Release: %{_release}
 # Don't turn off the useExtraSources flag.
 # The src.rpm includes pre-downloaded extra source archives that satisfy
 # source expectations for the depends tree during the build. They are:
-# bls-signatures (chia_bls) from https://github.com/codablock/bls-signatures
+# * bls-signatures (bls-dash) from https://github.com/dashpay/bls-signatures
+#   Note, used to be (chia_bls) from https://github.com/codablock/bls-signatures
 # libbacktrace (backtrace) from https://github.com/rust-lang-nursery/libbacktrace
 # The next two are for EL8 builds only.
 # miniupnpc from http://miniupnp.free.fr/files/miniupnpc-2.0.20170509.tar.gz
@@ -160,26 +161,25 @@ Release: %{_release}
 %define useExtraSources 1
 
 # the archive name and directory tree can have some variances
-# v0.16.0.0
+# v0.17.0.0
 %define _archivename_alt1 v%{version}
-# dash-0.16.0.0
-%define _archivename_alt2 %{_name_short}-%{version}
-# dashcore-0.16.0
-%define _archivename_alt3 %{name}-%{vermajor}.%{_verminor1}
-# dashcore-0.16.0.0
-%define _archivename_alt4 %{name}-%{version}
+# dash-0.17.0.0
+%define _archivename_alt2 dash-%{version}
+# dashcore-0.17.0
+%define _archivename_alt3 dashcore-%{vermajor}.%{_verminor1}
+# dashcore-0.17.0.0
+%define _archivename_alt4 dashcore-%{version}
 
 # Extracted source tree structure (extracted in .../BUILD)
-#   projectroot           dashcore-0.16.0
-#      \_sourcetree         \_dash-0.16.0.0 or dash-0.16.0.0-rc1...
-#      \_binarytree         \_dashcore-0.16.0
-#      \_srccontribtree     \_dashcore-0.16.0-contrib
-#      \_patch_files        \_dash-0.16.0-...patch
+#   projectroot           dashcore-0.17.0
+#      \_sourcetree         \_dash-0.17.0.0 or dash-0.17.0.0-rc1...
+#      \_binarytree         \_dashcore-0.17.0
+#      \_srccontribtree     \_dashcore-0.17.0-contrib
+#      \_patch_files        \_dash-0.17.0-...patch
 # Supplied but only "moved":
-#   bls-signatures-20181101.tar.gz
-#                           --> {sourcetree}/depends/sources/v20181101.tar.gz
+#   bls-signatures-1.0.1.tar.gz
+#                           --> {sourcetree}/depends/sources/1.0.1.tar.gz
 
-# our selection for this build - edit this
 %define _sourcearchivename %{_archivename_alt2}
 %define _binaryarchivename %{_archivename_alt4}
 %define _binarytree %{_archivename_alt3}
@@ -195,14 +195,12 @@ Release: %{_release}
   %define sourcetree %{_sourcearchivename}
   %define binarytree %{_binarytree}
 %endif
-%define blsarchivedate 20181101
-%define blsarchivename bls-signatures-%{blsarchivedate}
+#%%define blsarchiveversion 20181101 <--- for dash-0.16 and older
+%define blsarchiveversion 1.0.1
 %define libbacktracearchiveversion rust-snapshot-2018-05-22
 %define libbacktracearchivename libbacktrace-%{libbacktracearchiveversion}
-%define miniupnpcversion 2.0.20170509
-%define miniupnpcarchivename miniupnpc-%{miniupnpcversion}
+%define miniupnpcversion 2.0.20180203
 %define bdbarchiveversion 4.8.30.NC
-%define bdbarchivename db-%{bdbarchiveversion}
 
 %define projectroot %{name}-%{vermajor}
 %define srccontribtree %{name}-%{vermajor}-contrib
@@ -210,22 +208,23 @@ Release: %{_release}
 
 Source0: https://github.com/dashpay/dash/archive/v%{versionqualified}/%{sourcearchivename}.tar.gz
 Source1: https://github.com/taw00/dashcore-rpm/blob/master/SOURCES/%{srccontribtree}.tar.gz
-Source2: https://github.com/taw00/dashcore-rpm/blob/master/SOURCES/%{blsarchivename}.tar.gz
-Source3: https://github.com/rust-lang-nursery/libbacktrace/archive/%{libbacktracearchiveversion}/%{libbacktracearchivename}.tar.gz
-# Source4 and Source5 are for EL8 only
-Source4: http://miniupnp.free.fr/files/%{miniupnpcarchivename}.tar.gz
-Source5: https://download.oracle.com/berkeley-db/%{bdbarchivename}.tar.gz
+Source2: https://github.com/taw00/dashcore-rpm/blob/master/SOURCES/bls-signatures-%{blsarchiveversion}.tar.gz
+Source3: https://github.com/rust-lang-nursery/libbacktrace/archive/%{libbacktracearchiveversion}/libbacktrace-%{libbacktracearchiveversion}.tar.gz
+## Source4 and Source5 are for EL8 only
+#Source4: http://miniupnp.free.fr/files/miniupnpc-%%{miniupnpcversion}.tar.gz
+#Source5: https://download.oracle.com/berkeley-db/db-%%{bdbarchiveversion}.tar.gz
 %if %{clientSourceIsBinary} || %{serverSourceIsBinary}
 Source6: https://github.com/dashpay/dash/archive/v%{versionqualified}/%{binaryarchivename}-x86_64-linux-gnu.tar.gz
 %endif
 %if %{buildFromSource}
 # nuke "About QT" in the client source.
-Patch0: https://github.com/taw00/dashcore-rpm/blob/master/SOURCES/%{_name_short}-%{vermajor}-remove-about-qt-menu-item.patch
-# fix a problem with one specific build. This needs to go away in next version
+Patch01: https://github.com/taw00/dashcore-rpm/blob/master/SOURCES/dash-%{vermajor}-patch01-remove-about-qt-menu-item.patch
+# Patch02: fix a problem with one specific build. This needs to go away in next version
 # See also github.com/litecoin-project/litecoin/commit/a5929130223973636f3fd25fbfaf2953f2ec96a9
-Patch1: https://github.com/taw00/dashcore-rpm/blob/master/SOURCES/%{_name_short}-%{vermajor}-fix01-missing-deque-import.patch
-Patch2: https://github.com/taw00/dashcore-rpm/blob/master/SOURCES/%{_name_short}-%{vermajor}-fix02-bind-namespace-errors.patch
-Patch3: https://github.com/taw00/dashcore-rpm/blob/master/SOURCES/%{_name_short}-%{vermajor}-fix03-QPainterPath-issue.patch
+Patch2: https://github.com/taw00/dashcore-rpm/blob/master/SOURCES/dash-%{vermajor}-patch02-bind-namespace-errors.patch
+Patch3: https://github.com/taw00/dashcore-rpm/blob/master/SOURCES/dash-%{vermajor}-patch03-QPainterPath-issue.patch
+# Patch04: fix a problem with RC5 and earlier. This needs to go away in the future.
+Patch4: https://github.com/taw00/dashcore-rpm/blob/master/SOURCES/dash-%{vermajor}-patch04-cmake-prefix-fix-for-bls-dash.patch
 %endif
 
 %global selinux_variants mls strict targeted
@@ -256,10 +255,14 @@ URL: http://dash.org/
 ExclusiveArch: x86_64
 
 %if %{buildFromSource}
+# NOTE: the cmake supplied by EL8 is version 3.11 which is too old.
+# 3.14 is expected for bls-dash builds. It is supplied in the depends
+# tree but it is never used.
+
 # As recommended by...
 # https://github.com/dashpay/dash/blob/develop/doc/build-unix.md
 BuildRequires: libtool make autoconf automake patch
-BuildRequires: cmake libstdc++-static
+BuildRequires: libstdc++-static binutils
 BuildRequires: python3
 
 %if %{useSystemLibraries}
@@ -268,8 +271,8 @@ BuildRequires: python3
 BuildRequires: gettext
 BuildRequires: openssl-devel boost-devel libevent-devel
 BuildRequires: ccache
-# Added to satisfy chia_bls.
-BuildRequires: gmp-devel
+# Added to satisfy bls-signatures for 0.16 only.
+#BuildRequires: gmp-devel
 %if 0%{?fedora}
 # Note, EL8 uses in-src.rpm dependencies since EL8 does not provide these pkgs.
 BuildRequires: libdb4-cxx-devel miniupnpc-devel
@@ -285,8 +288,7 @@ BuildRequires: tree vim-enhanced less findutils
 %endif
 
 
-# dashcore-client
-# XXX Consider renaming dashcore-wallet
+# dashcore-client -- XXX Consider renaming to dashcore-wallet
 %package client
 Summary: A global payments network and decentralized application (dapp) platform: a peer-to-peer, fungible, digital currency, protocol, and platform. (desktop reference client)
 Requires: dashcore-utils = %{version}-%{release}
@@ -310,6 +312,7 @@ BuildRequires: protobuf-devel
 BuildRequires: qrencode-devel
 BuildRequires: qt5-qtbase-devel qt5-linguist
 BuildRequires: qt5-qtwayland-devel
+BuildRequires: libxkbcommon
 %endif
 # endif build from source and use system libraries
 %endif
@@ -517,12 +520,17 @@ Learn more at www.dash.org.
   echo "======== Fedora version: %{fedora}"
 %endif
 
-# Message if EL7 found (probably should check for other unsupported OSes as well)
 %if 0%{?rhel} && 0%{?rhel} < 8
-%{error: "EL7-based platforms (CentOS7/RHEL7) are not supported build targets."}
+%{error: "EL7-based platforms (RHEL7/CentOS7) are not supported build targets."}
+%endif
+%if 0%{?rhel} && 0%{?rhel} < 9
+%{error: "EL8-based platforms (RHEL8/CentOS8) are not supported build targets."}
 %endif
 %if 0%{?centos} && 0%{?centos_ver} < 8
 %{error: "EL7-based platforms (CentOS7/RHEL7) are not supported build targets."}
+%endif
+%if 0%{?centos} && 0%{?centos_ver} < 9
+%{error: "EL8-based platforms (CentOS8/RHEL8) are not supported build targets."}
 %endif
 
 %define _disable_wallet --disable-wallet --without-gui
@@ -533,47 +541,46 @@ Learn more at www.dash.org.
 mkdir -p %{projectroot}
 
 # Source0: dashcore (source)
-# {_builddir}/dashcore-0.16/dash-0.16.0.0/
+# {_builddir}/dashcore-0.17/dash-0.17.0.0/
 %if %{buildFromSource}
 %setup -q -T -D -a 0 -n %{projectroot}
 
 # Source6: dashcore (binary)
-# {_builddir}/dashcore-0.16/dashcore-0.16.0/
+# {_builddir}/dashcore-0.17/dashcore-0.17.0/
 %else
 %setup -q -T -D -a 6 -n %{projectroot}
 %endif
 
 # Source1: contributions
-# {_builddir}/dashcore-0.16.0/dashcore-0.16.0-contrib/
+# {_builddir}/dashcore-0.17.0/dashcore-0.17.0-contrib/
 %setup -q -T -D -a 1 -n %{projectroot}
 
-# Source2: bls (chai_bls) archive
+# Source2: bls-dash archive
 # Source3: libbacktrace (backtrace) archive
-# Source4: miniupnpc archive
-# Source5: bdb archive
+# Source4: miniupnpc archive (for EL only)
+# Source5: bdb archive (for EL only)
 # {_sourcedir} == ../../SOURCES/ but rpmlint hates use of {_sourcedir}
 # Moving the supplied tarballs from {_sourcedir} to their desired locations
 %if %{buildFromSource} && %{useExtraSources}
 mkdir -p %{sourcetree}/depends/sources/
-mv ../../SOURCES/%{blsarchivename}.tar.gz %{sourcetree}/depends/sources/v%{blsarchivedate}.tar.gz
+#mv ../../SOURCES/bls-signatures-%%{blsarchiveversion}.tar.gz %%{sourcetree}/depends/sources/v%%{blsarchiveversion}.tar.gz <-- dash-0.16 and older
+mv ../../SOURCES/bls-signatures-%{blsarchiveversion}.tar.gz %{sourcetree}/depends/sources/bls-dash-%{blsarchiveversion}.tar.gz
 mkdir -p %{sourcetree}/depends/sources/
-mv ../../SOURCES/%{libbacktracearchivename}.tar.gz %{sourcetree}/depends/sources/%{libbacktracearchiveversion}.tar.gz
+mv ../../SOURCES/libbacktrace-%{libbacktracearchiveversion}.tar.gz %{sourcetree}/depends/sources/%{libbacktracearchiveversion}.tar.gz
+# For EL builds only ...
 %if 0%{?rhel:1} || 0%{?centos:1}
 mkdir -p %{sourcetree}/depends/sources/
-mv ../../SOURCES/%{miniupnpcarchivename}.tar.gz %{sourcetree}/depends/sources/%{miniupnpcarchivename}.tar.gz
-mv ../../SOURCES/%{bdbarchivename}.tar.gz %{sourcetree}/depends/sources/%{bdbarchivename}.tar.gz
+mv ../../SOURCES/miniupnpc-%{miniupnpcversion}.tar.gz %{sourcetree}/depends/sources/miniupnpc-%{miniupnpcversion}.tar.gz
+mv ../../SOURCES/db-%{bdbarchiveversion}.tar.gz %{sourcetree}/depends/sources/db-%{bdbarchiveversion}.tar.gz
 %endif
 %endif
 
-# Patch0: get rid of that annoying "About QT" menu option
-# Patch1: fix issue only in v0.16.1.0
 %if ! %{clientSourceIsBinary}
 cd %{sourcetree}
-%patch0 -p1
-#%%if 0%%{?fedora} && 0%%{?fedora} > 32
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
+%patch4 -p1
 #%%endif
 cd ..
 %endif
@@ -581,11 +588,13 @@ cd ..
 # At this moment, we are in the projectroot directory
 
 %if %{buildFromSource} && %{useSystemLibraries}
-# Swap out packages.mk and chia_bls.mk makefiles in order to force usage of
-# OS native devel libraries and tools.
+# Swap out packages.mk and bls-dash.mk makefiles in order to force some usage
+# of OS native devel libraries and tools.
 cp -a %{srccontribtree}/build/depends/packages/*.mk %{sourcetree}/depends/packages/
+# For EL builds only ...
 %if 0%{?rhel:1} || 0%{?centos:1}
 cp -a %{srccontribtree}/build/depends/packages/packages.mk--EL8 %{sourcetree}/depends/packages/packages.mk
+cp -a %{srccontribtree}/build/depends/packages/bls-dash.mk--EL8 %{sourcetree}/depends/packages/bls-dash.mk
 %endif
 %endif
 # For debugging purposes...
@@ -622,15 +631,12 @@ cd %{sourcetree}
 
 # build dependencies
 cd depends
-#%%define _target_platformX x86_64-pc-linux-gnu
-%define _target_platformX %{_target_platform}
+# Note: {_target_platform} = x86_64-redhat-linux-gnu 
 # example: make HOST=x86_64-redhat-linux-gnu -j4
-make HOST=%{_target_platformX} -j$(nproc)
+make HOST=%{_target_platform} -j$(nproc)
 cd ..
 
 # build code
-%define _targettree %{_builddir}/%{projectroot}/%{sourcetree}/depends/%{_target_platformX}
-
 %define _disable_tests --disable-tests --disable-gui-tests
 %if %{testing_extras}
   %define _disable_tests %{nil}
@@ -648,13 +654,22 @@ cd ..
 ##   libraries don't get picked up in the make step after the configure step.
 
 %if %{useSystemLibraries}
+  %define _targettree %{_builddir}/%{projectroot}/%{sourcetree}/depends/%{_target_platform}
+
   # old configuration
   #%%define _FLAGS CPPFLAGS="$CPPFLAGS -I%%{_targettree}/include -I%%{_includedir}" LDFLAGS="$LDFLAGS -L%%{_targettree}/lib -L%%{_libdir}"
   #%%{_FLAGS} ./configure --libdir=%%{_targettree}/lib --prefix=%%{_targettree} --enable-reduce-exports %%{_disable_tests} --disable-zmq
+
   # current configuration
-  %define _FLAGS CXXFLAGS="-I%{_includedir} -I%{_targettree}/include $CXXFLAGS -O" CPPFLAGS="-I%{_includedir} -I%{_targettree}/include $CPPFLAGS" LDFLAGS="-L%{_libdir} -L%{_targettree}/lib $LDFLAGS"
+  ####%define _FLAGS CXXFLAGS="-I%{_includedir} -I%{_targettree}/include $CXXFLAGS -O" CPPFLAGS="-I%{_includedir} -I%{_targettree}/include $CPPFLAGS" LDFLAGS="-L%{_libdir} -L%{_targettree}/lib $LDFLAGS"
+  ####%{_FLAGS} ./configure --libdir=%{_targettree}/lib --includedir=%{_targettree}/include --prefix=%{_targettree} --enable-hardening %{_disable_tests} %{_disable_wallet}
+
+  # experimental configuration
+  %define _FLAGS CXXFLAGS="-I%{_targettree}/include -I%{_includedir} $CXXFLAGS -O" CPPFLAGS="-I%{_targettree}/include -I%{_includedir} $CPPFLAGS" LDFLAGS="-L%{_targettree}/lib -L%{_libdir} $LDFLAGS"
   %{_FLAGS} ./configure --libdir=%{_targettree}/lib --includedir=%{_targettree}/include --prefix=%{_targettree} --enable-hardening %{_disable_tests} %{_disable_wallet}
+
   make
+
 %else
   # NOTE!!! THIS METHOD NOT WORKING JUST YET.
   %define _FLAGS CXXFLAGS="-I%{_targettree}/include -I%{_includedir} $CXXFLAGS -O" CPPFLAGS="-I%{_targettree}/include -I%{_includedir} $CPPFLAGS" LDFLAGS="-L%{_targettree}/lib -L%{_libdir} $LDFLAGS"
@@ -1219,8 +1234,8 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 # Source snapshots...
 #     https://github.com/dashpay/dash/tags
 #     https://github.com/dashpay/dash/releases
-#     test example: dash-0.16.0.0-rc2.tar.gz
-#     release example: dash-0.16.0.0.tar.gz
+#     test example: dash-0.17.0.0-rc5.tar.gz
+#     release example: dash-0.17.0.0.tar.gz
 #
 # Dash Core (and related) git repos (a curated selection)...
 #   * Dash Core: https://github.com/dashpay
@@ -1233,6 +1248,29 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Dash Electrum: https://github.com/akhavr/electrum-dash
 
 %changelog
+* Mon May 17 2021 Todd Warner <t0dd_at_protonmail.com> 0.17.0.0-0.1.rc5.taw
+  - 0.17.0.0-rc5
+  - we are forced to use gmp from the depends tree. The OS supplied gmp is  
+    not statically linked and therefore can't be used for 0.17.
+  - EL8's cmake is too old, and the cmake, if built in the depends tree, is  
+    ignored. Therefore, EL8 is no longer a supportable target to build to.
+  - changed the names of the patch files
+  - experimented with changing the ordering of the CXX and CPP flags. No  
+    change noticed.
+  - added patch04: bls-dash package cmake instruction update
+    reference: https://github.com/dashpay/dash/pull/4158
+  - simplified some defines in the spec
+
+* Thu May 6 2021 Todd Warner <t0dd_at_protonmail.com> 0.17.0.0-0.1.rc4.taw
+  - 0.17.0.0-rc4 -- this build fails on all platforms
+  - updated the patches
+  - new bls-signatures source and version
+  - new miniupnpc version
+
+* Tue Feb 23 2021 Todd Warner <t0dd_at_protonmail.com> 0.17.0.0-0.1.rc3.taw
+  - 0.17.0.0-rc3
+  - updated the patches
+
 * Wed Jan 20 2021 Todd Warner <t0dd_at_protonmail.com> 0.16.1.1-3.taw
 * Wed Jan 20 2021 Todd Warner <t0dd_at_protonmail.com> 0.16.1.1-2.1.taw
   - patches resolving Boost and QT issuesapplied to all versions of fedora builds
