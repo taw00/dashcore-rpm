@@ -32,7 +32,7 @@ Summary: A global payments network and decentralized application (dapp) platform
 
 %define targetIsProduction 0
 
-# Leave these off.
+# Leave these switched off.
 # These settings are used if you want to deliver packages sourced from upstream
 # pre-builds instead of from source code. This is a last resort for scenarios
 # where an RPM is desired, but we could not successfully build from source.
@@ -40,7 +40,7 @@ Summary: A global payments network and decentralized application (dapp) platform
 %define clientSourceIsBinary 0
 %define serverSourceIsBinary 0
 
-# Leave this on
+# Leave this switched on
 # Building without leaning on the system libraries for the build is currently
 # not supported (I have not been successful at a full depends-based build
 # yet). Please leave this on. It's poor packaging anyway to rely on a depends-
@@ -48,8 +48,8 @@ Summary: A global payments network and decentralized application (dapp) platform
 %define useSystemLibraries 1
 
 # Use if the dev team includes things like rc4 in the filename
-%undefine buildQualifier
 %define buildQualifier rc5
+%undefine buildQualifier
 
 # VERSION
 %define vermajor 0.17
@@ -211,20 +211,20 @@ Source1: https://github.com/taw00/dashcore-rpm/blob/master/SOURCES/%{srccontribt
 Source2: https://github.com/taw00/dashcore-rpm/blob/master/SOURCES/bls-signatures-%{blsarchiveversion}.tar.gz
 Source3: https://github.com/rust-lang-nursery/libbacktrace/archive/%{libbacktracearchiveversion}/libbacktrace-%{libbacktracearchiveversion}.tar.gz
 ## Source4 and Source5 are for EL8 only
-#Source4: http://miniupnp.free.fr/files/miniupnpc-%%{miniupnpcversion}.tar.gz
-#Source5: https://download.oracle.com/berkeley-db/db-%%{bdbarchiveversion}.tar.gz
+Source4: http://miniupnp.free.fr/files/miniupnpc-%%{miniupnpcversion}.tar.gz
+Source5: https://download.oracle.com/berkeley-db/db-%%{bdbarchiveversion}.tar.gz
 %if %{clientSourceIsBinary} || %{serverSourceIsBinary}
 Source6: https://github.com/dashpay/dash/archive/v%{versionqualified}/%{binaryarchivename}-x86_64-linux-gnu.tar.gz
 %endif
 %if %{buildFromSource}
 # nuke "About QT" in the client source.
-Patch01: https://github.com/taw00/dashcore-rpm/blob/master/SOURCES/dash-%{vermajor}-patch01-remove-about-qt-menu-item.patch
+Patch01: https://github.com/taw00/dashcore-rpm/blob/master/SOURCES/dash-%{version}-patch01-remove-about-qt-menu-item.patch
 # Patch02: fix a problem with one specific build. This needs to go away in next version
 # See also github.com/litecoin-project/litecoin/commit/a5929130223973636f3fd25fbfaf2953f2ec96a9
-Patch2: https://github.com/taw00/dashcore-rpm/blob/master/SOURCES/dash-%{vermajor}-patch02-bind-namespace-errors.patch
-Patch3: https://github.com/taw00/dashcore-rpm/blob/master/SOURCES/dash-%{vermajor}-patch03-QPainterPath-issue.patch
-# Patch04: fix a problem with RC5 and earlier. This needs to go away in the future.
-Patch4: https://github.com/taw00/dashcore-rpm/blob/master/SOURCES/dash-%{vermajor}-patch04-cmake-prefix-fix-for-bls-dash.patch
+Patch2: https://github.com/taw00/dashcore-rpm/blob/master/SOURCES/dash-%{version}-patch02-bind-namespace-errors.patch
+Patch3: https://github.com/taw00/dashcore-rpm/blob/master/SOURCES/dash-%{version}-patch03-QPainterPath-issue.patch
+# Patch04: fix a problem with RC5 and earlier. This needs to go away with GA.
+#Patch4: https://github.com/taw00/dashcore-rpm/blob/master/SOURCES/dash-%%{versionqualified}-patch04-cmake-prefix-fix-for-bls-dash.patch
 %endif
 
 %global selinux_variants mls strict targeted
@@ -524,13 +524,13 @@ Learn more at www.dash.org.
 %{error: "EL7-based platforms (RHEL7/CentOS7) are not supported build targets."}
 %endif
 %if 0%{?rhel} && 0%{?rhel} < 9
-%{error: "EL8-based platforms (RHEL8/CentOS8) are not supported build targets."}
+#%%{error: "EL8-based platforms (RHEL8/CentOS8) are not supported build targets."}
 %endif
 %if 0%{?centos} && 0%{?centos_ver} < 8
 %{error: "EL7-based platforms (CentOS7/RHEL7) are not supported build targets."}
 %endif
 %if 0%{?centos} && 0%{?centos_ver} < 9
-%{error: "EL8-based platforms (CentOS8/RHEL8) are not supported build targets."}
+#%%{error: "EL8-based platforms (CentOS8/RHEL8) are not supported build targets."}
 %endif
 
 %define _disable_wallet --disable-wallet --without-gui
@@ -580,8 +580,9 @@ cd %{sourcetree}
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
+%if 0%{?buildQualifier:1}
 %patch4 -p1
-#%%endif
+%endif
 cd ..
 %endif
 
@@ -661,10 +662,6 @@ cd ..
   #%%{_FLAGS} ./configure --libdir=%%{_targettree}/lib --prefix=%%{_targettree} --enable-reduce-exports %%{_disable_tests} --disable-zmq
 
   # current configuration
-  ####%define _FLAGS CXXFLAGS="-I%{_includedir} -I%{_targettree}/include $CXXFLAGS -O" CPPFLAGS="-I%{_includedir} -I%{_targettree}/include $CPPFLAGS" LDFLAGS="-L%{_libdir} -L%{_targettree}/lib $LDFLAGS"
-  ####%{_FLAGS} ./configure --libdir=%{_targettree}/lib --includedir=%{_targettree}/include --prefix=%{_targettree} --enable-hardening %{_disable_tests} %{_disable_wallet}
-
-  # experimental configuration
   %define _FLAGS CXXFLAGS="-I%{_targettree}/include -I%{_includedir} $CXXFLAGS -O" CPPFLAGS="-I%{_targettree}/include -I%{_includedir} $CPPFLAGS" LDFLAGS="-L%{_targettree}/lib -L%{_libdir} $LDFLAGS"
   %{_FLAGS} ./configure --libdir=%{_targettree}/lib --includedir=%{_targettree}/include --prefix=%{_targettree} --enable-hardening %{_disable_tests} %{_disable_wallet}
 
@@ -1248,6 +1245,10 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Dash Electrum: https://github.com/akhavr/electrum-dash
 
 %changelog
+* Tue May 18 2021 Todd Warner <t0dd_at_protonmail.com> 0.17.0.0-0.1.testing.taw
+  - https://github.com/dashpay/dash/releases/tag/v0.17.0.0
+  - updated patch file semantics (major version only was not good enough)
+
 * Mon May 17 2021 Todd Warner <t0dd_at_protonmail.com> 0.17.0.0-0.1.rc5.taw
   - 0.17.0.0-rc5
   - we are forced to use gmp from the depends tree. The OS supplied gmp is  
