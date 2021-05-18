@@ -19,8 +19,7 @@
 * Keep up with Fedora's release schedule: <https://fedoraproject.org/wiki/Releases>
 
 Fedora upgrades are easy (see available documentation in the "documentation"
-folder). Legacy comment: RHEL/CentOS to Fedora or newer RHEL/CentOS should be
-performed as fresh installs.
+folder).
 
 ---
 
@@ -44,18 +43,17 @@ Dash on github can be found here: https://github.com/dashpay
 This github repository is used to develop and maintain Dash natively built
 and packaged for Fedora Linux.
 
-The source packages are housed directly within this repository. For more about
-the source packages and build instructions, please visit this link:
+For more about building from the sources provided here, please visit this link:
 <https://github.com/taw00/dashcore-rpm/blob/master/README.source.md>
 
 ## Binary (executable) RPMs
 
 **Binary (executable) RPMs are pre-built for you (from these sources) and are
 available through external repositories that your packaging system can
-understand.** This makes deploying and maintaining Dash on a Fedora, CentOS, or
-RHEL system dependable, more secure, and oh so very simple. This is arguably
-the simplest way to deploy and manage a Dash Wallet, Node, or Masternode. For
-more about the available binary RPMs, please visit this link:
+understand.** This makes deploying and maintaining Dash on a Fedora system
+dependable, more secure, and oh so very simple. This is arguably the simplest
+way to deploy and manage a Dash Wallet, Node, or Masternode. For more about the
+available binary RPMs, please visit this link:
 <https://github.com/taw00/dashcore-rpm/blob/master/README.binaries.md>
 
 ---
