@@ -1,19 +1,18 @@
-diff -ruN dash-0.17.0.0-rc3-orig/src/init.cpp dash-0.17.0.0-rc3-fix02-bind-namespace-errors/src/init.cpp
---- dash-0.17.0.0-rc3-orig/src/init.cpp	2021-02-01 11:17:29.000000000 -0500
-+++ dash-0.17.0.0-rc3-fix02-bind-namespace-errors/src/init.cpp	2021-02-23 17:24:17.315985258 -0500
-@@ -80,7 +80,7 @@
- #include <boost/algorithm/string/classification.hpp>
+diff -ruN dash-0.17.0.0-rc5-patch01-remove-about-qt-menu-item/src/init.cpp dash-0.17.0.0-rc5-patch02-bind-namespace-errors/src/init.cpp
+--- dash-0.17.0.0-rc5-patch01-remove-about-qt-menu-item/src/init.cpp	2021-05-15 16:50:29.000000000 -0400
++++ dash-0.17.0.0-rc5-patch02-bind-namespace-errors/src/init.cpp	2021-05-17 12:47:31.754441489 -0400
+@@ -82,6 +82,7 @@
  #include <boost/algorithm/string/replace.hpp>
  #include <boost/algorithm/string/split.hpp>
--#include <boost/bind.hpp>
+ #include <boost/bind.hpp>
 +#include <boost/bind/bind.hpp>
  #include <boost/interprocess/sync/file_lock.hpp>
  #include <boost/thread.hpp>
  #include <openssl/crypto.h>
-diff -ruN dash-0.17.0.0-rc3-orig/src/qt/bitcoingui.cpp dash-0.17.0.0-rc3-fix02-bind-namespace-errors/src/qt/bitcoingui.cpp
---- dash-0.17.0.0-rc3-orig/src/qt/bitcoingui.cpp	2021-02-01 11:17:29.000000000 -0500
-+++ dash-0.17.0.0-rc3-fix02-bind-namespace-errors/src/qt/bitcoingui.cpp	2021-02-23 17:28:22.529204021 -0500
-@@ -1773,8 +1773,8 @@
+diff -ruN dash-0.17.0.0-rc5-patch01-remove-about-qt-menu-item/src/qt/bitcoingui.cpp dash-0.17.0.0-rc5-patch02-bind-namespace-errors/src/qt/bitcoingui.cpp
+--- dash-0.17.0.0-rc5-patch01-remove-about-qt-menu-item/src/qt/bitcoingui.cpp	2021-05-17 13:22:56.712593395 -0400
++++ dash-0.17.0.0-rc5-patch02-bind-namespace-errors/src/qt/bitcoingui.cpp	2021-05-17 13:22:56.698593575 -0400
+@@ -1809,8 +1809,8 @@
  void BitcoinGUI::subscribeToCoreSignals()
  {
      // Connect signals to client
@@ -24,10 +23,10 @@ diff -ruN dash-0.17.0.0-rc3-orig/src/qt/bitcoingui.cpp dash-0.17.0.0-rc3-fix02-b
  }
  
  void BitcoinGUI::unsubscribeFromCoreSignals()
-diff -ruN dash-0.17.0.0-rc3-orig/src/qt/clientmodel.cpp dash-0.17.0.0-rc3-fix02-bind-namespace-errors/src/qt/clientmodel.cpp
---- dash-0.17.0.0-rc3-orig/src/qt/clientmodel.cpp	2021-02-01 11:17:29.000000000 -0500
-+++ dash-0.17.0.0-rc3-fix02-bind-namespace-errors/src/qt/clientmodel.cpp	2021-02-23 17:32:27.409423846 -0500
-@@ -283,15 +283,15 @@
+diff -ruN dash-0.17.0.0-rc5-patch01-remove-about-qt-menu-item/src/qt/clientmodel.cpp dash-0.17.0.0-rc5-patch02-bind-namespace-errors/src/qt/clientmodel.cpp
+--- dash-0.17.0.0-rc5-patch01-remove-about-qt-menu-item/src/qt/clientmodel.cpp	2021-05-15 16:50:29.000000000 -0400
++++ dash-0.17.0.0-rc5-patch02-bind-namespace-errors/src/qt/clientmodel.cpp	2021-05-17 12:57:36.080058461 -0400
+@@ -281,15 +281,15 @@
  void ClientModel::subscribeToCoreSignals()
  {
      // Connect signals to client
@@ -50,9 +49,9 @@ diff -ruN dash-0.17.0.0-rc3-orig/src/qt/clientmodel.cpp dash-0.17.0.0-rc3-fix02-
  }
  
  void ClientModel::unsubscribeFromCoreSignals()
-diff -ruN dash-0.17.0.0-rc3-orig/src/qt/splashscreen.cpp dash-0.17.0.0-rc3-fix02-bind-namespace-errors/src/qt/splashscreen.cpp
---- dash-0.17.0.0-rc3-orig/src/qt/splashscreen.cpp	2021-02-01 11:17:29.000000000 -0500
-+++ dash-0.17.0.0-rc3-fix02-bind-namespace-errors/src/qt/splashscreen.cpp	2021-02-23 17:34:31.707027843 -0500
+diff -ruN dash-0.17.0.0-rc5-patch01-remove-about-qt-menu-item/src/qt/splashscreen.cpp dash-0.17.0.0-rc5-patch02-bind-namespace-errors/src/qt/splashscreen.cpp
+--- dash-0.17.0.0-rc5-patch01-remove-about-qt-menu-item/src/qt/splashscreen.cpp	2021-05-15 16:50:29.000000000 -0400
++++ dash-0.17.0.0-rc5-patch02-bind-namespace-errors/src/qt/splashscreen.cpp	2021-05-17 12:59:00.420311285 -0400
 @@ -180,7 +180,7 @@
  #ifdef ENABLE_WALLET
  void SplashScreen::ConnectWallet(std::unique_ptr<interfaces::Wallet> wallet)
@@ -73,19 +72,18 @@ diff -ruN dash-0.17.0.0-rc3-orig/src/qt/splashscreen.cpp dash-0.17.0.0-rc3-fix02
  #ifdef ENABLE_WALLET
      m_handler_load_wallet = m_node.handleLoadWallet([this](std::unique_ptr<interfaces::Wallet> wallet) { ConnectWallet(std::move(wallet)); });
  #endif
-diff -ruN dash-0.17.0.0-rc3-orig/src/qt/trafficgraphwidget.cpp dash-0.17.0.0-rc3-fix02-bind-namespace-errors/src/qt/trafficgraphwidget.cpp
---- dash-0.17.0.0-rc3-orig/src/qt/trafficgraphwidget.cpp	2021-02-01 11:17:29.000000000 -0500
-+++ dash-0.17.0.0-rc3-fix02-bind-namespace-errors/src/qt/trafficgraphwidget.cpp	2021-02-23 17:36:31.021647706 -0500
-@@ -7,7 +7,7 @@
- #include <qt/clientmodel.h>
+diff -ruN dash-0.17.0.0-rc5-patch01-remove-about-qt-menu-item/src/qt/trafficgraphwidget.cpp dash-0.17.0.0-rc5-patch02-bind-namespace-errors/src/qt/trafficgraphwidget.cpp
+--- dash-0.17.0.0-rc5-patch01-remove-about-qt-menu-item/src/qt/trafficgraphwidget.cpp	2021-05-15 16:50:29.000000000 -0400
++++ dash-0.17.0.0-rc5-patch02-bind-namespace-errors/src/qt/trafficgraphwidget.cpp	2021-05-17 13:00:29.810519370 -0400
+@@ -8,6 +8,7 @@
  #include <qt/guiutil.h>
  
--#include <boost/bind.hpp>
+ #include <boost/bind.hpp>
 +#include <boost/bind/bind.hpp>
  
  #include <QPainter>
  #include <QColor>
-@@ -130,7 +130,7 @@
+@@ -130,7 +131,7 @@
          QColor lucentGreen = green;
          lucentGreen.setAlpha(128);
  
@@ -94,7 +92,7 @@ diff -ruN dash-0.17.0.0-rc3-orig/src/qt/trafficgraphwidget.cpp dash-0.17.0.0-rc3
          painter.fillPath(pIn, lucentGreen);
          painter.setPen(green);
          painter.drawPath(pIn);
-@@ -139,7 +139,7 @@
+@@ -139,7 +140,7 @@
          QColor lucentRed = red;
          lucentRed.setAlpha(128);
  
@@ -103,10 +101,10 @@ diff -ruN dash-0.17.0.0-rc3-orig/src/qt/trafficgraphwidget.cpp dash-0.17.0.0-rc3
          painter.fillPath(pOut, lucentRed);
          painter.setPen(red);
          painter.drawPath(pOut);
-diff -ruN dash-0.17.0.0-rc3-orig/src/qt/transactiontablemodel.cpp dash-0.17.0.0-rc3-fix02-bind-namespace-errors/src/qt/transactiontablemodel.cpp
---- dash-0.17.0.0-rc3-orig/src/qt/transactiontablemodel.cpp	2021-02-01 11:17:29.000000000 -0500
-+++ dash-0.17.0.0-rc3-fix02-bind-namespace-errors/src/qt/transactiontablemodel.cpp	2021-02-23 17:37:59.970364322 -0500
-@@ -817,9 +817,9 @@
+diff -ruN dash-0.17.0.0-rc5-patch01-remove-about-qt-menu-item/src/qt/transactiontablemodel.cpp dash-0.17.0.0-rc5-patch02-bind-namespace-errors/src/qt/transactiontablemodel.cpp
+--- dash-0.17.0.0-rc5-patch01-remove-about-qt-menu-item/src/qt/transactiontablemodel.cpp	2021-05-15 16:50:29.000000000 -0400
++++ dash-0.17.0.0-rc5-patch02-bind-namespace-errors/src/qt/transactiontablemodel.cpp	2021-05-17 13:01:37.411920481 -0400
+@@ -816,9 +816,9 @@
  void TransactionTableModel::subscribeToCoreSignals()
  {
      // Connect signals to wallet
@@ -119,12 +117,12 @@ diff -ruN dash-0.17.0.0-rc3-orig/src/qt/transactiontablemodel.cpp dash-0.17.0.0-
  }
  
  void TransactionTableModel::unsubscribeFromCoreSignals()
-diff -ruN dash-0.17.0.0-rc3-orig/src/qt/walletmodel.cpp dash-0.17.0.0-rc3-fix02-bind-namespace-errors/src/qt/walletmodel.cpp
---- dash-0.17.0.0-rc3-orig/src/qt/walletmodel.cpp	2021-02-01 11:17:29.000000000 -0500
-+++ dash-0.17.0.0-rc3-fix02-bind-namespace-errors/src/qt/walletmodel.cpp	2021-02-23 17:39:44.520031235 -0500
-@@ -486,12 +486,12 @@
- {
+diff -ruN dash-0.17.0.0-rc5-patch01-remove-about-qt-menu-item/src/qt/walletmodel.cpp dash-0.17.0.0-rc5-patch02-bind-namespace-errors/src/qt/walletmodel.cpp
+--- dash-0.17.0.0-rc5-patch01-remove-about-qt-menu-item/src/qt/walletmodel.cpp	2021-05-15 16:50:29.000000000 -0400
++++ dash-0.17.0.0-rc5-patch02-bind-namespace-errors/src/qt/walletmodel.cpp	2021-05-17 13:03:16.009047000 -0400
+@@ -493,12 +493,12 @@
      // Connect signals to wallet
+     m_handler_unload = m_wallet->handleUnload(boost::bind(&NotifyUnload, this));
      m_handler_status_changed = m_wallet->handleStatusChanged(boost::bind(&NotifyKeyStoreStatusChanged, this));
 -    m_handler_address_book_changed = m_wallet->handleAddressBookChanged(boost::bind(NotifyAddressBookChanged, this, _1, _2, _3, _4, _5));
 -    m_handler_transaction_changed = m_wallet->handleTransactionChanged(boost::bind(NotifyTransactionChanged, this, _1, _2));
@@ -140,19 +138,18 @@ diff -ruN dash-0.17.0.0-rc3-orig/src/qt/walletmodel.cpp dash-0.17.0.0-rc3-fix02-
  }
  
  void WalletModel::unsubscribeFromCoreSignals()
-diff -ruN dash-0.17.0.0-rc3-orig/src/rpc/server.cpp dash-0.17.0.0-rc3-fix02-bind-namespace-errors/src/rpc/server.cpp
---- dash-0.17.0.0-rc3-orig/src/rpc/server.cpp	2021-02-01 11:17:29.000000000 -0500
-+++ dash-0.17.0.0-rc3-fix02-bind-namespace-errors/src/rpc/server.cpp	2021-02-23 17:40:42.360846955 -0500
-@@ -15,7 +15,7 @@
- #include <util.h>
+diff -ruN dash-0.17.0.0-rc5-patch01-remove-about-qt-menu-item/src/rpc/server.cpp dash-0.17.0.0-rc5-patch02-bind-namespace-errors/src/rpc/server.cpp
+--- dash-0.17.0.0-rc5-patch01-remove-about-qt-menu-item/src/rpc/server.cpp	2021-05-15 16:50:29.000000000 -0400
++++ dash-0.17.0.0-rc5-patch02-bind-namespace-errors/src/rpc/server.cpp	2021-05-17 13:03:53.623713769 -0400
+@@ -16,6 +16,7 @@
  #include <utilstrencodings.h>
  
--#include <boost/bind.hpp>
+ #include <boost/bind.hpp>
 +#include <boost/bind/bind.hpp>
  #include <boost/signals2/signal.hpp>
  #include <boost/algorithm/string/case_conv.hpp> // for to_upper()
  #include <boost/algorithm/string/classification.hpp>
-@@ -639,7 +639,7 @@
+@@ -639,7 +640,7 @@
  
      std::transform( mapCommands.begin(), mapCommands.end(),
                     std::back_inserter(commandList),
@@ -161,43 +158,40 @@ diff -ruN dash-0.17.0.0-rc3-orig/src/rpc/server.cpp dash-0.17.0.0-rc3-fix02-bind
      return commandList;
  }
  
-diff -ruN dash-0.17.0.0-rc3-orig/src/scheduler.cpp dash-0.17.0.0-rc3-fix02-bind-namespace-errors/src/scheduler.cpp
---- dash-0.17.0.0-rc3-orig/src/scheduler.cpp	2021-02-01 11:17:29.000000000 -0500
-+++ dash-0.17.0.0-rc3-fix02-bind-namespace-errors/src/scheduler.cpp	2021-02-23 17:41:27.401703456 -0500
-@@ -8,7 +8,7 @@
- #include <reverselock.h>
+diff -ruN dash-0.17.0.0-rc5-patch01-remove-about-qt-menu-item/src/scheduler.cpp dash-0.17.0.0-rc5-patch02-bind-namespace-errors/src/scheduler.cpp
+--- dash-0.17.0.0-rc5-patch01-remove-about-qt-menu-item/src/scheduler.cpp	2021-05-15 16:50:29.000000000 -0400
++++ dash-0.17.0.0-rc5-patch02-bind-namespace-errors/src/scheduler.cpp	2021-05-17 12:48:34.195867895 -0400
+@@ -9,6 +9,7 @@
  
  #include <assert.h>
--#include <boost/bind.hpp>
+ #include <boost/bind.hpp>
 +#include <boost/bind/bind.hpp>
  #include <utility>
  
  CScheduler::CScheduler() : nThreadsServicingQueue(0), stopRequested(false), stopWhenEmpty(false)
-diff -ruN dash-0.17.0.0-rc3-orig/src/test/scheduler_tests.cpp dash-0.17.0.0-rc3-fix02-bind-namespace-errors/src/test/scheduler_tests.cpp
---- dash-0.17.0.0-rc3-orig/src/test/scheduler_tests.cpp	2021-02-01 11:17:29.000000000 -0500
-+++ dash-0.17.0.0-rc3-fix02-bind-namespace-errors/src/test/scheduler_tests.cpp	2021-02-23 17:42:16.512546993 -0500
-@@ -7,7 +7,7 @@
- 
+diff -ruN dash-0.17.0.0-rc5-patch01-remove-about-qt-menu-item/src/test/scheduler_tests.cpp dash-0.17.0.0-rc5-patch02-bind-namespace-errors/src/test/scheduler_tests.cpp
+--- dash-0.17.0.0-rc5-patch01-remove-about-qt-menu-item/src/test/scheduler_tests.cpp	2021-05-15 16:50:29.000000000 -0400
++++ dash-0.17.0.0-rc5-patch02-bind-namespace-errors/src/test/scheduler_tests.cpp	2021-05-17 12:48:49.207729990 -0400
+@@ -8,6 +8,7 @@
  #include <test/test_dash.h>
  
--#include <boost/bind.hpp>
+ #include <boost/bind.hpp>
 +#include <boost/bind/bind.hpp>
  #include <boost/thread.hpp>
  #include <boost/test/unit_test.hpp>
  
-diff -ruN dash-0.17.0.0-rc3-orig/src/torcontrol.cpp dash-0.17.0.0-rc3-fix02-bind-namespace-errors/src/torcontrol.cpp
---- dash-0.17.0.0-rc3-orig/src/torcontrol.cpp	2021-02-01 11:17:29.000000000 -0500
-+++ dash-0.17.0.0-rc3-fix02-bind-namespace-errors/src/torcontrol.cpp	2021-02-23 17:43:54.963233339 -0500
-@@ -15,7 +15,7 @@
- #include <set>
+diff -ruN dash-0.17.0.0-rc5-patch01-remove-about-qt-menu-item/src/torcontrol.cpp dash-0.17.0.0-rc5-patch02-bind-namespace-errors/src/torcontrol.cpp
+--- dash-0.17.0.0-rc5-patch01-remove-about-qt-menu-item/src/torcontrol.cpp	2021-05-15 16:50:29.000000000 -0400
++++ dash-0.17.0.0-rc5-patch02-bind-namespace-errors/src/torcontrol.cpp	2021-05-17 13:08:26.179808799 -0400
+@@ -16,6 +16,7 @@
  #include <stdlib.h>
  
--#include <boost/bind.hpp>
+ #include <boost/bind.hpp>
 +#include <boost/bind/bind.hpp>
  #include <boost/signals2/signal.hpp>
  #include <boost/algorithm/string/split.hpp>
  #include <boost/algorithm/string/classification.hpp>
-@@ -460,8 +460,8 @@
+@@ -460,8 +461,8 @@
      if (!reconnect_ev)
          LogPrintf("tor: Failed to create event for reconnection: out of memory?\n");
      // Start connection attempts immediately
@@ -208,7 +202,7 @@ diff -ruN dash-0.17.0.0-rc3-orig/src/torcontrol.cpp dash-0.17.0.0-rc3-fix02-bind
          LogPrintf("tor: Initiating connection to Tor control port %s failed\n", _target);
      }
      // Read service private key if cached
-@@ -539,7 +539,7 @@
+@@ -539,7 +540,7 @@
          // Note that the 'virtual' port doesn't have to be the same as our internal port, but this is just a convenient
          // choice.  TODO; refactor the shutdown sequence some day.
          _conn.Command(strprintf("ADD_ONION %s Port=%i,127.0.0.1:%i", private_key, GetListenPort(), GetListenPort()),
@@ -217,7 +211,7 @@ diff -ruN dash-0.17.0.0-rc3-orig/src/torcontrol.cpp dash-0.17.0.0-rc3-fix02-bind
      } else {
          LogPrintf("tor: Authentication failed\n");
      }
-@@ -598,7 +598,7 @@
+@@ -598,7 +599,7 @@
              }
  
              std::vector<uint8_t> computedClientHash = ComputeResponse(TOR_SAFE_CLIENTKEY, cookie, clientNonce, serverNonce);
@@ -226,7 +220,7 @@ diff -ruN dash-0.17.0.0-rc3-orig/src/torcontrol.cpp dash-0.17.0.0-rc3-fix02-bind
          } else {
              LogPrintf("tor: Invalid reply to AUTHCHALLENGE\n");
          }
-@@ -647,23 +647,23 @@
+@@ -647,23 +648,23 @@
              if (methods.count("HASHEDPASSWORD")) {
                  LogPrint(BCLog::TOR, "tor: Using HASHEDPASSWORD authentication\n");
                  boost::replace_all(torpassword, "\"", "\\\"");
@@ -254,7 +248,7 @@ diff -ruN dash-0.17.0.0-rc3-orig/src/torcontrol.cpp dash-0.17.0.0-rc3-fix02-bind
              } else {
                  if (status_cookie.first) {
                      LogPrintf("tor: Authentication cookie %s is not exactly %i bytes, as is required by the spec\n", cookiefile, TOR_COOKIE_SIZE);
-@@ -685,7 +685,7 @@
+@@ -685,7 +686,7 @@
  {
      reconnect_timeout = RECONNECT_TIMEOUT_START;
      // First send a PROTOCOLINFO command to figure out what authentication is expected
@@ -263,7 +257,7 @@ diff -ruN dash-0.17.0.0-rc3-orig/src/torcontrol.cpp dash-0.17.0.0-rc3-fix02-bind
          LogPrintf("tor: Error sending initial protocolinfo command\n");
  }
  
-@@ -712,8 +712,8 @@
+@@ -712,8 +713,8 @@
      /* Try to reconnect and reestablish if we get booted - for example, Tor
       * may be restarting.
       */
@@ -274,37 +268,37 @@ diff -ruN dash-0.17.0.0-rc3-orig/src/torcontrol.cpp dash-0.17.0.0-rc3-fix02-bind
          LogPrintf("tor: Re-initiating connection to Tor control port %s failed\n", target);
      }
  }
-diff -ruN dash-0.17.0.0-rc3-orig/src/validation.cpp dash-0.17.0.0-rc3-fix02-bind-namespace-errors/src/validation.cpp
---- dash-0.17.0.0-rc3-orig/src/validation.cpp	2021-02-01 11:17:29.000000000 -0500
-+++ dash-0.17.0.0-rc3-fix02-bind-namespace-errors/src/validation.cpp	2021-02-23 17:46:02.583826745 -0500
-@@ -2792,11 +2792,11 @@
+diff -ruN dash-0.17.0.0-rc5-patch01-remove-about-qt-menu-item/src/validation.cpp dash-0.17.0.0-rc5-patch02-bind-namespace-errors/src/validation.cpp
+--- dash-0.17.0.0-rc5-patch01-remove-about-qt-menu-item/src/validation.cpp	2021-05-15 16:50:29.000000000 -0400
++++ dash-0.17.0.0-rc5-patch02-bind-namespace-errors/src/validation.cpp	2021-05-17 13:09:23.582069270 -0400
+@@ -2786,11 +2786,11 @@
  
  public:
      explicit ConnectTrace(CTxMemPool &_pool) : blocksConnected(1), pool(_pool) {
 -        pool.NotifyEntryRemoved.connect(boost::bind(&ConnectTrace::NotifyEntryRemoved, this, _1, _2));
-+        pool.NotifyEntryRemoved.connect(boost::bind(&ConnectTrace::NotifyEntryRemoved, this,  boost::placeholders::_1, boost::placeholders::_2));
++        pool.NotifyEntryRemoved.connect(boost::bind(&ConnectTrace::NotifyEntryRemoved, this, boost::placeholders::_1, boost::placeholders::_2));
      }
  
      ~ConnectTrace() {
 -        pool.NotifyEntryRemoved.disconnect(boost::bind(&ConnectTrace::NotifyEntryRemoved, this, _1, _2));
-+        pool.NotifyEntryRemoved.disconnect(boost::bind(&ConnectTrace::NotifyEntryRemoved, this,  boost::placeholders::_1, boost::placeholders::_2));
++        pool.NotifyEntryRemoved.disconnect(boost::bind(&ConnectTrace::NotifyEntryRemoved, this, boost::placeholders::_1, boost::placeholders::_2));
      }
  
      void BlockConnected(CBlockIndex* pindex, std::shared_ptr<const CBlock> pblock) {
-diff -ruN dash-0.17.0.0-rc3-orig/src/validationinterface.cpp dash-0.17.0.0-rc3-fix02-bind-namespace-errors/src/validationinterface.cpp
---- dash-0.17.0.0-rc3-orig/src/validationinterface.cpp	2021-02-01 11:17:29.000000000 -0500
-+++ dash-0.17.0.0-rc3-fix02-bind-namespace-errors/src/validationinterface.cpp	2021-02-23 17:48:08.687424984 -0500
+diff -ruN dash-0.17.0.0-rc5-patch01-remove-about-qt-menu-item/src/validationinterface.cpp dash-0.17.0.0-rc5-patch02-bind-namespace-errors/src/validationinterface.cpp
+--- dash-0.17.0.0-rc5-patch01-remove-about-qt-menu-item/src/validationinterface.cpp	2021-05-15 16:50:29.000000000 -0400
++++ dash-0.17.0.0-rc5-patch02-bind-namespace-errors/src/validationinterface.cpp	2021-05-17 13:14:49.601869033 -0400
 @@ -75,11 +75,11 @@
  }
  
  void CMainSignals::RegisterWithMempoolSignals(CTxMemPool& pool) {
 -    pool.NotifyEntryRemoved.connect(boost::bind(&CMainSignals::MempoolEntryRemoved, this, _1, _2));
-+    pool.NotifyEntryRemoved.connect(boost::bind(&CMainSignals::MempoolEntryRemoved, this,  boost::placeholders::_1, boost::placeholders::_2));
++    pool.NotifyEntryRemoved.connect(boost::bind(&CMainSignals::MempoolEntryRemoved, this, boost::placeholders::_1, boost::placeholders::_2));
  }
  
  void CMainSignals::UnregisterWithMempoolSignals(CTxMemPool& pool) {
 -    pool.NotifyEntryRemoved.disconnect(boost::bind(&CMainSignals::MempoolEntryRemoved, this, _1, _2));
-+    pool.NotifyEntryRemoved.disconnect(boost::bind(&CMainSignals::MempoolEntryRemoved, this,  boost::placeholders::_1, boost::placeholders::_2));
++    pool.NotifyEntryRemoved.disconnect(boost::bind(&CMainSignals::MempoolEntryRemoved, this, boost::placeholders::_1, boost::placeholders::_2));
  }
  
  CMainSignals& GetMainSignals()
@@ -331,25 +325,25 @@ diff -ruN dash-0.17.0.0-rc3-orig/src/validationinterface.cpp dash-0.17.0.0-rc3-f
 -    g_signals.m_internals->NotifyInstantSendDoubleSpendAttempt.connect(boost::bind(&CValidationInterface::NotifyInstantSendDoubleSpendAttempt, pwalletIn, _1, _2));
 -    g_signals.m_internals->NotifyRecoveredSig.connect(boost::bind(&CValidationInterface::NotifyRecoveredSig, pwalletIn, _1));
 -    g_signals.m_internals->NotifyMasternodeListChanged.connect(boost::bind(&CValidationInterface::NotifyMasternodeListChanged, pwalletIn, _1, _2, _3));
-+    g_signals.m_internals->AcceptedBlockHeader.connect(boost::bind(&CValidationInterface::AcceptedBlockHeader, pwalletIn,  boost::placeholders::_1));
-+    g_signals.m_internals->NotifyHeaderTip.connect(boost::bind(&CValidationInterface::NotifyHeaderTip, pwalletIn,  boost::placeholders::_1, boost::placeholders::_2));
-+    g_signals.m_internals->UpdatedBlockTip.connect(boost::bind(&CValidationInterface::UpdatedBlockTip, pwalletIn,  boost::placeholders::_1, boost::placeholders::_2, boost::placeholders::_3));
-+    g_signals.m_internals->SynchronousUpdatedBlockTip.connect(boost::bind(&CValidationInterface::SynchronousUpdatedBlockTip, pwalletIn,  boost::placeholders::_1, boost::placeholders::_2, boost::placeholders::_3));
-+    g_signals.m_internals->TransactionAddedToMempool.connect(boost::bind(&CValidationInterface::TransactionAddedToMempool, pwalletIn,  boost::placeholders::_1, boost::placeholders::_2));
-+    g_signals.m_internals->BlockConnected.connect(boost::bind(&CValidationInterface::BlockConnected, pwalletIn,  boost::placeholders::_1, boost::placeholders::_2, boost::placeholders::_3));
-+    g_signals.m_internals->BlockDisconnected.connect(boost::bind(&CValidationInterface::BlockDisconnected, pwalletIn,  boost::placeholders::_1, boost::placeholders::_2));
-+    g_signals.m_internals->NotifyTransactionLock.connect(boost::bind(&CValidationInterface::NotifyTransactionLock, pwalletIn,  boost::placeholders::_1, boost::placeholders::_2));
-+    g_signals.m_internals->NotifyChainLock.connect(boost::bind(&CValidationInterface::NotifyChainLock, pwalletIn,  boost::placeholders::_1, boost::placeholders::_2));
-+    g_signals.m_internals->TransactionRemovedFromMempool.connect(boost::bind(&CValidationInterface::TransactionRemovedFromMempool, pwalletIn,  boost::placeholders::_1));
-+    g_signals.m_internals->SetBestChain.connect(boost::bind(&CValidationInterface::SetBestChain, pwalletIn,  boost::placeholders::_1));
-+    g_signals.m_internals->Broadcast.connect(boost::bind(&CValidationInterface::ResendWalletTransactions, pwalletIn,  boost::placeholders::_1, boost::placeholders::_2));
-+    g_signals.m_internals->BlockChecked.connect(boost::bind(&CValidationInterface::BlockChecked, pwalletIn,  boost::placeholders::_1, boost::placeholders::_2));
-+    g_signals.m_internals->NewPoWValidBlock.connect(boost::bind(&CValidationInterface::NewPoWValidBlock, pwalletIn,  boost::placeholders::_1, boost::placeholders::_2));
-+    g_signals.m_internals->NotifyGovernanceObject.connect(boost::bind(&CValidationInterface::NotifyGovernanceObject, pwalletIn,  boost::placeholders::_1));
-+    g_signals.m_internals->NotifyGovernanceVote.connect(boost::bind(&CValidationInterface::NotifyGovernanceVote, pwalletIn,  boost::placeholders::_1));
-+    g_signals.m_internals->NotifyInstantSendDoubleSpendAttempt.connect(boost::bind(&CValidationInterface::NotifyInstantSendDoubleSpendAttempt, pwalletIn,  boost::placeholders::_1, boost::placeholders::_2));
-+    g_signals.m_internals->NotifyRecoveredSig.connect(boost::bind(&CValidationInterface::NotifyRecoveredSig, pwalletIn,  boost::placeholders::_1));
-+    g_signals.m_internals->NotifyMasternodeListChanged.connect(boost::bind(&CValidationInterface::NotifyMasternodeListChanged, pwalletIn,  boost::placeholders::_1, boost::placeholders::_2, boost::placeholders::_3));
++    g_signals.m_internals->AcceptedBlockHeader.connect(boost::bind(&CValidationInterface::AcceptedBlockHeader, pwalletIn, boost::placeholders::_1));
++    g_signals.m_internals->NotifyHeaderTip.connect(boost::bind(&CValidationInterface::NotifyHeaderTip, pwalletIn, boost::placeholders::_1, boost::placeholders::_2));
++    g_signals.m_internals->UpdatedBlockTip.connect(boost::bind(&CValidationInterface::UpdatedBlockTip, pwalletIn, boost::placeholders::_1, boost::placeholders::_2, boost::placeholders::_3));
++    g_signals.m_internals->SynchronousUpdatedBlockTip.connect(boost::bind(&CValidationInterface::SynchronousUpdatedBlockTip, pwalletIn, boost::placeholders::_1, boost::placeholders::_2, boost::placeholders::_3));
++    g_signals.m_internals->TransactionAddedToMempool.connect(boost::bind(&CValidationInterface::TransactionAddedToMempool, pwalletIn, boost::placeholders::_1, boost::placeholders::_2));
++    g_signals.m_internals->BlockConnected.connect(boost::bind(&CValidationInterface::BlockConnected, pwalletIn, boost::placeholders::_1, boost::placeholders::_2, boost::placeholders::_3));
++    g_signals.m_internals->BlockDisconnected.connect(boost::bind(&CValidationInterface::BlockDisconnected, pwalletIn, boost::placeholders::_1, boost::placeholders::_2));
++    g_signals.m_internals->NotifyTransactionLock.connect(boost::bind(&CValidationInterface::NotifyTransactionLock, pwalletIn, boost::placeholders::_1, boost::placeholders::_2));
++    g_signals.m_internals->NotifyChainLock.connect(boost::bind(&CValidationInterface::NotifyChainLock, pwalletIn, boost::placeholders::_1, boost::placeholders::_2));
++    g_signals.m_internals->TransactionRemovedFromMempool.connect(boost::bind(&CValidationInterface::TransactionRemovedFromMempool, pwalletIn, boost::placeholders::_1));
++    g_signals.m_internals->SetBestChain.connect(boost::bind(&CValidationInterface::SetBestChain, pwalletIn, boost::placeholders::_1));
++    g_signals.m_internals->Broadcast.connect(boost::bind(&CValidationInterface::ResendWalletTransactions, pwalletIn, boost::placeholders::_1, boost::placeholders::_2));
++    g_signals.m_internals->BlockChecked.connect(boost::bind(&CValidationInterface::BlockChecked, pwalletIn, boost::placeholders::_1, boost::placeholders::_2));
++    g_signals.m_internals->NewPoWValidBlock.connect(boost::bind(&CValidationInterface::NewPoWValidBlock, pwalletIn, boost::placeholders::_1, boost::placeholders::_2));
++    g_signals.m_internals->NotifyGovernanceObject.connect(boost::bind(&CValidationInterface::NotifyGovernanceObject, pwalletIn, boost::placeholders::_1));
++    g_signals.m_internals->NotifyGovernanceVote.connect(boost::bind(&CValidationInterface::NotifyGovernanceVote, pwalletIn, boost::placeholders::_1));
++    g_signals.m_internals->NotifyInstantSendDoubleSpendAttempt.connect(boost::bind(&CValidationInterface::NotifyInstantSendDoubleSpendAttempt, pwalletIn, boost::placeholders::_1, boost::placeholders::_2));
++    g_signals.m_internals->NotifyRecoveredSig.connect(boost::bind(&CValidationInterface::NotifyRecoveredSig, pwalletIn, boost::placeholders::_1));
++    g_signals.m_internals->NotifyMasternodeListChanged.connect(boost::bind(&CValidationInterface::NotifyMasternodeListChanged, pwalletIn, boost::placeholders::_1, boost::placeholders::_2, boost::placeholders::_3));
  }
  
  void UnregisterValidationInterface(CValidationInterface* pwalletIn) {
@@ -372,25 +366,25 @@ diff -ruN dash-0.17.0.0-rc3-orig/src/validationinterface.cpp dash-0.17.0.0-rc3-f
 -    g_signals.m_internals->NotifyInstantSendDoubleSpendAttempt.disconnect(boost::bind(&CValidationInterface::NotifyInstantSendDoubleSpendAttempt, pwalletIn, _1, _2));
 -    g_signals.m_internals->NotifyRecoveredSig.disconnect(boost::bind(&CValidationInterface::NotifyRecoveredSig, pwalletIn, _1));
 -    g_signals.m_internals->NotifyMasternodeListChanged.disconnect(boost::bind(&CValidationInterface::NotifyMasternodeListChanged, pwalletIn, _1, _2, _3));
-+    g_signals.m_internals->BlockChecked.disconnect(boost::bind(&CValidationInterface::BlockChecked, pwalletIn,  boost::placeholders::_1, boost::placeholders::_2));
-+    g_signals.m_internals->Broadcast.disconnect(boost::bind(&CValidationInterface::ResendWalletTransactions, pwalletIn,  boost::placeholders::_1, boost::placeholders::_2));
-+    g_signals.m_internals->SetBestChain.disconnect(boost::bind(&CValidationInterface::SetBestChain, pwalletIn,  boost::placeholders::_1));
-+    g_signals.m_internals->NotifyChainLock.disconnect(boost::bind(&CValidationInterface::NotifyChainLock, pwalletIn,  boost::placeholders::_1, boost::placeholders::_2));
-+    g_signals.m_internals->NotifyTransactionLock.disconnect(boost::bind(&CValidationInterface::NotifyTransactionLock, pwalletIn,  boost::placeholders::_1, boost::placeholders::_2));
-+    g_signals.m_internals->TransactionAddedToMempool.disconnect(boost::bind(&CValidationInterface::TransactionAddedToMempool, pwalletIn,  boost::placeholders::_1, boost::placeholders::_2));
-+    g_signals.m_internals->BlockConnected.disconnect(boost::bind(&CValidationInterface::BlockConnected, pwalletIn,  boost::placeholders::_1, boost::placeholders::_2, boost::placeholders::_3));
-+    g_signals.m_internals->BlockDisconnected.disconnect(boost::bind(&CValidationInterface::BlockDisconnected, pwalletIn,  boost::placeholders::_1, boost::placeholders::_2));
-+    g_signals.m_internals->TransactionRemovedFromMempool.disconnect(boost::bind(&CValidationInterface::TransactionRemovedFromMempool, pwalletIn,  boost::placeholders::_1));
-+    g_signals.m_internals->UpdatedBlockTip.disconnect(boost::bind(&CValidationInterface::UpdatedBlockTip, pwalletIn,  boost::placeholders::_1, boost::placeholders::_2, boost::placeholders::_3));
-+    g_signals.m_internals->SynchronousUpdatedBlockTip.disconnect(boost::bind(&CValidationInterface::SynchronousUpdatedBlockTip, pwalletIn,  boost::placeholders::_1, boost::placeholders::_2, boost::placeholders::_3));
-+    g_signals.m_internals->NewPoWValidBlock.disconnect(boost::bind(&CValidationInterface::NewPoWValidBlock, pwalletIn,  boost::placeholders::_1, boost::placeholders::_2));
-+    g_signals.m_internals->NotifyHeaderTip.disconnect(boost::bind(&CValidationInterface::NotifyHeaderTip, pwalletIn,  boost::placeholders::_1, boost::placeholders::_2));
-+    g_signals.m_internals->AcceptedBlockHeader.disconnect(boost::bind(&CValidationInterface::AcceptedBlockHeader, pwalletIn,  boost::placeholders::_1));
-+    g_signals.m_internals->NotifyGovernanceObject.disconnect(boost::bind(&CValidationInterface::NotifyGovernanceObject, pwalletIn,  boost::placeholders::_1));
-+    g_signals.m_internals->NotifyGovernanceVote.disconnect(boost::bind(&CValidationInterface::NotifyGovernanceVote, pwalletIn,  boost::placeholders::_1));
-+    g_signals.m_internals->NotifyInstantSendDoubleSpendAttempt.disconnect(boost::bind(&CValidationInterface::NotifyInstantSendDoubleSpendAttempt, pwalletIn,  boost::placeholders::_1, boost::placeholders::_2));
-+    g_signals.m_internals->NotifyRecoveredSig.disconnect(boost::bind(&CValidationInterface::NotifyRecoveredSig, pwalletIn,  boost::placeholders::_1));
-+    g_signals.m_internals->NotifyMasternodeListChanged.disconnect(boost::bind(&CValidationInterface::NotifyMasternodeListChanged, pwalletIn,  boost::placeholders::_1, boost::placeholders::_2, boost::placeholders::_3));
++    g_signals.m_internals->BlockChecked.disconnect(boost::bind(&CValidationInterface::BlockChecked, pwalletIn, boost::placeholders::_1, boost::placeholders::_2));
++    g_signals.m_internals->Broadcast.disconnect(boost::bind(&CValidationInterface::ResendWalletTransactions, pwalletIn, boost::placeholders::_1, boost::placeholders::_2));
++    g_signals.m_internals->SetBestChain.disconnect(boost::bind(&CValidationInterface::SetBestChain, pwalletIn, boost::placeholders::_1));
++    g_signals.m_internals->NotifyChainLock.disconnect(boost::bind(&CValidationInterface::NotifyChainLock, pwalletIn, boost::placeholders::_1, boost::placeholders::_2));
++    g_signals.m_internals->NotifyTransactionLock.disconnect(boost::bind(&CValidationInterface::NotifyTransactionLock, pwalletIn, boost::placeholders::_1, boost::placeholders::_2));
++    g_signals.m_internals->TransactionAddedToMempool.disconnect(boost::bind(&CValidationInterface::TransactionAddedToMempool, pwalletIn, boost::placeholders::_1, boost::placeholders::_2));
++    g_signals.m_internals->BlockConnected.disconnect(boost::bind(&CValidationInterface::BlockConnected, pwalletIn, boost::placeholders::_1, boost::placeholders::_2, boost::placeholders::_3));
++    g_signals.m_internals->BlockDisconnected.disconnect(boost::bind(&CValidationInterface::BlockDisconnected, pwalletIn, boost::placeholders::_1, boost::placeholders::_2));
++    g_signals.m_internals->TransactionRemovedFromMempool.disconnect(boost::bind(&CValidationInterface::TransactionRemovedFromMempool, pwalletIn, boost::placeholders::_1));
++    g_signals.m_internals->UpdatedBlockTip.disconnect(boost::bind(&CValidationInterface::UpdatedBlockTip, pwalletIn, boost::placeholders::_1, boost::placeholders::_2, boost::placeholders::_3));
++    g_signals.m_internals->SynchronousUpdatedBlockTip.disconnect(boost::bind(&CValidationInterface::SynchronousUpdatedBlockTip, pwalletIn, boost::placeholders::_1, boost::placeholders::_2, boost::placeholders::_3));
++    g_signals.m_internals->NewPoWValidBlock.disconnect(boost::bind(&CValidationInterface::NewPoWValidBlock, pwalletIn, boost::placeholders::_1, boost::placeholders::_2));
++    g_signals.m_internals->NotifyHeaderTip.disconnect(boost::bind(&CValidationInterface::NotifyHeaderTip, pwalletIn, boost::placeholders::_1, boost::placeholders::_2));
++    g_signals.m_internals->AcceptedBlockHeader.disconnect(boost::bind(&CValidationInterface::AcceptedBlockHeader, pwalletIn, boost::placeholders::_1));
++    g_signals.m_internals->NotifyGovernanceObject.disconnect(boost::bind(&CValidationInterface::NotifyGovernanceObject, pwalletIn, boost::placeholders::_1));
++    g_signals.m_internals->NotifyGovernanceVote.disconnect(boost::bind(&CValidationInterface::NotifyGovernanceVote, pwalletIn, boost::placeholders::_1));
++    g_signals.m_internals->NotifyInstantSendDoubleSpendAttempt.disconnect(boost::bind(&CValidationInterface::NotifyInstantSendDoubleSpendAttempt, pwalletIn, boost::placeholders::_1, boost::placeholders::_2));
++    g_signals.m_internals->NotifyRecoveredSig.disconnect(boost::bind(&CValidationInterface::NotifyRecoveredSig, pwalletIn, boost::placeholders::_1));
++    g_signals.m_internals->NotifyMasternodeListChanged.disconnect(boost::bind(&CValidationInterface::NotifyMasternodeListChanged, pwalletIn, boost::placeholders::_1, boost::placeholders::_2, boost::placeholders::_3));
  }
  
  void UnregisterAllValidationInterfaces() {

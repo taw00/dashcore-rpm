@@ -1,0 +1,12 @@
+diff -ruN dash-0.17.0.0-rc5-orig/depends/packages/bls-dash.mk dash-0.17.0.0-rc5-patch04-cmake-prefix-fix-for-bls-dash/depends/packages/bls-dash.mk
+--- dash-0.17.0.0-rc5-orig/depends/packages/bls-dash.mk	2021-05-15 16:50:29.000000000 -0400
++++ dash-0.17.0.0-rc5-patch04-cmake-prefix-fix-for-bls-dash/depends/packages/bls-dash.mk	2021-05-17 11:40:41.859680960 -0400
+@@ -32,7 +32,7 @@
+ 
+ define $(package)_set_vars
+   $(package)_config_opts=-DCMAKE_INSTALL_PREFIX=$($(package)_staging_dir)/$(host_prefix)
+-  $(package)_config_opts+= -DCMAKE_PREFIX_PATH=$($(package)_staging_dir)/$(host_prefix)
++  $(package)_config_opts+= -DCMAKE_PREFIX_PATH=$(host_prefix)
+   $(package)_config_opts+= -DSTLIB=ON -DSHLIB=OFF -DSTBIN=ON
+   $(package)_config_opts+= -DBUILD_BLS_PYTHON_BINDINGS=0 -DBUILD_BLS_TESTS=0 -DBUILD_BLS_BENCHMARKS=0
+   $(package)_config_opts_linux=-DOPSYS=LINUX -DCMAKE_SYSTEM_NAME=Linux
