@@ -262,7 +262,7 @@ cd ../.. ; /usr/bin/tree -df -L 2 BUILD ; cd -
 #  This bug seems to have been resolved some time ago. Probably can delete all this cruft. -todd 2021-05-19
 #  # Is it pip3? or pip? and does Fedora version matter?
 #  # Next pip3 command line is to address a bug in pyinstaller, see
-#  # https://github.com/pyinstaller/pyinstaller/issues/4003  
+#  # https://github.com/pyinstaller/pyinstaller/issues/4003
 #  # https://stackoverflow.com/questions/54338714/pip-install-pyinstaller-no-module-named-pyinstaller
 #  #./venv/bin/pip3 install pip==18.1
 #  ./venv/bin/pip3 install 'pyinstaller>=3.3'
@@ -506,7 +506,7 @@ cd ../../
   - Fixed my broken config file sniffing logic in the .sh wrapper script
   - pip 19.0 associated to pyinstaller has a bug, therefore I had to add...  
       ./venv/bin/pip3 install pip==18.1  
-    The bug is: https://github.com/pyinstaller/pyinstaller/issues/4003
+    The bug is: https://github.com/pyinstaller/pyinstaller/issues/4003  
     Associated: https://stackoverflow.com/questions/54338714/pip-install-pyinstaller-no-module-named-pyinstaller
 
 * Mon Jan 14 2019 Todd Warner <t0dd_at_protonmail.com> 0.9.21-1.taw
