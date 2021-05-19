@@ -36,23 +36,23 @@ Summary: Manage and collateralize a Dash Masternode with a hardware wallet
 #BuildArch: noarch
 
 %define targetIsProduction 1
-%define sourceIsBinary 1
+%define sourceIsBinary 0
 
-%undefine buildQualifier
 %define buildQualifier hotfix4
+%undefine buildQualifier
 
 # Package (RPM) name-version-release.
 # <name>-<vermajor.<verminor>-<pkgrel>[.<extraver>][.<snapinfo>].DIST[.<minorbump>]
 
 # VERSION
 %define vermajor 0.9
-%define verminor 26
+%define verminor 27
 Version: %{vermajor}.%{verminor}
 
 # RELEASE
-%define _pkgrel 7
+%define _pkgrel 1
 %if ! %{targetIsProduction}
-  %define _pkgrel 6.1
+  %define _pkgrel 0.1
 %endif
 
 # MINORBUMP
@@ -122,14 +122,14 @@ Release: %{_release}
 %define sourcetree %{name}-%{version}
 %define binaryarchivename %{_name2}_%{version}.linux
 %endif
-#%%define btchip_python_version 0.1.26
+
+# As of v0.9.27, we stopped including btchip-python because upstream stopped shipping their version.
+#%%define btchip_python_version 0.1.32
 %define btchip_python_vermajor master-branch
 %define btchip_python_verminor 2019-03-08
 %define btchip_python_version %{btchip_python_vermajor}-%{btchip_python_verminor}
-#%%define sourcetree_btchip_python btchip-python-%%{btchip_python_version}
-%define archivename_btchip_python btchip-python-%{btchip_python_version}
-%define sourcetree_btchip_python btchip-python-%{btchip_python_vermajor}
 %define sourcetree_contrib %{name}-%{vermajor}-contrib
+
 # /usr/share/org.dash.dash_core.dash_masternode_tool
 %define installtree %{_datadir}/%{appid}
 
@@ -137,17 +137,19 @@ Release: %{_release}
 %if %{sourceIsBinary}
 Source0: https://github.com/Bertrand256/dash-masternode-tool/archive/v%{version}/%{binaryarchivename}.tar.gz
 %else
-# XXX: The "a" is temporary
-#Source0: https://github.com/Bertrand256/dash-masternode-tool/archive/v%%{version}/%%{sourcetree}a.tar.gz
 Source0: https://github.com/Bertrand256/dash-masternode-tool/archive/v%{version}/%{sourcetree}.tar.gz
 %endif
 # dash-masternode-tool-0.9-contrib
 Source1: https://github.com/taw00/dashcore-rpm/blob/master/SOURCES/%{sourcetree_contrib}.tar.gz
+
 # btchip-python-...
-#Source2: https://github.com/Bertrand256/btchip-python/archive/v%%{btchip_python_version}/%%{sourcetree_btchip_python}.tar.gz
-Source2: https://github.com/taw00/dashcore-rpm/blob/master/SOURCES/%{archivename_btchip_python}.tar.gz
+# As of v0.9.27, we stopped including btchip-python because upstream stopped shipping their version.
+#Source2: https://github.com/taw00/dashcore-rpm/blob/master/SOURCES/btchip-python-%%{btchip_python_version}.tar.gz
 
 %if ! %{sourceIsBinary}
+# As of 0.9.27, python3.8 has to be forced
+# Otherwise, drop this next BuildRequires
+BuildRequires: python3.8
 Requires: zenity
 BuildRequires: python3-devel python3-virtualenv
 BuildRequires: libusbx-devel libudev-devel
@@ -230,7 +232,7 @@ mkdir -p %{projectroot}
 # contrib
 %setup -q -T -D -a 1 -n %{projectroot}
 # btchip-python
-%setup -q -T -D -a 2 -n %{projectroot}
+#%setup -q -T -D -a 2 -n %{projectroot}
 
 # For debugging purposes...
 %if ! %{targetIsProduction}
@@ -242,12 +244,8 @@ cd ../.. ; /usr/bin/tree -df -L 2 BUILD ; cd -
   #mv %%{sourcetree}a %%{sourcetree}
 
   # My modified requirements a tad since we use the native QT libraries
-  # and include btchip-python
-  #cp %%{sourcetree_contrib}/build/requirements.txt %%{sourcetree}/
-  # UPDATE (20200520): instead of slapping a state requirements.txt file
-  # replace in place, just edit the existing one with sed.
   sed -i.previous '{s/'"libusb1"'/'"#libusb1"'/}' %{sourcetree}/requirements.txt
-  sed -i.previous '{s/'"pyinstaller"'/'"#pyinstaller"'/}' %{sourcetree}/requirements.txt
+#  sed -i.previous '{s/'"pyinstaller"'/'"#pyinstaller"'/}' %{sourcetree}/requirements.txt
   sed -i.previous '{s/''-e git+https:\/\/github''/''#-e git+https:\/\/github''/}' %{sourcetree}/requirements.txt
   #sed -i.previous '{s/'"PyQt5==5.9.2"'/'"PyQt5==5.13.2"'/}' %{sourcetree}/requirements.txt
   #sed -i.previous '{s/'"PyQtChart==5.9.2"'/'"PyQtChart==5.14.0"'/}' %{sourcetree}/requirements.txt
@@ -256,26 +254,31 @@ cd ../.. ; /usr/bin/tree -df -L 2 BUILD ; cd -
   #sed -i.previous '{s/'"PyQtChart==5.9.2"'/''PyQtChart==5.9.2\nsip==4.19.8''/}' %{sourcetree}/requirements.txt
   cp %{sourcetree_contrib}/build/version.txt %{sourcetree}/
 
-  [ -f /usr/bin/virtualenv-3 ] && /usr/bin/virtualenv-3 -p python3 ./venv || /usr/bin/virtualenv -p python3 ./venv
+  # As of 0.9.27, python3.8 has to be forced
+  #[ -f /usr/bin/virtualenv-3 ] && /usr/bin/virtualenv-3 -p python3 ./venv || /usr/bin/virtualenv -p python3 ./venv
+  [ -f /usr/bin/virtualenv-3 ] && /usr/bin/virtualenv-3 -p python3.8 ./venv || /usr/bin/virtualenv -p python3.8 ./venv
   . ./venv/bin/activate
 
-  # Is it pip3? or pip? and does Fedora version matter?
-  # Next pip3 command line is to address a bug in pyinstaller, see
-  # https://github.com/pyinstaller/pyinstaller/issues/4003  
-  # https://stackoverflow.com/questions/54338714/pip-install-pyinstaller-no-module-named-pyinstaller
-  #./venv/bin/pip3 install pip==18.1
-  ./venv/bin/pip3 install 'pyinstaller>=3.3'
+#  This bug seems to have been resolved some time ago. Probably can delete all this cruft. -todd 2021-05-19
+#  # Is it pip3? or pip? and does Fedora version matter?
+#  # Next pip3 command line is to address a bug in pyinstaller, see
+#  # https://github.com/pyinstaller/pyinstaller/issues/4003  
+#  # https://stackoverflow.com/questions/54338714/pip-install-pyinstaller-no-module-named-pyinstaller
+#  #./venv/bin/pip3 install pip==18.1
+#  ./venv/bin/pip3 install 'pyinstaller>=3.3'
   # To solve https://github.com/taw00/dashcore-rpm/issues/1 either force version downgrade or see other solution below
-  #./venv/bin/pip3 install --upgrade setuptools
-  ./venv/bin/pip3 install --upgrade 'setuptools<45.0.0'
+#  ./venv/bin/pip3 install --upgrade setuptools
+#  ./venv/bin/pip3 install --upgrade 'setuptools<45.0.0'
+
   cd %{sourcetree}
-  #../venv/bin/pip3 install pip-download
-  #../venv/bin/pip-download --show-config
-  #../venv/bin/pip-download -r requirements.txt
-  #exit 1
-  ../venv/bin/pip3 install ../%{sourcetree_btchip_python}
+  # As of v0.9.27, we stopped including btchip-python because upstream stopped shipping their version.
+  #../venv/bin/pip3 install ../btchip-python-%%{btchip_python_vermajor}
   ../venv/bin/pip3 install -r requirements.txt
   cd ..
+  # This is really ugly brute-force bs
+  [ -d ./venv/lib/python3.8/site-packages/bitcoin ]   && [ ! -d ./venv/lib64/python3.8/site-packages/bitcoin ]   && ln -s ../../../lib/python3.8/site-packages/bitcoin ./venv/lib64/python*/site*/
+  [ -d ./venv/lib/python3.8/site-packages/mnemonic ]  && [ ! -d ./venv/lib64/python3.8/site-packages/mnemonic ]  && ln -s ../../../lib/python3.8/site-packages/mnemonic ./venv/lib64/python*/site*/
+  [ -d ./venv/lib/python3.8/site-packages/trezorlib ] && [ ! -d ./venv/lib64/python3.8/site-packages/trezorlib ] && ln -s ../../../lib/python3.8/site-packages/trezorlib ./venv/lib64/python*/site*/
 %else
   mkdir -p %{sourcetree}
   mv DashMasternodeTool %{sourcetree}
@@ -398,6 +401,14 @@ cd ../../
 
 
 %changelog
+* Wed May 19 2021 Todd Warner <t0dd_at_protonmail.com> 0.9.27-1.taw
+* Wed May 19 2021 Todd Warner <t0dd_at_protonmail.com> 0.9.27-0.1.testing.taw
+  - https://github.com/Bertrand256/dash-masternode-tool/releases/tag/v0.9.27
+  - forced python3.8 (required for build)
+  - had to do some brute-force ugly symlinking so that libraries could be found
+  - we no long ship btchip-python source because upstream no longer require his  
+    custom version
+
 * Thu Feb 18 2021 Todd Warner <t0dd_at_protonmail.com> 0.9.26-7.hotfix4.taw
 * Thu Feb 18 2021 Todd Warner <t0dd_at_protonmail.com> 0.9.26-6.1.hotfix4.taw
   - update
@@ -495,7 +506,7 @@ cd ../../
   - Fixed my broken config file sniffing logic in the .sh wrapper script
   - pip 19.0 associated to pyinstaller has a bug, therefore I had to add...  
       ./venv/bin/pip3 install pip==18.1  
-    The bug is: https://github.com/pyinstaller/pyinstaller/issues/4003  
+    The bug is: https://github.com/pyinstaller/pyinstaller/issues/4003
     Associated: https://stackoverflow.com/questions/54338714/pip-install-pyinstaller-no-module-named-pyinstaller
 
 * Mon Jan 14 2019 Todd Warner <t0dd_at_protonmail.com> 0.9.21-1.taw
