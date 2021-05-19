@@ -276,9 +276,11 @@ cd ../.. ; /usr/bin/tree -df -L 2 BUILD ; cd -
   ../venv/bin/pip3 install -r requirements.txt
   cd ..
   # This is really ugly brute-force bs
-  [ -d ./venv/lib/python3.8/site-packages/bitcoin ]   && [ ! -d ./venv/lib64/python3.8/site-packages/bitcoin ]   && ln -s ../../../lib/python3.8/site-packages/bitcoin ./venv/lib64/python*/site*/
-  [ -d ./venv/lib/python3.8/site-packages/mnemonic ]  && [ ! -d ./venv/lib64/python3.8/site-packages/mnemonic ]  && ln -s ../../../lib/python3.8/site-packages/mnemonic ./venv/lib64/python*/site*/
-  [ -d ./venv/lib/python3.8/site-packages/trezorlib ] && [ ! -d ./venv/lib64/python3.8/site-packages/trezorlib ] && ln -s ../../../lib/python3.8/site-packages/trezorlib ./venv/lib64/python*/site*/
+  %if 0%{?fedora} && 0%{?fedora} > 32
+    [ ! -d ./venv/lib64/python3.8/site-packages/bitcoin ]   && [ -d ./venv/lib/python3.8/site-packages/bitcoin ]   && ln -s ../../../lib/python3.8/site-packages/bitcoin ./venv/lib64/python*/site*/
+    [ ! -d ./venv/lib64/python3.8/site-packages/mnemonic ]  && [ -d ./venv/lib/python3.8/site-packages/mnemonic ]  && ln -s ../../../lib/python3.8/site-packages/mnemonic ./venv/lib64/python*/site*/
+    [ ! -d ./venv/lib64/python3.8/site-packages/trezorlib ] && [ -d ./venv/lib/python3.8/site-packages/trezorlib ] && ln -s ../../../lib/python3.8/site-packages/trezorlib ./venv/lib64/python*/site*/
+  %endif
 %else
   mkdir -p %{sourcetree}
   mv DashMasternodeTool %{sourcetree}
