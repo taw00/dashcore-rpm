@@ -20,7 +20,7 @@
 Name: %{_name_dcs}
 Summary: A required helper agent for Dash Core Masternodes
 
-%define targetIsProduction 0
+%define targetIsProduction 1
 
 
 # VERSION
@@ -332,6 +332,7 @@ exit 0
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
+* Wed May 19 2021 Todd Warner <t0dd_at_protonmail.com> 1.5.1-1.taw
 * Thu May 6 2021 Todd Warner <t0dd_at_protonmail.com> 1.5.1-0.1.testing.taw
   - https://github.com/dashpay/sentinel/releases/tag/v1.5.1
 
