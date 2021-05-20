@@ -255,9 +255,9 @@ cd ../.. ; /usr/bin/tree -df -L 2 BUILD ; cd -
   ## Manually correct the version.txt file
   ## Only used if the version.txt file in the source tarball is incorrect
   #%if 0%{?buildQualifier:1}
-  #  echo "%{version}-%{buildQualifier}" > %{sourcetree}/version.txt
+  #  echo "version_str = '%{version}-%{buildQualifier}`" > %{sourcetree}/version.txt
   #%else
-  #  echo "%{version}" > %{sourcetree}/version.txt
+  #  echo "version_str = '%{version}`" > %{sourcetree}/version.txt
   #%endif
 
   # As of 0.9.27, python3.8 has to be forced
