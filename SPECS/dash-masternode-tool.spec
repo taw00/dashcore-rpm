@@ -286,9 +286,9 @@ cd ../.. ; /usr/bin/tree -df -L 2 BUILD ; cd -
   cd ..
   # This is really ugly brute-force bs
   %if 0%{?fedora} && 0%{?fedora} > 32
-    [ ! -d ./venv/lib64/python3.8/site-packages/bitcoin ]   && [ -d ./venv/lib/python3.8/site-packages/bitcoin ]   && ln -s ../../../lib/python3.8/site-packages/bitcoin ./venv/lib64/python*/site*/
-    [ ! -d ./venv/lib64/python3.8/site-packages/mnemonic ]  && [ -d ./venv/lib/python3.8/site-packages/mnemonic ]  && ln -s ../../../lib/python3.8/site-packages/mnemonic ./venv/lib64/python*/site*/
-    [ ! -d ./venv/lib64/python3.8/site-packages/trezorlib ] && [ -d ./venv/lib/python3.8/site-packages/trezorlib ] && ln -s ../../../lib/python3.8/site-packages/trezorlib ./venv/lib64/python*/site*/
+    [ ! -e "./venv/lib64/python3.8/site-packages/bitcoin"   -a -d "./venv/lib/python3.8/site-packages/bitcoin" ]   && ln -s ../../../lib/python3.8/site-packages/bitcoin ./venv/lib64/python*/site*/
+    [ ! -e "./venv/lib64/python3.8/site-packages/mnemonic"  -a -d "./venv/lib/python3.8/site-packages/mnemonic" ]  && ln -s ../../../lib/python3.8/site-packages/mnemonic ./venv/lib64/python*/site*/
+    [ ! -e "./venv/lib64/python3.8/site-packages/trezorlib" -a -d "./venv/lib/python3.8/site-packages/trezorlib" ] && ln -s ../../../lib/python3.8/site-packages/trezorlib ./venv/lib64/python*/site*/
   %endif
 %else
   mkdir -p %{sourcetree}
