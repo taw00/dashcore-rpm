@@ -50,14 +50,14 @@ Summary: Manage and collateralize a Dash Masternode with a hardware wallet
 Version: %{vermajor}.%{verminor}
 
 # RELEASE
-%define _pkgrel 1
+%define _pkgrel 2
 %if ! %{targetIsProduction}
-  %define _pkgrel 0.1
+  %define _pkgrel 1.1
 %endif
 
 # MINORBUMP
+%undefine minorbump
 %define minorbump taw
-#%%undefine minorbump
 
 #
 # Build the release string - don't edit this
@@ -222,9 +222,9 @@ Supported hardware wallets: Trezor (model One and T), KeepKey, Ledger Nano S
 # I create a root dir and place the source and contribution trees under it.
 # Extracted source tree structure (extracted in .../BUILD)
 #   projectroot                 dash-masternode-tool-0.9
-#      \_sourcetree               \_dash-masternode-tool-0.9.22
-#      \_sourcetree_btchip_python \_btchip-python-SOME_VERSION
+#      \_sourcetree               \_dash-masternode-tool-0.9.27
 #      \_sourcetree_contrib       \_dash-masternode-tool-0.9-contrib
+#      \_sourcetree_btchip_python \_btchip-python-SOME_VERSION -- stopped including as of 0.9.27
 
 mkdir -p %{projectroot}
 # sourcecode or DashMasternodeTool (binary)
@@ -240,38 +240,47 @@ cd ../.. ; /usr/bin/tree -df -L 2 BUILD ; cd -
 %endif
 
 %if ! %{sourceIsBinary}
-  # XXX: The "a" is temporary
-  #mv %%{sourcetree}a %%{sourcetree}
-
-  # My modified requirements a tad since we use the native QT libraries
+  # Modified requirements.txt...
+  # (requirements.txt is the instruction-set for what other code to fetch from the internet.)
+  # ...we use the OS-supplied libusb
   sed -i.previous '{s/'"libusb1"'/'"#libusb1"'/}' %{sourcetree}/requirements.txt
-#  sed -i.previous '{s/'"pyinstaller"'/'"#pyinstaller"'/}' %{sourcetree}/requirements.txt
-  sed -i.previous '{s/''-e git+https:\/\/github''/''#-e git+https:\/\/github''/}' %{sourcetree}/requirements.txt
+  #sed -i.previous '{s/'"pyinstaller"'/'"#pyinstaller"'/}' %{sourcetree}/requirements.txt
+  # ...don't get btchip-python, since we supply it (old versions used explicite github source) new, uses python hubs
+  #old way: sed -i.previous '{s/''-e git+https:\/\/github''/''#-e git+https:\/\/github''/}' %{sourcetree}/requirements.txt
+  #sed -i.previous '{s/'"btchip-python"'/'"#btchip-python"'/}' %{sourcetree}/requirements.txt
+  # ...we use the OS-supplied QT libraries and force the introspection by changing the version
   #sed -i.previous '{s/'"PyQt5==5.9.2"'/'"PyQt5==5.13.2"'/}' %{sourcetree}/requirements.txt
   #sed -i.previous '{s/'"PyQtChart==5.9.2"'/'"PyQtChart==5.14.0"'/}' %{sourcetree}/requirements.txt
-  # NOPE
-  #sed -i.previous '{s/'"PyQt5==5.9.2"'/'"PyQt5==5.9.2"'/}' %{sourcetree}/requirements.txt
-  #sed -i.previous '{s/'"PyQtChart==5.9.2"'/''PyQtChart==5.9.2\nsip==4.19.8''/}' %{sourcetree}/requirements.txt
-  cp %{sourcetree_contrib}/build/version.txt %{sourcetree}/
+
+  ## Manually correct the version.txt file
+  ## Only used if the version.txt file in the source tarball is incorrect
+  #%if 0%{?buildQualifier:1}
+  #  echo "%{version}-%{buildQualifier}" > %{sourcetree}/version.txt
+  #%else
+  #  echo "%{version}" > %{sourcetree}/version.txt
+  #%endif
 
   # As of 0.9.27, python3.8 has to be forced
   #[ -f /usr/bin/virtualenv-3 ] && /usr/bin/virtualenv-3 -p python3 ./venv || /usr/bin/virtualenv -p python3 ./venv
   [ -f /usr/bin/virtualenv-3 ] && /usr/bin/virtualenv-3 -p python3.8 ./venv || /usr/bin/virtualenv -p python3.8 ./venv
   . ./venv/bin/activate
 
-#  This bug seems to have been resolved some time ago. Probably can delete all this cruft. -todd 2021-05-19
-#  # Is it pip3? or pip? and does Fedora version matter?
-#  # Next pip3 command line is to address a bug in pyinstaller, see
-#  # https://github.com/pyinstaller/pyinstaller/issues/4003
-#  # https://stackoverflow.com/questions/54338714/pip-install-pyinstaller-no-module-named-pyinstaller
-#  #./venv/bin/pip3 install pip==18.1
+  # We have fought pip installation fo pyinstaller in the past. It seems to
+  # crop again of from time to time.
+  # I am leaving this here, but commented out for posterity. Probably should
+  # just nuke it. -todd 2021-05-19
+  # (Is it pip3? or pip? and does Fedora version matter?)
+  # The bug in pip or pyinstaller this resolves:
+  # https://github.com/pyinstaller/pyinstaller/issues/4003 ...see also...
+  # https://stackoverflow.com/questions/54338714/pip-install-pyinstaller-no-module-named-pyinstaller
 #  ./venv/bin/pip3 install 'pyinstaller>=3.3'
-  # To solve https://github.com/taw00/dashcore-rpm/issues/1 either force version downgrade or see other solution below
-#  ./venv/bin/pip3 install --upgrade setuptools
+
+  # This solution is no longer relevant. Keeping for posterity.
+  # To solve https://github.com/taw00/dashcore-rpm/issues/1 force a version downgrade
 #  ./venv/bin/pip3 install --upgrade 'setuptools<45.0.0'
 
   cd %{sourcetree}
-  # As of v0.9.27, we stopped including btchip-python because upstream stopped shipping their version.
+  # As of v0.9.27, we stopped including btchip-python in the SRPM because upstream stopped shipping their version.
   #../venv/bin/pip3 install ../btchip-python-%%{btchip_python_vermajor}
   ../venv/bin/pip3 install -r requirements.txt
   cd ..
@@ -403,6 +412,11 @@ cd ../../
 
 
 %changelog
+* Thu May 20 2021 Todd Warner <t0dd_at_protonmail.com> 0.9.27-2.taw
+* Thu May 20 2021 Todd Warner <t0dd_at_protonmail.com> 0.9.27-1.1.testing.taw
+  - fixed a version.txt overwrite
+  - cleaned up the specfile a bit
+
 * Wed May 19 2021 Todd Warner <t0dd_at_protonmail.com> 0.9.27-1.taw
 * Wed May 19 2021 Todd Warner <t0dd_at_protonmail.com> 0.9.27-0.1.testing.taw
   - https://github.com/Bertrand256/dash-masternode-tool/releases/tag/v0.9.27
