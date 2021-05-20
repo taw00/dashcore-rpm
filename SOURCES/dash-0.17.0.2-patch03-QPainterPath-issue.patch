@@ -1,0 +1,11 @@
+diff -ruN dash-0.17.0.0-rc5-patch02-bind-namespace-errors/src/qt/trafficgraphwidget.cpp dash-0.17.0.0-rc5-patch03-QPainterPath-issue/src/qt/trafficgraphwidget.cpp
+--- dash-0.17.0.0-rc5-patch02-bind-namespace-errors/src/qt/trafficgraphwidget.cpp	2021-05-17 13:00:29.810519370 -0400
++++ dash-0.17.0.0-rc5-patch03-QPainterPath-issue/src/qt/trafficgraphwidget.cpp	2021-05-17 13:31:54.696014845 -0400
+@@ -10,6 +10,7 @@
+ #include <boost/bind.hpp>
+ #include <boost/bind/bind.hpp>
+ 
++#include <QPainterPath>
+ #include <QPainter>
+ #include <QColor>
+ #include <QTimer>

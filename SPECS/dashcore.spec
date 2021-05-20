@@ -30,7 +30,7 @@ Summary: A global payments network and decentralized application (dapp) platform
 %define appid_wallet %{appid}.wallet
 %define appid_node %{appid}.node
 
-%define targetIsProduction 0
+%define targetIsProduction 1
 
 # Leave these switched off.
 # These settings are used if you want to deliver packages sourced from upstream
@@ -54,7 +54,7 @@ Summary: A global payments network and decentralized application (dapp) platform
 # VERSION
 %define vermajor 0.17
 %define _verminor1 0
-%define _verminor2 0
+%define _verminor2 2
 %define verminor %{_verminor1}.%{_verminor2}
 Version: %{vermajor}.%{verminor}
 %define versionqualified %{version}
@@ -196,7 +196,7 @@ Release: %{_release}
   %define binarytree %{_binarytree}
 %endif
 #%%define blsarchiveversion 20181101 <--- for dash-0.16 and older
-%define blsarchiveversion 1.0.1
+%define blsarchiveversion 1.1.0
 %define libbacktracearchiveversion rust-snapshot-2018-05-22
 %define libbacktracearchivename libbacktrace-%{libbacktracearchiveversion}
 %define miniupnpcversion 2.0.20180203
@@ -217,14 +217,11 @@ Source5: https://download.oracle.com/berkeley-db/db-%%{bdbarchiveversion}.tar.gz
 Source6: https://github.com/dashpay/dash/archive/v%{versionqualified}/%{binaryarchivename}-x86_64-linux-gnu.tar.gz
 %endif
 %if %{buildFromSource}
-# nuke "About QT" in the client source.
-Patch01: https://github.com/taw00/dashcore-rpm/blob/master/SOURCES/dash-%{version}-patch01-remove-about-qt-menu-item.patch
-# Patch02: fix a problem with one specific build. This needs to go away in next version
-# See also github.com/litecoin-project/litecoin/commit/a5929130223973636f3fd25fbfaf2953f2ec96a9
+# (1) nuke "About QT" in the client source.
+Patch1: https://github.com/taw00/dashcore-rpm/blob/master/SOURCES/dash-%{version}-patch01-remove-about-qt-menu-item.patch
+# fixes for (2) newer bind and boost and (3) QT
 Patch2: https://github.com/taw00/dashcore-rpm/blob/master/SOURCES/dash-%{version}-patch02-bind-namespace-errors.patch
 Patch3: https://github.com/taw00/dashcore-rpm/blob/master/SOURCES/dash-%{version}-patch03-QPainterPath-issue.patch
-# Patch04: fix a problem with RC5 and earlier. This needs to go away with GA.
-#Patch4: https://github.com/taw00/dashcore-rpm/blob/master/SOURCES/dash-%%{versionqualified}-patch04-cmake-prefix-fix-for-bls-dash.patch
 %endif
 
 %global selinux_variants mls strict targeted
@@ -580,9 +577,6 @@ cd %{sourcetree}
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
-%if 0%{?buildQualifier:1}
-%patch4 -p1
-%endif
 cd ..
 %endif
 
@@ -810,7 +804,8 @@ ln -s %{_localstatedir}/log/dashcore/testnet3/debug.log %{buildroot}%{_sharedsta
 ln -s %{_sysconfdir}/dashcore/dash.conf %{buildroot}%{_sharedstatedir}/dashcore/.dashcore/dash.conf
 
 # Man Pages (from contrib) -- man5 documents now defunct
-install -D -m644 %{srccontribtree}/linux/man/man1/* %{buildroot}%{_mandir}/man1/
+# These are out of date, let's not contrib anymore.
+#install -D -m644 %%{srccontribtree}/linux/man/man1/* %%{buildroot}%{_mandir}/man1/
 #install -D -m644 %%{srccontribtree}/linux/man/man5/* %%{buildroot}%%{_mandir}/man5/
 # Man Pages (from upstream) - likely to overwrite ones from contrib (which is fine)
 %if %{buildFromSource}
@@ -1245,6 +1240,11 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Dash Electrum: https://github.com/akhavr/electrum-dash
 
 %changelog
+* Wed May 19 2021 Todd Warner <t0dd_at_protonmail.com> 0.17.0.2-1.taw
+* Wed May 19 2021 Todd Warner <t0dd_at_protonmail.com> 0.17.0.2-0.1.testing.taw
+  - https://github.com/dashpay/dash/releases/tag/v0.17.0.2
+  - also, updated bls-signatures (bls-dash) v1.1.0
+
 * Tue May 18 2021 Todd Warner <t0dd_at_protonmail.com> 0.17.0.0-0.1.testing.taw
   - https://github.com/dashpay/dash/releases/tag/v0.17.0.0
   - updated patch file semantics (major version only was not good enough)

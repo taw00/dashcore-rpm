@@ -1,0 +1,12 @@
+diff -ruN dash-0.17.0.0-rc5-orig/src/qt/bitcoingui.cpp dash-0.17.0.0-rc5-patch01-remove-about-qt-menu-item/src/qt/bitcoingui.cpp
+--- dash-0.17.0.0-rc5-orig/src/qt/bitcoingui.cpp	2021-05-15 16:50:29.000000000 -0400
++++ dash-0.17.0.0-rc5-patch01-remove-about-qt-menu-item/src/qt/bitcoingui.cpp	2021-05-17 13:22:56.712593395 -0400
+@@ -579,7 +579,7 @@
+     help->addAction(showCoinJoinHelpAction);
+     help->addSeparator();
+     help->addAction(aboutAction);
+-    help->addAction(aboutQtAction);
++    //help->addAction(aboutQtAction); --'About QT' is an implementation detail — commenting out -t0dd
+ }
+ 
+ void BitcoinGUI::createToolBars()
