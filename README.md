@@ -23,15 +23,15 @@ folder).
 
 ---
 
-**Dash (Digital Cash)** is an open source peer-to-peer cryptocurrency with an
+**Dash (Digital Cash)** is an open-source peer-to-peer cryptocurrency with an
 emphasis on serving as an efficient platform for payments and decentralized
 applications. Dash offers a form of money that is portable, inexpensive,
-divisible and fast. It can be spent securely both online and in person with
-minimal transaction fees. Dash offers instant transactions **(InstantSend)**,
-private / more-fungible transactions **(PrivateSend)**, and operates a
-self-governing and self-funding model. This decentralized governance and
-budgeting system makes it the first ever successful decentralized autonomous
-organization (DAO).
+divisible and fast. It can be spent securely both online and in-person with
+negligible transaction fees. Dash offers instant transactions by default
+**(InstantSend)**, more-fungible transactions **(CoinJoin)**, and operates its
+network with a model of self-governance and self-funding. This decentralized
+governance and budgeting system makes it the first-ever successful
+decentralized autonomous organization (DAO).
 
 Dash is open source and the name of the overarching project. Learn more
 at https://www.dash.org/
@@ -74,6 +74,5 @@ loss of funds or damages associated to this software.
 ### Send comment and feedback - <https://keybase.io/toddwarner>
 
 _Come say hello to me. I am **t0dd** in various forums: [Dash Talk on Discord](https://discord.com/invite/PXbUxJB),
-[dash.org's forum](https://www.dash.org/forum/), and [#dashpay on freenode
-IRC](http://freenode.net/)._
+[dash.org's forum](https://www.dash.org/forum/), and in various chat rooms on Matrix.org.
 
