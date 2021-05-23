@@ -29,9 +29,9 @@ Summary: A required helper agent for Dash Core Masternodes
 Version: %{vermajor}.%{verminor}
 
 # RELEASE
-%define _pkgrel 1
+%define _pkgrel 2
 %if ! %{targetIsProduction}
-  %define _pkgrel 0.1
+  %define _pkgrel 1.1
 %endif
 
 # MINORBUMP
@@ -132,15 +132,15 @@ Evolution).
 Sentinel is implemented as a Python application that binds to a local version
 dashd instance on each Dash Masternode.
 
-Dash (Digital Cash) is an open source peer-to-peer cryptocurrency with a strong
-focus on serving the payments industry. Dash offers a form of money that is
-portable, inexpensive, divisible and fast. It can be spent securely both online
-and in person with minimal transaction fees. Dash offers instant transactions
-(InstantSend), private transactions (PrivateSend), and operates a
-self-governing and self-funding model. This decentralized governance and
-budgeting system makes it one of the first ever successful decentralized
-autonomous organizations (DAO). Dash is also a platform for innovative
-decentralized crypto-tech.
+Dash (Digital Cash) is an open-source peer-to-peer cryptocurrency with an
+emphasis on serving as an efficient platform for payments and decentralized
+applications. Dash offers a form of money that is portable, inexpensive,
+divisible and fast. It can be spent securely both online and in-person with
+negligible transaction fees. Dash offers instant transactions by default
+(InstantSend), more-fungible transactions (CoinJoin), and operates its network
+with a model of self-governance and self-funding. This decentralized governance
+and budgeting system makes it the first-ever successful decentralized
+autonomous organization (DAO).
 
 Learn more at www.dash.org.
 
@@ -273,6 +273,17 @@ touch %{buildroot}%{_localstatedir}/log/dashcore/sentinel.log
 
 
 %pre
+# the venv directory is problematic. Let's forcibly clean it up before an upgrade.
+# About scriptlets: https://fedoraproject.org/wiki/Packaging:Scriptlets
+# Installs ($1 == 1) and upgrades ($1 == 2)
+if [ "$1" -gt 0 ] ; then
+  if [ "$1" = 1 ] ; then
+    :
+  elif [ "$1" = 2 ] ; then
+    /usr/bin/rm -rf %{_sharedstatedir}/dashcore/sentinel/venv >> /dev/null 2>&1
+  fi
+fi
+
 getent group dashcore >/dev/null || groupadd -r dashcore
 # dashcore system user's home directory will be /var/lib/dashcore
 getent passwd dashcore >/dev/null ||
@@ -288,8 +299,7 @@ getent passwd dashcore >/dev/null ||
 %define etcd %{_sysconfdir}/dashcore
 %define vlds_conf %{vlds}/sentinel.conf
 %define etcd_conf %{etcd}/sentinel.conf
-if [ -e %{vlds_conf} -a -f %{vlds_conf} -a ! -h %{vlds_conf} ]
-then
+if [ -e %{vlds_conf} -a -f %{vlds_conf} -a ! -h %{vlds_conf} ] ; then
    mv %{vlds_conf} %{etcd}/
    ln -s %{etcd_conf} %{vlds_conf}
    chown dashcore:dashcore %{vlds_conf}
@@ -301,18 +311,22 @@ exit 0
 
 
 %post
-## Reference: https://fedoraproject.org/wiki/Packaging:Scriptlets
-## Always runs on install or upgrade
-#if [$1 -gt 0 ] ; then
-#  # Only runs on upgrades
-#  if [$1 -gt 1 ] ; then
-#  fi
-#fi
-
+# About scriptlets: https://fedoraproject.org/wiki/Packaging:Scriptlets
+if [ "$1" -gt 0 ] ; then
+  # Runs on install ($1 == 1) or upgrade ($1 == 2)
+  if   [ "$1" = 1 ] ; then
+    # Only runs on install
+    :
+  elif [ "$1" = 2 ] ; then
+    # Only runs on upgrades
+    :
+  fi
+fi
 
 %preun
 # Nuke the database and then uninstall the thing. This will ensure the sentinel
 # directory is properly cleaned up as well if need be.
+# About scriptlets: https://fedoraproject.org/wiki/Packaging:Scriptlets
 /usr/bin/rm -f %{_sharedstatedir}/dashcore/sentinel/database/sentinel.db >> /dev/null 2>&1
 
 
@@ -332,19 +346,27 @@ exit 0
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
+* Sun May 23 2021 Todd Warner <t0dd_at_protonmail.com> 1.5.1-2.taw
+* Sun May 23 2021 Todd Warner <t0dd_at_protonmail.com> 1.5.1-1.1.testing.taw
+  - experimenting with cleaning up venv during upgrades. Something conflicts at  
+    times and it is not cleaned up properly.  
+    Reference https://github.com/taw00/dashcore-rpm/issues/5
+  - updated description text
+
 * Wed May 19 2021 Todd Warner <t0dd_at_protonmail.com> 1.5.1-1.taw
 * Thu May 6 2021 Todd Warner <t0dd_at_protonmail.com> 1.5.1-0.1.testing.taw
   - https://github.com/dashpay/sentinel/releases/tag/v1.5.1
 
 * Fri Jan 22 2021 Todd Warner <t0dd_at_protonmail.com> 1.5.0-3.taw
 * Fri Jan 22 2021 Todd Warner <t0dd_at_protonmail.com> 1.5.0-2.1.testing.taw
-  - remove broken rm command in the preun -- it wasn't the right solution anyway
+  - remove broken rm command in the preun -- it wasn't the right solution
 
 * Thu Jan 21 2021 Todd Warner <t0dd_at_protonmail.com> 1.5.0-2.taw
 * Thu Jan 21 2021 Todd Warner <t0dd_at_protonmail.com> 1.5.0-1.1.testing.taw
   - fix prior release date in this spec file (2020, not 2019)
   - cleanup a little more directly the venv tree upon uninstall and upgrades
   - hopefully resolving https://github.com/taw00/dashcore-rpm/issues/5
+  - UPDATE: turns out, this version of the RPM was seriously broken because I screwed up a shell scriptlet
 
 * Thu Oct 1 2020 Todd Warner <t0dd_at_protonmail.com> 1.5.0-1.taw
 * Thu Oct 1 2020 Todd Warner <t0dd_at_protonmail.com> 1.5.0-0.1.testing.taw
