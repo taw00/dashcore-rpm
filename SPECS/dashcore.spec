@@ -30,7 +30,7 @@ Summary: A global payments network and decentralized application (dapp) platform
 %define appid_wallet %{appid}.wallet
 %define appid_node %{appid}.node
 
-%define targetIsProduction 0
+%define targetIsProduction 1
 
 # Leave these switched off.
 # These settings are used if you want to deliver packages sourced from upstream
@@ -54,7 +54,7 @@ Summary: A global payments network and decentralized application (dapp) platform
 # VERSION
 %define vermajor 0.17
 %define _verminor1 0
-%define _verminor2 2
+%define _verminor2 3
 %define verminor %{_verminor1}.%{_verminor2}
 Version: %{vermajor}.%{verminor}
 %define versionqualified %{version}
@@ -65,9 +65,9 @@ Version: %{vermajor}.%{verminor}
 
 # RELEASE
 # package release (and for testing only, extrarel)
-%define _pkgrel 2
+%define _pkgrel 1
 %if ! %{targetIsProduction}
-  %define _pkgrel 1.1
+  %define _pkgrel 0.1
 %endif
 
 # MINORBUMP
@@ -363,10 +363,10 @@ Dash (Digital Cash) is a global payments network with its own cryptocurrency
 offering businesses and individuals instant payments to anyone, anywhere in the
 world. Payments are instant, easy and secure, with neglible fees. Dash uses
 peer-to-peer technology to operate with no central authority, managing
-transactions and issuing money carried out collectively by the network.
+transactions and money-issuance carried out collectively by the network.
 Additionally, the Dash Network operates with a model of self-governance and
 self-funding. The Dash Network is the first ever successful decentralized
-autonomous organizations (DAO). Dash Core is the name of the open source
+autonomous organizations (DAO). Dash Core is the name of the open-source
 software which enables the use of this currency. Dash has introduced many
 industry-first innovations including masternodes, LLMQs, ChainLocks, and
 InstantSend. Dash is digital cash that offers financial freedom to anyone.
@@ -386,10 +386,10 @@ Dash (Digital Cash) is a global payments network with its own cryptocurrency
 offering businesses and individuals instant payments to anyone, anywhere in the
 world. Payments are instant, easy and secure, with neglible fees. Dash uses
 peer-to-peer technology to operate with no central authority, managing
-transactions and issuing money carried out collectively by the network.
+transactions and money-issuance carried out collectively by the network.
 Additionally, the Dash Network operates with a model of self-governance and
 self-funding. The Dash Network is the first ever successful decentralized
-autonomous organizations (DAO). Dash Core is the name of the open source
+autonomous organizations (DAO). Dash Core is the name of the open-source
 software which enables the use of this currency. Dash has introduced many
 industry-first innovations including masternodes, LLMQs, ChainLocks, and
 InstantSend. Dash is digital cash that offers financial freedom to anyone.
@@ -420,10 +420,10 @@ Dash (Digital Cash) is a global payments network with its own cryptocurrency
 offering businesses and individuals instant payments to anyone, anywhere in the
 world. Payments are instant, easy and secure, with neglible fees. Dash uses
 peer-to-peer technology to operate with no central authority, managing
-transactions and issuing money carried out collectively by the network.
+transactions and money-issuance carried out collectively by the network.
 Additionally, the Dash Network operates with a model of self-governance and
 self-funding. The Dash Network is the first ever successful decentralized
-autonomous organizations (DAO). Dash Core is the name of the open source
+autonomous organizations (DAO). Dash Core is the name of the open-source
 software which enables the use of this currency. Dash has introduced many
 industry-first innovations including masternodes, LLMQs, ChainLocks, and
 InstantSend. Dash is digital cash that offers financial freedom to anyone.
@@ -441,10 +441,10 @@ Dash (Digital Cash) is a global payments network with its own cryptocurrency
 offering businesses and individuals instant payments to anyone, anywhere in the
 world. Payments are instant, easy and secure, with neglible fees. Dash uses
 peer-to-peer technology to operate with no central authority, managing
-transactions and issuing money carried out collectively by the network.
+transactions and money-issuance carried out collectively by the network.
 Additionally, the Dash Network operates with a model of self-governance and
 self-funding. The Dash Network is the first ever successful decentralized
-autonomous organizations (DAO). Dash Core is the name of the open source
+autonomous organizations (DAO). Dash Core is the name of the open-source
 software which enables the use of this currency. Dash has introduced many
 industry-first innovations including masternodes, LLMQs, ChainLocks, and
 InstantSend. Dash is digital cash that offers financial freedom to anyone.
@@ -461,10 +461,10 @@ Dash (Digital Cash) is a global payments network with its own cryptocurrency
 offering businesses and individuals instant payments to anyone, anywhere in the
 world. Payments are instant, easy and secure, with neglible fees. Dash uses
 peer-to-peer technology to operate with no central authority, managing
-transactions and issuing money carried out collectively by the network.
+transactions and money-issuance carried out collectively by the network.
 Additionally, the Dash Network operates with a model of self-governance and
 self-funding. The Dash Network is the first ever successful decentralized
-autonomous organizations (DAO). Dash Core is the name of the open source
+autonomous organizations (DAO). Dash Core is the name of the open-source
 software which enables the use of this currency. Dash has introduced many
 industry-first innovations including masternodes, LLMQs, ChainLocks, and
 InstantSend. Dash is digital cash that offers financial freedom to anyone.
@@ -484,10 +484,10 @@ Dash (Digital Cash) is a global payments network with its own cryptocurrency
 offering businesses and individuals instant payments to anyone, anywhere in the
 world. Payments are instant, easy and secure, with neglible fees. Dash uses
 peer-to-peer technology to operate with no central authority, managing
-transactions and issuing money carried out collectively by the network.
+transactions and money-issuance carried out collectively by the network.
 Additionally, the Dash Network operates with a model of self-governance and
 self-funding. The Dash Network is the first ever successful decentralized
-autonomous organizations (DAO). Dash Core is the name of the open source
+autonomous organizations (DAO). Dash Core is the name of the open-source
 software which enables the use of this currency. Dash has introduced many
 industry-first innovations including masternodes, LLMQs, ChainLocks, and
 InstantSend. Dash is digital cash that offers financial freedom to anyone.
@@ -1240,6 +1240,10 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Dash Electrum: https://github.com/akhavr/electrum-dash
 
 %changelog
+* Mon Jun 07 2021 Todd Warner <t0dd_at_protonmail.com> 0.17.0.3-1.taw
+* Mon Jun 07 2021 Todd Warner <t0dd_at_protonmail.com> 0.17.0.3-0.1.testing.taw
+  - https://github.com/dashpay/dash/releases/tag/v0.17.0.3
+
 * Sun May 23 2021 Todd Warner <t0dd_at_protonmail.com> 0.17.0.2-1.1.testing.taw
   - description updates
 
