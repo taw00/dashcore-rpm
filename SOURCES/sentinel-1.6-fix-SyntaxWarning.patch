@@ -1,0 +1,12 @@
+diff -ruN sentinel-1.5.1-orig/lib/base58.py sentinel-1.5.1-fix-SyntaxWarning.patch/lib/base58.py
+--- sentinel-1.5.1-orig/lib/base58.py	2021-04-27 09:04:29.000000000 -0400
++++ sentinel-1.5.1-fix-SyntaxWarning.patch/lib/base58.py	2021-05-06 18:15:38.098677454 -0400
+@@ -116,7 +116,7 @@
+ 
+ if __name__ == '__main__':
+     # Test case (from http://gitorious.org/bitcoin/python-base58.git)
+-    assert get_bcaddress_version('15VjRaDX9zpbA8LVnbrCAFzrVzN7ixHNsC') is 0
++    assert get_bcaddress_version('15VjRaDX9zpbA8LVnbrCAFzrVzN7ixHNsC') == 0
+     _ohai = 'o hai'.encode('ascii')
+     _tmp = b58encode(_ohai)
+     assert _tmp == 'DYB3oMS'

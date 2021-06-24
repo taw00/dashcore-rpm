@@ -24,14 +24,14 @@ Summary: A required helper agent for Dash Core Masternodes
 
 
 # VERSION
-%define vermajor 1.5
-%define verminor 1
+%define vermajor 1.6
+%define verminor 0
 Version: %{vermajor}.%{verminor}
 
 # RELEASE
-%define _pkgrel 2
+%define _pkgrel 1
 %if ! %{targetIsProduction}
-  %define _pkgrel 1.1
+  %define _pkgrel 0.1
 %endif
 
 # MINORBUMP
@@ -83,7 +83,7 @@ Patch0: https://github.com/taw00/dashcore-rpm/blob/master/SOURCES/%{_name_s}-%{v
 
 # Most of the time, the build system can figure out the requires.
 # But if you need something specific...
-Requires: dashcore-server >= 0.16.0
+Requires: dashcore-server >= 0.17.0
 
 # Force Python3 as __python default even if Python2 is present (and it usually is).
 # Note, this is going away as an advised path.
@@ -346,6 +346,10 @@ fi
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
+* Thu Jun 24 2021 Todd Warner <t0dd_at_protonmail.com> 1.6.0-1.taw
+* Thu Jun 24 2021 Todd Warner <t0dd_at_protonmail.com> 1.6.0-0.1.testing.taw
+  - 1.6.0 includes a fix for 0.17 masternodes
+
 * Sun May 23 2021 Todd Warner <t0dd_at_protonmail.com> 1.5.1-2.taw
 * Sun May 23 2021 Todd Warner <t0dd_at_protonmail.com> 1.5.1-1.1.testing.taw
   - experimenting with cleaning up venv during upgrades. Something conflicts at  
