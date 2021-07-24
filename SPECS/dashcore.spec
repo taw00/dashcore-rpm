@@ -65,9 +65,9 @@ Version: %{vermajor}.%{verminor}
 
 # RELEASE
 # package release (and for testing only, extrarel)
-%define _pkgrel 1
+%define _pkgrel 2
 %if ! %{targetIsProduction}
-  %define _pkgrel 0.1
+  %define _pkgrel 1.1
 %endif
 
 # MINORBUMP
@@ -721,15 +721,18 @@ cd %{sourcetree}
 #   _sharedstatedir is /var/lib
 #   _prefix or _usr = /usr
 #   _libdir = /usr/lib or /usr/lib64 (depending on system)
-# This is used to quiet rpmlint who can't seem to understand that /usr/lib is
-# still used for certain things.
+# The _rawlib macro is used to quiet rpmlint who can't seem to understand
+# that /usr/lib is still used for certain things.
 %define _rawlib lib
 %define _usr_lib /usr/%{_rawlib}
-# These three are already defined in newer versions of RPM, but not in el7
-# Leaving here for posterity because EL7 is no longer being built.
-%if 0%{?rhel} && 0%{?rhel} < 8
-  %define _tmpfilesdir %{_usr_lib}/tmpfiles.d
+# These three are defined in some versions of RPM and not in others.
+%if ! 0%{?_unitdir:1}
   %define _unitdir %{_usr_lib}/systemd/system
+%endif
+%if ! 0%{?_tmpfilesdir:1}
+  %define _tmpfilesdir %{_usr_lib}/tmpfiles.d
+%endif
+%if ! 0%{?_metainfodir:1}
   %define _metainfodir %{_datadir}/metainfo
 %endif
 
@@ -1240,6 +1243,9 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Dash Electrum: https://github.com/akhavr/electrum-dash
 
 %changelog
+* Fri Jul 23 2021 Todd Warner <t0dd_at_protonmail.com> 0.17.0.3-1.1.testing.taw
+  - specfile: genericized the rpm-version-specific macros
+
 * Mon Jun 07 2021 Todd Warner <t0dd_at_protonmail.com> 0.17.0.3-1.taw
 * Mon Jun 07 2021 Todd Warner <t0dd_at_protonmail.com> 0.17.0.3-0.1.testing.taw
   - https://github.com/dashpay/dash/releases/tag/v0.17.0.3

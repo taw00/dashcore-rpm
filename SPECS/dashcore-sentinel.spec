@@ -29,9 +29,9 @@ Summary: A required helper agent for Dash Core Masternodes
 Version: %{vermajor}.%{verminor}
 
 # RELEASE
-%define _pkgrel 1
+%define _pkgrel 2
 %if ! %{targetIsProduction}
-  %define _pkgrel 0.1
+  %define _pkgrel 1.1
 %endif
 
 # MINORBUMP
@@ -178,9 +178,13 @@ cd ..
 %install
 # This section starts us in directory .../BUILD/dashcore-sentinel-x.y (projectroot)
 
-# Install / config ancillary files
 # Cheatsheet for built-in RPM macros:
-# https://fedoraproject.org/wiki/Packaging:RPMMacros
+# https://docs.fedoraproject.org/en-US/packaging-guidelines/RPMMacros/
+#   _builddir = {_topdir}/BUILD
+#   _buildrootdir = {_topdir}/BUILDROOT
+#   buildroot = {_buildrootdir}/{name}-{version}-{release}.{_arch}
+#   _bindir = /usr/bin
+#   _sbindir = /usr/sbin
 #   _datadir = /usr/share
 #   _mandir = /usr/share/man
 #   _sysconfdir = /etc
@@ -188,13 +192,20 @@ cd ..
 #   _sharedstatedir is /var/lib
 #   _prefix or _usr = /usr
 #   _libdir = /usr/lib or /usr/lib64 (depending on system)
-# This is used to quiet rpmlint who can't seem to understand that /usr/lib is
-# still used for certain things.
+# The _rawlib macro is used to quiet rpmlint who can't seem to understand
+# that /usr/lib is still used for certain things.
 %define _rawlib lib
 %define _usr_lib /usr/%{_rawlib}
-# These two are defined in newer versions of RPM (Fedora not el7)
-%define _tmpfilesdir %{_usr_lib}/tmpfiles.d
-%define _unitdir %{_usr_lib}/systemd/system
+# These three are defined in some versions of RPM and not in others.
+%if ! 0%{?_unitdir:1}
+  %define _unitdir %{_usr_lib}/systemd/system
+%endif
+%if ! 0%{?_tmpfilesdir:1}
+  %define _tmpfilesdir %{_usr_lib}/tmpfiles.d
+%endif
+#%%if ! 0%%{?_metainfodir:1}
+#  %%define _metainfodir %%{_datadir}/metainfo
+#%endif
 
 # Create directories
 install -d %{buildroot}%{_sysconfdir}
@@ -346,6 +357,9 @@ fi
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
+* Fri Jul 23 2021 Todd Warner <t0dd_at_protonmail.com> 1.6.0-1.1.testing.taw
+  - specfile: genericized the rpm-version-specific macros
+
 * Thu Jun 24 2021 Todd Warner <t0dd_at_protonmail.com> 1.6.0-1.taw
 * Thu Jun 24 2021 Todd Warner <t0dd_at_protonmail.com> 1.6.0-0.1.testing.taw
   - 1.6.0 includes a fix for 0.17 masternodes
