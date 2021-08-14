@@ -1,9 +1,9 @@
-For Dash 0.17 there are three patches in play.
+For Dash 0.17 there are four (now three) patches in play.
 
 1. removes the About QT from the menus, because it is so not part of the application (and there is no licensing reason for it to be there, frankly).
 2. fixes a lot of things associated to the newer version of boost (v1.73)
-3. fixes an error associated to building against newer version of QT (v5.15)
-4. addresses a build path issue (https://github.com/dashpay/dash/pull/4158)
+3. (will be FIXED in 0.18) fixes an error associated to building against newer version of QT (v5.15)
+4. (FIXED IN 0.17.0.2) addresses a build path issue (https://github.com/dashpay/dash/pull/4158)
 
 These are all backward compatible for ... some number of versions of the Fedora OS. I am not sure how far back.
 
