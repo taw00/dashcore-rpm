@@ -35,7 +35,7 @@ Summary: Manage and collateralize a Dash Masternode with a hardware wallet
 
 #BuildArch: noarch
 
-%define targetIsProduction 1
+%define isTestBuild 0
 %define sourceIsBinary 0
 
 %define buildQualifier hotfix4
@@ -46,13 +46,13 @@ Summary: Manage and collateralize a Dash Masternode with a hardware wallet
 
 # VERSION
 %define vermajor 0.9
-%define verminor 27
+%define verminor 30
 Version: %{vermajor}.%{verminor}
 
 # RELEASE
-%define _pkgrel 2
-%if ! %{targetIsProduction}
-  %define _pkgrel 1.1
+%define _pkgrel 1
+%if %{isTestBuild}
+  %define _pkgrel 0.1
 %endif
 
 # MINORBUMP
@@ -64,7 +64,7 @@ Version: %{vermajor}.%{verminor}
 #
 
 %define snapinfo testing
-%if %{targetIsProduction}
+%if ! %{isTestBuild}
   %undefine snapinfo
 %endif
 %if 0%{?buildQualifier:1}
@@ -166,7 +166,7 @@ BuildRequires: sed
 %endif
 
 # tree, vim-enhanced, and less for mock build environment introspection
-%if ! %{targetIsProduction}
+%if %{isTestBuild}
 BuildRequires: tree vim-enhanced less findutils
 %endif
 
@@ -232,10 +232,10 @@ mkdir -p %{projectroot}
 # contrib
 %setup -q -T -D -a 1 -n %{projectroot}
 # btchip-python
-#%setup -q -T -D -a 2 -n %{projectroot}
+#%%setup -q -T -D -a 2 -n %%{projectroot}
 
 # For debugging purposes...
-%if ! %{targetIsProduction}
+%if %{isTestBuild}
 cd ../.. ; /usr/bin/tree -df -L 2 BUILD ; cd -
 %endif
 
@@ -244,21 +244,21 @@ cd ../.. ; /usr/bin/tree -df -L 2 BUILD ; cd -
   # (requirements.txt is the instruction-set for what other code to fetch from the internet.)
   # ...we use the OS-supplied libusb
   sed -i.previous '{s/'"libusb1"'/'"#libusb1"'/}' %{sourcetree}/requirements.txt
-  #sed -i.previous '{s/'"pyinstaller"'/'"#pyinstaller"'/}' %{sourcetree}/requirements.txt
+  #sed -i.previous '{s/'"pyinstaller"'/'"#pyinstaller"'/}' %%{sourcetree}/requirements.txt
   # ...don't get btchip-python, since we supply it (old versions used explicite github source) new, uses python hubs
-  #old way: sed -i.previous '{s/''-e git+https:\/\/github''/''#-e git+https:\/\/github''/}' %{sourcetree}/requirements.txt
-  #sed -i.previous '{s/'"btchip-python"'/'"#btchip-python"'/}' %{sourcetree}/requirements.txt
+  #old way: sed -i.previous '{s/''-e git+https:\/\/github''/''#-e git+https:\/\/github''/}' %%{sourcetree}/requirements.txt
+  #sed -i.previous '{s/'"btchip-python"'/'"#btchip-python"'/}' %%{sourcetree}/requirements.txt
   # ...we use the OS-supplied QT libraries and force the introspection by changing the version
-  #sed -i.previous '{s/'"PyQt5==5.9.2"'/'"PyQt5==5.13.2"'/}' %{sourcetree}/requirements.txt
-  #sed -i.previous '{s/'"PyQtChart==5.9.2"'/'"PyQtChart==5.14.0"'/}' %{sourcetree}/requirements.txt
+  #sed -i.previous '{s/'"PyQt5==5.9.2"'/'"PyQt5==5.13.2"'/}' %%{sourcetree}/requirements.txt
+  #sed -i.previous '{s/'"PyQtChart==5.9.2"'/'"PyQtChart==5.14.0"'/}' %%{sourcetree}/requirements.txt
 
   ## Manually correct the version.txt file
   ## Only used if the version.txt file in the source tarball is incorrect
-  #%if 0%{?buildQualifier:1}
-  #  echo "version_str = '%{version}-%{buildQualifier}`" > %{sourcetree}/version.txt
-  #%else
-  #  echo "version_str = '%{version}`" > %{sourcetree}/version.txt
-  #%endif
+  #%%if 0%%{?buildQualifier:1}
+  #  echo "version_str = '%%{version}-%%{buildQualifier}`" > %%{sourcetree}/version.txt
+  #%%else
+  #  echo "version_str = '%%{version}`" > %%{sourcetree}/version.txt
+  #%%endif
 
   # As of 0.9.27, python3.8 has to be forced
   #[ -f /usr/bin/virtualenv-3 ] && /usr/bin/virtualenv-3 -p python3 ./venv || /usr/bin/virtualenv -p python3 ./venv
@@ -285,10 +285,12 @@ cd ../.. ; /usr/bin/tree -df -L 2 BUILD ; cd -
   ../venv/bin/pip3 install -r requirements.txt
   cd ..
   # This is really ugly brute-force bs
+  # ...the _lib define is here to quiet rpmlint
+  %define _lib lib
   %if 0%{?fedora} && 0%{?fedora} > 32
-    [ ! -e "./venv/lib64/python3.8/site-packages/bitcoin"   -a -d "./venv/lib/python3.8/site-packages/bitcoin" ]   && ln -s ../../../lib/python3.8/site-packages/bitcoin ./venv/lib64/python*/site*/
-    [ ! -e "./venv/lib64/python3.8/site-packages/mnemonic"  -a -d "./venv/lib/python3.8/site-packages/mnemonic" ]  && ln -s ../../../lib/python3.8/site-packages/mnemonic ./venv/lib64/python*/site*/
-    [ ! -e "./venv/lib64/python3.8/site-packages/trezorlib" -a -d "./venv/lib/python3.8/site-packages/trezorlib" ] && ln -s ../../../lib/python3.8/site-packages/trezorlib ./venv/lib64/python*/site*/
+    [ ! -e "./venv/%{_lib}64/python3.8/site-packages/bitcoin"   -a -d "./venv/%{_lib}/python3.8/site-packages/bitcoin" ]   && ln -s ../../../%{_lib}/python3.8/site-packages/bitcoin ./venv/%{_lib}64/python*/site*/
+    [ ! -e "./venv/%{_lib}64/python3.8/site-packages/mnemonic"  -a -d "./venv/%{_lib}/python3.8/site-packages/mnemonic" ]  && ln -s ../../../%{_lib}/python3.8/site-packages/mnemonic ./venv/%{_lib}64/python*/site*/
+    [ ! -e "./venv/%{_lib}64/python3.8/site-packages/trezorlib" -a -d "./venv/%{_lib}/python3.8/site-packages/trezorlib" ] && ln -s ../../../%{_lib}/python3.8/site-packages/trezorlib ./venv/%{_lib}64/python*/site*/
   %endif
 %else
   mkdir -p %{sourcetree}
@@ -296,7 +298,7 @@ cd ../.. ; /usr/bin/tree -df -L 2 BUILD ; cd -
 %endif
 
 # For debugging purposes...
-%if ! %{targetIsProduction}
+%if %{isTestBuild}
 cd ../.. ; /usr/bin/tree -df -L 2 BUILD ; cd -
 %endif
 
@@ -328,7 +330,11 @@ cd ../.. ; /usr/bin/tree -df -L 2 BUILD ; cd -
 #   _sharedstatedir is /var/lib
 #   _prefix = /usr
 #   _libdir = /usr/lib or /usr/lib64 (depending on system)
-%define _usr_lib /usr/lib
+
+# ...the lib defines are here to quiet rpmlint
+%define _lib lib
+%define _usr_lib /usr/%{_lib}
+
 #   https://fedoraproject.org/wiki/Packaging:RPMMacros
 # These three are defined in newer versions of RPM (Fedora not el7)
 %define _tmpfilesdir %{_usr_lib}/tmpfiles.d
@@ -412,6 +418,16 @@ cd ../../
 
 
 %changelog
+* Sun Oct 17 2021 Todd Warner <t0dd_at_protonmail.com> 0.9.30-1.taw
+* Sun Oct 17 2021 Todd Warner <t0dd_at_protonmail.com> 0.9.30-0.1.testing.taw
+  - https://github.com/Bertrand256/dash-masternode-tool/releases/tag/v0.9.30
+  - created some _lib defines to shut up the rpmlint checker
+
+* Fri Sep 24 2021 Todd Warner <t0dd_at_protonmail.com> 0.9.29-0.1.testing.taw
+  - https://github.com/Bertrand256/dash-masternode-tool/releases/tag/v0.9.29
+  - changed targetIsProduction macro to isTestBuild to be consistent with other projects
+  - does not build for Fedora
+
 * Thu May 20 2021 Todd Warner <t0dd_at_protonmail.com> 0.9.27-2.taw
 * Thu May 20 2021 Todd Warner <t0dd_at_protonmail.com> 0.9.27-1.1.testing.taw
   - fixed a version.txt overwrite
