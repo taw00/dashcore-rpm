@@ -30,7 +30,7 @@ Summary: A global payments network and decentralized application (dapp) platform
 %define appid_wallet %{appid}.wallet
 %define appid_node %{appid}.node
 
-%define targetIsProduction 1
+%define isTestBuild 0
 
 # Leave these switched off.
 # These settings are used if you want to deliver packages sourced from upstream
@@ -66,8 +66,8 @@ Version: %{vermajor}.%{verminor}
 # RELEASE
 # package release (and for testing only, extrarel)
 %define _pkgrel 2
-%if ! %{targetIsProduction}
-  %define _pkgrel 1.1
+%if %{isTestBuild}
+  %define _pkgrel 1.2
 %endif
 
 # MINORBUMP
@@ -79,7 +79,7 @@ Version: %{vermajor}.%{verminor}
 #
 
 %define snapinfo testing
-%if %{targetIsProduction}
+%if ! %{isTestBuild}
   %undefine snapinfo
 %endif
 %if 0%{?buildQualifier:1}
@@ -207,21 +207,21 @@ Release: %{_release}
 
 
 Source0: https://github.com/dashpay/dash/archive/v%{versionqualified}/%{sourcearchivename}.tar.gz
-Source1: https://github.com/taw00/dashcore-rpm/blob/master/SOURCES/%{srccontribtree}.tar.gz
-Source2: https://github.com/taw00/dashcore-rpm/blob/master/SOURCES/bls-signatures-%{blsarchiveversion}.tar.gz
+Source1: https://github.com/taw00/dashcore-rpm/raw/master/SOURCES/%{srccontribtree}.tar.gz
+Source2: https://github.com/taw00/dashcore-rpm/raw/master/SOURCES/bls-signatures-%{blsarchiveversion}.tar.gz
 Source3: https://github.com/rust-lang-nursery/libbacktrace/archive/%{libbacktracearchiveversion}/libbacktrace-%{libbacktracearchiveversion}.tar.gz
 ## Source4 and Source5 are for EL8 only
-Source4: http://miniupnp.free.fr/files/miniupnpc-%%{miniupnpcversion}.tar.gz
-Source5: https://download.oracle.com/berkeley-db/db-%%{bdbarchiveversion}.tar.gz
+Source4: http://miniupnp.free.fr/files/miniupnpc-%{miniupnpcversion}.tar.gz
+Source5: https://download.oracle.com/berkeley-db/db-%{bdbarchiveversion}.tar.gz
 %if %{clientSourceIsBinary} || %{serverSourceIsBinary}
 Source6: https://github.com/dashpay/dash/archive/v%{versionqualified}/%{binaryarchivename}-x86_64-linux-gnu.tar.gz
 %endif
 %if %{buildFromSource}
 # (1) nuke "About QT" in the client source.
-Patch1: https://github.com/taw00/dashcore-rpm/blob/master/SOURCES/dash-%{version}-patch01-remove-about-qt-menu-item.patch
+Patch1: https://github.com/taw00/dashcore-rpm/raw/master/SOURCES/dash-%{version}-patch01-remove-about-qt-menu-item.patch
 # fixes for (2) newer bind and boost and (3) QT
-Patch2: https://github.com/taw00/dashcore-rpm/blob/master/SOURCES/dash-%{version}-patch02-bind-namespace-errors.patch
-Patch3: https://github.com/taw00/dashcore-rpm/blob/master/SOURCES/dash-%{version}-patch03-QPainterPath-issue.patch
+Patch2: https://github.com/taw00/dashcore-rpm/raw/master/SOURCES/dash-%{version}-patch02-bind-namespace-errors.patch
+Patch3: https://github.com/taw00/dashcore-rpm/raw/master/SOURCES/dash-%{version}-patch03-QPainterPath-issue.patch
 %endif
 
 %global selinux_variants mls strict targeted
@@ -233,7 +233,7 @@ Patch3: https://github.com/taw00/dashcore-rpm/blob/master/SOURCES/dash-%{version
 # wisdom about, but for now... I turn all that off.
 #
 # How debug info and build_ids managed (I only halfway understand this):
-# https://github.com/rpm-software-management/rpm/blob/master/macros.in
+# https://github.com/rpm-software-management/rpm/raw/master/macros.in
 # ...flip-flop next two lines in order to disable (nil) or enable (1) debuginfo package build
 %define debug_package 1
 %define debug_package %{nil}
@@ -257,7 +257,7 @@ ExclusiveArch: x86_64
 # tree but it is never used.
 
 # As recommended by...
-# https://github.com/dashpay/dash/blob/develop/doc/build-unix.md
+# https://github.com/dashpay/dash/raw/develop/doc/build-unix.md
 BuildRequires: libtool make autoconf automake patch
 BuildRequires: libstdc++-static binutils
 BuildRequires: python3
@@ -280,7 +280,7 @@ BuildRequires: libdb4-cxx-devel miniupnpc-devel
 # NOTE: other BuildRequires listed per package below
 
 # tree, vim-enhanced, and less for mock build environment introspection
-%if ! %{targetIsProduction}
+%if %{isTestBuild}
 BuildRequires: tree vim-enhanced less findutils
 %endif
 
@@ -594,7 +594,7 @@ cp -a %{srccontribtree}/build/depends/packages/bls-dash.mk--EL8 %{sourcetree}/de
 %endif
 # For debugging purposes...
 
-%if ! %{targetIsProduction}
+%if %{isTestBuild}
   cd %{_builddir} ; tree -df -L 1 %{projectroot} ; cd -
 %endif
 
@@ -808,7 +808,7 @@ ln -s %{_sysconfdir}/dashcore/dash.conf %{buildroot}%{_sharedstatedir}/dashcore/
 
 # Man Pages (from contrib) -- man5 documents now defunct
 # These are out of date, let's not contrib anymore.
-#install -D -m644 %%{srccontribtree}/linux/man/man1/* %%{buildroot}%{_mandir}/man1/
+#install -D -m644 %%{srccontribtree}/linux/man/man1/* %%{buildroot}%%{_mandir}/man1/
 #install -D -m644 %%{srccontribtree}/linux/man/man5/* %%{buildroot}%%{_mandir}/man5/
 # Man Pages (from upstream) - likely to overwrite ones from contrib (which is fine)
 %if %{buildFromSource}
@@ -883,10 +883,10 @@ cd -
 
 # Config
 # Install default configuration file (from contrib)
-%if %{targetIsProduction}
-%define testnet 0
-%else
+%if %{isTestBuild}
 %define testnet 1
+%else
+%define testnet 0
 %endif
 
 install -D -m640 %{srccontribtree}/linux/systemd/etc-dashcore_dash.conf %{buildroot}%{_sysconfdir}/dashcore/dash.conf
@@ -1050,7 +1050,7 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 %posttrans server
 /usr/bin/systemd-tmpfiles --create
 #TODO: Replace above with %%tmpfiles_create_package macro
-#TODO: https://github.com/systemd/systemd/blob/master/src/core/macros.systemd.in
+#TODO: https://github.com/systemd/systemd/raw/master/src/core/macros.systemd.in
 
 
 # dashcore-server
@@ -1243,6 +1243,12 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Dash Electrum: https://github.com/akhavr/electrum-dash
 
 %changelog
+* Tue Nov 9 2021 Todd Warner <t0dd_at_protonmail.com> 0.17.0.3-2.taw
+* Tue Nov 9 2021 Todd Warner <t0dd_at_protonmail.com> 0.17.0.3-1.2.testing.taw
+  - fixed links to the raw source archives
+  - using define "isTestBuild" rather than "targetIsProduction" because the  
+    word production is problematic
+
 * Fri Jul 23 2021 Todd Warner <t0dd_at_protonmail.com> 0.17.0.3-1.1.testing.taw
   - specfile: genericized the rpm-version-specific macros
 
