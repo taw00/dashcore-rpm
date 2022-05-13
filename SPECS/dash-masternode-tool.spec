@@ -35,7 +35,7 @@ Summary: Manage and collateralize a Dash Masternode with a hardware wallet
 
 #BuildArch: noarch
 
-%define isTestBuild 0
+%define isTestBuild 1
 %define sourceIsBinary 0
 
 %define buildQualifier hotfix4
@@ -46,7 +46,7 @@ Summary: Manage and collateralize a Dash Masternode with a hardware wallet
 
 # VERSION
 %define vermajor 0.9
-%define verminor 30
+%define verminor 31
 Version: %{vermajor}.%{verminor}
 
 # RELEASE
@@ -418,6 +418,10 @@ cd ../../
 
 
 %changelog
+* Fri May 13 2022 Todd Warner <t0dd_at_protonmail.com> 0.9.31-1.taw
+* Fri May 13 2022 Todd Warner <t0dd_at_protonmail.com> 0.9.31-0.1.testing.taw
+  - https://github.com/Bertrand256/dash-masternode-tool/releases/tag/v0.9.31
+
 * Sun Oct 17 2021 Todd Warner <t0dd_at_protonmail.com> 0.9.30-1.taw
 * Sun Oct 17 2021 Todd Warner <t0dd_at_protonmail.com> 0.9.30-0.1.testing.taw
   - https://github.com/Bertrand256/dash-masternode-tool/releases/tag/v0.9.30
