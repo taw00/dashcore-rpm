@@ -35,7 +35,7 @@ Summary: Manage and collateralize a Dash Masternode with a hardware wallet
 
 #BuildArch: noarch
 
-%define isTestBuild 1
+%define isTestBuild 0
 %define sourceIsBinary 0
 
 %define buildQualifier hotfix4
@@ -52,7 +52,7 @@ Version: %{vermajor}.%{verminor}
 # RELEASE
 %define _pkgrel 1
 %if %{isTestBuild}
-  %define _pkgrel 0.1
+  %define _pkgrel 0.2
 %endif
 
 # MINORBUMP
@@ -419,8 +419,13 @@ cd ../../
 
 %changelog
 * Fri May 13 2022 Todd Warner <t0dd_at_protonmail.com> 0.9.31-1.taw
+* Fri May 13 2022 Todd Warner <t0dd_at_protonmail.com> 0.9.31-0.2.testing.taw
+  - cleaned up the requirements.txt file in the contribs
+  - added the forgotten upstream release date in the metainfo.xml file
+
 * Fri May 13 2022 Todd Warner <t0dd_at_protonmail.com> 0.9.31-0.1.testing.taw
   - https://github.com/Bertrand256/dash-masternode-tool/releases/tag/v0.9.31
+  - updated requirements.txt
 
 * Sun Oct 17 2021 Todd Warner <t0dd_at_protonmail.com> 0.9.30-1.taw
 * Sun Oct 17 2021 Todd Warner <t0dd_at_protonmail.com> 0.9.30-0.1.testing.taw
