@@ -1,6 +1,20 @@
 # Dash Core for Fedora Linux<br />_...wallet, node, and masternode_
 
-> IMPORTANT REPOSITORY NOTICE  
+> **EOL of Dash Core RPM development**  
+>
+> The Dash developer community will be moving towards containerized deployment  
+> of nodes and masternodes. Therefore, I will cease building RPMs when v18
+> rolls out (relatively soon). I appreciate all of you who have found my builds
+> useful.
+>
+> Associated announcments:
+> - https://www.dash.org/blog/introducing-dashmate-the-masternode-setup-tool-for-dash-platform/
+> - https://www.dash.org/blog/dashcore-v18-0-product-brief/
+> 
+> ETA? Unknown at this time.
+
+
+> OLD NEWS: IMPORTANT REPOSITORY NOTICE  
 >   
 > This repository will no longer host RPMs or SRPMs. Due to github quotas, I am
 > ending storage of the `.src.rpm` convenience files in all (or most) of my
@@ -15,7 +29,6 @@
 * For both Dash Core and Dash Masternode Tool (DMT), I no longer supply packages for RHEL/CentOS.
 * For Dash Core, use the provided systemd configuration. This makes nodes near bullet-proof, even on Fedora.
 * Dash Masternode Tool: DMT will remain Fedora-only! except for test builds.
-* Dash Core 0.16 was released on Sep 30, 2020.
 * Keep up with Fedora's release schedule: <https://fedoraproject.org/wiki/Releases>
 
 Fedora upgrades are easy (see available documentation in the "documentation"
