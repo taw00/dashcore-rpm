@@ -30,7 +30,7 @@ Summary: A global payments network and decentralized application (dapp) platform
 %define appid_wallet %{appid}.wallet
 %define appid_node %{appid}.node
 
-%define isTestBuild 0
+%define isTestBuild 1
 
 # Leave these switched off.
 # These settings are used if you want to deliver packages sourced from upstream
@@ -52,10 +52,8 @@ Summary: A global payments network and decentralized application (dapp) platform
 %undefine buildQualifier
 
 # VERSION
-%define vermajor 0.17
-%define _verminor1 0
-%define _verminor2 3
-%define verminor %{_verminor1}.%{_verminor2}
+%define vermajor 18.0
+%define verminor 1
 Version: %{vermajor}.%{verminor}
 %define versionqualified %{version}
 %if 0%{?buildQualifier:1}
@@ -65,9 +63,9 @@ Version: %{vermajor}.%{verminor}
 
 # RELEASE
 # package release (and for testing only, extrarel)
-%define _pkgrel 2
+%define _pkgrel 1
 %if %{isTestBuild}
-  %define _pkgrel 1.2
+  %define _pkgrel 0.1
 %endif
 
 # MINORBUMP
@@ -161,24 +159,22 @@ Release: %{_release}
 %define useExtraSources 1
 
 # the archive name and directory tree can have some variances
-# v0.17.0.0
+# v18.0.1
 %define _archivename_alt1 v%{version}
-# dash-0.17.0.0
+# dash-18.0.1
 %define _archivename_alt2 dash-%{version}
-# dashcore-0.17.0
-%define _archivename_alt3 dashcore-%{vermajor}.%{_verminor1}
-# dashcore-0.17.0.0
-%define _archivename_alt4 dashcore-%{version}
+# dashcore-18.0.1
+%define _archivename_alt3 dashcore-%{version}
 
 # Extracted source tree structure (extracted in .../BUILD)
-#   projectroot           dashcore-0.17.0
-#      \_sourcetree         \_dash-0.17.0.0 or dash-0.17.0.0-rc1...
-#      \_binarytree         \_dashcore-0.17.0
-#      \_srccontribtree     \_dashcore-0.17.0-contrib
-#      \_patch_files        \_dash-0.17.0-...patch
+#   projectroot           dashcore-18.0.1
+#      \_sourcetree         \_dash-18.0.1 or dash-18.0.1-rc1...
+#      \_binarytree         \_dashcore-18.0.1
+#      \_srccontribtree     \_dashcore-18.0-contrib
+#      \_patch_files        \_dash-18.0.1-...patch
 # Supplied but only "moved":
-#   bls-signatures-1.0.1.tar.gz
-#                           --> {sourcetree}/depends/sources/1.0.1.tar.gz
+#   bls-signatures-1.2.4.tar.gz
+#                           --> {sourcetree}/depends/sources/1.2.4.tar.gz
 
 %define _sourcearchivename %{_archivename_alt2}
 %define _binaryarchivename %{_archivename_alt4}
@@ -195,8 +191,7 @@ Release: %{_release}
   %define sourcetree %{_sourcearchivename}
   %define binarytree %{_binarytree}
 %endif
-#%%define blsarchiveversion 20181101 <--- for dash-0.16 and older
-%define blsarchiveversion 1.1.0
+%define blsarchiveversion 1.2.4
 %define libbacktracearchiveversion rust-snapshot-2018-05-22
 %define libbacktracearchivename libbacktrace-%{libbacktracearchiveversion}
 %define miniupnpcversion 2.0.20180203
@@ -217,11 +212,11 @@ Source5: https://download.oracle.com/berkeley-db/db-%{bdbarchiveversion}.tar.gz
 Source6: https://github.com/dashpay/dash/archive/v%{versionqualified}/%{binaryarchivename}-x86_64-linux-gnu.tar.gz
 %endif
 %if %{buildFromSource}
-# (1) nuke "About QT" in the client source.
-Patch1: https://github.com/taw00/dashcore-rpm/raw/master/SOURCES/dash-%{version}-patch01-remove-about-qt-menu-item.patch
-# fixes for (2) newer bind and boost and (3) QT
-Patch2: https://github.com/taw00/dashcore-rpm/raw/master/SOURCES/dash-%{version}-patch02-bind-namespace-errors.patch
-Patch3: https://github.com/taw00/dashcore-rpm/raw/master/SOURCES/dash-%{version}-patch03-QPainterPath-issue.patch
+## (1) nuke "About QT" in the client source.
+#Patch1: https://github.com/taw00/dashcore-rpm/raw/master/SOURCES/dash-%%{version}-patch01-remove-about-qt-menu-item.patch
+## fixes for (2) newer bind and boost and (3) QT
+#Patch2: https://github.com/taw00/dashcore-rpm/raw/master/SOURCES/dash-%%{version}-patch02-bind-namespace-errors.patch
+#Patch3: https://github.com/taw00/dashcore-rpm/raw/master/SOURCES/dash-%%{version}-patch03-QPainterPath-issue.patch
 %endif
 
 %global selinux_variants mls strict targeted
@@ -574,9 +569,9 @@ mv ../../SOURCES/db-%{bdbarchiveversion}.tar.gz %{sourcetree}/depends/sources/db
 
 %if ! %{clientSourceIsBinary}
 cd %{sourcetree}
-%patch1 -p1
-%patch2 -p1
-%patch3 -p1
+#%%patch1 -p1
+#%%patch2 -p1
+#%%patch3 -p1
 cd ..
 %endif
 
@@ -1243,6 +1238,10 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Dash Electrum: https://github.com/akhavr/electrum-dash
 
 %changelog
+* Tue Aug 23 2022 Todd Warner <t0dd_at_protonmail.com> 18.0.1-1.taw
+* Tue Aug 23 2022 Todd Warner <t0dd_at_protonmail.com> 18.0.1-0.1.testing.taw
+  - 18.0.1
+
 * Tue Nov 9 2021 Todd Warner <t0dd_at_protonmail.com> 0.17.0.3-2.taw
 * Tue Nov 9 2021 Todd Warner <t0dd_at_protonmail.com> 0.17.0.3-1.2.testing.taw
   - fixed links to the raw source archives

@@ -20,18 +20,18 @@
 Name: %{_name_dcs}
 Summary: A required helper agent for Dash Core Masternodes
 
-%define isTestBuild 0
+%define isTestBuild 1
 
 
 # VERSION
-%define vermajor 1.6
-%define verminor 0
+%define vermajor 1.7
+%define verminor 1
 Version: %{vermajor}.%{verminor}
 
 # RELEASE
-%define _pkgrel 2
+%define _pkgrel 1
 %if %{isTestBuild}
-  %define _pkgrel 1.2
+  %define _pkgrel 0.1
 %endif
 
 # MINORBUMP
@@ -357,6 +357,10 @@ fi
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
+* Tue Aug 23 2022 Todd Warner <t0dd_at_protonmail.com> 1.7.1-1.taw
+* Tue Aug 23 2022 Todd Warner <t0dd_at_protonmail.com> 1.7.1-0.1.testing.taw
+  - 1.7.1 - in support of v18.0 masternodes
+
 * Tue Nov 9 2021 Todd Warner <t0dd_at_protonmail.com> 1.6.0-2.taw
 * Tue Nov 9 2021 Todd Warner <t0dd_at_protonmail.com> 1.6.0-1.2.testing.taw
   - fixed links to the raw source archives
