@@ -37,8 +37,8 @@ Summary: A global payments network and decentralized application (dapp) platform
 # pre-builds instead of from source code. This is a last resort for scenarios
 # where an RPM is desired, but we could not successfully build from source.
 # E.g., we often have had a terrible time building to a EPEL/RHEL target.
-%define clientSourceIsBinary 0
-%define serverSourceIsBinary 0
+%define clientSourceIsBinary 1
+%define serverSourceIsBinary 1
 
 # Leave this switched on
 # Building without leaning on the system libraries for the build is currently
@@ -177,7 +177,7 @@ Release: %{_release}
 #                           --> {sourcetree}/depends/sources/1.2.4.tar.gz
 
 %define _sourcearchivename %{_archivename_alt2}
-%define _binaryarchivename %{_archivename_alt4}
+%define _binaryarchivename %{_archivename_alt3}
 %define _binarytree %{_archivename_alt3}
 
 %if 0%{?buildQualifier:1}
@@ -201,16 +201,20 @@ Release: %{_release}
 %define srccontribtree %{name}-%{vermajor}-contrib
 
 
-Source0: https://github.com/dashpay/dash/archive/v%{versionqualified}/%{sourcearchivename}.tar.gz
 Source1: https://github.com/taw00/dashcore-rpm/raw/master/SOURCES/%{srccontribtree}.tar.gz
+%if %{buildFromSource}
+Source0: https://github.com/dashpay/dash/archive/v%{versionqualified}/%{sourcearchivename}.tar.gz
 Source2: https://github.com/taw00/dashcore-rpm/raw/master/SOURCES/bls-signatures-%{blsarchiveversion}.tar.gz
 Source3: https://github.com/rust-lang-nursery/libbacktrace/archive/%{libbacktracearchiveversion}/libbacktrace-%{libbacktracearchiveversion}.tar.gz
 ## Source4 and Source5 are for EL8 only
 Source4: http://miniupnp.free.fr/files/miniupnpc-%{miniupnpcversion}.tar.gz
 Source5: https://download.oracle.com/berkeley-db/db-%{bdbarchiveversion}.tar.gz
+%else
 %if %{clientSourceIsBinary} || %{serverSourceIsBinary}
 Source6: https://github.com/dashpay/dash/archive/v%{versionqualified}/%{binaryarchivename}-x86_64-linux-gnu.tar.gz
 %endif
+%endif
+
 %if %{buildFromSource}
 ## (1) nuke "About QT" in the client source.
 #Patch1: https://github.com/taw00/dashcore-rpm/raw/master/SOURCES/dash-%%{version}-patch01-remove-about-qt-menu-item.patch
@@ -757,16 +761,20 @@ install -d -m755 -p %{buildroot}%{_libdir}
 
 %if %{clientSourceIsBinary} && %{serverSourceIsBinary}
   mv %{binarytree}/bin/dash* %{buildroot}%{_bindir}/
-  ln -s %{_bindir}/dash-qt %{buildroot}%{_bindir}/dash-wallet
   mv %{binarytree}/include/dash* %{buildroot}%{_includedir}/
   mv %{binarytree}/lib/libdash* %{buildroot}%{_libdir}/
 %else
   %if %{clientSourceIsBinary}
     mv %{binarytree}/bin/dash-qt %{buildroot}%{_bindir}/
-    ln -s %{_bindir}/dash-qt %{buildroot}%{_bindir}/dash-wallet
+    mv %{binarytree}/bin/dash-tx %{buildroot}%{_bindir}/
+    mv %{binarytree}/bin/dash-wallet %{buildroot}%{_bindir}/
+    mv %{binarytree}/bin/dash-cli %{buildroot}%{_bindir}/
   %endif
   %if %{serverSourceIsBinary}
     mv %{binarytree}/bin/dashd %{buildroot}%{_bindir}/
+    mv %{binarytree}/bin/dash-tx %{buildroot}%{_bindir}/
+    mv %{binarytree}/include/dash* %{buildroot}%{_includedir}/
+    mv %{binarytree}/lib/libdash* %{buildroot}%{_libdir}/
   %endif
 %endif
 
@@ -849,30 +857,17 @@ desktop-file-validate %{buildroot}%{_datadir}/applications/%{appid_wallet}.deskt
 # https://docs.fedoraproject.org/en-US/packaging-guidelines/AppData/
 install -D -m644 -p %{appid_wallet}.metainfo.xml %{buildroot}%{_metainfodir}/%{appid_wallet}.metainfo.xml
 appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/*.metainfo.xml
-cd ../../..
-
-%if %{buildFromSource}
-cd %{sourcetree}/share/pixmaps/
 # desktop icons
-install -D -m644 dash64.png                   %{buildroot}%{_datadir}/icons/hicolor/64x64/apps/%{appid}.png
-install -D -m644 dash128.png                %{buildroot}%{_datadir}/icons/hicolor/128x128/apps/%{appid}.png
-install -D -m644 dash256.png                %{buildroot}%{_datadir}/icons/hicolor/256x256/apps/%{appid}.png
-install -D -m644 dash-hicolor-scalable.svg %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/%{appid}.svg
-# desktop icons
-install -D -m644 ../../../%{srccontribtree}/linux/desktop/dash-HighContrast-64.png %{buildroot}%{_datadir}/icons/HighContrast/64x64/apps/%{appid}.png
-install -D -m644 dash-HighContrast-128.png       %{buildroot}%{_datadir}/icons/HighContrast/128x128/apps/%{appid}.png
-install -D -m644 dash-HighContrast-256.png       %{buildroot}%{_datadir}/icons/HighContrast/256x256/apps/%{appid}.png
-install -D -m644 dash-HighContrast-scalable.svg %{buildroot}%{_datadir}/icons/HighContrast/scalable/apps/%{appid}.svg
-cd -
-%endif
-%if %{clientSourceIsBinary}
-cd %{srccontribtree}/linux/binary-build-contribs/desktop/
 install -D -m644 dash-hicolor-64.png       %{buildroot}%{_datadir}/icons/hicolor/64x64/apps/%{appid}.png
+install -D -m644 dash-hicolor-128.png      %{buildroot}%{_datadir}/icons/hicolor/128x128/apps/%{appid}.png
+install -D -m644 dash-hicolor-256.png      %{buildroot}%{_datadir}/icons/hicolor/256x256/apps/%{appid}.png
+install -D -m644 dash-hicolor-scalable.svg %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/%{appid}.svg
 install -D -m644 dash-HighContrast-64.png       %{buildroot}%{_datadir}/icons/HighContrast/64x64/apps/%{appid}.png
-install -D -m644 dash-hicolor-scalable.svg           %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/%{appid}.svg
+install -D -m644 dash-HighContrast-128.png      %{buildroot}%{_datadir}/icons/HighContrast/128x128/apps/%{appid}.png
+install -D -m644 dash-HighContrast-256.png      %{buildroot}%{_datadir}/icons/HighContrast/256x256/apps/%{appid}.png
 install -D -m644 dash-HighContrast-scalable.svg %{buildroot}%{_datadir}/icons/HighContrast/scalable/apps/%{appid}.svg
 cd -
-%endif
+
 # endif not disabled wallet
 %endif
 
@@ -1028,6 +1023,10 @@ then
    chmod 644 %{vlogdc_tdl}*
 fi
 
+# This export is used to ward off upstream's static rpath that they introduced.
+# I.e., it's an annoying misconfiguration on their part and we work around it.
+# Read more about rpaths here: https://fedoraproject.org/wiki/RPath_Packaging_Draft
+export QA_RPATHS=0x0002
 exit 0
 
 
@@ -1167,34 +1166,30 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 # dashcore-libs
 %files libs
 %defattr(-,root,root,-)
+%{_libdir}/*
 %if %{buildFromSource}
 %license %{sourcetree}/COPYING
 %else
 %license %{srccontribtree}/linux/binary-build-contribs/license/COPYING
 %endif
-%{_libdir}/*
 
 
 # dashcore-devel
 %files devel
 %defattr(-,root,root,-)
+%{_includedir}/*
+%{_libdir}/*
 %if %{buildFromSource}
 %license %{sourcetree}/COPYING
 %else
 %license %{srccontribtree}/linux/binary-build-contribs/license/COPYING
 %endif
-%{_includedir}/*
-%{_libdir}/*
 
 
 # dashcore-utils
 %files utils
 %defattr(-,root,root,-)
-%if %{buildFromSource}
-%license %{sourcetree}/COPYING
-%else
-%license %{srccontribtree}/linux/binary-build-contribs/license/COPYING
-%endif
+
 %{_bindir}/dash-cli
 %{_bindir}/dash-tx
 %{_datadir}/bash-completion/completions/dash-cli
@@ -1202,6 +1197,11 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 %{_mandir}/man1/dash-cli.1.gz
 %{_mandir}/man1/dash-tx.1.gz
 
+%if %{buildFromSource}
+%license %{sourcetree}/COPYING
+%else
+%license %{srccontribtree}/linux/binary-build-contribs/license/COPYING
+%endif
 
 # Dash Core Information
 #
@@ -1238,9 +1238,16 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Dash Electrum: https://github.com/akhavr/electrum-dash
 
 %changelog
-* Tue Aug 23 2022 Todd Warner <t0dd_at_protonmail.com> 18.0.1-1.taw
-* Tue Aug 23 2022 Todd Warner <t0dd_at_protonmail.com> 18.0.1-0.1.testing.taw
-  - 18.0.1
+* Tue Aug 23 2022 Todd Warner <t0dd_at_protonmail.com> 18.0.1-1.rp.taw
+* Tue Aug 23 2022 Todd Warner <t0dd_at_protonmail.com> 18.0.1-0.1.rp.testing.taw
+  - 18.0.1 - repackaged build only (from upstream binaries)
+  - I decided to (for now, at least) end my battle to properly build these  
+    RPMs from source. -t0dd/taw/todd
+  - Spec file needed a minor overhaul to accommodate repackaging the binaries.
+  - contrib tarball updated with updated docs and desktop icons are all  
+    included and in one spot now.
+  - upstream binaries are incorrectly built with static rpaths. Forced to  
+    include an export in the install section in order to ignore them.
 
 * Tue Nov 9 2021 Todd Warner <t0dd_at_protonmail.com> 0.17.0.3-2.taw
 * Tue Nov 9 2021 Todd Warner <t0dd_at_protonmail.com> 0.17.0.3-1.2.testing.taw
