@@ -20,7 +20,7 @@
 Name: %{_name_dcs}
 Summary: A required helper agent for Dash Core Masternodes
 
-%define isTestBuild 1
+%define isTestBuild 0
 
 
 # VERSION
