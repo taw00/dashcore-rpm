@@ -745,7 +745,7 @@ export QA_RPATHS=0x0002
 install -d %{buildroot}%{_datadir}
 install -d %{buildroot}%{_mandir}
 install -d %{buildroot}%{_mandir}/man1
-install -d %{buildroot}%{_mandir}/man5
+#install -d %%{buildroot}%%{_mandir}/man5
 install -d %{buildroot}%{_sysconfdir}
 install -d %{buildroot}%{_localstatedir}
 install -d %{buildroot}%{_sharedstatedir}
@@ -1161,7 +1161,6 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 
 %if %{testing_extras}
   %{_bindir}/test_dash
-  %{_bindir}/bench_dash
 %endif
 
 
