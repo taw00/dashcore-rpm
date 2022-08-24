@@ -211,7 +211,8 @@ Source4: http://miniupnp.free.fr/files/miniupnpc-%{miniupnpcversion}.tar.gz
 Source5: https://download.oracle.com/berkeley-db/db-%{bdbarchiveversion}.tar.gz
 %else
 %if %{clientSourceIsBinary} || %{serverSourceIsBinary}
-Source6: https://github.com/dashpay/dash/archive/v%{versionqualified}/%{binaryarchivename}-x86_64-linux-gnu.tar.gz
+#Source6: https://github.com/dashpay/dash/archive/v%%{versionqualified}/%%{binaryarchivename}-x86_64-linux-gnu.tar.gz
+Source6: https://github.com/dashpay/dash/releases/download/v%{versionqualified}/%{binaryarchivename}-x86_64-linux-gnu.tar.gz
 %endif
 %endif
 
@@ -706,6 +707,11 @@ cd %{sourcetree}
   cd ..
 %endif
 
+# This export is used to ward off upstream's static rpath that they introduced.
+# I.e., it's an annoying misconfiguration on their part and we work around it.
+# Read more about rpaths here: https://fedoraproject.org/wiki/RPath_Packaging_Draft
+export QA_RPATHS=0x0002
+
 # Cheatsheet for built-in RPM macros:
 # https://docs.fedoraproject.org/en-US/packaging-guidelines/RPMMacros/
 #   _builddir = {_topdir}/BUILD
@@ -1023,10 +1029,6 @@ then
    chmod 644 %{vlogdc_tdl}*
 fi
 
-# This export is used to ward off upstream's static rpath that they introduced.
-# I.e., it's an annoying misconfiguration on their part and we work around it.
-# Read more about rpaths here: https://fedoraproject.org/wiki/RPath_Packaging_Draft
-export QA_RPATHS=0x0002
 exit 0
 
 
@@ -1240,7 +1242,9 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 %changelog
 * Tue Aug 23 2022 Todd Warner <t0dd_at_protonmail.com> 18.0.1-1.rp.taw
 * Tue Aug 23 2022 Todd Warner <t0dd_at_protonmail.com> 18.0.1-0.1.rp.testing.taw
-  - 18.0.1 - repackaged build only (from upstream binaries)
+  - 18.0.1 - repackaged build only (from upstream binaries)  
+    https://github.com/dashpay/dash/releases/tag/v18.0.1  
+    https://github.com/dashpay/dash/blob/v18.x/doc/release-notes.md
   - I decided to (for now, at least) end my battle to properly build these  
     RPMs from source. -t0dd/taw/todd
   - Spec file needed a minor overhaul to accommodate repackaging the binaries.
