@@ -30,7 +30,7 @@ Summary: A global payments network and decentralized application (dapp) platform
 %define appid_wallet %{appid}.wallet
 %define appid_node %{appid}.node
 
-%define isTestBuild 1
+%define isTestBuild 0
 
 # Leave these switched off.
 # These settings are used if you want to deliver packages sourced from upstream
