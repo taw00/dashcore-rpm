@@ -63,9 +63,9 @@ Version: %{vermajor}.%{verminor}
 
 # RELEASE
 # package release (and for testing only, extrarel)
-%define _pkgrel 2
+%define _pkgrel 3
 %if %{isTestBuild}
-  %define _pkgrel 1.1
+  %define _pkgrel 2.1
 %endif
 
 # MINORBUMP
@@ -933,7 +933,7 @@ install -D -m644 %{buildroot}%{_sysconfdir}/dashcore/dash.conf %{srccontribtree}
 # change anything.
 echo "\
 # Example RPC username and password.
-rpcuser=`head -c 32 /dev/urandom | base64 | head -c 4`
+rpcuser=`head -c 32 /dev/urandom | base64 | head -c 8`
 rpcpassword=`head -c 32 /dev/urandom | base64`
 " >> %{buildroot}%{_sysconfdir}/dashcore/dash.conf
 
@@ -1252,6 +1252,9 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Dash Electrum: https://github.com/akhavr/electrum-dash
 
 %changelog
+* Wed Aug 24 2022 Todd Warner <t0dd_at_protonmail.com> 18.0.1-2.1.rp.testing.taw
+  - generated rpcuser value is more than 4 characters now. :)
+
 * Wed Aug 24 2022 Todd Warner <t0dd_at_protonmail.com> 18.0.1-2.rp.taw
 * Wed Aug 24 2022 Todd Warner <t0dd_at_protonmail.com> 18.0.1-1.1.rp.testing.taw
   - updated the dash.conf minimum configuration
