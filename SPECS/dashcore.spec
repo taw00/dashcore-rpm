@@ -30,7 +30,7 @@ Summary: A global payments network and decentralized application (dapp) platform
 %define appid_wallet %{appid}.wallet
 %define appid_node %{appid}.node
 
-%define isTestBuild 0
+%define isTestBuild 1
 
 # Leave these switched off.
 # These settings are used if you want to deliver packages sourced from upstream
@@ -63,9 +63,9 @@ Version: %{vermajor}.%{verminor}
 
 # RELEASE
 # package release (and for testing only, extrarel)
-%define _pkgrel 1
+%define _pkgrel 2
 %if %{isTestBuild}
-  %define _pkgrel 0.1
+  %define _pkgrel 1.1
 %endif
 
 # MINORBUMP
@@ -888,7 +888,10 @@ cd -
 install -D -m640 %{srccontribtree}/linux/systemd/etc-dashcore_dash.conf %{buildroot}%{_sysconfdir}/dashcore/dash.conf
 
 echo "\
+
 # ---------------------------------------------------------------------------
+# ---------------------------------------------------------------------------
+
 # Example of a minimalistic configuration. Change the password. Additionally,
 # some of these settings are more explicit than they need to be.
 
@@ -909,25 +912,35 @@ logtimestamps=1
 disablewallet=1
 
 # Only localhost allowed to connect to make RPC calls.
+# Mainnet port is 9998; testnet is 19998.
 rpcallowip=127.0.0.1
 " >> %{buildroot}%{_sysconfdir}/dashcore/dash.conf
+
+%if %{testnet}
+echo "\
+rpcport=19998
+" >> %{buildroot}%{_sysconfdir}/dashcore/dash.conf
+%else
+echo "\
+rpcport=9998
+" >> %{buildroot}%{_sysconfdir}/dashcore/dash.conf
+%endif
+
 install -D -m644 %{buildroot}%{_sysconfdir}/dashcore/dash.conf %{srccontribtree}/dash.conf.example
 
 # Add the rpcuser name and rpcpassword, but really need to be different for the
 # working dash.conf and the example, just in case the user decides to not
 # change anything.
 echo "\
-
 # Example RPC username and password.
-rpcuser=rpcuser-CHANGEME-`head -c 32 /dev/urandom | base64 | head -c 4`
-rpcpassword=CHANGEME`head -c 32 /dev/urandom | base64`
+rpcuser=`head -c 32 /dev/urandom | base64 | head -c 4`
+rpcpassword=`head -c 32 /dev/urandom | base64`
 " >> %{buildroot}%{_sysconfdir}/dashcore/dash.conf
 
 echo "\
-
 # Example RPC username and password.
-rpcuser=rpcuser-CHANGEME-`head -c 32 /dev/urandom | base64 | head -c 4`
-rpcpassword=CHANGEME`head -c 32 /dev/urandom | base64`
+rpcuser=`head -c 32 /dev/urandom | base64 | head -c 4`
+rpcpassword=`head -c 32 /dev/urandom | base64`
 " >> %{srccontribtree}/dash.conf.example
 
 # ...message about the convenience symlink:
@@ -1239,6 +1252,10 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Dash Electrum: https://github.com/akhavr/electrum-dash
 
 %changelog
+* Wed Aug 24 2022 Todd Warner <t0dd_at_protonmail.com> 18.0.1-2.rp.taw
+* Wed Aug 24 2022 Todd Warner <t0dd_at_protonmail.com> 18.0.1-1.1.rp.testing.taw
+  - updated the dash.conf minimum configuration
+
 * Tue Aug 23 2022 Todd Warner <t0dd_at_protonmail.com> 18.0.1-1.rp.taw
 * Tue Aug 23 2022 Todd Warner <t0dd_at_protonmail.com> 18.0.1-0.1.rp.testing.taw
   - 18.0.1 - repackaged build only (from upstream binaries)  
