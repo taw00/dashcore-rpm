@@ -29,9 +29,9 @@ Summary: A required helper agent for Dash Core Masternodes
 Version: %{vermajor}.%{verminor}
 
 # RELEASE
-%define _pkgrel 2
+%define _pkgrel 3
 %if %{isTestBuild}
-  %define _pkgrel 1.1
+  %define _pkgrel 2.1
 %endif
 
 # MINORBUMP
@@ -228,7 +228,7 @@ cp -a %{sourcetree}/* %{buildroot}%{_sharedstatedir}/dashcore/sentinel/
 # Place contributed configuration file into /etc/dashcore
 # Create symlink to that file...
 #   /var/lib/dashcore/sentinel/sentinel.conf -> /etc/dashcore/sentinel.conf
-mv %{buildroot}%{_sharedstatedir}/dashcore/sentinel/sentinel.conf %{buildroot}%{_sharedstatedir}/dashcore/sentinel/sentinel.conf.orig-upstream
+mv %{buildroot}%{_sharedstatedir}/dashcore/sentinel/sentinel.conf %{buildroot}%{_sharedstatedir}/dashcore/sentinel/sentinel.conf.upstream-default
 install -D -m640 %{sourcetree_contrib}/linux/etc-dashcore_sentinel.conf %{buildroot}%{_sysconfdir}/dashcore/sentinel.conf
 ln -s %{_sysconfdir}/dashcore/sentinel.conf %{buildroot}%{_sharedstatedir}/dashcore/sentinel/sentinel.conf
 
