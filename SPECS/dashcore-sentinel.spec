@@ -70,8 +70,8 @@ Release: %{_release}
 # ----------- end of release building section
 
 # Unarchived source tree structure (extracted in .../BUILD)
-#   projectroot              dashcore-sentinel-1.4
-#      \_sourcetree            \_sentinel-1.4.0 (github tree example)
+#   projectroot              dashcore-sentinel-1.7
+#      \_sourcetree            \_sentinel-1.7.1 (github tree example)
 #      \_sourcetree_contrib    \_dashcore-sentinel-1.4-contrib
 %define projectroot %{_name_dcs}-%{vermajor}
 %define sourcetree %{_name_s}-%{version}
@@ -222,6 +222,16 @@ install -d %{buildroot}%{_mandir}/man1
 
 cp -a %{sourcetree}/* %{buildroot}%{_sharedstatedir}/dashcore/sentinel/
 
+# Conf file
+# Replace core sentinel configuration file with contributed configuration file
+# Remove supplied sentinel configuration file
+# Place contributed configuration file into /etc/dashcore
+# Create symlink to that file...
+#   /var/lib/dashcore/sentinel/sentinel.conf -> /etc/dashcore/sentinel.conf
+mv %{buildroot}%{_sharedstatedir}/dashcore/sentinel/sentinel.conf %{buildroot}%{_sharedstatedir}/dashcore/sentinel/sentinel.conf.orig-upstream
+install -D -m640 %{sourcetree_contrib}/linux/etc-dashcore_sentinel.conf %{buildroot}%{_sysconfdir}/dashcore/sentinel.conf
+ln -s %{_sysconfdir}/dashcore/sentinel.conf %{buildroot}%{_sharedstatedir}/dashcore/sentinel/sentinel.conf
+
 # Log files
 # ...logrotate file rules
 install -D -m644 -p %{sourcetree_contrib}/linux/etc-logrotate.d_dashcore-sentinel %{buildroot}/etc/logrotate.d/dashcore-sentinel
@@ -256,6 +266,9 @@ touch %{buildroot}%{_localstatedir}/log/dashcore/sentinel.log
 
 # Code and data directories
 %{_sharedstatedir}/dashcore/sentinel/*
+
+# sentinel.conf
+%config(noreplace) %{_sysconfdir}/dashcore/sentinel.conf
 
 # The logs
 %attr(644,root,root) /etc/logrotate.d/dashcore-sentinel
@@ -319,6 +332,11 @@ fi
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
+* Wed Aug 24 2022 Todd Warner <t0dd_at_protonmail.com> 1.7.1-3.taw
+* Wed Aug 24 2022 Todd Warner <t0dd_at_protonmail.com> 1.7.1-2.1.testing.taw
+  - well, I was wrong. sentinel.conf is expected to, if nothing else, set the  
+    database location.
+
 * Wed Aug 24 2022 Todd Warner <t0dd_at_protonmail.com> 1.7.1-2.taw
 * Wed Aug 24 2022 Todd Warner <t0dd_at_protonmail.com> 1.7.1-1.1.testing.taw
   - simplifying, since python2 is more or less out of the picture.
