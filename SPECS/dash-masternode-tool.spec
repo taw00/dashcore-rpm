@@ -46,13 +46,13 @@ Summary: Manage and collateralize a Dash Masternode with a hardware wallet
 
 # VERSION
 %define vermajor 0.9
-%define verminor 31
+%define verminor 32
 Version: %{vermajor}.%{verminor}
 
 # RELEASE
 %define _pkgrel 1
 %if %{isTestBuild}
-  %define _pkgrel 0.2
+  %define _pkgrel 0.1
 %endif
 
 # MINORBUMP
@@ -140,7 +140,7 @@ Source0: https://github.com/Bertrand256/dash-masternode-tool/archive/v%{version}
 Source0: https://github.com/Bertrand256/dash-masternode-tool/archive/v%{version}/%{sourcetree}.tar.gz
 %endif
 # dash-masternode-tool-0.9-contrib
-Source1: https://github.com/taw00/dashcore-rpm/blob/master/SOURCES/%{sourcetree_contrib}.tar.gz
+Source1: https://github.com/taw00/dashcore-rpm/raw/master/SOURCES/%{sourcetree_contrib}.tar.gz
 
 # btchip-python-...
 # As of v0.9.27, we stopped including btchip-python because upstream stopped shipping their version.
@@ -418,6 +418,11 @@ cd ../../
 
 
 %changelog
+* Mon Oct 24 2022 Todd Warner <t0dd_at_protonmail.com> 0.9.32-1.taw
+* Mon Oct 24 2022 Todd Warner <t0dd_at_protonmail.com> 0.9.32-0.1.testing.taw
+  - https://github.com/Bertrand256/dash-masternode-tool/releases/tag/v0.9.32
+  - Fixed the contrib source fetch URL. Odd that it changed.
+
 * Fri May 13 2022 Todd Warner <t0dd_at_protonmail.com> 0.9.31-1.taw
 * Fri May 13 2022 Todd Warner <t0dd_at_protonmail.com> 0.9.31-0.2.testing.taw
   - cleaned up the requirements.txt file in the contribs
