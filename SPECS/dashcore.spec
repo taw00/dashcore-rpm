@@ -30,7 +30,7 @@ Summary: A global payments network and decentralized application (dapp) platform
 %define appid_wallet %{appid}.wallet
 %define appid_node %{appid}.node
 
-%define isTestBuild 1
+%define isTestBuild 0
 
 # Leave these switched off.
 # These settings are used if you want to deliver packages sourced from upstream
@@ -52,8 +52,11 @@ Summary: A global payments network and decentralized application (dapp) platform
 %undefine buildQualifier
 
 # VERSION
-%define vermajor 18.0
-%define verminor 1
+%define verX 18
+%define verY 1
+%define verZ 0
+%define vermajor %{verX}.%{verY}
+%define verminor %{verZ}
 Version: %{vermajor}.%{verminor}
 %define versionqualified %{version}
 %if 0%{?buildQualifier:1}
@@ -63,9 +66,9 @@ Version: %{vermajor}.%{verminor}
 
 # RELEASE
 # package release (and for testing only, extrarel)
-%define _pkgrel 3
+%define _pkgrel 1
 %if %{isTestBuild}
-  %define _pkgrel 2.1
+  %define _pkgrel 0.1
 %endif
 
 # MINORBUMP
@@ -170,7 +173,7 @@ Release: %{_release}
 #   projectroot           dashcore-18.0.1
 #      \_sourcetree         \_dash-18.0.1 or dash-18.0.1-rc1...
 #      \_binarytree         \_dashcore-18.0.1
-#      \_srccontribtree     \_dashcore-18.0-contrib
+#      \_srccontribtree     \_dashcore-18-contrib
 #      \_patch_files        \_dash-18.0.1-...patch
 # Supplied but only "moved":
 #   bls-signatures-1.2.4.tar.gz
@@ -198,7 +201,7 @@ Release: %{_release}
 %define bdbarchiveversion 4.8.30.NC
 
 %define projectroot %{name}-%{vermajor}
-%define srccontribtree %{name}-%{vermajor}-contrib
+%define srccontribtree %{name}-%{verX}-contrib
 
 
 Source1: https://github.com/taw00/dashcore-rpm/raw/master/SOURCES/%{srccontribtree}.tar.gz
@@ -549,7 +552,7 @@ mkdir -p %{projectroot}
 %endif
 
 # Source1: contributions
-# {_builddir}/dashcore-0.17.0/dashcore-0.17.0-contrib/
+# {_builddir}/dashcore-18.1.0/dashcore-18-contrib/
 %setup -q -T -D -a 1 -n %{projectroot}
 
 # Source2: bls-dash archive
@@ -767,7 +770,9 @@ install -d -m755 -p %{buildroot}%{_libdir}
 
 %if %{clientSourceIsBinary} && %{serverSourceIsBinary}
   mv %{binarytree}/bin/dash* %{buildroot}%{_bindir}/
-  mv %{binarytree}/include/dash* %{buildroot}%{_includedir}/
+  #v18.1.0 has a build bug. This is a temporary work around
+  #mv %%{binarytree}/include/dash* %%{buildroot}%%{_includedir}/
+  mv %{binarytree}/include/bitcoinconsensus.h %{buildroot}%{_includedir}/dashconsensus.h
   mv %{binarytree}/lib/libdash* %{buildroot}%{_libdir}/
 %else
   %if %{clientSourceIsBinary}
@@ -779,7 +784,9 @@ install -d -m755 -p %{buildroot}%{_libdir}
   %if %{serverSourceIsBinary}
     mv %{binarytree}/bin/dashd %{buildroot}%{_bindir}/
     mv %{binarytree}/bin/dash-tx %{buildroot}%{_bindir}/
-    mv %{binarytree}/include/dash* %{buildroot}%{_includedir}/
+    #v18.1.0 has a build bug. This is a temporary work around
+    #mv %%{binarytree}/include/dash* %%{buildroot}%%{_includedir}/
+    mv %{binarytree}/include/bitcoinconsensus.h %{buildroot}%{_includedir}/dashconsensus.h
     mv %{binarytree}/lib/libdash* %{buildroot}%{_libdir}/
   %endif
 %endif
@@ -815,10 +822,6 @@ ln -s %{_localstatedir}/log/dashcore/testnet3/debug.log %{buildroot}%{_sharedsta
 #   -> /etc/dashcore/dash.conf (convenience symlink)
 ln -s %{_sysconfdir}/dashcore/dash.conf %{buildroot}%{_sharedstatedir}/dashcore/.dashcore/dash.conf
 
-# Man Pages (from contrib) -- man5 documents now defunct
-# These are out of date, let's not contrib anymore.
-#install -D -m644 %%{srccontribtree}/linux/man/man1/* %%{buildroot}%%{_mandir}/man1/
-#install -D -m644 %%{srccontribtree}/linux/man/man5/* %%{buildroot}%%{_mandir}/man5/
 # Man Pages (from upstream) - likely to overwrite ones from contrib (which is fine)
 %if %{buildFromSource}
 install -D -m644 %{sourcetree}/doc/man/*.1* %{buildroot}%{_mandir}/man1/
@@ -1252,6 +1255,13 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Dash Electrum: https://github.com/akhavr/electrum-dash
 
 %changelog
+* Mon Oct 24 2022 Todd Warner <t0dd_at_protonmail.com> 18.1.0-1.rp.taw
+* Mon Oct 24 2022 Todd Warner <t0dd_at_protonmail.com> 18.1.0-0.1.rp.testing.taw
+  - (repackaged) https://github.com/dashpay/dash/releases/tag/v18.1.0  
+  - contrib now versioned w/ just verX of the pkg version. In this case, 18.
+  - this version build a "bitcoincensus.h" instead of a "dashconsensus.h".
+    I added a work around for now.
+
 * Wed Aug 24 2022 Todd Warner <t0dd_at_protonmail.com> 18.0.1-2.1.rp.testing.taw
   - generated rpcuser value is more than 4 characters now. :)
 
