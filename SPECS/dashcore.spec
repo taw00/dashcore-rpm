@@ -19,7 +19,7 @@
 # Enjoy. -t0dd
 
 # Package (RPM) name-version-release.
-# <name>-<vermajor.<verminor>-<pkgrel>[.<extraver>][.<snapinfo>].DIST[.<minorbump>]
+# <name>-<vermajor>.<verminor>-<pkgrel>[.<extraver>][.<snapinfo>].DIST[.<minorbump>]
 
 
 Name: dashcore
@@ -30,7 +30,7 @@ Summary: A global payments network and decentralized application (dapp) platform
 %define appid_wallet %{appid}.wallet
 %define appid_node %{appid}.node
 
-%define isTestBuild 0
+%define isTestBuild 1
 
 # Leave these switched off.
 # These settings are used if you want to deliver packages sourced from upstream
@@ -54,7 +54,7 @@ Summary: A global payments network and decentralized application (dapp) platform
 # VERSION
 %define verX 18
 %define verY 1
-%define verZ 0
+%define verZ 1
 %define vermajor %{verX}.%{verY}
 %define verminor %{verZ}
 Version: %{vermajor}.%{verminor}
@@ -66,9 +66,9 @@ Version: %{vermajor}.%{verminor}
 
 # RELEASE
 # package release (and for testing only, extrarel)
-%define _pkgrel 1
+%define _pkgrel 2
 %if %{isTestBuild}
-  %define _pkgrel 0.1
+  %define _pkgrel 1.1
 %endif
 
 # MINORBUMP
@@ -629,7 +629,7 @@ cd %{sourcetree}
 
 # build dependencies
 cd depends
-# Note: {_target_platform} = x86_64-redhat-linux-gnu 
+# Note: {_target_platform} = x86_64-redhat-linux-gnu
 # example: make HOST=x86_64-redhat-linux-gnu -j4
 make HOST=%{_target_platform} -j$(nproc)
 cd ..
@@ -770,10 +770,9 @@ install -d -m755 -p %{buildroot}%{_libdir}
 
 %if %{clientSourceIsBinary} && %{serverSourceIsBinary}
   mv %{binarytree}/bin/dash* %{buildroot}%{_bindir}/
-  #v18.1.0 has a build bug. This is a temporary work around
-  #mv %%{binarytree}/include/dash* %%{buildroot}%%{_includedir}/
-  mv %{binarytree}/include/bitcoinconsensus.h %{buildroot}%{_includedir}/dashconsensus.h
-  mv %{binarytree}/lib/libdash* %{buildroot}%{_libdir}/
+  mv %{binarytree}/include/*        %{buildroot}%{_includedir}/
+  mv %{binarytree}/lib/lib*         %{buildroot}%{_libdir}/
+  cp -a %{buildroot}%{_includedir}/bitcoinconsensus.h %{buildroot}%{_includedir}/dashconsensus.h
 %else
   %if %{clientSourceIsBinary}
     mv %{binarytree}/bin/dash-qt %{buildroot}%{_bindir}/
@@ -784,10 +783,9 @@ install -d -m755 -p %{buildroot}%{_libdir}
   %if %{serverSourceIsBinary}
     mv %{binarytree}/bin/dashd %{buildroot}%{_bindir}/
     mv %{binarytree}/bin/dash-tx %{buildroot}%{_bindir}/
-    #v18.1.0 has a build bug. This is a temporary work around
-    #mv %%{binarytree}/include/dash* %%{buildroot}%%{_includedir}/
-    mv %{binarytree}/include/bitcoinconsensus.h %{buildroot}%{_includedir}/dashconsensus.h
-    mv %{binarytree}/lib/libdash* %{buildroot}%{_libdir}/
+    mv %{binarytree}/include/*        %{buildroot}%{_includedir}/
+    mv %{binarytree}/lib/lib*         %{buildroot}%{_libdir}/
+    cp -a %{buildroot}%{_includedir}/bitcoinconsensus.h %{buildroot}%{_includedir}/dashconsensus.h
   %endif
 %endif
 
@@ -1233,7 +1231,7 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #
 # The last very involved testnet effort...
 #   * Announcement: https://www.dash.org/forum/threads/v14-0-testing.44047/
-#   * Documentation:  
+#   * Documentation:
 #     https://docs.dash.org/en/latest/developers/testnet.html
 #     https://docs.dash.org/en/latest/masternodes/dip3-upgrade.html
 #     https://thephez.github.io/en/developer-reference
@@ -1255,12 +1253,27 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Dash Electrum: https://github.com/akhavr/electrum-dash
 
 %changelog
+* Mon Jan 09 2023 Todd Warner <t0dd_at_protonmail.com> 18.1.1-2.rp.taw
+* Mon Jan 09 2023 Todd Warner <t0dd_at_protonmail.com> 18.1.1-1.1.rp.testing.taw
+  - bitcoinconsensus.h copied to dashconsensus.h because ... I feel that is  
+    more "correct" than having only a bitcoinconsensus.h header that only  
+    calls dash libraries. I dunno. That's what it is going to be tho for now.
+
+* Mon Jan 09 2023 Todd Warner <t0dd_at_protonmail.com> 18.1.1-1.rp.taw
+* Mon Jan 09 2023 Todd Warner <t0dd_at_protonmail.com> 18.1.1-0.1.rp.testing.taw
+  - (repackaged) https://github.com/dashpay/dash/releases/tag/v18.1.1
+  - removed bitcoinconsensus.h to dashconsensus.h workaround. Turns out that  
+    it was unneeded.
+
 * Mon Oct 24 2022 Todd Warner <t0dd_at_protonmail.com> 18.1.0-1.rp.taw
 * Mon Oct 24 2022 Todd Warner <t0dd_at_protonmail.com> 18.1.0-0.1.rp.testing.taw
-  - (repackaged) https://github.com/dashpay/dash/releases/tag/v18.1.0  
+  - (repackaged) https://github.com/dashpay/dash/releases/tag/v18.1.0
   - contrib now versioned w/ just verX of the pkg version. In this case, 18.
-  - this version build a "bitcoincensus.h" instead of a "dashconsensus.h".
-    I added a work around for now.
+  - this version builds a "bitcoinconsensus.h" instead of a  
+    "dashconsensus.h". I added a work around for now.
+    - followup discussion stated that they are now leaving it as  
+      bitcoinconcensus.h, but dashconsensus.h shouldn't hurt anything for the  
+      time being.
 
 * Wed Aug 24 2022 Todd Warner <t0dd_at_protonmail.com> 18.0.1-2.1.rp.testing.taw
   - generated rpcuser value is more than 4 characters now. :)
