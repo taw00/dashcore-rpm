@@ -21,16 +21,25 @@
 # Package (RPM) name-version-release.
 # <name>-<vermajor>.<verminor>-<pkgrel>[.<extraver>][.<snapinfo>].DIST[.<minorbump>]
 
-
 Name: dashcore
 %define name_ dash
 Summary: A global payments network and decentralized application (dapp) platform: a peer-to-peer, fungible, digital currency, protocol, and platform.
 
+# VERSION and RELEASE components
+%define isTestBuild 1
+%define verX 18
+%define verY 2
+%define verZ 1
+%define _pkgrel 1
+%define _pkgrel_iftestbuild 0.1
+
+# Use if the dev team includes things like rc4 in the filename
+%define buildQualifier rc5
+%undefine buildQualifier
+
 %define appid org.dash.dash_core
 %define appid_wallet %{appid}.wallet
 %define appid_node %{appid}.node
-
-%define isTestBuild 1
 
 # Leave these switched off.
 # These settings are used if you want to deliver packages sourced from upstream
@@ -47,14 +56,7 @@ Summary: A global payments network and decentralized application (dapp) platform
 # tree of libraries if those libraries are not maintained by the project.
 %define useSystemLibraries 1
 
-# Use if the dev team includes things like rc4 in the filename
-%define buildQualifier rc5
-%undefine buildQualifier
-
 # VERSION
-%define verX 18
-%define verY 1
-%define verZ 1
 %define vermajor %{verX}.%{verY}
 %define verminor %{verZ}
 Version: %{vermajor}.%{verminor}
@@ -63,12 +65,10 @@ Version: %{vermajor}.%{verminor}
   %define versionqualified %{version}-%{buildQualifier}
 %endif
 
-
 # RELEASE
 # package release (and for testing only, extrarel)
-%define _pkgrel 2
 %if %{isTestBuild}
-  %define _pkgrel 1.1
+  %define _pkgrel %{_pkgrel_iftestbuild}
 %endif
 
 # MINORBUMP
@@ -610,7 +610,7 @@ cp -a %{srccontribtree}/build/depends/packages/bls-dash.mk--EL8 %{sourcetree}/de
 
 ## A note about the _target_platform (RPM) and AC_CANONICAL_HOST (Makefile)
 ## macros.
-## 
+##
 ## _target_platform for Fedora/EL8 on X86_64 is x86_64-redhat-linux-gnu
 ## AC_CANONICAL_HOST in the makefile will result in x86_64-pc-linux-gnu.
 ## Regardless, config.sub in the depends directory will result in this
@@ -673,7 +673,7 @@ cd ..
   #cd %%{_targettree} && cp $(find ./plugins | grep "\.a$") ./lib/
   #cd ../..
   %{_FLAGS} %{_PKGCONFIG} ./configure --libdir=%{_targettree}/lib --includedir=%{_targettree}/include --with-boost-libdir=%{_targettree}/lib --prefix=%{_targettree} --enable-hardening %{_disable_tests} %{_disable_wallet} %{_QTSTUFF}
-  %{_PKGCONFIG} make 
+  %{_PKGCONFIG} make
 %endif
 
 cd ..
@@ -1253,6 +1253,11 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Dash Electrum: https://github.com/akhavr/electrum-dash
 
 %changelog
+* Mon Jan 26 2023 Todd Warner <t0dd_at_protonmail.com> 18.2.1-1.rp.taw
+* Mon Jan 26 2023 Todd Warner <t0dd_at_protonmail.com> 18.2.1-0.1.rp.testing.taw
+  - (repackaged) https://github.com/dashpay/dash/releases/tag/v18.2.1
+  - moved the version and release components to the top of the spec
+
 * Mon Jan 09 2023 Todd Warner <t0dd_at_protonmail.com> 18.1.1-2.rp.taw
 * Mon Jan 09 2023 Todd Warner <t0dd_at_protonmail.com> 18.1.1-1.1.rp.testing.taw
   - bitcoinconsensus.h copied to dashconsensus.h because ... I feel that is  
