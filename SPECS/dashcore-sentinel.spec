@@ -25,13 +25,13 @@ Summary: A required helper agent for Dash Core Masternodes
 
 # VERSION
 %define vermajor 1.7
-%define verminor 1
+%define verminor 2
 Version: %{vermajor}.%{verminor}
 
 # RELEASE
-%define _pkgrel 3
+%define _pkgrel 1
 %if %{isTestBuild}
-  %define _pkgrel 2.1
+  %define _pkgrel 0.1
 %endif
 
 # MINORBUMP
@@ -92,7 +92,7 @@ Requires: dashcore-server >= 0.17.0
 # For mock environments I sometimes add vim and less so I can introspect
 #BuildRequires: tree vim-enhanced less
 BuildRequires: findutils sed
-BuildRequires: python3 python3-virtualenv
+BuildRequires: python3 python3-virtualenv gcc python3-devel
 
 # Nuke the auto-requires that rpmbuild will generate because of the
 # virtualenv things we do in the build section.
@@ -332,6 +332,12 @@ fi
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
+* Thu Apr 06 2023 Todd Warner <t0dd_at_protonmail.com> 1.7.2-1.taw
+* Thu Apr 06 2023 Todd Warner <t0dd_at_protonmail.com> 1.7.2-0.1.testing.taw
+  - 1.7.2
+  - gcc is explicitely required now for F37. Not sure why.
+  - python3-devel is explicitely required now for F37. Not sure why.
+
 * Wed Aug 24 2022 Todd Warner <t0dd_at_protonmail.com> 1.7.1-3.taw
 * Wed Aug 24 2022 Todd Warner <t0dd_at_protonmail.com> 1.7.1-2.1.testing.taw
   - well, I was wrong. sentinel.conf is expected to, if nothing else, set the  
