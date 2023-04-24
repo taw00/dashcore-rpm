@@ -25,7 +25,7 @@ Summary: A required helper agent for Dash Core Masternodes
 
 # VERSION
 %define vermajor 1.7
-%define verminor 2
+%define verminor 3
 Version: %{vermajor}.%{verminor}
 
 # RELEASE
@@ -317,7 +317,7 @@ fi
 
 
 # Dash Core Information
-# 
+#
 # Dash...
 #   * Project website: https://www.dash.org/
 #   * Project documentation: https://docs.dash.org/
@@ -332,6 +332,10 @@ fi
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
+* Sun Apr 23 2023 Todd Warner <t0dd_at_protonmail.com> 1.7.3-1.taw
+* Sun Apr 23 2023 Todd Warner <t0dd_at_protonmail.com> 1.7.3-0.1.testing.taw
+  - 1.7.3
+
 * Thu Apr 06 2023 Todd Warner <t0dd_at_protonmail.com> 1.7.2-1.taw
 * Thu Apr 06 2023 Todd Warner <t0dd_at_protonmail.com> 1.7.2-0.1.testing.taw
   - 1.7.2
