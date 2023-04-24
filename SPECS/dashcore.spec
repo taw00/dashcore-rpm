@@ -27,9 +27,9 @@ Summary: A global payments network and decentralized application (dapp) platform
 
 # VERSION and RELEASE components
 %define isTestBuild 1
-%define verX 18
-%define verY 2
-%define verZ 2
+%define verX 19
+%define verY 0
+%define verZ 0
 %define _pkgrel 1
 %define _pkgrel_iftestbuild 0.1
 
@@ -153,12 +153,15 @@ Release: %{_release}
 # Don't turn off the useExtraSources flag.
 # The src.rpm includes pre-downloaded extra source archives that satisfy
 # source expectations for the depends tree during the build. They are:
+# * libbacktrace (backtrace) from https://github.com/rust-lang-nursery/libbacktrace
+# ...The next two are for EL8 builds only...
+# * miniupnpc from http://miniupnp.free.fr/files/miniupnpc-2.0.20170509.tar.gz
+# * bdb v4 from https://download.oracle.com/berkeley-db/db-4.8.30.NC.tar.gz
+# The src.rpm USED TO include pre-downloaded extra source archives for
+# bls-signatures. But those are how imbedded in the dash source tree directly.
+# For posterity, the old archive was:
 # * bls-signatures (bls-dash) from https://github.com/dashpay/bls-signatures
 #   Note, used to be (chia_bls) from https://github.com/codablock/bls-signatures
-# libbacktrace (backtrace) from https://github.com/rust-lang-nursery/libbacktrace
-# The next two are for EL8 builds only.
-# miniupnpc from http://miniupnp.free.fr/files/miniupnpc-2.0.20170509.tar.gz
-# bdb v4 from https://download.oracle.com/berkeley-db/db-4.8.30.NC.tar.gz
 %define useExtraSources 1
 
 # the archive name and directory tree can have some variances
@@ -175,7 +178,8 @@ Release: %{_release}
 #      \_binarytree         \_dashcore-18.0.1
 #      \_srccontribtree     \_dashcore-18-contrib
 #      \_patch_files        \_dash-18.0.1-...patch
-# Supplied but only "moved":
+#
+# In v18 and older ... Supplied but only "moved":
 #   bls-signatures-1.2.4.tar.gz
 #                           --> {sourcetree}/depends/sources/1.2.4.tar.gz
 
@@ -194,7 +198,7 @@ Release: %{_release}
   %define sourcetree %{_sourcearchivename}
   %define binarytree %{_binarytree}
 %endif
-%define blsarchiveversion 1.2.4
+#%%define blsarchiveversion 1.2.4 <-- dash v18 and older
 %define libbacktracearchiveversion rust-snapshot-2018-05-22
 %define libbacktracearchivename libbacktrace-%{libbacktracearchiveversion}
 %define miniupnpcversion 2.0.20180203
@@ -207,7 +211,7 @@ Release: %{_release}
 Source1: https://github.com/taw00/dashcore-rpm/raw/master/SOURCES/%{srccontribtree}.tar.gz
 %if %{buildFromSource}
 Source0: https://github.com/dashpay/dash/archive/v%{versionqualified}/%{sourcearchivename}.tar.gz
-Source2: https://github.com/taw00/dashcore-rpm/raw/master/SOURCES/bls-signatures-%{blsarchiveversion}.tar.gz
+#XXX Source2: https://github.com/taw00/dashcore-rpm/raw/master/SOURCES/bls-signatures-%%{blsarchiveversion}.tar.gz
 Source3: https://github.com/rust-lang-nursery/libbacktrace/archive/%{libbacktracearchiveversion}/libbacktrace-%{libbacktracearchiveversion}.tar.gz
 ## Source4 and Source5 are for EL8 only
 Source4: http://miniupnp.free.fr/files/miniupnpc-%{miniupnpcversion}.tar.gz
@@ -555,7 +559,7 @@ mkdir -p %{projectroot}
 # {_builddir}/dashcore-18.1.0/dashcore-18-contrib/
 %setup -q -T -D -a 1 -n %{projectroot}
 
-# Source2: bls-dash archive
+# XXX Source2: bls-dash archive
 # Source3: libbacktrace (backtrace) archive
 # Source4: miniupnpc archive (for EL only)
 # Source5: bdb archive (for EL only)
@@ -564,7 +568,7 @@ mkdir -p %{projectroot}
 %if %{buildFromSource} && %{useExtraSources}
 mkdir -p %{sourcetree}/depends/sources/
 #mv ../../SOURCES/bls-signatures-%%{blsarchiveversion}.tar.gz %%{sourcetree}/depends/sources/v%%{blsarchiveversion}.tar.gz <-- dash-0.16 and older
-mv ../../SOURCES/bls-signatures-%{blsarchiveversion}.tar.gz %{sourcetree}/depends/sources/bls-dash-%{blsarchiveversion}.tar.gz
+#mv ../../SOURCES/bls-signatures-%%{blsarchiveversion}.tar.gz %{sourcetree}/depends/sources/bls-dash-%%{blsarchiveversion}.tar.gz <-- dash-18 and older
 mkdir -p %{sourcetree}/depends/sources/
 mv ../../SOURCES/libbacktrace-%{libbacktracearchiveversion}.tar.gz %{sourcetree}/depends/sources/%{libbacktracearchiveversion}.tar.gz
 # For EL builds only ...
@@ -1094,6 +1098,7 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 %{_metainfodir}/%{appid_wallet}.metainfo.xml
 # XXX Removing this unless someone gripes
 %{_datadir}/icons/*
+%{_mandir}/man1/dash-wallet.1.gz
 %{_mandir}/man1/dash-qt.1.gz
 #%%{_mandir}/man5/masternode.conf.5.gz
 %{_usr_lib}/firewalld/services/dashcore.xml
@@ -1253,12 +1258,19 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Dash Electrum: https://github.com/akhavr/electrum-dash
 
 %changelog
+* Sun Apr 23 2023 Todd Warner <t0dd_at_protonmail.com> 19.0.0-1.rp.taw
+* Sun Apr 23 2023 Todd Warner <t0dd_at_protonmail.com> 19.0.0-0.1.rp.testing.taw
+  - (repackaged) https://github.com/dashpay/dash/releases/tag/v19.0.0
+  - bls stuff is now part of the dashcore tree (finally!)
+  - dash-qt and dash-wallet manpages exist and I am not sure that is a good  
+    thing.
+
 * Wed Apr 05 2023 Todd Warner <t0dd_at_protonmail.com> 18.2.2-1.rp.taw
 * Wed Apr 05 2023 Todd Warner <t0dd_at_protonmail.com> 18.2.2-0.1.rp.testing.taw
   - (repackaged) https://github.com/dashpay/dash/releases/tag/v18.2.2
 
-* Mon Jan 26 2023 Todd Warner <t0dd_at_protonmail.com> 18.2.1-1.rp.taw
-* Mon Jan 26 2023 Todd Warner <t0dd_at_protonmail.com> 18.2.1-0.1.rp.testing.taw
+* Thu Jan 26 2023 Todd Warner <t0dd_at_protonmail.com> 18.2.1-1.rp.taw
+* Thu Jan 26 2023 Todd Warner <t0dd_at_protonmail.com> 18.2.1-0.1.rp.testing.taw
   - (repackaged) https://github.com/dashpay/dash/releases/tag/v18.2.1
   - moved the version and release components to the top of the spec
 
