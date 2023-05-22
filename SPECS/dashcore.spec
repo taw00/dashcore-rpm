@@ -28,7 +28,7 @@ Summary: A global payments network and decentralized application (dapp) platform
 # VERSION and RELEASE components
 %define isTestBuild 1
 %define verX 19
-%define verY 0
+%define verY 1
 %define verZ 0
 %define _pkgrel 1
 %define _pkgrel_iftestbuild 0.1
@@ -1258,6 +1258,10 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Dash Electrum: https://github.com/akhavr/electrum-dash
 
 %changelog
+* Mon May 22 2023 Todd Warner <t0dd_at_protonmail.com> 19.1.0-1.rp.taw
+* Mon May 22 2023 Todd Warner <t0dd_at_protonmail.com> 19.1.0-0.1.rp.testing.taw
+  - (repackaged) https://github.com/dashpay/dash/releases/tag/v19.1.0
+
 * Sun Apr 23 2023 Todd Warner <t0dd_at_protonmail.com> 19.0.0-1.rp.taw
 * Sun Apr 23 2023 Todd Warner <t0dd_at_protonmail.com> 19.0.0-0.1.rp.testing.taw
   - (repackaged) https://github.com/dashpay/dash/releases/tag/v19.0.0
