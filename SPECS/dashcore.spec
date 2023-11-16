@@ -3,8 +3,7 @@
 # vim:tw=0:ts=2:sw=2:et:
 #
 # This is the rpm source spec for building a Dash Core Reference Desktop
-# Wallet, Masternode, and Full Node. Dash Core Masternode Sentinel is built
-# with another spec file.
+# Wallet, Masternode, and Full Node.
 #
 # Consumer facing...
 # * dashcore-client
@@ -27,11 +26,11 @@ Summary: A global payments network and decentralized application (dapp) platform
 
 # VERSION and RELEASE components
 %define isTestBuild 1
-%define verX 19
-%define verY 3
+%define verX 20
+%define verY 0
 %define verZ 0
 %define _pkgrel 1
-%define _pkgrel_iftestbuild 0.1
+%define _pkgrel_iftestbuild 0.2
 
 # Use if the dev team includes things like rc1 in the filename
 %define buildQualifier rc1
@@ -341,7 +340,9 @@ Requires(post): /usr/sbin/semodule, /sbin/restorecon, /sbin/fixfiles
 Requires(postun): /usr/sbin/semodule, /sbin/restorecon, /sbin/fixfiles
 Requires: openssl-libs
 Requires: dashcore-utils = %{version}-%{release}
-Requires: dashcore-sentinel
+
+# We no longer need dashcore-sentinel, so force it out!
+Obsoletes: dashcore-sentinel
 
 
 # dashcore-libs
@@ -410,8 +411,7 @@ Dash Core reference implementation. This package provides dashd, a
 peer-to-peer node and wallet server. It is the command line installation
 without a graphical user interface. It can be used as a commandline wallet
 but is typically used to run a full node or masternode. This package
-requires the dashcore-utils and dashcore-sentinel RPM packages to be
-installed.
+requires the dashcore-utils RPM package to be installed.
 
 Please refer to Dash Core documentation at dash.org for more information
 about running a Masternode.
@@ -1250,7 +1250,7 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 # Dash Core (and related) git repos (a curated selection)...
 #   * Dash Core: https://github.com/dashpay
 #     - https://github.com/dashpay/dash
-#     - https://github.com/dashpay/sentinel
+#     - https://github.com/dashpay/sentinel (not needed for dashcore v20+)
 #     - https://github.com/dashpay/dips
 #     - https://github.com/dashpay/docs
 #   * Dash Evolution: https://github.com/dashevo
@@ -1258,17 +1258,11 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Dash Electrum: https://github.com/akhavr/electrum-dash
 
 %changelog
-* Wed Aug 2 2023 Todd Warner <t0dd_at_protonmail.com> 19.3.0-1.rp.taw
-* Wed Aug 2 2023 Todd Warner <t0dd_at_protonmail.com> 19.3.0-0.1.rp.testing.taw
-  - (repackaged) https://github.com/dashpay/dash/releases/tag/v19.3.0
-
-* Mon Jun 19 2023 Todd Warner <t0dd_at_protonmail.com> 19.2.0-1.rp.taw
-* Mon Jun 19 2023 Todd Warner <t0dd_at_protonmail.com> 19.2.0-0.1.rp.testing.taw
-  - (repackaged) https://github.com/dashpay/dash/releases/tag/v19.2.0
-
-* Mon May 22 2023 Todd Warner <t0dd_at_protonmail.com> 19.1.0-1.rp.taw
-* Mon May 22 2023 Todd Warner <t0dd_at_protonmail.com> 19.1.0-0.1.rp.testing.taw
-  - (repackaged) https://github.com/dashpay/dash/releases/tag/v19.1.0
+* Thu Nov 16 2023 Todd Warner <t0dd_at_protonmail.com> 20.0.0-1.rp.taw
+* Thu Nov 16 2023 Todd Warner <t0dd_at_protonmail.com> 20.0.0-0.2.rp.testing.taw
+* Wed Nov 15 2023 Todd Warner <t0dd_at_protonmail.com> 20.0.0-0.1.rp.testing.taw
+  - (repackaged) https://github.com/dashpay/dash/releases/tag/v20.0.0
+  - dashcore-sentinel no longer needed. Requirement becomes an Obsoletes
 
 * Sun Apr 23 2023 Todd Warner <t0dd_at_protonmail.com> 19.0.0-1.rp.taw
 * Sun Apr 23 2023 Todd Warner <t0dd_at_protonmail.com> 19.0.0-0.1.rp.testing.taw
