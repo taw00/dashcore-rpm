@@ -35,7 +35,7 @@ Summary: Manage and collateralize a Dash Masternode with a hardware wallet
 
 #BuildArch: noarch
 
-%define isTestBuild 0
+%define isTestBuild 1
 %define sourceIsBinary 0
 
 %define buildQualifier hotfix4
@@ -46,7 +46,7 @@ Summary: Manage and collateralize a Dash Masternode with a hardware wallet
 
 # VERSION
 %define vermajor 0.9
-%define verminor 32
+%define verminor 37
 Version: %{vermajor}.%{verminor}
 
 # RELEASE
@@ -150,17 +150,18 @@ Source1: https://github.com/taw00/dashcore-rpm/raw/master/SOURCES/%{sourcetree_c
 # As of 0.9.27, python3.8 has to be forced
 # Otherwise, drop this next BuildRequires
 BuildRequires: python3.8
-Requires: zenity
-BuildRequires: python3-devel python3-virtualenv
+BuildRequires: python3-devel openssl-devel zlib-devel bzip2-devel sqlite-devel libffi-devel libXinerama-devel wget
+BuildRequires: python3-pip python3-virtualenv
 BuildRequires: libusbx-devel libudev-devel
+
 # Can't use OS-level qt bits for some reason.
 #BuildRequires: python3-qt5 python3-pyqt5-sip python3-pyqtchart
 BuildRequires: gcc-c++ cmake gmp-devel
 BuildRequires: sed
 # All these python requirements were an attempt to reduce the python upstream
-# fetches by the build. Unfortunately, DMT doesn't attempt to use
+# fetches by the build. Unfortunately, DMT mostly doesn't attempt to use
 # system-installed packages.
-#BuildRequires: python2-qt5
+#BuildRequires: python3-qt5
 #BuildRequires: python3-pyqtchart-devel
 #BuildRequires: python3-simplejson python3-mnemonic python3-requests python3-paramiko python3-cryptography python3-more-itertools
 %endif
@@ -222,7 +223,7 @@ Supported hardware wallets: Trezor (model One and T), KeepKey, Ledger Nano S
 # I create a root dir and place the source and contribution trees under it.
 # Extracted source tree structure (extracted in .../BUILD)
 #   projectroot                 dash-masternode-tool-0.9
-#      \_sourcetree               \_dash-masternode-tool-0.9.27
+#      \_sourcetree               \_dash-masternode-tool-0.9.37
 #      \_sourcetree_contrib       \_dash-masternode-tool-0.9-contrib
 #      \_sourcetree_btchip_python \_btchip-python-SOME_VERSION -- stopped including as of 0.9.27
 
@@ -243,6 +244,7 @@ cd ../.. ; /usr/bin/tree -df -L 2 BUILD ; cd -
   # Modified requirements.txt...
   # (requirements.txt is the instruction-set for what other code to fetch from the internet.)
   # ...we use the OS-supplied libusb
+  # (this is done instead of splatting the sourcetree_contrib/build/requirements.txt file in here)
   sed -i.previous '{s/'"libusb1"'/'"#libusb1"'/}' %{sourcetree}/requirements.txt
   #sed -i.previous '{s/'"pyinstaller"'/'"#pyinstaller"'/}' %%{sourcetree}/requirements.txt
   # ...don't get btchip-python, since we supply it (old versions used explicite github source) new, uses python hubs
@@ -261,10 +263,10 @@ cd ../.. ; /usr/bin/tree -df -L 2 BUILD ; cd -
   #%%endif
 
   # As of 0.9.27, python3.8 has to be forced
-  #[ -f /usr/bin/virtualenv-3 ] && /usr/bin/virtualenv-3 -p python3 ./venv || /usr/bin/virtualenv -p python3 ./venv
   [ -f /usr/bin/virtualenv-3 ] && /usr/bin/virtualenv-3 -p python3.8 ./venv || /usr/bin/virtualenv -p python3.8 ./venv
   . ./venv/bin/activate
 
+### This solution is no longer relevant. Keeping for posterity.
   # We have fought pip installation fo pyinstaller in the past. It seems to
   # crop again of from time to time.
   # I am leaving this here, but commented out for posterity. Probably should
@@ -275,7 +277,7 @@ cd ../.. ; /usr/bin/tree -df -L 2 BUILD ; cd -
   # https://stackoverflow.com/questions/54338714/pip-install-pyinstaller-no-module-named-pyinstaller
 #  ./venv/bin/pip3 install 'pyinstaller>=3.3'
 
-  # This solution is no longer relevant. Keeping for posterity.
+### This solution is no longer relevant. Keeping for posterity.
   # To solve https://github.com/taw00/dashcore-rpm/issues/1 force a version downgrade
 #  ./venv/bin/pip3 install --upgrade 'setuptools<45.0.0'
 
@@ -293,7 +295,6 @@ cd ../.. ; /usr/bin/tree -df -L 2 BUILD ; cd -
     [ ! -e "./venv/%{_lib}64/python3.8/site-packages/trezorlib" -a -d "./venv/%{_lib}/python3.8/site-packages/trezorlib" ] && ln -s ../../../%{_lib}/python3.8/site-packages/trezorlib ./venv/%{_lib}64/python*/site*/
   %endif
 %else
-  mkdir -p %{sourcetree}
   mv DashMasternodeTool %{sourcetree}
 %endif
 
@@ -418,6 +419,13 @@ cd ../../
 
 
 %changelog
+* Wed Dec 13 2023 Todd Warner <t0dd_at_protonmail.com> 0.9.37-1.taw
+* Wed Dec 13 2023 Todd Warner <t0dd_at_protonmail.com> 0.9.37-0.1.testing.taw
+  - https://github.com/Bertrand256/dash-masternode-tool/releases/tag/v0.9.37
+  - archived my packaged modified requirements.txt stuff (we do it in place  
+    in the spec file)
+  - removed a tiny bit of cruft in the spec file
+
 * Mon Oct 24 2022 Todd Warner <t0dd_at_protonmail.com> 0.9.32-1.taw
 * Mon Oct 24 2022 Todd Warner <t0dd_at_protonmail.com> 0.9.32-0.1.testing.taw
   - https://github.com/Bertrand256/dash-masternode-tool/releases/tag/v0.9.32
