@@ -46,7 +46,7 @@ Summary: Manage and collateralize a Dash Masternode with a hardware wallet
 
 # VERSION
 %define vermajor 0.9
-%define verminor 37
+%define verminor 38
 Version: %{vermajor}.%{verminor}
 
 # RELEASE
@@ -419,12 +419,18 @@ cd ../../
 
 
 %changelog
+* Thu Dec 21 2023 Todd Warner <t0dd_at_protonmail.com> 0.9.38-0.1.testing.taw
+  - https://github.com/Bertrand256/dash-masternode-tool/releases/tag/v0.9.38
+  - Build is currently failing.
+
+
 * Wed Dec 13 2023 Todd Warner <t0dd_at_protonmail.com> 0.9.37-1.taw
 * Wed Dec 13 2023 Todd Warner <t0dd_at_protonmail.com> 0.9.37-0.1.testing.taw
   - https://github.com/Bertrand256/dash-masternode-tool/releases/tag/v0.9.37
   - archived my packaged modified requirements.txt stuff (we do it in place  
     in the spec file)
   - removed a tiny bit of cruft in the spec file
+  - Build is failing on Fedora 39
 
 * Mon Oct 24 2022 Todd Warner <t0dd_at_protonmail.com> 0.9.32-1.taw
 * Mon Oct 24 2022 Todd Warner <t0dd_at_protonmail.com> 0.9.32-0.1.testing.taw
