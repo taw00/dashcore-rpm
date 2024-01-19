@@ -28,9 +28,9 @@ Summary: A global payments network and decentralized application (dapp) platform
 %define isTestBuild 1
 %define verX 20
 %define verY 0
-%define verZ 3
-%define _pkgrel 1
-%define _pkgrel_iftestbuild 0.1
+%define verZ 4
+%define _pkgrel 2
+%define _pkgrel_iftestbuild 1.1
 
 # Use if the dev team includes things like rc1 in the filename
 %define buildQualifier rc1
@@ -1258,6 +1258,13 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Dash Electrum: https://github.com/akhavr/electrum-dash
 
 %changelog
+* Fri Jan 19 2024 Todd Warner <t0dd_at_protonmail.com> 20.0.4-2.rp.taw
+* Fri Jan 19 2024 Todd Warner <t0dd_at_protonmail.com> 20.0.4-1.1.rp.testing.taw
+* Fri Jan 19 2024 Todd Warner <t0dd_at_protonmail.com> 20.0.4-1.rp.taw
+* Fri Jan 19 2024 Todd Warner <t0dd_at_protonmail.com> 20.0.4-0.1.rp.testing.taw
+  - (repackaged) https://github.com/dashpay/dash/releases/tag/v20.0.4
+  - fixed changelog date in specfile
+
 * Thu Jan 11 2024 Todd Warner <t0dd_at_protonmail.com> 20.0.3-1.rp.taw
 * Thu Jan 11 2024 Todd Warner <t0dd_at_protonmail.com> 20.0.3-0.1.rp.testing.taw
   - (repackaged) https://github.com/dashpay/dash/releases/tag/v20.0.3
