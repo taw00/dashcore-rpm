@@ -36,6 +36,7 @@ Summary: Manage and collateralize a Dash Masternode with a hardware wallet
 #BuildArch: noarch
 
 %define isTestBuild 1
+%define sourceIsBinary 0
 
 %define buildQualifier hotfix4
 %undefine buildQualifier
@@ -72,10 +73,18 @@ Version: %{vermajor}.%{verminor}
 
 # have to use _variables because rpm spec macros are easily recursive and break.
 %define _snapinfo THIS_VALUE_WILL_BE_REPLACED
-%if 0%{?snapinfo:1}
-  %define _snapinfo %{snapinfo}.rp
+%if %{sourceIsBinary}
+  %if 0%{?snapinfo:1}
+    %define _snapinfo %{snapinfo}.rp
+  %else
+    %define _snapinfo rp
+  %endif
 %else
-  %define _snapinfo rp
+  %if 0%{?snapinfo:1}
+    %define _snapinfo %snapinfo
+  %else
+    %undefine _snapinfo
+  %endif
 %endif
 
 # pkgrel will be defined, snapinfo and minorbump may not be
@@ -119,9 +128,34 @@ Release: %{_release}
 %define installtree %{_datadir}/%{appid}
 
 # dash-masternode-tool-0.9.z
+%if %{sourceIsBinary}
 Source0: https://github.com/Bertrand256/dash-masternode-tool/releases/download/v%{version}/%{binaryarchivename}.tar.gz
+%else
+Source0: https://github.com/Bertrand256/dash-masternode-tool/archive/v%{version}/%{sourcetree}.tar.gz
+%endif
 # dash-masternode-tool-0.9-contrib
 Source1: https://github.com/taw00/dashcore-rpm/raw/master/SOURCES/%{sourcetree_contrib}.tar.gz
+
+%if ! %{sourceIsBinary}
+# !!! Currently broken for Fedora 39+ !!!
+# As of 0.9.27, python3.8 has to be forced
+# Otherwise, drop this next BuildRequires
+BuildRequires: python3.8
+BuildRequires: python3-devel openssl-devel zlib-devel bzip2-devel sqlite-devel libffi-devel libXinerama-devel wget
+BuildRequires: python3-pip python3-virtualenv
+BuildRequires: libusbx-devel libudev-devel
+
+# Can't use OS-level qt bits for some reason.
+#BuildRequires: python3-qt5 python3-pyqt5-sip python3-pyqtchart
+BuildRequires: gcc-c++ cmake gmp-devel
+BuildRequires: sed
+# All these python requirements were an attempt to reduce the python upstream
+# fetches by the build. Unfortunately, DMT mostly doesn't attempt to use
+# system-installed packages.
+#BuildRequires: python3-qt5
+#BuildRequires: python3-pyqtchart-devel
+#BuildRequires: python3-simplejson python3-mnemonic python3-requests python3-paramiko python3-cryptography python3-more-itertools
+%endif
 
 # tree, vim-enhanced, and less for mock build environment introspection
 %if %{isTestBuild}
@@ -179,6 +213,7 @@ Supported hardware wallets: Trezor (model One and T), KeepKey, Ledger Nano S
 #
 # I create a root dir and place the source and contribution trees under it.
 # Extracted source tree structure (extracted in .../BUILD)
+#   projectroot                 dash-masternode-tool-0.9
 #      \_sourcetree_contrib        \_dash-masternode-tool-0.9-contrib
 #      \_binaryarchivename         \_DashMasternodeTool (file) -or-
 #      \_sourcetree                \_dash-masternode-tool-0.9.38
@@ -187,6 +222,10 @@ mkdir -p %{projectroot}
 # if DashMasternodeTool (binary)
 %setup -q -T -D -a 0 -c
 cd .. ; mv %{sourcetree} %{projectroot}/
+%else
+# or if sourcecode
+%setup -q -T -D -a 0 -n %{projectroot}
+%endif
 # contrib
 %setup -q -T -D -a 1 -n %{projectroot}
 
@@ -195,9 +234,80 @@ cd .. ; mv %{sourcetree} %{projectroot}/
 cd ../.. ; /usr/bin/tree -df -L 3 BUILD ; cd -
 %endif
 
+%if ! %{sourceIsBinary}
+  # !!! Currently broken for Fedora 39+ !!!
+  # Modified requirements.txt...
+  # (requirements.txt is the instruction-set for what other code to fetch from the internet.)
+  # ...we use the OS-supplied libusb
+  # (this is done instead of splatting the sourcetree_contrib/build/requirements.txt file in here)
+  sed -i.previous '{s/'"libusb1"'/'"#libusb1"'/}' %{sourcetree}/requirements.txt
+  #sed -i.previous '{s/'"pyinstaller"'/'"#pyinstaller"'/}' %%{sourcetree}/requirements.txt
+  # ...don't get btchip-python, since we supply it (old versions used explicite github source) new, uses python hubs
+  #old way: sed -i.previous '{s/''-e git+https:\/\/github''/''#-e git+https:\/\/github''/}' %%{sourcetree}/requirements.txt
+  #sed -i.previous '{s/'"btchip-python"'/'"#btchip-python"'/}' %%{sourcetree}/requirements.txt
+  # ...we use the OS-supplied QT libraries and force the introspection by changing the version
+  #sed -i.previous '{s/'"PyQt5==5.9.2"'/'"PyQt5==5.13.2"'/}' %%{sourcetree}/requirements.txt
+  #sed -i.previous '{s/'"PyQtChart==5.9.2"'/'"PyQtChart==5.14.0"'/}' %%{sourcetree}/requirements.txt
+
+  ## Manually correct the version.txt file
+  ## Only used if the version.txt file in the source tarball is incorrect
+  #%%if 0%%{?buildQualifier:1}
+  #  echo "version_str = '%%{version}-%%{buildQualifier}`" > %%{sourcetree}/version.txt
+  #%%else
+  #  echo "version_str = '%%{version}`" > %%{sourcetree}/version.txt
+  #%%endif
+
+  # As of 0.9.27, python3.8 has to be forced
+  [ -f /usr/bin/virtualenv-3 ] && /usr/bin/virtualenv-3 -p python3.8 ./venv || /usr/bin/virtualenv -p python3.8 ./venv
+  . ./venv/bin/activate
+
+ ## This solution is no longer relevant. Keeping for posterity.
+  # We have fought pip installation fo pyinstaller in the past. It seems to
+  # crop again of from time to time.
+  # I am leaving this here, but commented out for posterity. Probably should
+  # just nuke it. -todd 2021-05-19
+  # (Is it pip3? or pip? and does Fedora version matter?)
+  # The bug in pip or pyinstaller this resolves:
+  # https://github.com/pyinstaller/pyinstaller/issues/4003 ...see also...
+  # https://stackoverflow.com/questions/54338714/pip-install-pyinstaller-no-module-named-pyinstaller
+ # ./venv/bin/pip3 install 'pyinstaller>=3.3'
+
+ ## This solution is no longer relevant. Keeping for posterity.
+  # To solve https://github.com/taw00/dashcore-rpm/issues/1 force a version downgrade
+ # ./venv/bin/pip3 install --upgrade 'setuptools<45.0.0'
+
+  cd %{sourcetree}
+  ../venv/bin/pip3 install -r requirements.txt
+  cd ..
+  # This is really ugly brute-force bs
+  # ...the _lib define is here to quiet rpmlint
+  %define _lib lib
+  %if 0%{?fedora} && 0%{?fedora} > 32
+    [ ! -e "./venv/%{_lib}64/python3.8/site-packages/bitcoin"   -a -d "./venv/%{_lib}/python3.8/site-packages/bitcoin" ]   && ln -s ../../../%{_lib}/python3.8/site-packages/bitcoin ./venv/%{_lib}64/python*/site*/
+    [ ! -e "./venv/%{_lib}64/python3.8/site-packages/mnemonic"  -a -d "./venv/%{_lib}/python3.8/site-packages/mnemonic" ]  && ln -s ../../../%{_lib}/python3.8/site-packages/mnemonic ./venv/%{_lib}64/python*/site*/
+    [ ! -e "./venv/%{_lib}64/python3.8/site-packages/trezorlib" -a -d "./venv/%{_lib}/python3.8/site-packages/trezorlib" ] && ln -s ../../../%{_lib}/python3.8/site-packages/trezorlib ./venv/%{_lib}64/python*/site*/
+  %endif
+%endif
+
+# For debugging purposes...
+%if %{isTestBuild}
+cd ../.. ; /usr/bin/tree -df -L 2 BUILD ; cd -
+%endif
+
+
 
 %build
 # This section starts us in directory {_builddir}/{projectroot}
+
+%if ! %{sourceIsBinary}
+  # !!! Currently broken for Fedora 39+ !!!
+  cd %{sourcetree}
+  # To solve https://github.com/taw00/dashcore-rpm/issues/1 either force add hidden import or see other solution above
+  # ...but... this didn't seem to work.
+  ../venv/bin/pyinstaller --distpath=../dist/linux --workpath=../dist/linux/build dash_masternode_tool.spec
+  #../venv/bin/pyinstaller --hidden-import='pkg_resources.py2_warn' --distpath=../dist/linux --workpath=../dist/linux/build dash_masternode_tool.spec
+  cd ..
+%endif
 
 
 %install
@@ -232,7 +342,12 @@ install -d %{buildroot}%{installtree}
 
 # Binaries
 install -D -m755 -p %{sourcetree_contrib}/desktop/%{name}-desktop-script.sh %{buildroot}%{installtree}/
+%if ! %{sourceIsBinary}
+# !!! Currently broken for Fedora 39+ !!!
+install -D -m755 -p ./dist/linux/%{_name2} %{buildroot}%{installtree}/%{_name2}
+%else
 install -D -m755 -p %{sourcetree}/%{_name2} %{buildroot}%{installtree}/%{_name2}
+%endif
 ln -s %{installtree}/%{_name2} %{buildroot}%{_bindir}/%{name}
 
 # Most use LICENSE or COPYING... not LICENSE.txt
@@ -279,7 +394,12 @@ cd ../../
 #%%license %%{sourcetree}/LICENSE
 %license %{sourcetree_contrib}/LICENSE
 %doc %{sourcetree_contrib}/README.about-this-rpm.md
+%if ! %{sourceIsBinary}
+# !!! Currently broken for Fedora 39+ !!!
+%doc %{sourcetree}/README.md
+%else
 %doc %{sourcetree_contrib}/build/README.md
+%endif
 
 # Binaries
 %{_bindir}/%{name}
@@ -293,14 +413,10 @@ cd ../../
 
 
 %changelog
-* Tue Apr 23 2024 Todd Warner <t0dd_at_protonmail.com> 0.9.38-2.rp.taw
-* Tue Apr 23 2024 Todd Warner <t0dd_at_protonmail.com> 0.9.38-1.1.testing.rp.taw
-  - Fedora 40 was released, we need a version that works. Repackaging the  
-    upstream binary and stripping out all the build stuff. Wee!
-
 * Thu Dec 21 2023 Todd Warner <t0dd_at_protonmail.com> 0.9.38-0.1.testing.taw
   - https://github.com/Bertrand256/dash-masternode-tool/releases/tag/v0.9.38
   - Build is currently failing.
+
 
 * Wed Dec 13 2023 Todd Warner <t0dd_at_protonmail.com> 0.9.37-1.taw
 * Wed Dec 13 2023 Todd Warner <t0dd_at_protonmail.com> 0.9.37-0.1.testing.taw
