@@ -115,10 +115,11 @@ Data directory: Usually either `/var/lib/dashcore` or `$HOME/.dashcore`
 * If `testnet=1`, your data-directory becomes your `<data-directory>/testnet3`
 * `dash.conf` is independent of this, even if you choose to store it in your data-directory.
 
+<!-- NO LONGER RELEVANT
 `sentinel.conf`
 
 * `network=testnet` or `network=mainnet`
-
+-->
 
 
 

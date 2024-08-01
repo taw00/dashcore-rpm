@@ -1,5 +1,7 @@
 # Dash Core for Fedora Linux<br />_...wallet, node, and masternode_
 
+### OUT OF DATE
+
 The most current source packages can be found in this directory:
 <https://github.com/taw00/dashcore-rpm/tree/master/SRPMS>
 
@@ -11,12 +13,12 @@ The original components used to build these packages come from:
 
 * Tagged release builds / source archives:
   - Dash <https://github.com/dashpay/dash/releases>
-  - Sentinel <https://github.com/dashpay/sentinel/releases>
+  <!--- Sentinel <https://github.com/dashpay/sentinel/releases>-->
   - Dash Masternode Tool  <https://github.com/Bertrand256/dash-masternode-tool/releases>
 
 * Directly from the build system and non-tagged repositories:
   - Dash <https://bamboo.dash.org/browse/DASHL-DEV/latestSuccessful>
-  - Sentinel <https://github.com/dashpay/sentinel>
+  <!--- Sentinel <https://github.com/dashpay/sentinel>-->
   - Dash Masternode Tool  <https://github.com/Bertrand256/dash-masternode-tool>
 
 Each RPM contains my own contributed imagery and configuration. If you wish to

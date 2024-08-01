@@ -11,11 +11,11 @@
 > Associated announcments:
 > - https://www.dash.org/blog/introducing-dashmate-the-masternode-setup-tool-for-dash-platform/
 > - https://www.dash.org/blog/dashcore-v18-0-product-brief/
-> 
+>
 
 
 **Supported builds and other notices:**
-* RHEL and CentOS: For both Dash Core and Dash Masternode Tool (DMT), I no longer supply packages for RHEL/CentOS.
+* ~~RHEL and CentOS: For both Dash Core and Dash Masternode Tool (DMT), I no longer supply packages for RHEL/CentOS.~~
 * For Dash Core, use the provided systemd configuration. This makes nodes near bullet-proof, even on Fedora.
 * Dash Masternode Tool: DMT will remain Fedora-only! except for test builds.
 * Keep up with Fedora's release schedule: <https://fedoraproject.org/wiki/Releases>

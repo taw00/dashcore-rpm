@@ -27,10 +27,19 @@ trivial.
 Assuming you are logging in as a normal user who has `sudo` priviledges.<br />
 At the terminal command line...
 
+<!-- OLD WAY
 ```bash
 # Fedora only at the moment
 sudo rpm --import https://keybase.io/toddwarner/key.asc
 sudo dnf install -y https://raw.githubusercontent.com/taw00/dashcore-rpm/master/toddpkgs-dashcore-repo.fedora.rpm
+sudo dnf install -y dashcore-client --refresh
+dash-qt
+```
+-->
+
+```bash
+# Fedora only at the moment
+sudo dnf copr enable taw/dashcore-0.14 # ignore the 0.14 legacy artifact
 sudo dnf install -y dashcore-client --refresh
 dash-qt
 ```
@@ -51,11 +60,20 @@ who has `sudo` priviledges.
 
 At the terminal command line...
 
+<!-- OLD WAY
 ```bash
 # Fedora only at the moment
 sudo rpm --import https://keybase.io/toddwarner/key.asc
 sudo dnf install -y https://raw.githubusercontent.com/taw00/dashcore-rpm/master/toddpkgs-dashcore-repo.fedora.rpm
 sudo dnf install -y dash-masternode-tool --refresh
+```
+-->
+
+```bash
+# Fedora only at the moment
+sudo dnf copr enable taw/dashcore-0.14 # ignore the 0.14 legacy artifact
+sudo dnf install -y dash-masternode-tool --refresh
+dash-masternode-tool
 ```
 
 **Boom!** You should now see the Dash Masternode Tool graphical application
@@ -108,8 +126,7 @@ access. Log into a terminal and do this...
 
 ```bash
 # My system is Fedora...
-sudo rpm --import https://keybase.io/toddwarner/key.asc
-sudo dnf install -y https://raw.githubusercontent.com/taw00/dashcore-rpm/master/toddpkgs-dashcore-repo.fedora.rpm
+sudo dnf copr enable taw/dashcore-0.14 # ignore the 0.14 legacy artifact
 ```
 
 That's it! You are now configured to install Dash Core through your package
@@ -126,6 +143,7 @@ sudo dnf list|grep dashcore
 You should get a nice listing of all the packages available to your linux
 system.
 
+<!-- NO LONGER SUPPORTED
 ### Stable versus the not-so-stable testing repos
 
 By default, those `*.repo` files configure your system to only pull from the
@@ -147,6 +165,7 @@ the version of what software is available just changed.
 
 To switch back to the stable repositories, just flip-flop the enable/disable
 command line switches above and re-run those commands.
+-->
 
 ## Installing or Upgrading Dash Core software
 
@@ -206,6 +225,7 @@ Send comments or feedback to <t0dd@protonmail.com>
 
 ## Appendix: QnA and other information
 
+<!-- Sentinel is no longer a thing
 #### Q: Sentinel? What's this Sentinel thing?
 
 A: Operating a Masternode requires 3 things now...
@@ -219,20 +239,23 @@ Sentinel is going to increasingly take over the duties of a Masternode, whereas
 
 This is all explained in the [Masternode
 documentation](https://github.com/taw00/dashcore-rpm/tree/master/documentation).
+-->
 
-
+<!-- NO LONGER SUPPORTED
 #### Q: Testing?
 
 A. In that repository configaration file that you downloaded and installed in
 directory `/etc/yum.repos.d`, you have access to test versions of Dash. Unless
 you know what you are doing, I do not recommend you enable that repository.
-
+-->
 
 #### Q: What are all these packages?
 
+<!-- NO LONGER
 * **toddpkgs-dashcore-repo** -- this package enables automation of installation
   and update of all the packages listed below via dnf repository
   configuration.
+-->
 
 * **dash-masternode-tool** -- A graphical desktop application that enables
   masternode owners to manage their masternode collateral from a hardware
@@ -257,7 +280,7 @@ you know what you are doing, I do not recommend you enable that repository.
   party applications to verify scripts (and other functionality in the future).
 
 * **dashcore-devel** -- provides the libraries and header files necessary to
-  compile programs which use libbitcoinconsensus. *Requires `dashcore-libs` to
+  compile programs which use libdashconsensus. *Requires `dashcore-libs` to
   be installed as well.*
 
 * **dashcore-[*version info*].src.rpm** -- The source code -- the source RPM, or

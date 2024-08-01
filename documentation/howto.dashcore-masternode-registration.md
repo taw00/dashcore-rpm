@@ -1,5 +1,7 @@
 # HowTo: Register a Dash Core version 0.13.0 Masternode
 
+### THIS IS DATED: See instructions for dash-masternode-tool via dash.org
+
 These instructions are specific to node, masternode, and wallet users running
 the software on Fedora, ~~CentOS, or RHEL~~ (i386 and x86_64) plugged into the
 ~~`yum`~~ or `dnf` install and update process described in other documentation
@@ -19,7 +21,9 @@ Version 0.13.0 merges two models of registering a masternode on the network. The
   - [[1.1] Install a Dash Core wallet (or use a hardware wallet)](#11-install-a-dash-core-wallet-or-use-a-hardware-wallet)
   - [[1.2] Send 1000 Dash (the collateral) to the wallet](#12-send-1000-dash-the-collateral-to-the-wallet)
   - [[1.3] Deploy and configure a Dash Core node](#13-deploy-and-configure-a-dash-core-node)
+<!-- NO LONGER RELEVANT
   - [[1.4] Configure Dash Sentinel on the Dash Core node](#14-configure-dash-sentinel-on-the-dash-core-node)
+-->
   - [[1.5] Generate a private "masternode key" via the wallet (a shared secret)](#15-generate-a-private-masternode-key-via-the-wallet-a-shared-secret)
   - [[1.6] Increase `maxconnections` and set `externalip` and `masternodeprivkey` values in the Dash Core node's `dash.conf` configuration file](#16-increase-maxconnections-and-set-externalip-and-masternodeprivkey-values-in-the-dash-core-nodes-dashconf-configuration-file)
 - [PART 2: Configure the wallet and masternode (pre-DIP003)](#part-2-configure-the-wallet-and-masternode-pre-dip003)
@@ -78,6 +82,7 @@ Take note of (store somewhere) the receiving address, transaction ID, and index 
 
 If you have one already set up, skip this step, or see [these instructions](https://github.com/taw00/dashcore-rpm/blob/master/documentation/howto.dashcore-node-setup.systemd.md).
 
+<!-- NO LONGER RELEVANT
 ### [1.4] Configure Dash Sentinel on the Dash Core node
 
 There are really two services associated to a masternode, the node itself
@@ -131,6 +136,7 @@ Sentinel is now set up and "running" every minute. You can monitor it's activiti
 ```
 sudo tail -f /var/log/dashcore/sentinel.log
 ```
+-->
 
 ### [1.5] Generate a private "masternode key" via the wallet (a shared secret)
 

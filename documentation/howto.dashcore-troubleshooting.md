@@ -21,12 +21,14 @@ There are a number of log files and watch commands you can issue to monitor the 
 
 #### If configured and operated as a `systemd` service
 
+<!-- NO LONGER RELEVANT
 Watch Sentinel's activity - silence is good. Make sure you check your crontab
 settings to see if you are actually loging to this file, by default, you will
 be if you install with our RPM packages.
 ```
 sudo tail -f /var/log/dashcore/sentinel.log
 ```
+-->
 
 ```
 # mainnet
@@ -100,12 +102,14 @@ do things like: `dashcli masternode status`
 I.e., Your data directory is in ~/.dashcore and configuration file is
 ~/.dashcore/dash.conf
 
+<!-- NO LONGER RELEVANT
 Watch Sentinel's activity - silence is good. Make sure you check your crontab
 settings to see if you are actually loging to this file, by default, you will
 be if you install with our RPM packages.
 ```
 sudo tail -f /var/log/dashcore/sentinel.log
 ```
+-->
 
 ```
 # mainnet
