@@ -60,6 +60,17 @@ available binary RPMs, please visit this link:
 
 ---
 
+### EXPIRED GPG KEY?
+
+If you get complaints about an expired GPG for the COPR repo after `dnf` downloads one of the dashcore RPMs, do this …
+
+1. Find the actual COPR key using: `rpm -q --qf "%{NAME}-%{VERSION}-%{RELEASE}\t%{SUMMARY}\n" gpg-pubkey | grep dashcore`
+2. Remove your current GPG key for the COPR: `sudo rpm -e gpg-pubkey-XXXXXXXX-XXXXXXXX` (replacing the gpg-pubkey-* with the numbers from step 1).
+3. Re-install or upgrade: `sudo dnf upgrade -y or sudo dnf install dashcore-client -y` or `sudo dnf install dashcore-server -y`
+
+
+---
+
 ### Disclaimer!
 
 These packages have been successfully built and tested, but I lay no claim that
@@ -76,5 +87,5 @@ loss of funds or damages associated to this software.
 ### Send comment and feedback - <https://keybase.io/toddwarner>
 
 _Come say hello to me. I am **t0dd** in various forums: [Dash Talk on Discord](https://discord.com/invite/PXbUxJB),
-[dash.org's forum](https://www.dash.org/forum/), and in various chat rooms on Matrix.org.
+[dash.org's forum](https://www.dash.org/forum/), and in various chat rooms on Matrix.org._
 
