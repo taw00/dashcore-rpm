@@ -45,13 +45,13 @@ Summary: Manage and collateralize a Dash Masternode with a hardware wallet
 
 # VERSION
 %define vermajor 0.9
-%define verminor 38
+%define verminor 39
 Version: %{vermajor}.%{verminor}
 
 # RELEASE
-%define _pkgrel 2
+%define _pkgrel 1
 %if %{isTestBuild}
-  %define _pkgrel 1.1
+  %define _pkgrel 0.1
 %endif
 
 # MINORBUMP
@@ -293,6 +293,10 @@ cd ../../
 
 
 %changelog
+* Thu Aug 22 2024 Todd Warner <t0dd_at_protonmail.com> 0.9.39-1.rp.taw
+* Thu Aug 22 2024 Todd Warner <t0dd_at_protonmail.com> 0.9.39-0.1.testing.rp.taw
+  - https://github.com/Bertrand256/dash-masternode-tool/releases/tag/v0.9.39
+
 * Tue Apr 23 2024 Todd Warner <t0dd_at_protonmail.com> 0.9.38-2.rp.taw
 * Tue Apr 23 2024 Todd Warner <t0dd_at_protonmail.com> 0.9.38-1.1.testing.rp.taw
   - Fedora 40 was released, we need a version that works. Repackaging the  
