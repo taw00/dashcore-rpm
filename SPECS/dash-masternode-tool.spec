@@ -35,7 +35,7 @@ Summary: Manage and collateralize a Dash Masternode with a hardware wallet
 
 #BuildArch: noarch
 
-%define isTestBuild 1
+%define isTestBuild 0
 
 %define buildQualifier hotfix4
 %undefine buildQualifier
@@ -49,9 +49,9 @@ Summary: Manage and collateralize a Dash Masternode with a hardware wallet
 Version: %{vermajor}.%{verminor}
 
 # RELEASE
-%define _pkgrel 1
+%define _pkgrel 2
 %if %{isTestBuild}
-  %define _pkgrel 0.1
+  %define _pkgrel 1.1
 %endif
 
 # MINORBUMP
@@ -181,7 +181,7 @@ Supported hardware wallets: Trezor (model One and T), KeepKey, Ledger Nano S
 # Extracted source tree structure (extracted in .../BUILD)
 #      \_sourcetree_contrib        \_dash-masternode-tool-0.9-contrib
 #      \_binaryarchivename         \_DashMasternodeTool (file) -or-
-#      \_sourcetree                \_dash-masternode-tool-0.9.38
+#      \_sourcetree                \_dash-masternode-tool-0.9.39
 
 mkdir -p %{projectroot}
 # if DashMasternodeTool (binary)
@@ -192,7 +192,7 @@ cd .. ; mv %{sourcetree} %{projectroot}/
 
 # For debugging purposes...
 %if %{isTestBuild}
-cd ../.. ; /usr/bin/tree -df -L 3 BUILD ; cd -
+cd ../../.. ; /usr/bin/tree -df -L 3 BUILD ; cd -
 %endif
 
 
@@ -293,6 +293,10 @@ cd ../../
 
 
 %changelog
+* Fri Aug 30 2024 Todd Warner <t0dd_at_protonmail.com> 0.9.39-2.rp.taw
+* Fri Aug 30 2024 Todd Warner <t0dd_at_protonmail.com> 0.9.39-1.1.testing.rp.taw
+  - fixed a cd issue in the spec
+
 * Thu Aug 22 2024 Todd Warner <t0dd_at_protonmail.com> 0.9.39-1.rp.taw
 * Thu Aug 22 2024 Todd Warner <t0dd_at_protonmail.com> 0.9.39-0.1.testing.rp.taw
   - https://github.com/Bertrand256/dash-masternode-tool/releases/tag/v0.9.39
