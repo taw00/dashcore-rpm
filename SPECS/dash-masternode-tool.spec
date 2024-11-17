@@ -49,9 +49,9 @@ Summary: Manage and collateralize a Dash Masternode with a hardware wallet
 Version: %{vermajor}.%{verminor}
 
 # RELEASE
-%define _pkgrel 3
+%define _pkgrel 4
 %if %{isTestBuild}
-  %define _pkgrel 2.2
+  %define _pkgrel 3.1
 %endif
 
 # MINORBUMP
