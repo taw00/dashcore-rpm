@@ -31,7 +31,7 @@
 Name: dash-masternode-tool
 %define _name2 DashMasternodeTool
 Summary: Manage and collateralize a Dash Masternode with a hardware wallet
-%define appid org.dash.dash_core.DashMasternodeTool
+%define appid org.dash.dash_core.%{_name2}
 
 #BuildArch: noarch
 
@@ -293,9 +293,26 @@ cd ../../
 %{_metainfodir}/%{appid}.metainfo.xml
 
 
+
+%post
+umask 007
+/usr/bin/update-desktop-database &> /dev/null || :
+
+%postun
+umask 007
+/usr/bin/update-desktop-database &> /dev/null || :
+
+
+
 %changelog
-* Sat Nov 17 2024 Todd Warner <t0dd_at_protonmail.com> 0.9.39-3.rp.taw
-* Sat Nov 17 2024 Todd Warner <t0dd_at_protonmail.com> 0.9.39-2.2.testing.rp.taw
+* Sun Nov 17 2024 Todd Warner <t0dd_at_protonmail.com> 0.9.39-4.rp.taw
+* Sun Nov 17 2024 Todd Warner <t0dd_at_protonmail.com> 0.9.39-3.1.testing.rp.taw
+  - fixed appid labeling
+  - refined the .desktop file a bit
+  - added update-desktop-database to the spec
+
+* Sun Nov 17 2024 Todd Warner <t0dd_at_protonmail.com> 0.9.39-3.rp.taw
+* Sun Nov 17 2024 Todd Warner <t0dd_at_protonmail.com> 0.9.39-2.2.testing.rp.taw
 * Sat Nov 16 2024 Todd Warner <t0dd_at_protonmail.com> 0.9.39-2.1.testing.rp.taw
   - fixed a couple appstream metainfo issues
   - updated the appid to meet spec

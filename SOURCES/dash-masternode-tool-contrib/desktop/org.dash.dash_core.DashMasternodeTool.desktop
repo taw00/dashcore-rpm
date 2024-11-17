@@ -1,12 +1,16 @@
 [Desktop Entry]
-Name=Dash Masternode Tool
-Comment=Manage and collateralize a Dash Masternode with a hardware wallet
-GenericName=Crytocurrency Wallet Utility
-Categories=Office;Finance;X-Cryptocurrency;X-Dash;
-Exec=/usr/share/org.dash.dash_core.dash_masternode_tool/dash-masternode-tool-desktop-script.sh
-Terminal=false
 Type=Application
-StartupNotify=true
-Icon=org.dash.dash_core.dash_masternode_tool
+Name=Dash Masternode Tool
+GenericName=Crytocurrency Wallet Utility
 Name[en_US]=Dash Masternode Tool
 GenericName[en_US]=Crytocurrency Wallet Utility
+Comment=Manage and collateralize a Dash Masternode with a hardware wallet
+Categories=Office;Finance;
+TryExec=/usr/share/org.dash.dash_core.DashMasternodeTool/DashMasternodeTool
+Exec=/usr/share/org.dash.dash_core.DashDasternodeTool/dash-masternode-tool-desktop-script.sh
+Icon=org.dash.dash_core.DashMasternodeTool
+MimeType=x-scheme-handler/dash;
+Terminal=false
+SingleMainWindow=true
+StartupNotify=true
+Version=1.5

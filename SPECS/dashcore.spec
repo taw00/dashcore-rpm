@@ -29,8 +29,8 @@ Summary: A global payments network and decentralized application (dapp) platform
 %define verX 21
 %define verY 1
 %define verZ 1
-%define _pkgrel 3
-%define _pkgrel_iftestbuild 2.1
+%define _pkgrel 4
+%define _pkgrel_iftestbuild 3.1
 
 # Use if the dev team includes things like rc1 in the filename
 %define buildQualifier rc1
@@ -1258,6 +1258,10 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Dash Electrum: https://github.com/akhavr/electrum-dash
 
 %changelog
+* Sun Nov 17 2024 Todd Warner <t0dd_at_protonmail.com> 21.1.1-4.rp.taw
+* Sun Nov 17 2024 Todd Warner <t0dd_at_protonmail.com> 21.1.1-3.1.rp.testing.taw
+  - refined the .desktop file a bit
+
 * Sun Nov 17 2024 Todd Warner <t0dd_at_protonmail.com> 21.1.1-3.rp.taw
 * Sun Nov 17 2024 Todd Warner <t0dd_at_protonmail.com> 21.1.1-2.1.rp.testing.taw
   - fixing additional appstream and desktop deficiencies
