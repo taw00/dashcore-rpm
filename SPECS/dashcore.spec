@@ -862,11 +862,11 @@ cd %{srccontribtree}/linux/desktop/
 # org.dash.dash_core.dash-qt.desktop
 # https://docs.fedoraproject.org/en-US/packaging-guidelines/#_desktop_files
 install -m755  dash-wallet.wrapper.sh %{buildroot}%{_bindir}/
-desktop-file-install --dir=%{buildroot}%{_datadir}/applications %{appid_wallet}.desktop
-desktop-file-validate %{buildroot}%{_datadir}/applications/%{appid_wallet}.desktop
+desktop-file-install --dir=%{buildroot}%{_datadir}/applications %{appid}.desktop
+desktop-file-validate %{buildroot}%{_datadir}/applications/%{appid}.desktop
 # org.dash.dash_core.dash-qt.metainfo.xml
 # https://docs.fedoraproject.org/en-US/packaging-guidelines/AppData/
-install -D -m644 -p %{appid_wallet}.metainfo.xml %{buildroot}%{_metainfodir}/%{appid_wallet}.metainfo.xml
+install -D -m644 -p %{appid}.metainfo.xml %{buildroot}%{_metainfodir}/%{appid}.metainfo.xml
 appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/*.metainfo.xml
 # desktop icons
 install -D -m644            dash-hicolor-64.png         %{buildroot}%{_datadir}/icons/hicolor/64x64/apps/%{appid}.png
@@ -1094,8 +1094,8 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 %{_bindir}/dash-qt
 %{_bindir}/dash-wallet
 %{_bindir}/dash-wallet.wrapper.sh
-%{_datadir}/applications/%{appid_wallet}.desktop
-%{_metainfodir}/%{appid_wallet}.metainfo.xml
+%{_datadir}/applications/%{appid}.desktop
+%{_metainfodir}/%{appid}.metainfo.xml
 # XXX Removing this unless someone gripes
 %{_datadir}/icons/*
 %{_mandir}/man1/dash-wallet.1.gz
