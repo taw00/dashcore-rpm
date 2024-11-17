@@ -31,7 +31,7 @@
 Name: dash-masternode-tool
 %define _name2 DashMasternodeTool
 Summary: Manage and collateralize a Dash Masternode with a hardware wallet
-%define appid org.dash.dash_core.dash_masternode_tool
+%define appid org.dash.dash_core.DashMasternodeTool
 
 #BuildArch: noarch
 
@@ -101,7 +101,7 @@ Release: %{_release}
 # Extracted source tree structure (extracted in .../BUILD)
 # (sourcetree and binaryarchivename will be mutually exclusive)
 #   projectroot                 dash-masternode-tool-0.9
-#      \_sourcetree_contrib        \_dash-masternode-tool-0.9-contrib
+#      \_sourcetree_contrib        \_dash-masternode-tool-contrib
 #      \_binaryarchivename         \_DashMasternodeTool (file) -or-
 #      \_sourcetree                \_dash-masternode-tool-0.9.38
 %define projectroot %{name}-%{vermajor}
@@ -113,15 +113,16 @@ Release: %{_release}
 %define binaryarchivename %{_name2}_%{version}.linux
 %endif
 
-%define sourcetree_contrib %{name}-%{vermajor}-contrib
+%define sourcearchive_contrib %{name}-%{vermajor}-contrib
+%define sourcetree_contrib %{name}-contrib
 
 # /usr/share/org.dash.dash_core.dash_masternode_tool
 %define installtree %{_datadir}/%{appid}
 
-# dash-masternode-tool-0.9.z
+# dash-masternode-tool-0.9.z.tar.gz
 Source0: https://github.com/Bertrand256/dash-masternode-tool/releases/download/v%{version}/%{binaryarchivename}.tar.gz
-# dash-masternode-tool-0.9-contrib
-Source1: https://github.com/taw00/dashcore-rpm/raw/master/SOURCES/%{sourcetree_contrib}.tar.gz
+# dash-masternode-tool-0.9-contrib.tar.gz
+Source1: https://github.com/taw00/dashcore-rpm/raw/master/SOURCES/%{sourcearchive_contrib}.tar.gz
 
 # tree, vim-enhanced, and less for mock build environment introspection
 %if %{isTestBuild}
@@ -179,7 +180,7 @@ Supported hardware wallets: Trezor (model One and T), KeepKey, Ledger Nano S
 #
 # I create a root dir and place the source and contribution trees under it.
 # Extracted source tree structure (extracted in .../BUILD)
-#      \_sourcetree_contrib        \_dash-masternode-tool-0.9-contrib
+#      \_sourcetree_contrib        \_dash-masternode-tool-contrib
 #      \_binaryarchivename         \_DashMasternodeTool (file) -or-
 #      \_sourcetree                \_dash-masternode-tool-0.9.39
 
@@ -293,10 +294,12 @@ cd ../../
 
 
 %changelog
-* Sat Nov 16 2024 Todd Warner <t0dd_at_protonmail.com> 0.9.39-3.rp.taw
-* Sat Nov 16 2024 Todd Warner <t0dd_at_protonmail.com> 0.9.39-2.2.testing.rp.taw
+* Sat Nov 17 2024 Todd Warner <t0dd_at_protonmail.com> 0.9.39-3.rp.taw
+* Sat Nov 17 2024 Todd Warner <t0dd_at_protonmail.com> 0.9.39-2.2.testing.rp.taw
 * Sat Nov 16 2024 Todd Warner <t0dd_at_protonmail.com> 0.9.39-2.1.testing.rp.taw
   - fixed a couple appstream metainfo issues
+  - updated the appid to meet spec
+  - change he naming scheme of the contrib
 
 * Fri Aug 30 2024 Todd Warner <t0dd_at_protonmail.com> 0.9.39-2.rp.taw
 * Fri Aug 30 2024 Todd Warner <t0dd_at_protonmail.com> 0.9.39-1.1.testing.rp.taw

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <!-- Copyright 2016 Todd Warner, only this packaging and some docs -->
+  <id>org.dash.dash_core.DashWallet</id>
+  <launchable type="desktop-id">org.dash.dash_core.DashWallet.desktop</launchable>
+
+  <name>Dash Core Wallet</name>
+  <summary>Dash cryptocurrency wallet</summary>
+
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>MIT</project_license>
+  <content_rating type="oars-1.1" />
+
+  <developer id="org.dash">
+      <name>Even Duffield</name>
+      <name>Dash Core Team</name>
+      <name>Dash Community</name>
+  </developer>
+  <project_group>Dash Core</project_group>
+
+  <url type="homepage">https://dash.org/</url>
+  <url type="bugtracker">https://github.com/dashpay/dash/issues</url>
+  <url type="help">https://docs.dash.org/en/stable/</url>
+
+  <!-- for this package build -->
+  <update_contact>t0dd_AT_protonmail.com</update_contact>
+  <custom>
+      <value key="package_maintainer">Todd Warner</value>
+      <value key="package_maintainer_email">t0dd_AT_protonmail.com</value>
+      <value key="package_bugtracker">https://github.com/taw00/dashcore-rpm/issues</value>
+  </custom>
+
+  <description translate="no">
+   <p>Dash Core reference implementation. This package provides a user-friendly(er) graphical wallet manager  for personal use.</p>
+   <p>Dash (Digital Cash) is a global payments network with its own cryptocurrency offering businesses and individuals instant payments to anyone, anywhere in the world. Payments are instant, easy and secure, with neglible fees. Dash uses peer-to-peer technology to operate with no central authority, managing transactions and money-issuance carried out collectively by the network. Additionally, the Dash Network operates with a model of self-governance and self-funding. The Dash Network is the first ever successful decentralized autonomous organizations (DAO). Dash Core is the name of the opens-source software which enables the use of this currency. Dash has introduced many industry-first innovations including masternodes, LLMQs, ChainLocks, and InstantSend. Dash is digital cash that offers financial freedom to anyone.</p>
+  </description>
+
+  <screenshots>
+    <screenshot type="default">
+      <caption>Dashboard for the application</caption>
+      <image>https://docs.dash.org/en/stable/_images/overview.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>A received transaction</caption>
+      <image>https://docs.dash.org/en/stable/_images/received.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>A received transaction notification</caption>
+      <image>https://docs.dash.org/en/stable/_images/received-notification.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>The Send tab filled out for a transaction</caption>
+      <image>https://docs.dash.org/en/stable/_images/sendready.png</image>
+    </screenshot>
+  </screenshots>
+
+  <provides>
+    <binary>dash-wallet</binary>
+  </provides>
+
+  <releases>
+      <release version="21.1.0" date="2024-08-08" />
+      <release version="21.0.2" date="2024-08-02" />
+      <release version="21.0.0" date="2024-07-29" />
+      <release version="20.1.1" date="2024-04-05" />
+      <release version="20.1.0" date="2024-03-05" />
+      <release version="20.0.4" date="2024-01-13" />
+      <release version="20.0.3" date="2023-12-27" />
+      <release version="20.0.2" date="2023-12-05" />
+      <release version="20.0.1" date="2023-11-18" />
+      <release version="20.0.0" date="2023-11-15" />
+      <release version="19.3.0" date="2023-07-31" />
+      <release version="19.2.0" date="2023-06-19" />
+      <release version="19.1.0" date="2023-05-22" />
+      <release version="19.0.0" date="2023-04-14" />
+      <release version="18.2.1" date="2023-01-17" />
+      <release version="18.1.1" date="2023-01-08" />
+      <release version="18.1.0" date="2022-10-17" />
+      <release version="18.0.1" date="2022-08-17" />
+      <release version="0.17.0.3" date="2021-06-07" />
+      <release version="0.17.0.2" date="2021-05-19" />
+      <release version="0.16.1.1" date="2020-11-17" />
+      <release version="0.16.1.0" date="2020-11-14" />
+      <release version="0.16.0.1" date="2020-09-30" />
+      <release version="0.16.0.0-rc3" date="2020-09-14" />
+      <release version="0.16.0.0-rc2" date="2020-07-02" />
+      <release version="0.16.0.0-rc1" date="2020-06-11" />
+      <release version="0.15.0.0" date="2020-02-19" />
+      <release version="0.14.0.5" date="2019-12-07" />
+      <release version="0.14.0.4" date="2019-11-22" />
+      <release version="0.14.0.3" date="2019-08-15" />
+      <release version="0.14.0.2" date="2019-07-04" />
+      <release version="0.14.0.1" date="2019-05-31" />
+      <release version="0.14.0.0" date="2019-05-22" />
+      <release version="0.13.3.0" date="2019-04-04" />
+      <release version="0.13.2.0" date="2019-03-15" />
+      <release version="0.13.1.0" date="2019-02-08" />
+      <release version="0.13.0.0" date="2019-01-14" />
+      <release version="0.12.3.4" date="2018-12-14" />
+      <release version="0.12.3.3" date="2018-09-19" />
+      <release version="0.12.3.2" date="2018-07-09" />
+      <release version="0.12.3.1" date="2018-07-03" />
+      <release version="0.12.2.3" date="2018-01-11" />
+      <release version="0.12.2.2" date="2017-12-18" />
+      <release version="0.12.2.1" date="2017-11-11" />
+      <release version="0.12.2.0" date="2017-11-07" />
+      <release version="0.12.1.5" date="2017-04-11" />
+      <release version="0.12.1.4" date="2017-03-22" />
+      <release version="0.12.1.3" date="2017-03-02" />
+      <release version="0.12.1.2" date="2017-02-24" />
+      <release version="0.12.1.1" date="2017-02-19" />
+      <release version="0.12.1.0" date="2017-02-05" />
+      <release version="0.12.0.58" date="2016-06-09" />
+      <release version="0.12.0.57" date="2016-06-03" />
+      <release version="0.12.0.0" date="2015-04-04">
+        <description><p>This is the earliest release noted in this document. Please visit the project website for more information surrounding release history and milestones.</p></description>
+      </release>
+  </releases>
+</component>

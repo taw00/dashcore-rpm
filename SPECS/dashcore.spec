@@ -29,15 +29,14 @@ Summary: A global payments network and decentralized application (dapp) platform
 %define verX 21
 %define verY 1
 %define verZ 1
-%define _pkgrel 2
-%define _pkgrel_iftestbuild 1.1
+%define _pkgrel 3
+%define _pkgrel_iftestbuild 2.1
 
 # Use if the dev team includes things like rc1 in the filename
 %define buildQualifier rc1
 %undefine buildQualifier
 
-%define appid org.dash.dash_core
-%define appid_wallet %{appid}.wallet
+%define appid org.dash.dash_core.DashWallet
 %define appid_node %{appid}.node
 
 # Leave these switched off.
@@ -172,10 +171,10 @@ Release: %{_release}
 %define _archivename_alt3 dashcore-%{version}
 
 # Extracted source tree structure (extracted in .../BUILD)
-#   projectroot           dashcore-18.0.1
-#      \_sourcetree         \_dash-18.0.1 or dash-18.0.1-rc1...
-#      \_binarytree         \_dashcore-18.0.1
-#      \_srccontribtree     \_dashcore-18-contrib
+#   projectroot           dashcore-21.1.1
+#      \_sourcetree         \_dash-21.1.1 or dash-21.1.1-rc1...
+#      \_binarytree         \_dashcore-21.1.1
+#      \_srccontribtree     \_dashcore-contrib
 #      \_patch_files        \_dash-18.0.1-...patch
 #
 # In v18 and older ... Supplied but only "moved":
@@ -204,10 +203,11 @@ Release: %{_release}
 %define bdbarchiveversion 4.8.30.NC
 
 %define projectroot %{name}-%{vermajor}
-%define srccontribtree %{name}-%{verX}-contrib
+%define srccontribarchive %{name}-%{verX}-contrib
+%define srccontribtree %{name}-contrib
 
 
-Source1: https://github.com/taw00/dashcore-rpm/raw/master/SOURCES/%{srccontribtree}.tar.gz
+Source1: https://github.com/taw00/dashcore-rpm/raw/master/SOURCES/%{srccontribarchive}.tar.gz
 %if %{buildFromSource}
 Source0: https://github.com/dashpay/dash/archive/v%{versionqualified}/%{sourcearchivename}.tar.gz
 #XXX Source2: https://github.com/taw00/dashcore-rpm/raw/master/SOURCES/bls-signatures-%%{blsarchiveversion}.tar.gz
@@ -556,7 +556,7 @@ mkdir -p %{projectroot}
 %endif
 
 # Source1: contributions
-# {_builddir}/dashcore-18.1.0/dashcore-18-contrib/
+# {_builddir}/dashcore-21.1.0/dashcore-contrib/
 %setup -q -T -D -a 1 -n %{projectroot}
 
 # XXX Source2: bls-dash archive
@@ -869,13 +869,13 @@ desktop-file-validate %{buildroot}%{_datadir}/applications/%{appid_wallet}.deskt
 install -D -m644 -p %{appid_wallet}.metainfo.xml %{buildroot}%{_metainfodir}/%{appid_wallet}.metainfo.xml
 appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/*.metainfo.xml
 # desktop icons
-install -D -m644 dash-hicolor-64.png       %{buildroot}%{_datadir}/icons/hicolor/64x64/apps/%{appid}.png
-install -D -m644 dash-hicolor-128.png      %{buildroot}%{_datadir}/icons/hicolor/128x128/apps/%{appid}.png
-install -D -m644 dash-hicolor-256.png      %{buildroot}%{_datadir}/icons/hicolor/256x256/apps/%{appid}.png
-install -D -m644 dash-hicolor-scalable.svg %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/%{appid}.svg
-install -D -m644 dash-HighContrast-64.png       %{buildroot}%{_datadir}/icons/HighContrast/64x64/apps/%{appid}.png
-install -D -m644 dash-HighContrast-128.png      %{buildroot}%{_datadir}/icons/HighContrast/128x128/apps/%{appid}.png
-install -D -m644 dash-HighContrast-256.png      %{buildroot}%{_datadir}/icons/HighContrast/256x256/apps/%{appid}.png
+install -D -m644            dash-hicolor-64.png         %{buildroot}%{_datadir}/icons/hicolor/64x64/apps/%{appid}.png
+install -D -m644           dash-hicolor-128.png       %{buildroot}%{_datadir}/icons/hicolor/128x128/apps/%{appid}.png
+install -D -m644           dash-hicolor-256.png       %{buildroot}%{_datadir}/icons/hicolor/256x256/apps/%{appid}.png
+install -D -m644      dash-hicolor-scalable.svg      %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/%{appid}.svg
+install -D -m644       dash-HighContrast-64.png    %{buildroot}%{_datadir}/icons/HighContrast/64x64/apps/%{appid}.png
+install -D -m644      dash-HighContrast-128.png  %{buildroot}%{_datadir}/icons/HighContrast/128x128/apps/%{appid}.png
+install -D -m644      dash-HighContrast-256.png  %{buildroot}%{_datadir}/icons/HighContrast/256x256/apps/%{appid}.png
 install -D -m644 dash-HighContrast-scalable.svg %{buildroot}%{_datadir}/icons/HighContrast/scalable/apps/%{appid}.svg
 cd -
 
@@ -1258,6 +1258,12 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Dash Electrum: https://github.com/akhavr/electrum-dash
 
 %changelog
+* Sun Nov 17 2024 Todd Warner <t0dd_at_protonmail.com> 21.1.1-3.rp.taw
+* Sun Nov 17 2024 Todd Warner <t0dd_at_protonmail.com> 21.1.1-2.1.rp.testing.taw
+  - fixing additional appstream and desktop deficiencies
+  - made the dashcore-contrib stuff more generic
+  - appid is now org.dash.dash_core.DashWallet
+
 * Sat Nov 16 2024 Todd Warner <t0dd_at_protonmail.com> 21.1.1-2.rp.taw
 * Sat Nov 16 2024 Todd Warner <t0dd_at_protonmail.com> 21.1.1-1.1.rp.testing.taw
   - fixing some appstream metainfo deficiencies (validate-strict)
