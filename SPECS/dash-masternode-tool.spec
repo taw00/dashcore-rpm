@@ -35,7 +35,7 @@ Summary: Manage and collateralize a Dash Masternode with a hardware wallet
 
 #BuildArch: noarch
 
-%define isTestBuild 0
+%define isTestBuild 1
 
 %define buildQualifier hotfix4
 %undefine buildQualifier
@@ -49,9 +49,9 @@ Summary: Manage and collateralize a Dash Masternode with a hardware wallet
 Version: %{vermajor}.%{verminor}
 
 # RELEASE
-%define _pkgrel 2
+%define _pkgrel 3
 %if %{isTestBuild}
-  %define _pkgrel 1.1
+  %define _pkgrel 2.2
 %endif
 
 # MINORBUMP
@@ -192,7 +192,7 @@ cd .. ; mv %{sourcetree} %{projectroot}/
 
 # For debugging purposes...
 %if %{isTestBuild}
-cd ../../.. ; /usr/bin/tree -df -L 3 BUILD ; cd -
+/usr/bin/tree -df -L 3 %{_builddir}
 %endif
 
 
@@ -293,9 +293,14 @@ cd ../../
 
 
 %changelog
+* Sat Nov 16 2024 Todd Warner <t0dd_at_protonmail.com> 0.9.39-3.rp.taw
+* Sat Nov 16 2024 Todd Warner <t0dd_at_protonmail.com> 0.9.39-2.2.testing.rp.taw
+* Sat Nov 16 2024 Todd Warner <t0dd_at_protonmail.com> 0.9.39-2.1.testing.rp.taw
+  - fixed a couple appstream metainfo issues
+
 * Fri Aug 30 2024 Todd Warner <t0dd_at_protonmail.com> 0.9.39-2.rp.taw
 * Fri Aug 30 2024 Todd Warner <t0dd_at_protonmail.com> 0.9.39-1.1.testing.rp.taw
-  - fixed a cd issue in the spec
+  - fixed a change directory issue in the spec
 
 * Thu Aug 22 2024 Todd Warner <t0dd_at_protonmail.com> 0.9.39-1.rp.taw
 * Thu Aug 22 2024 Todd Warner <t0dd_at_protonmail.com> 0.9.39-0.1.testing.rp.taw
