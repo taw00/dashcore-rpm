@@ -26,11 +26,11 @@ Summary: A global payments network and decentralized application (dapp) platform
 
 # VERSION and RELEASE components
 %define isTestBuild 1
-%define verX 21
-%define verY 1
-%define verZ 1
-%define _pkgrel 4
-%define _pkgrel_iftestbuild 3.1
+%define verX 22
+%define verY 0
+%define verZ 0
+%define _pkgrel 1
+%define _pkgrel_iftestbuild 0.1
 
 # Use if the dev team includes things like rc1 in the filename
 %define buildQualifier rc1
@@ -1258,6 +1258,10 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Dash Electrum: https://github.com/akhavr/electrum-dash
 
 %changelog
+* Thu Dec 12 2024 Todd Warner <t0dd_at_protonmail.com> 22.0.0-1.rp.taw
+* Thu Dec 12 2024 Todd Warner <t0dd_at_protonmail.com> 22.0.0-0.1.rp.testing.taw
+  - (repackaged) https://github.com/dashpay/dash/releases/tag/v22.0.0
+
 * Sun Nov 17 2024 Todd Warner <t0dd_at_protonmail.com> 21.1.1-4.rp.taw
 * Sun Nov 17 2024 Todd Warner <t0dd_at_protonmail.com> 21.1.1-3.1.rp.testing.taw
   - refined the .desktop file a bit
