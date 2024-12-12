@@ -1,13 +1,6 @@
-packages:=gmp backtrace
+packages:=boost libevent gmp backtrace
 
-protobuf_native_packages =
-protobuf_packages =
-
-openssl_packages =
-
-qt_packages =
-
-qt_linux_packages:=
+qt_linux_packages:=qt expat libxcb xcb_proto libXau xproto freetype fontconfig libxkbcommon libxcb_util libxcb_util_render libxcb_util_keysyms libxcb_util_image libxcb_util_wm
 
 qrencode_linux_packages = qrencode
 qrencode_android_packages = qrencode
@@ -18,12 +11,12 @@ qt_android_packages=qt
 qt_darwin_packages=qt
 qt_mingw32_packages=qt
 
-bdb_packages=
-sqlite_package=sqlite
+bdb_packages=bdb
+sqlite_packages=sqlite
 
-zmq_packages=
+zmq_packages=zeromq
 
-upnp_packages=
+upnp_packages=miniupnpc
 natpmp_packages=libnatpmp
 
 multiprocess_packages = libmultiprocess capnp
