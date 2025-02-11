@@ -1,13 +1,7 @@
 packages:=gmp backtrace
 
-protobuf_native_packages =
-protobuf_packages =
-
-openssl_packages =
-
-qt_packages =
-
 qt_linux_packages:=
+
 
 qrencode_linux_packages = qrencode
 qrencode_android_packages = qrencode
@@ -19,7 +13,6 @@ qt_darwin_packages=qt
 qt_mingw32_packages=qt
 
 bdb_packages=
-sqlite_package=sqlite
 
 zmq_packages=
 
