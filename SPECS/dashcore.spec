@@ -27,7 +27,7 @@ Summary: A global payments network and decentralized application (dapp) platform
 # VERSION and RELEASE components
 %define isTestBuild 1
 %define verX 22
-%define verY 0
+%define verY 1
 %define verZ 0
 %define _pkgrel 1
 %define _pkgrel_iftestbuild 0.1
@@ -342,7 +342,7 @@ Requires: openssl-libs
 Requires: dashcore-utils = %{version}-%{release}
 
 # We no longer need dashcore-sentinel, so force it out!
-Obsoletes: dashcore-sentinel
+Obsoletes: dashcore-sentinel > 0
 
 
 # dashcore-libs
@@ -568,7 +568,7 @@ mkdir -p %{projectroot}
 %if %{buildFromSource} && %{useExtraSources}
 mkdir -p %{sourcetree}/depends/sources/
 #mv ../../SOURCES/bls-signatures-%%{blsarchiveversion}.tar.gz %%{sourcetree}/depends/sources/v%%{blsarchiveversion}.tar.gz <-- dash-0.16 and older
-#mv ../../SOURCES/bls-signatures-%%{blsarchiveversion}.tar.gz %{sourcetree}/depends/sources/bls-dash-%%{blsarchiveversion}.tar.gz <-- dash-18 and older
+#mv ../../SOURCES/bls-signatures-%%{blsarchiveversion}.tar.gz %%{sourcetree}/depends/sources/bls-dash-%%{blsarchiveversion}.tar.gz <-- dash-18 and older
 mkdir -p %{sourcetree}/depends/sources/
 mv ../../SOURCES/libbacktrace-%{libbacktracearchiveversion}.tar.gz %{sourcetree}/depends/sources/%{libbacktracearchiveversion}.tar.gz
 # For EL builds only ...
@@ -1258,6 +1258,10 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Dash Electrum: https://github.com/akhavr/electrum-dash
 
 %changelog
+* Mon Feb 10 2025 Todd Warner <t0dd_at_protonmail.com> 22.1.0-1.rp.taw
+* Mon Feb 10 2025 Todd Warner <t0dd_at_protonmail.com> 22.1.0-0.1.rp.testing.taw
+  - (repackaged) https://github.com/dashpay/dash/releases/tag/v22.1.0
+
 * Thu Dec 12 2024 Todd Warner <t0dd_at_protonmail.com> 22.0.0-1.rp.taw
 * Thu Dec 12 2024 Todd Warner <t0dd_at_protonmail.com> 22.0.0-0.1.rp.testing.taw
   - (repackaged) https://github.com/dashpay/dash/releases/tag/v22.0.0
