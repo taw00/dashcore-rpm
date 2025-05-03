@@ -45,13 +45,13 @@ Summary: Manage and collateralize a Dash Masternode with a hardware wallet
 
 # VERSION
 %define vermajor 0.9
-%define verminor 39
+%define verminor 40
 Version: %{vermajor}.%{verminor}
 
 # RELEASE
-%define _pkgrel 4
+%define _pkgrel 1
 %if %{isTestBuild}
-  %define _pkgrel 3.1
+  %define _pkgrel 0.1
 %endif
 
 # MINORBUMP
@@ -305,6 +305,10 @@ umask 007
 
 
 %changelog
+* Sat May 3 2025 Todd Warner <t0dd_at_protonmail.com> 0.9.40-1.rp.taw
+* Sat May 3 2025 Todd Warner <t0dd_at_protonmail.com> 0.9.40-0.1.testing.rp.taw
+  - https://github.com/Bertrand256/dash-masternode-tool/releases/tag/v0.9.40
+
 * Sun Nov 17 2024 Todd Warner <t0dd_at_protonmail.com> 0.9.39-4.rp.taw
 * Sun Nov 17 2024 Todd Warner <t0dd_at_protonmail.com> 0.9.39-3.1.testing.rp.taw
   - fixed appid labeling
