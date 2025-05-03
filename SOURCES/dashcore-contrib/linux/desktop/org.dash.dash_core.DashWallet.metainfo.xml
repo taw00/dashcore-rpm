@@ -59,6 +59,7 @@
   </provides>
 
   <releases>
+      <release version="22.1.2" date="2025-04-22" />
       <release version="22.1.1" date="2025-02-17" />
       <release version="22.1.0" date="2025-02-10" />
       <release version="22.0.0" date="2024-12-12" />
