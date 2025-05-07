@@ -1,6 +1,7 @@
 #!/usr/bin/bash
 
 _datadir=$HOME/.config/dmt
+_binary=/usr/share/org.dash.dash_core.DashMasternodeTool/DashMasternodeTool
 
 # Create ~/.config/dmt directory if it doesn't exist. Set the
 # permissions to something better than 755 and kick off the main process.
@@ -62,6 +63,6 @@ else
   _options="$_options --config $_config"
 fi
 
-echo "Running /usr/share/org.dash.dash_core.dash_masternode_tool/DashMasternodeTool $_options"
-/usr/share/org.dash.dash_core.dash_masternode_tool/DashMasternodeTool $_options
+echo "Running $_binary $_options"
+$_binary $_options
 cd - 1> /dev/null
