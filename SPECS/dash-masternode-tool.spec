@@ -51,7 +51,7 @@ Version: %{vermajor}.%{verminor}
 # RELEASE
 %define _pkgrel 2
 %if %{isTestBuild}
-  %define _pkgrel 1.1
+  %define _pkgrel 1.3
 %endif
 
 # MINORBUMP
@@ -233,8 +233,9 @@ install -d %{buildroot}%{installtree}
 
 # Binaries
 install -D -m755 -p %{sourcetree_contrib}/desktop/%{name}-desktop-script.sh %{buildroot}%{installtree}/
-ln -s %{installtree}/%{name}-desktop-script.sh %{buildroot}%{_bindir}/%{name}-desktop-script.sh
 install -D -m755 -p %{sourcetree}/%{_name2} %{buildroot}%{installtree}/%{_name2}
+
+ln -s %{installtree}/%{name}-desktop-script.sh %{buildroot}%{_bindir}/%{name}-desktop-script.sh
 ln -s %{installtree}/%{_name2} %{buildroot}%{_bindir}/%{name}
 
 # Most use LICENSE or COPYING... not LICENSE.txt
@@ -285,6 +286,7 @@ cd ../../
 
 # Binaries
 %{_bindir}/%{name}
+%{_bindir}/%{name}-desktop-script.sh
 %{installtree}/%{_name2}
 %{installtree}/%{name}-desktop-script.sh
 
@@ -307,9 +309,13 @@ umask 007
 
 %changelog
 * Wed May 7 2025 Todd Warner <t0dd_at_protonmail.com> 0.9.40-2.rp.taw
+* Wed May 7 2025 Todd Warner <t0dd_at_protonmail.com> 0.9.40-1.3.testing.rp.taw
+* Wed May 7 2025 Todd Warner <t0dd_at_protonmail.com> 0.9.40-1.2.testing.rp.taw
 * Wed May 7 2025 Todd Warner <t0dd_at_protonmail.com> 0.9.40-1.1.testing.rp.taw
   - minor adjustment to metainfo.xml
-  - dash-masternode-tool-desktop-script.sh MUST be /usr/bin or the like
+  - desktop script: fix broken path to executable
+  - dash-masternode-tool-desktop-script.sh MUST be in path /usr/bin or the like  
+    This fixes the issue where application would not show in menus.
 
 * Sat May 3 2025 Todd Warner <t0dd_at_protonmail.com> 0.9.40-1.rp.taw
 * Sat May 3 2025 Todd Warner <t0dd_at_protonmail.com> 0.9.40-0.1.testing.rp.taw
