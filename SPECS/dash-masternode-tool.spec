@@ -49,9 +49,9 @@ Summary: Manage and collateralize a Dash Masternode with a hardware wallet
 Version: %{vermajor}.%{verminor}
 
 # RELEASE
-%define _pkgrel 1
+%define _pkgrel 2
 %if %{isTestBuild}
-  %define _pkgrel 0.1
+  %define _pkgrel 1.1
 %endif
 
 # MINORBUMP
@@ -233,6 +233,7 @@ install -d %{buildroot}%{installtree}
 
 # Binaries
 install -D -m755 -p %{sourcetree_contrib}/desktop/%{name}-desktop-script.sh %{buildroot}%{installtree}/
+ln -s %{installtree}/%{name}-desktop-script.sh %{buildroot}%{_bindir}/%{name}-desktop-script.sh
 install -D -m755 -p %{sourcetree}/%{_name2} %{buildroot}%{installtree}/%{_name2}
 ln -s %{installtree}/%{_name2} %{buildroot}%{_bindir}/%{name}
 
@@ -305,6 +306,11 @@ umask 007
 
 
 %changelog
+* Wed May 7 2025 Todd Warner <t0dd_at_protonmail.com> 0.9.40-2.rp.taw
+* Wed May 7 2025 Todd Warner <t0dd_at_protonmail.com> 0.9.40-1.1.testing.rp.taw
+  - minor adjustment to metainfo.xml
+  - dash-masternode-tool-desktop-script.sh MUST be /usr/bin or the like
+
 * Sat May 3 2025 Todd Warner <t0dd_at_protonmail.com> 0.9.40-1.rp.taw
 * Sat May 3 2025 Todd Warner <t0dd_at_protonmail.com> 0.9.40-0.1.testing.rp.taw
   - https://github.com/Bertrand256/dash-masternode-tool/releases/tag/v0.9.40
