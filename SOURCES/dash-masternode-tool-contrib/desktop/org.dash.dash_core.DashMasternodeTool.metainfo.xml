@@ -1,40 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<component type="desktop-application">
 <!-- Copyright 2018 Todd Warner <t0dd at protonmail.com>, this packaging/docs -->
+<component type="desktop-application">
   <id>org.dash.dash_core.DashMasternodeTool</id>
   <launchable type="desktop-id">org.dash.dash_core.DashMasternodeTool.desktop</launchable>
-
   <name>Dash Masternode Tool</name>
   <summary>Manage and collateralize a Dash Masternode with a hardware wallet</summary>
-
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>MIT</project_license>
   <content_rating type="oars-1.1" />
-
-    <developer id="org.dash">
+  <developer id="org.dash">
       <name>Bertrand256</name>
       <name>Dash Core Team</name>
       <name>Dash Community</name>
   </developer>
   <project_group>Dash Core</project_group>
-
   <url type="homepage">https://github.com/Bertrand256/dash-masternode-tool</url>
   <url type="bugtracker">https://github.com/Bertrand256/dash-masternode-tool/issues</url>
   <url type="help">https://docs.dash.org/en/stable/docs/user/masternodes/index.html</url>
-
-  <!-- for this package build -->
+  <!-- contact info for this package build -->
   <update_contact>t0dd_AT_protonmail.com</update_contact>
   <custom>
       <value key="package_maintainer">Todd Warner</value>
       <value key="package_maintainer_email">t0dd_AT_protonmail.com</value>
       <value key="package_bugtracker">https://github.com/taw00/dashcore-rpm/issues</value>
   </custom>
-
   <description translate="no">
     <p>DashMasternodeTool (aka dash-masternode-tool) enables Dash Masternode
      owners to manage their Masternodes from a collateralize-holding
      hardware wallet.</p>
-
     <p>This tool will allow you to...</p>
     <ul>
        <li>Send the start masternode command if the collateral is controlled
@@ -47,21 +40,18 @@
        <li>Update hardware wallets firmware (Trezor/KeepKey)</li>
        <li>Participate on Dash Testnet</li>
     </ul>
-
-  <p>Supported hardware wallets: Trezor (model One and T), KeepKey, Ledger
+    <p>Supported hardware wallets: Trezor (model One and T), KeepKey, Ledger
      Nano S.</p>
   </description>
-
   <screenshots>
     <screenshot type="default">
       <image>https://github.com/Bertrand256/dash-masternode-tool/blob/master/doc/img/dmt-main-window.png</image>
     </screenshot>
   </screenshots>
-
   <provides>
+    <id>org.dash.dash_core.DashMasternodeTool.desktop</id>
     <binary>dash-masternode-tool</binary>
   </provides>
-
   <releases>
       <release version="0.9.40" date="2025-05-02" />
       <release version="0.9.39" date="2024-08-13" />
@@ -83,3 +73,6 @@
       <release version="0.9.18" date="2018-04-17" />
   </releases>
 </component>
+<!-- .desktop spec: https://www.freedesktop.org/wiki/Specifications/desktop-entry-spec/ -->
+<!-- .metainfo.xml spec: https://www.freedesktop.org/software/appstream/docs/ -->
+
