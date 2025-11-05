@@ -29,8 +29,8 @@ Summary: A global payments network and decentralized application (dapp) platform
 %define verX 22
 %define verY 1
 %define verZ 3
-%define _pkgrel 1
-%define _pkgrel_iftestbuild 0.1
+%define _pkgrel 2
+%define _pkgrel_iftestbuild 1.1
 
 # Use if the dev team includes things like rc1 in the filename
 %define buildQualifier rc1
@@ -340,6 +340,9 @@ Requires(post): /usr/sbin/semodule, /sbin/restorecon, /sbin/fixfiles
 Requires(postun): /usr/sbin/semodule, /sbin/restorecon, /sbin/fixfiles
 Requires: openssl-libs
 Requires: dashcore-utils = %{version}-%{release}
+#BuildRequires:  sysuser-tools
+Provides: user(dashcore)
+Provides: group(dashcore)
 
 # We no longer need dashcore-sentinel, so force it out!
 Obsoletes: dashcore-sentinel > 0
@@ -1258,6 +1261,10 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Dash Electrum: https://github.com/akhavr/electrum-dash
 
 %changelog
+* Wed Nov 5 2025 Todd Warner <t0dd_at_protonmail.com> 22.1.3-2.rp.taw
+* Wed Nov 5 2025 Todd Warner <t0dd_at_protonmail.com> 22.1.3-1.1.rp.testing.taw
+  - resolve packaging issues by explicitely providing dashcore user and group
+
 * Tue Jul 15 2025 Todd Warner <t0dd_at_protonmail.com> 22.1.3-1.rp.taw
 * Tue Jul 15 2025 Todd Warner <t0dd_at_protonmail.com> 22.1.3-0.1.rp.testing.taw
   - (repackaged) https://github.com/dashpay/dash/releases/tag/v22.1.3
