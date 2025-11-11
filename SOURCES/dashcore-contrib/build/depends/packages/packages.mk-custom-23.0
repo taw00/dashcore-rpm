@@ -35,9 +35,9 @@ endif
 
 packages:=gmp backtrace
 
-boost_packages =
+boost_packages = 
 
-libevent_packages =
+libevent_packages = 
 
 qrencode_linux_packages = qrencode
 qrencode_android_packages = qrencode

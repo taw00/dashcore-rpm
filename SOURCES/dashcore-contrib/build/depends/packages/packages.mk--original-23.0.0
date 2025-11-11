@@ -1,6 +1,3 @@
-ifeq ("x","y")
-# This entire block is "commented" out.
-
 packages:=gmp backtrace
 
 boost_packages = boost
@@ -29,36 +26,3 @@ multiprocess_packages = libmultiprocess capnp
 multiprocess_native_packages = native_libmultiprocess native_capnp
 
 usdt_linux_packages=systemtap
-
-# end of "commented" out block
-endif
-
-packages:=gmp backtrace
-
-boost_packages =
-
-libevent_packages =
-
-qrencode_linux_packages = qrencode
-qrencode_android_packages = qrencode
-qrencode_darwin_packages = qrencode
-qrencode_mingw32_packages = qrencode
-
-qt_linux_packages:=
-qt_android_packages=qt
-qt_darwin_packages=qt
-qt_mingw32_packages=qt
-
-bdb_packages=
-sqlite_packages=
-
-zmq_packages=
-
-upnp_packages=
-natpmp_packages=libnatpmp
-
-multiprocess_packages = libmultiprocess capnp
-multiprocess_native_packages = native_libmultiprocess native_capnp
-
-usdt_linux_packages=systemtap
-
