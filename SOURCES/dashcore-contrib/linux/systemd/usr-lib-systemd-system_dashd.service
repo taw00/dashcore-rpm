@@ -44,7 +44,7 @@ Restart=on-failure
 # If something triggers an auto-restart, let's wait a bit before taking
 # further action
 # Note: This value is in addition to the stop sleep time
-RestartSec=15
+RestartSec=1
 
 # In this interval of time, we allow systemd to start dashd "burst" number
 # of times. With Dash we really only want one instance started, so... let's

@@ -32,7 +32,7 @@ DATA_DIR="/var/lib/dashcore"
 
 # How long to sleep in seconds after a start / stop, regardless of pid status
 START_SLEEP_TIME=0
-STOP_SLEEP_TIME=15
+STOP_SLEEP_TIME=5
 
 
 # ---- Variables rarely used
