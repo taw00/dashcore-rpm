@@ -26,11 +26,11 @@ Summary: A global payments network and decentralized application (dapp) platform
 
 # VERSION and RELEASE components
 %define isTestBuild 1
-%define verX 22
-%define verY 1
-%define verZ 3
-%define _pkgrel 2
-%define _pkgrel_iftestbuild 1.1
+%define verX 23
+%define verY 0
+%define verZ 0
+%define _pkgrel 1
+%define _pkgrel_iftestbuild 0.2
 
 # Use if the dev team includes things like rc1 in the filename
 %define buildQualifier rc1
@@ -272,7 +272,7 @@ BuildRequires: python3
 # These avoid unneccessary fetching of libraries from the internet.
 # Packaging is supposed to be performable with an airgapped system.
 BuildRequires: gettext
-BuildRequires: openssl-devel boost-devel libevent-devel
+BuildRequires: openssl-devel boost-devel libevent-devel sqlite-devel
 BuildRequires: ccache
 # Added to satisfy bls-signatures for 0.16 only.
 #BuildRequires: gmp-devel
@@ -920,21 +920,8 @@ logtimestamps=1
 disablewallet=1
 
 # Only localhost allowed to connect to make RPC calls.
-# Mainnet port is 9998; testnet is 19998.
 rpcallowip=127.0.0.1
 " >> %{buildroot}%{_sysconfdir}/dashcore/dash.conf
-
-%if %{testnet}
-echo "\
-rpcport=19998
-" >> %{buildroot}%{_sysconfdir}/dashcore/dash.conf
-%else
-echo "\
-rpcport=9998
-" >> %{buildroot}%{_sysconfdir}/dashcore/dash.conf
-%endif
-
-install -D -m644 %{buildroot}%{_sysconfdir}/dashcore/dash.conf %{srccontribtree}/dash.conf.example
 
 # Add the rpcuser name and rpcpassword, but really need to be different for the
 # working dash.conf and the example, just in case the user decides to not
@@ -950,6 +937,17 @@ echo "\
 rpcuser=`head -c 32 /dev/urandom | base64 | head -c 4`
 rpcpassword=`head -c 32 /dev/urandom | base64`
 " >> %{srccontribtree}/dash.conf.example
+
+echo "\
+# Mainnet port is 9998; testnet is 19998.
+[main]
+rpcport=9998
+
+[test]
+rpcport=19998
+" >> %{buildroot}%{_sysconfdir}/dashcore/dash.conf
+
+install -D -m644 %{buildroot}%{_sysconfdir}/dashcore/dash.conf %{srccontribtree}/dash.conf.example
 
 # ...message about the convenience symlink:
 echo "\
@@ -1261,6 +1259,16 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Dash Electrum: https://github.com/akhavr/electrum-dash
 
 %changelog
+* Thu Nov 12 2025 Todd Warner <t0dd_at_protonmail.com> 23.0.0-1.rp.taw
+* Thu Nov 12 2025 Todd Warner <t0dd_at_protonmail.com> 23.0.0-0.2.rp.testing.taw
+  - rpcport= needs to be in a [main] or [test] section of .conf
+  - reduced dashd.service start and stop sleep times
+
+* Wed Nov 11 2025 Todd Warner <t0dd_at_protonmail.com> 23.0.0-0.1.rp.testing.taw
+  - (repackaged) https://github.com/dashpay/dash/releases/tag/v23.0.0
+  - sqlite-devel added to build requires
+  - does dashcore-server require the sqlite package? unsure at this time
+
 * Wed Nov 5 2025 Todd Warner <t0dd_at_protonmail.com> 22.1.3-2.rp.taw
 * Wed Nov 5 2025 Todd Warner <t0dd_at_protonmail.com> 22.1.3-1.1.rp.testing.taw
   - resolve packaging issues by explicitely providing dashcore user and group
