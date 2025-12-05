@@ -28,9 +28,9 @@ Summary: A global payments network and decentralized application (dapp) platform
 %define isTestBuild 1
 %define verX 23
 %define verY 0
-%define verZ 0
+%define verZ 2
 %define _pkgrel 1
-%define _pkgrel_iftestbuild 0.2
+%define _pkgrel_iftestbuild 0.1
 
 # Use if the dev team includes things like rc1 in the filename
 %define buildQualifier rc1
@@ -1259,6 +1259,10 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Dash Electrum: https://github.com/akhavr/electrum-dash
 
 %changelog
+* Fri Dec 5 2025 Todd Warner <t0dd_at_protonmail.com> 23.0.2-1.rp.taw
+* Fri Dec 5 2025 Todd Warner <t0dd_at_protonmail.com> 23.0.2-0.1.rp.testing.taw
+  - (repackaged) https://github.com/dashpay/dash/releases/tag/v23.0.2
+
 * Thu Nov 12 2025 Todd Warner <t0dd_at_protonmail.com> 23.0.0-1.rp.taw
 * Thu Nov 12 2025 Todd Warner <t0dd_at_protonmail.com> 23.0.0-0.2.rp.testing.taw
   - rpcport= needs to be in a [main] or [test] section of .conf
