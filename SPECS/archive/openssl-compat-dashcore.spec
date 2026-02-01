@@ -433,7 +433,7 @@ rm -rf $RPM_BUILD_ROOT/%{_libdir}/fipscanister.*
 %postun libs -p /sbin/ldconfig
 
 %changelog
-* Fri Mar 03 2017 Todd Warner <t0dd@protonmail.com> 1.0.2f-1.taw
+* Fri Mar 03 2017 Todd Warner <t0dd_at_protonmail_dot_com> 1.0.2f-1.taw
 - In-housed version for the Dash project
 
 * Thu Jan 28 2016 Michael Hampton <bitcoin@ringingliberty.com> 1.0.2f-1

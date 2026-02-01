@@ -469,37 +469,37 @@ exit 0
 
 
 %changelog
-* Wed Apr 13 2016 Todd Warner <toddwarner@protonmail.com> 0.12.0.56-7.taw
+* Wed Apr 13 2016 Todd Warner <t0dd_at_protonmail_dot_com> 0.12.0.56-7.taw
 - "dashcore" shall be the base package name.
 - I also fixed some icons.
 -
-* Sun Apr 10 2016 Todd Warner <toddwarner@protonmail.com> 0.12.0.56-6.taw
+* Sun Apr 10 2016 Todd Warner <t0dd_at_protonmail_dot_com> 0.12.0.56-6.taw
 - "dash" the package name, is already claimed by dash shell--the Almquist Shell.
 - Therefpre our source RPM will remain named "dash" but the RPMs will all have
 - qualifiers added to that root name - in particular, the dash RPM becomes the
 - dash-client RPM. Most annoying.
 -
-* Tue Apr 05 2016 Todd Warner <toddwarner@protonmail.com> 0.12.0.56-5.taw
+* Tue Apr 05 2016 Todd Warner <t0dd_at_protonmail_dot_com> 0.12.0.56-5.taw
 - Improved a description
 -
-* Tue Apr 05 2016 Todd Warner <toddwarner@protonmail.com> 0.12.0.56-4.taw
+* Tue Apr 05 2016 Todd Warner <t0dd_at_protonmail_dot_com> 0.12.0.56-4.taw
 - Fixed missing Requires for a couple packages
 - Comment updates
 - Restructured some of the more custom release values and made them nil-able
 - OOPS! I forgot the .bmp pixmaps! Doh!
 -
-* Mon Apr 04 2016 Todd Warner <toddwarner@protonmail.com> 0.12.0.56-3.taw
+* Mon Apr 04 2016 Todd Warner <t0dd_at_protonmail_dot_com> 0.12.0.56-3.taw
 - pixmaps mapped according to the intention of dash source
 - fPIC in configure.ac more like 0.12.1.x's version of the template
 - When back to patch and supplemental sources including the release
 -
-* Mon Apr 04 2016 Todd Warner <toddwarner@protonmail.com> 0.12.0.56-0.taw2
+* Mon Apr 04 2016 Todd Warner <t0dd_at_protonmail_dot_com> 0.12.0.56-0.taw2
 - Fix daemon service file s/bitcoin/dash/
 - Using pristine upstream tarball now
 - Changes to configure.ac is now via a patch (keep the original source clean!)
 - Supplemental fedora files into their own tarball (keep the original source clean!)
 -
-* Sat Apr 02 2016 Todd Warner <toddwarner@protonmail.com> 0.12.0.56-0.taw0
+* Sat Apr 02 2016 Todd Warner <t0dd_at_protonmail_dot_com> 0.12.0.56-0.taw0
 - aka Todd Warner <taw@pobox.com> -- taw, taw00, dagrarion, tawster, todwar, tawar, etc
 - First attempt at a build
 - Original spec file adapted from bitcoin.spec and the good work of Michael Hampton <bitcoin@ringingliberty.com>

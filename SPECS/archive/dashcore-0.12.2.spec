@@ -20,7 +20,7 @@
 # Note commented out macros in this (or any) spec file. You MUST double up the
 # %%'s or rpmbuild will yell at you. RPM is weird.
 #
-# Enjoy. Todd Warner <t0dd@protonmail.com>
+# Enjoy. Todd Warner <t0dd_at_protonmail_dot_com>
 
 %global selinux_variants mls strict targeted
 %define testing_extras 0
@@ -56,7 +56,7 @@ Name: %{_name_dc}
 Version: %{_version_major}.%{_version_minor}
 Release: %{_release}%{?dist}
 Vendor: Dash.org
-Packager: Todd Warner <t0dd@protonmail.com>
+Packager: Todd Warner <t0dd_at_protonmail_dot_com>
 Summary: Dash - Digital Cash - Peer-to-peer, privacy-centric, digital currency
 
 %define _nmv_d %{_name_d}-%{_version_major}
@@ -763,54 +763,54 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Documentation: https://dashpay.atlassian.net/wiki/display/DOC/Testnet
 
 %changelog
-* Fri Apr 06 2018 Todd Warner <t0dd@protonmail.com> 0.12.2.3-2.taw
+* Fri Apr 06 2018 Todd Warner <t0dd_at_protonmail_dot_com> 0.12.2.3-2.taw
 - Improved rpm text descriptions and some updated comments.
 -
-* Fri Apr 06 2018 Todd Warner <t0dd@protonmail.com> 0.12.2.3-1.taw
+* Fri Apr 06 2018 Todd Warner <t0dd_at_protonmail_dot_com> 0.12.2.3-1.taw
 - spec file cleanup. dash.conf cleanup and improvements.
 - Create convenience symlink to /etc/dashcore/dash.conf so you don't have to
 - put -conf= on the commandline all the time.
 - 2cee47fc92196b5839eb4a230db080939263b9d3940a1a04231c0f656e96b336 dashcore-0.12.2-contrib.tar.gz
 - https://github.com/dashpay/dash/releases/tag/v0.12.2.3
 -
-* Thu Jan 11 2018 Todd Warner <t0dd@protonmail.com> 0.12.2.3-0.taw
+* Thu Jan 11 2018 Todd Warner <t0dd_at_protonmail_dot_com> 0.12.2.3-0.taw
 - Release - e596762
 - 5347351483ce39d1dd0be4d93ee19aba1a6b02bc7f90948b4eea4466ad79d1c3 dash-0.12.2.3.tar.gz
 - b09f09d847e02e1509dd157aca1655bbe5ca79106fe4cf2e4370228e0eab79e3 dashcore-0.12.2-contrib.tar.gz
 - https://github.com/dashpay/dash/releases/tag/v0.12.2.3
 -
-* Tue Dec 19 2017 Todd Warner <t0dd@protonmail.com> 0.12.2.2-0.taw
+* Tue Dec 19 2017 Todd Warner <t0dd_at_protonmail_dot_com> 0.12.2.2-0.taw
 - Release - 8506678
 - fd5f1576bc8ef70e5823f665b86a334937813e300f037a03bcd127b83773d771 dash-0.12.2.2.tar.gz
 - b09f09d847e02e1509dd157aca1655bbe5ca79106fe4cf2e4370228e0eab79e3 dashcore-0.12.2-contrib.tar.gz
 - https://github.com/dashpay/dash/releases/tag/v0.12.2.2
 -
-* Sun Nov 12 2017 Todd Warner <t0dd@protonmail.com> 0.12.2.1-0.taw
+* Sun Nov 12 2017 Todd Warner <t0dd_at_protonmail_dot_com> 0.12.2.1-0.taw
 - Release - 20bacfa
 - ae2e96ea685d9aa3b442acff986b096659a1d2c6dfd2ef9deef84d75fe2cf2b0 dash-0.12.2.1.tar.gz
 - b09f09d847e02e1509dd157aca1655bbe5ca79106fe4cf2e4370228e0eab79e3 dashcore-0.12.2-contrib.tar.gz
 - https://github.com/dashpay/dash/releases/tag/v0.12.2.1
 -
-* Wed Nov 8 2017 Todd Warner <t0dd@protonmail.com> 0.12.2.0-0.taw
+* Wed Nov 8 2017 Todd Warner <t0dd_at_protonmail_dot_com> 0.12.2.0-0.taw
 - Release 12.2 - ec8178c
 - 2e0c20c64f5ccc392e51373761f16384642d224587f10c2fdcdbb4f17e185c04 dash-0.12.2.0.tar.gz
 - b09f09d847e02e1509dd157aca1655bbe5ca79106fe4cf2e4370228e0eab79e3 dashcore-0.12.2-contrib.tar.gz
 - https://github.com/dashpay/dash/releases/tag/v0.12.2.0
 -
-* Tue Apr 11 2017 Todd Warner <t0dd@protonmail.com> 0.12.1.5-0.taw
+* Tue Apr 11 2017 Todd Warner <t0dd_at_protonmail_dot_com> 0.12.1.5-0.taw
 - Fixes a watchdog propagation issue.
 - 4e52b2427f1ea46f0ff5b31b0dd044478fba6a076611a97a9c2d3d345374459f  dash-0.12.1.5.tar.gz
 - e3e4351656afda2ff23cb142d264af4b4d04d0bbe9f3326ce24019423f6adf94  dashcore-0.12.1-contrib.tar.gz
 - https://github.com/dashpay/dash/releases/tag/v0.12.1.5
 -
-* Wed Mar 22 2017 Todd Warner <t0dd@protonmail.com> 0.12.1.4-0.taw
+* Wed Mar 22 2017 Todd Warner <t0dd_at_protonmail_dot_com> 0.12.1.4-0.taw
 - Added RPC port to available firewalld services.
 - Renamed firewalld services to match bitcoin's firewalld service name taxonomies.
 - 7218baaa1aa8052960ffc0c36904b6f5647256f9773c17e8506be37a2d3cc0cb  dash-0.12.1.4.tar.gz
 - e3e4351656afda2ff23cb142d264af4b4d04d0bbe9f3326ce24019423f6adf94  dashcore-0.12.1-contrib.tar.gz
 - https://github.com/dashpay/dash/releases/tag/v0.12.1.4
 - 
-* Sat Mar 04 2017 Todd Warner <t0dd@protonmail.com> 0.12.1.3-1.taw
+* Sat Mar 04 2017 Todd Warner <t0dd_at_protonmail_dot_com> 0.12.1.3-1.taw
 - Brought back the test scripts (most of them), made them conditional. Added
 - back and adjusted build-requires for openssl-compat that uses our own
 - openssl-compat builds. Test scripts / openssl-compat seem to only work for
@@ -819,13 +819,13 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 -
 - "bumptag" now can be defined or undefined and we do the right thing.
 - 
-* Thu Mar 02 2017 Todd Warner <t0dd@protonmail.com> 0.12.1.3-0.taw
+* Thu Mar 02 2017 Todd Warner <t0dd_at_protonmail_dot_com> 0.12.1.3-0.taw
 - Release 0.12.1.3 - 119fe83
 - Announcement: https://github.com/dashpay/dash/releases/tag/v0.12.1.3
 - 1f6e6fb528151c8703019ed1511562b0c8bc91fe8c7ac6838a3811ffd1af288a  dash-0.12.1.3.tar.gz
 - d4c0f01ea5fa017f6362269495d2cd32e724d9e4d2e584bf5e9a0057b493dfbb  dashcore-0.12.1-contrib.tar.gz
 -
-* Fri Feb 24 2017 Todd Warner <t0dd@protonmail.com> 0.12.1.2-0.taw
+* Fri Feb 24 2017 Todd Warner <t0dd_at_protonmail_dot_com> 0.12.1.2-0.taw
 - Release 0.12.1.2 - a1ef547
 - Announcement: https://github.com/dashpay/dash/releases/tag/v0.12.1.2
 - 8a99d35dd7b87c42efa698d2ac36f2cca98aa501ce2f7dcb5e8d27b749efb72d  dash-0.12.1.2.tar.gz
@@ -837,29 +837,29 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 - dashd.init updated
 - dashd.send-email.sh with much clearer messaging.
 -
-* Mon Feb 20 2017 Todd Warner <t0dd@protonmail.com> 0.12.1.1-1.taw
+* Mon Feb 20 2017 Todd Warner <t0dd_at_protonmail_dot_com> 0.12.1.1-1.taw
 - Still massaging systemd service and configuration settings.
 - Boosting startup timeout window significantly to avoid shooting ourselves
 - in the foot too quickly. Also PIDFile= is not necessary.
 - Reduced default maxconnections to 8 since we have so many masternodes.
 - Fixed a systemd-managed tmpfile perms issue.
 -
-* Sun Feb 19 2017 Todd Warner <t0dd@protonmail.com> 0.12.1.1-0.taw
+* Sun Feb 19 2017 Todd Warner <t0dd_at_protonmail_dot_com> 0.12.1.1-0.taw
 - Release 0.12.1.1 - e9e5a24
 - Announcement: https://github.com/dashpay/dash/releases/tag/v0.12.1.1
 - Stability improvements. Governance object sync time improvements.
 - systemd service file and configuration tweaks.
 - lots of other bug fixes
 -
-* Fri Feb 17 2017 Todd Warner <t0dd@protonmail.com> 0.12.1.0-2.taw
+* Fri Feb 17 2017 Todd Warner <t0dd_at_protonmail_dot_com> 0.12.1.0-2.taw
 - dashd.service can be configured to send email upon start, stop,
 - restart
 -
-* Fri Feb 10 2017 Todd Warner <t0dd@protonmail.com> 0.12.1.0-1.taw
+* Fri Feb 10 2017 Todd Warner <t0dd_at_protonmail_dot_com> 0.12.1.0-1.taw
 - With Debuginfo Package built -- there have been segfaults. This
 - should help troubleshoot.
 -
-* Sun Feb 05 2017 Todd Warner <t0dd@protonmail.com> 0.12.1.0-0.taw
+* Sun Feb 05 2017 Todd Warner <t0dd_at_protonmail_dot_com> 0.12.1.0-0.taw
 - Release 12.1.0 - 56971f8
 - Announcement: https://github.com/dashpay/dash/releases/tag/v0.12.1.0
 -

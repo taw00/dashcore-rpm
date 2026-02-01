@@ -4,7 +4,7 @@
 # required to operate a Dash Masternode. It will build the dashcore-sentinel
 # package.
 #
-# Enjoy. Todd Warner <t0dd@protonmail.com>
+# Enjoy. Todd Warner <t0dd_at_protonmail_dot_com>
 
 # Note: "bump" and "bumptag" are release-build identifiers.
 # For sentinel, bumptag will be either testing.taw, rc.taw, or just taw
@@ -25,7 +25,7 @@ Name: %{_name2}
 Version: %{_version_major}.%{_version_minor}
 Release: %{_release}%{?dist}
 Vendor: Dash.org
-Packager: Todd Warner <t0dd@protonmail.com>
+Packager: Todd Warner <t0dd_at_protonmail_dot_com>
 Summary: Dash Masternode Sentinel - required toolset for Dash Masternodes
 
 # Various archive and tree naming conventions (for example)
@@ -232,25 +232,25 @@ exit 0
 #   * Sentinel: https://github.com/dashpay/sentinel
 
 %changelog
-* Tue May 1 2018 Todd Warner <t0dd@protonmail.com> 1.1.0-1.taw
+* Tue May 1 2018 Todd Warner <t0dd_at_protonmail_dot_com> 1.1.0-1.taw
 - Build failing on Fedora 28 due to pedantic spec file checks. Fixed!
 
-* Tue Nov 7 2017 Todd Warner <t0dd@protonmail.com> 1.1.0-0.taw
+* Tue Nov 7 2017 Todd Warner <t0dd_at_protonmail_dot_com> 1.1.0-0.taw
 - Release 1.1 in support of dashcore 0.12.2.0 - b21bb6c
 - 971aa5e5f4d06ba76e76c9c828402af56f28353254c8db15214ac7071d982de5 sentinel-1.1.0.tar.gz
 - d1526682d6103e15f17a3298c76eda00cd0126903accc762ea7c1a3eb806b1f1 dashcore-sentinel-1.1-contrib.tar.gz
 -
-* Fri Feb 24 2017 Todd Warner <t0dd@protonmail.com> 1.0.1-0.rc.taw
+* Fri Feb 24 2017 Todd Warner <t0dd_at_protonmail_dot_com> 1.0.1-0.rc.taw
 - Release 1.0.1 - Release Candidate - 4ac8523
 - 407c509cc00706645e899dc6fa5bdc1f6ea156381ab8b84d669ed59c1a070fad  sentinel-1.0.1.tar.gz
 -
-* Fri Feb 10 2017 Todd Warner <t0dd@protonmail.com> 1.0-2.taw
+* Fri Feb 10 2017 Todd Warner <t0dd_at_protonmail_dot_com> 1.0-2.taw
 - Building debuginfo RPMs as well now.
 -
-* Mon Feb 06 2017 Todd Warner <t0dd@protonmail.com> 1.0-1.taw
+* Mon Feb 06 2017 Todd Warner <t0dd_at_protonmail_dot_com> 1.0-1.taw
 - Fixed a broken file in the contribs that hosed the sentinel.conf file.
 - 
-* Sun Feb 05 2017 Todd Warner <t0dd@protonmail.com> 1.0-0.taw
+* Sun Feb 05 2017 Todd Warner <t0dd_at_protonmail_dot_com> 1.0-0.taw
 - Release 1.0 - d822f41 - in tandem with Dash Core 12.1 release
 - 
 

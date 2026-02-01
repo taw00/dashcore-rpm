@@ -4,7 +4,7 @@
 # required to operate a Dash Masternode. It will build the dashcore-sentinel
 # package.
 #
-# Enjoy. Todd Warner <t0dd@protonmail.com>
+# Enjoy. Todd Warner <t0dd_at_protonmail_dot_com>
 
 
 # To produce a debuginfo package:
@@ -43,7 +43,7 @@ Name: %{_name2}
 Version: %{_version_major}.%{_version_minor}
 Release: %{_release}%{?dist}
 Vendor: Dash.org
-Packager: Todd Warner <t0dd@protonmail.com>
+Packager: Todd Warner <t0dd_at_protonmail_dot_com>
 Summary: Dash Masternode Sentinel - required toolset for Dash Masternodes
 
 # upstream dash team convention, github - sentinel-1.0.2
@@ -229,20 +229,20 @@ exit 0
 
 %changelog
 
-* Fri Oct 20 2017 Todd Warner <t0dd@protonmail.com> 1.0.2-0.testing.taw
+* Fri Oct 20 2017 Todd Warner <t0dd_at_protonmail_dot_com> 1.0.2-0.testing.taw
 - Branch core-v12.2.x - 5325ee5
 -
-* Fri Feb 24 2017 Todd Warner <t0dd@protonmail.com> 1.0.1-0.rc.taw
+* Fri Feb 24 2017 Todd Warner <t0dd_at_protonmail_dot_com> 1.0.1-0.rc.taw
 - Release 1.0.1 - Release Candidate - 4ac8523
 - 407c509cc00706645e899dc6fa5bdc1f6ea156381ab8b84d669ed59c1a070fad  sentinel-1.0.1.tar.gz
 -
-* Fri Feb 10 2017 Todd Warner <t0dd@protonmail.com> 1.0-2.taw
+* Fri Feb 10 2017 Todd Warner <t0dd_at_protonmail_dot_com> 1.0-2.taw
 - Building debuginfo RPMs as well now.
 -
-* Mon Feb 06 2017 Todd Warner <t0dd@protonmail.com> 1.0-1.taw
+* Mon Feb 06 2017 Todd Warner <t0dd_at_protonmail_dot_com> 1.0-1.taw
 - Fixed a broken file in the contribs that hosed the sentinel.conf file.
 - 
-* Sun Feb 05 2017 Todd Warner <t0dd@protonmail.com> 1.0-0.taw
+* Sun Feb 05 2017 Todd Warner <t0dd_at_protonmail_dot_com> 1.0-0.taw
 - Release 1.0 - d822f41 - in tandem with Dash Core 12.1 release
 - 
 
