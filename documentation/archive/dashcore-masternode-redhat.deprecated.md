@@ -670,7 +670,7 @@ Insert the following line into crontab to invoke sentinel every two minutes.
 # Celebrate! You're done!
 
 I hope this was helpful    
-Got a dash of feedback? *...har har...* Send it my way [t0dd@protonmail.com](mailto:t0dd@protonmail.com)
+Got a dash of feedback? *...har har...* Send it my way [t0dd_at_protonmail_dot_com](mailto:t0dd_at_protonmail_dot_com)
 
 ----
 

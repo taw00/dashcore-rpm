@@ -213,7 +213,7 @@ restart (protocol change from 70210 to 70213). 0.13 to 0.14 to 0.15 and then to
 
 #### Good luck!
 
-Send comments or feedback to <t0dd@protonmail.com>
+Send comments or feedback to <t0dd_at_protonmail_dot_com>
 
 &nbsp;
 
