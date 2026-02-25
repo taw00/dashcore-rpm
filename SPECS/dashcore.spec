@@ -27,8 +27,8 @@ Summary: A global payments network and decentralized application (dapp) platform
 # VERSION and RELEASE components
 %define isTestBuild 1
 %define verX 23
-%define verY 0
-%define verZ 2
+%define verY 1
+%define verZ 0
 %define _pkgrel 1
 %define _pkgrel_iftestbuild 0.1
 
@@ -345,7 +345,7 @@ Provides: user(dashcore)
 Provides: group(dashcore)
 
 # We no longer need dashcore-sentinel, so force it out!
-Obsoletes: dashcore-sentinel > 0
+Obsoletes: dashcore-sentinel
 
 
 # dashcore-libs
@@ -783,12 +783,14 @@ install -d -m755 -p %{buildroot}%{_libdir}
 %else
   %if %{clientSourceIsBinary}
     mv %{binarytree}/bin/dash-qt %{buildroot}%{_bindir}/
+    mv %{binarytree}/bin/dash-util %{buildroot}%{_bindir}/
     mv %{binarytree}/bin/dash-tx %{buildroot}%{_bindir}/
     mv %{binarytree}/bin/dash-wallet %{buildroot}%{_bindir}/
     mv %{binarytree}/bin/dash-cli %{buildroot}%{_bindir}/
   %endif
   %if %{serverSourceIsBinary}
     mv %{binarytree}/bin/dashd %{buildroot}%{_bindir}/
+    mv %{binarytree}/bin/dash-util %{buildroot}%{_bindir}/
     mv %{binarytree}/bin/dash-tx %{buildroot}%{_bindir}/
     mv %{binarytree}/include/*        %{buildroot}%{_includedir}/
     mv %{binarytree}/lib/lib*         %{buildroot}%{_libdir}/
@@ -1093,6 +1095,7 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 %doc %{srccontribtree}/linux/binary-build-contribs/doc/*.md %{srccontribtree}/dash.conf.example
 %endif
 %{_bindir}/dash-qt
+%{_bindir}/dash-util
 %{_bindir}/dash-wallet
 %{_bindir}/dash-wallet.wrapper.sh
 %{_datadir}/applications/%{appid}.desktop
@@ -1101,6 +1104,7 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 %{_datadir}/icons/*
 %{_mandir}/man1/dash-wallet.1.gz
 %{_mandir}/man1/dash-qt.1.gz
+%{_mandir}/man1/bitcoin-util.1.gz
 #%%{_mandir}/man5/masternode.conf.5.gz
 %{_usr_lib}/firewalld/services/dashcore.xml
 %{_usr_lib}/firewalld/services/dashcore-testnet.xml
@@ -1173,9 +1177,11 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 %{_usr_lib}/firewalld/services/dashcore-rpc.xml
 %{_usr_lib}/firewalld/services/dashcore-testnet-rpc.xml
 %{_bindir}/dashd
+%{_bindir}/dash-util
 %{_tmpfilesdir}/dashd.conf
 %{_datadir}/bash-completion/completions/dashd
 %{_mandir}/man1/dashd.1.gz
+%{_mandir}/man1/bitcoin-util.1.gz
 #%%{_mandir}/man5/dash.conf.5.gz
 #%%{_mandir}/man5/masternode.conf.5.gz
 
@@ -1213,10 +1219,12 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 
 %{_bindir}/dash-cli
 %{_bindir}/dash-tx
+%{_bindir}/dash-util
 %{_datadir}/bash-completion/completions/dash-cli
 %{_datadir}/bash-completion/completions/dash-tx
 %{_mandir}/man1/dash-cli.1.gz
 %{_mandir}/man1/dash-tx.1.gz
+%{_mandir}/man1/bitcoin-util.1.gz
 
 %if %{buildFromSource}
 %license %{sourcetree}/COPYING
@@ -1259,16 +1267,22 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Dash Electrum: https://github.com/akhavr/electrum-dash
 
 %changelog
+* Wed Feb 25 2026 Todd Warner <t0dd_at_protonmail.com> 23.1.0-1.rp.taw
+* Wed Feb 25 2026 Todd Warner <t0dd_at_protonmail.com> 23.1.0-0.1.rp.testing.taw
+  - (repackaged) https://github.com/dashpay/dash/releases/tag/v23.1.0
+  - Repaired some dates and updated the obsoletes to remove the greater-than
+  - Fixed some previously unpackaged stuff
+
 * Fri Dec 5 2025 Todd Warner <t0dd_at_protonmail.com> 23.0.2-1.rp.taw
 * Fri Dec 5 2025 Todd Warner <t0dd_at_protonmail.com> 23.0.2-0.1.rp.testing.taw
   - (repackaged) https://github.com/dashpay/dash/releases/tag/v23.0.2
 
-* Thu Nov 12 2025 Todd Warner <t0dd_at_protonmail.com> 23.0.0-1.rp.taw
-* Thu Nov 12 2025 Todd Warner <t0dd_at_protonmail.com> 23.0.0-0.2.rp.testing.taw
+* Wed Nov 12 2025 Todd Warner <t0dd_at_protonmail.com> 23.0.0-1.rp.taw
+* Wed Nov 12 2025 Todd Warner <t0dd_at_protonmail.com> 23.0.0-0.2.rp.testing.taw
   - rpcport= needs to be in a [main] or [test] section of .conf
   - reduced dashd.service start and stop sleep times
 
-* Wed Nov 11 2025 Todd Warner <t0dd_at_protonmail.com> 23.0.0-0.1.rp.testing.taw
+* Tue Nov 11 2025 Todd Warner <t0dd_at_protonmail.com> 23.0.0-0.1.rp.testing.taw
   - (repackaged) https://github.com/dashpay/dash/releases/tag/v23.0.0
   - sqlite-devel added to build requires
   - does dashcore-server require the sqlite package? unsure at this time
