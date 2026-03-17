@@ -251,8 +251,9 @@ Requires: dashcore-utils = %{version}-%{release}
 Provides: user(dashcore)
 Provides: group(dashcore)
 
-# We no longer need dashcore-sentinel, so force it out!
-Obsoletes: dashcore-sentinel
+# We no longer need dashcore-sentinel, so force it out! 1.7.3 was the last
+# version
+Obsoletes: dashcore-sentinel = 1.7.3
 
 
 # dashcore-libs
@@ -456,9 +457,7 @@ mkdir -p %{projectroot}
 
 # Source6: dashcore (binary)
 # {_builddir}/dashcore-0.17/dashcore-0.17.0/
-%else
 %setup -q -T -D -a 6 -n %{projectroot}
-%endif
 
 # Source1: contributions
 # {_builddir}/dashcore-21.1.0/dashcore-contrib/
@@ -529,7 +528,6 @@ export QA_RPATHS=0x0002
 install -d %{buildroot}%{_datadir}
 install -d %{buildroot}%{_mandir}
 install -d %{buildroot}%{_mandir}/man1
-#install -d %%{buildroot}%%{_mandir}/man5
 install -d %{buildroot}%{_sysconfdir}
 install -d %{buildroot}%{_localstatedir}
 install -d %{buildroot}%{_sharedstatedir}
@@ -541,12 +539,12 @@ install -d -m755 -p %{buildroot}%{_includedir}
 install -d -m755 -p %{buildroot}%{_libdir}
 
 mv %{binarytree}/bin/dash* %{buildroot}%{_bindir}/
-#mv %{binarytree}/bin/dash-qt %{buildroot}%{_bindir}/
-#mv %{binarytree}/bin/dash-wallet %{buildroot}%{_bindir}/
-#mv %{binarytree}/bin/dashd %{buildroot}%{_bindir}/
-#mv %{binarytree}/bin/dash-util %{buildroot}%{_bindir}/
-#mv %{binarytree}/bin/dash-tx %{buildroot}%{_bindir}/
-#mv %{binarytree}/bin/dash-cli %{buildroot}%{_bindir}/
+#mv %%{binarytree}/bin/dash-qt     %%{buildroot}%%{_bindir}/
+#mv %%{binarytree}/bin/dash-wallet %%{buildroot}%%{_bindir}/
+#mv %%{binarytree}/bin/dashd       %%{buildroot}%%{_bindir}/
+#mv %%{binarytree}/bin/dash-util   %%{buildroot}%%{_bindir}/
+#mv %%{binarytree}/bin/dash-tx     %%{buildroot}%%{_bindir}/
+#mv %%{binarytree}/bin/dash-cli    %%{buildroot}%%{_bindir}/
 mv %{binarytree}/include/*        %{buildroot}%{_includedir}/
 mv %{binarytree}/lib/lib*         %{buildroot}%{_libdir}/
 cp -a %{buildroot}%{_includedir}/bitcoinconsensus.h %{buildroot}%{_includedir}/dashconsensus.h
@@ -582,11 +580,9 @@ ln -s %{_localstatedir}/log/dashcore/testnet3/debug.log %{buildroot}%{_sharedsta
 #   -> /etc/dashcore/dash.conf (convenience symlink)
 ln -s %{_sysconfdir}/dashcore/dash.conf %{buildroot}%{_sharedstatedir}/dashcore/.dashcore/dash.conf
 
-# Man Pages (from upstream) - likely to overwrite ones from contrib (which is fine)
-install -D -m644 %{binarytree}/share/man/man1/*.1* %{buildroot}%{_mandir}/man1/
-
-# probably the same as above. I haven't checked.
-install -D -m644 %{binarytree}/share/man/man1/*.1* %{buildroot}%{_mandir}/man1/
+# Man Pages
+#install -D -m644 %%{binarytree}/share/man/man1/*.1* %%{buildroot}%%{_mandir}/man1/
+install -D -m644 %{srccontribtree}/binary-build-contribs/doc/man/*.1* %{buildroot}%{_mandir}/man1/
 
 %if %{disable_wallet}
   rm -f %{buildroot}%{_mandir}/man1/dash-qt*
@@ -594,7 +590,6 @@ install -D -m644 %{binarytree}/share/man/man1/*.1* %{buildroot}%{_mandir}/man1/
 %endif
 
 gzip -f %{buildroot}%{_mandir}/man1/*.1
-#gzip -f %%{buildroot}%%{_mandir}/man5/*.5
 
 # Bash completion
 install -D -m644 %{srccontribtree}/binary-build-contribs/bash-completion/dash-cli.bash-completion %{buildroot}%{_datadir}/bash-completion/completions/dash-cli
@@ -829,7 +824,7 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 %defattr(-,root,root,-)
 %if ! %{disable_wallet}
 %license %{srccontribtree}/binary-build-contribs/license/COPYING
-%doc %{srccontribtree}/binary-build-contribs/doc/*.md %{srccontribtree}/dash.conf.example
+%doc %{srccontribtree}/binary-build-contribs/doc/* %{srccontribtree}/dash.conf.example
 %{_bindir}/dash-qt
 %{_bindir}/dash-util
 %{_bindir}/dash-wallet
@@ -840,8 +835,7 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 %{_datadir}/icons/*
 %{_mandir}/man1/dash-wallet.1.gz
 %{_mandir}/man1/dash-qt.1.gz
-%{_mandir}/man1/bitcoin-util.1.gz
-#%%{_mandir}/man5/masternode.conf.5.gz
+%{_mandir}/man1/dash-util.1.gz
 %{_usr_lib}/firewalld/services/dashcore.xml
 %{_usr_lib}/firewalld/services/dashcore-testnet.xml
 %{_usr_lib}/firewalld/services/dashcore-rpc.xml
@@ -858,7 +852,7 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 %files server
 %defattr(-,root,root,-)
 %license %{srccontribtree}/binary-build-contribs/license/COPYING
-%doc %{srccontribtree}/binary-build-contribs/doc/*.md %{srccontribtree}/dash.conf.example
+%doc %{srccontribtree}/binary-build-contribs/doc/* %{srccontribtree}/dash.conf.example
 
 # Application as systemd service directory structure
 %defattr(-,dashcore,dashcore,-)
@@ -912,9 +906,7 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 %{_tmpfilesdir}/dashd.conf
 %{_datadir}/bash-completion/completions/dashd
 %{_mandir}/man1/dashd.1.gz
-%{_mandir}/man1/bitcoin-util.1.gz
-#%%{_mandir}/man5/dash.conf.5.gz
-#%%{_mandir}/man5/masternode.conf.5.gz
+%{_mandir}/man1/dash-util.1.gz
 
 %if %{testing_extras}
   %{_bindir}/test_dash
@@ -947,7 +939,7 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 %{_datadir}/bash-completion/completions/dash-tx
 %{_mandir}/man1/dash-cli.1.gz
 %{_mandir}/man1/dash-tx.1.gz
-%{_mandir}/man1/bitcoin-util.1.gz
+%{_mandir}/man1/dash-util.1.gz
 
 %license %{srccontribtree}/binary-build-contribs/license/COPYING
 
@@ -989,7 +981,10 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 * Tue Mar 17 2026 Todd Warner <t0dd_at_protonmail.com> 23.1.2-1.rp.taw
 * Tue Mar 17 2026 Todd Warner <t0dd_at_protonmail.com> 23.1.2-0.1.rp.testing.taw
   - (repackaged) https://github.com/dashpay/dash/releases/tag/v23.2.0
+  - the Obsoletes is still making RPM lint angry; setting a version
   - stripped out all of the build from source bits. At least I hope so.
+  - adjusted docs to match updated dashcore-contrib
+
 
 * Wed Feb 25 2026 Todd Warner <t0dd_at_protonmail.com> 23.1.0-1.rp.taw
 * Wed Feb 25 2026 Todd Warner <t0dd_at_protonmail.com> 23.1.0-0.1.rp.testing.taw
