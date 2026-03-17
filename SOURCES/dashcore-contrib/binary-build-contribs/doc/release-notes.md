@@ -1,350 +1,95 @@
-Dash Core version v18.0.1
-=========================
+# Dash Core version v23.1.2
 
-Release is now available from:
+This is a new patch version release, bringing GUI improvements, new features, bugfixes, and performance optimizations.
+This release is **optional** for all nodes, although recommended.
 
-  <https://www.dash.org/downloads/#wallets>
-
-This is a new major version release, bringing new features, various bugfixes
-and other improvements.
-
-This release is mandatory for all nodes.
-
-Please report bugs using the issue tracker at github:
+Please report bugs using the issue tracker at GitHub:
 
   <https://github.com/dashpay/dash/issues>
 
+# Upgrading and downgrading
 
-Upgrading and downgrading
-=========================
-
-How to Upgrade
---------------
+## How to Upgrade
 
 If you are running an older version, shut it down. Wait until it has completely
 shut down (which might take a few minutes for older versions), then run the
 installer (on Windows) or just copy over /Applications/Dash-Qt (on Mac) or
-dashd/dash-qt (on Linux). If you upgrade after DIP0003 activation and you were
-using version < 0.13 you will have to reindex (start with -reindex-chainstate
-or -reindex) to make sure your wallet has all the new data synced. Upgrading
-from version 0.13 should not require any additional actions.
+dashd/dash-qt (on Linux).
 
-When upgrading from a version prior to 18.0.1, the
-first startup of Dash Core will run a migration process which can take anywhere
-from a few minutes to thirty minutes to finish. After the migration, a 
-downgrade to an older version is only possible with a reindex 
-(or reindex-chainstate).
+## Downgrade warning
 
-Downgrade warning
------------------
+### Downgrade to a version < v23.0.0
 
-### Downgrade to a version < v18.0.1
+Downgrading to a version older than v23.0.0 is not supported, and will
+require a reindex.
 
-Downgrading to a version older than v18.0.1 is not supported due to changes in
-the indexes database folder. If you need to use an older version, you must
-either reindex or re-sync the whole chain.
+# Release Notes
 
-### Downgrade of masternodes to < v18.0.1
+## GUI changes
 
-Starting with the 0.16 release, masternodes verify the protocol version of other
-masternodes. This results in PoSe punishment/banning for outdated masternodes,
-so downgrading even prior to the activation of the introduced hard-fork changes
-is not recommended.
+- Introduced a framework for sourcing and applying data with dedicated feeds, used by the Masternode and Proposal list views for improved data flow and separation of concerns (dash#7146).
+- Added a new "Proposal Information" widget to the Information tab with an interactive donut chart showing proposal budget allocation (dash#7159).
+- Added distinct widgets for Dash-specific reporting in the Debug window, including dedicated Information and Network tabs (dash#7118).
+- Added support for reporting `OP_RETURN` payloads as Data Transactions in the transaction list (dash#7144).
+- Added Tahoe styled icons for macOS with runtime styling for each network type (mainnet, testnet, devnet, regtest), updated bundle icon, and added mask-based tray icon with generation scripts (dash#7180).
+- Filter preferences in the masternode list are now persisted across sessions (dash#7148).
+- Fixed overview page font double scaling, recalculated minimum width correctly, fixed `SERVICE` and `STATUS` column sorting, and fixed common types filtering in masternode list (dash#7147).
+- Fixed `labelError` styling by moving it from `proposalcreate.ui` into `general.css` for consistency (dash#7145).
+- Fixed banned masternodes incorrectly returning status=0 instead of their actual ban status (dash#7157).
 
-Notable changes
-===============
+## Bug Fixes
 
-Quorum rotation
---------------
-InstantSend quorums will now use a new quorum type and a new algorithm for
-establishing quorums. The upcoming DIP-0024 will provide comprehensive details.
+- Fixed MN update notifications where the old and new masternode lists were swapped, causing incorrect change detection (dash#7154).
+- Reject identity elements in BLS deserialization and key generation to prevent invalid keys from being accepted (dash#7193).
+- Fixed quorum labels not being correctly reseated when new quorum types are inserted (dash#7191).
+- Skip collecting block txids during IBD to prevent unbounded memory growth in `ChainLockSigner` (dash#7208).
+- Serialize `TrySignChainTip` to prevent concurrent signing races that could split signing shares across different block hashes (dash#7209).
+- Properly skip evodb repair when reindexing to prevent unnecessary repair attempts (dash#7222).
 
-Quorum rotation is activated via a BIP9 style hard fork that will begin
-signalling on August 15, 2022 using bit 7. New quorums will start forming in
-1152-1440 block range after the activation. Any nodes that do not upgrade by
-that time will diverge from the rest of the network.
+## Miscellaneous
 
-Deterministic InstantSend
--------------------------
-Deterministically verifying InstantSend locks at any point in the future has
-been added to support Dash Platform. This update introduces versioning to
-InstantSend messages and adds quorum information to them. While the previous
-design was sufficient for core chain payments, the platform chain will benefit
-from this enhanced verification capability. Details about deterministic
-InstantSend are provided in [DIP-0022](https://github.com/dashpay/dips/blob/master/dip-0022.md).
+- Renamed `bitcoin-util` manpage and test references to `dash-util` (dash#7221).
 
-Deterministic InstantSend will be activated with the DIP0024 hard fork.
+## Interfaces
 
-Governance
-----------
-Several improvements have been made to Dash’s DAO governance system.
-The governance proposal fee has been reduced from 5 Dash to 1 Dash following
-a vote by masternode owners to do so. For improved security and flexibility,
-proposal payouts to pay-to-script-hash (P2SH) addresses are now supported.
+- Consolidated masternode counts into a single struct and exposed chainlock, InstantSend, credit pool, and quorum statistics through the node interface (dash#7160).
 
-These changes will be activated with the DIP0024 hard fork.
+## Performance Improvements
 
-Governance proposals can now be viewed in GUI Governance tab (must be enabled
-in Preferences first).
+- Replaced two heavy `HashMap` constructions with linear lookups in hot paths where the maps were rarely used, reducing overhead (dash#7176).
 
-Initial Enhanced Hard Fork support
-----------------------------------
-The masternode hard fork signal special transaction has been added as the first
-step in enabling an improved hard fork mechanism. This enhancement enables
-future hard forks to be activated quickly and safely without any
-“race conditions” if miners and masternodes update at significantly different
-speeds. Effectively there will be a masternode signal on chain in addition to
-the miner one to ensure smooth transitions. Details of the enhanced hard fork
-system are provided in [DIP-0023](https://github.com/dashpay/dips/blob/master/dip-0023.md).
+# v23.1.2 Change log
 
-Network improvements
---------------------
-We implemented and backported implementations of several improvement proposals.
-You can read more about implemented changes in the following documents:
-- [`DIP-0025`](https://gist.github.com/thephez/6c4c2a7747298e8b3e528c0c4e98a68c): Compressed headers.
-- [`BIP 155`](https://github.com/bitcoin/bips/blob/master/bip-0155.mediawiki): The 'addrv2' and 'sendaddrv2' messages which enable relay of Tor V3 addresses (and other networks).
-- [`BIP 158`](https://github.com/bitcoin/bips/blob/master/bip-0158.mediawiki): Compact Block Filters for Light Clients.
+See detailed [set of changes][set-of-changes].
 
-KeePass support removed
------------------------
-Please make sure to move your coins to a wallet with a regular passphrase.
-
-Wallet changes
---------------
-We continued backporting wallet functionality updates. Most notable changes
-are:
-- Added support for empty, encrypted-on-creation and watch-only wallets.
-- Wallets can now be created, opened and closed via a GUI menu.
-- No more `salvagewallet` option in cmd-line and Repair tab in GUI. Check the
-`salvage` command in the `dash-wallet` tool.
-
-Indexes
--------
-The transaction index is moved into `indexes/` folder. The migration of the old
-data is done on the first run and does not require reindexing. Note that the data
-in the old path is removed which means that this change is not backwards
-compatible and you'll have to reindex the whole blockchain if you decide to
-downgrade to a pre-v18.0.1 version.
-
-Remote Procedure Call (RPC) Changes
------------------------------------
-Most changes here were introduced through Bitcoin backports mostly related to
-the deprecation of wallet accounts in DashCore v0.17 and introduction of PSBT
-format.
-
-The new RPCs are:
-- `combinepsbt`
-- `converttopsbt`
-- `createpsbt`
-- `decodepsbt`
-- `deriveaddresses`
-- `finalizepsbt`
-- `getblockfilter`
-- `getdescriptorinfo`
-- `getnodeaddresses`
-- `getrpcinfo`
-- `joinpsbts`
-- `listwalletdir`
-- `quorum rotationinfo`
-- `scantxoutset`
-- `submitheader`
-- `testmempoolaccept`
-- `utxoupdatepsbt`
-- `walletcreatefundedpsbt`
-- `walletprocesspsbt`
-
-The removed RPCs are:
-- `estimatefee`
-- `getinfo`
-- `getreceivedbyaccount`
-- `keepass`
-- `listaccounts`
-- `listreceivedbyaccount`
-- `move`
-- `resendwallettransactions`
-- `sendfrom`
-- `signrawtransaction`
-
-Changes in existing RPCs introduced through bitcoin backports:
-- The `testnet` field in `dash-cli -getinfo` has been renamed to `chain` and
-now returns the current network name as defined in BIP70 (main, test, regtest).
-- Added `window_final_block_height` in `getchaintxstats`
-- Added `feerate_percentiles` object with feerates at the 10th, 25th, 50th,
-75th, and 90th percentile weight unit instead of `medianfeerate` in
-`getblockstats`
-- In `getmempoolancestors`, `getmempooldescendants`, `getmempoolentry` and
-`getrawmempool` RPCs, to be consistent with the returned value and other RPCs
-such as `getrawtransaction`, `vsize` has been added and `size` is now
-deprecated. `size` will only be returned if `dashd` is started with
-`-deprecatedrpc=size`.
-- Added `loaded` in mempool related RPCs indicates whether the mempool is fully
-loaded or not
-- Added `localservicesnames` in `getnetworkinfo` list the services the node
-offers to the network, in human-readable form (in addition to an already
-existing `localservices` hex string)
-- Added `hwm` in `getzmqnotifications`
-- `createwallet` can create blank, encrypted or watch-only wallets now.
-- Added `private_keys_enabled` in `getwalletinfo`
-- Added `solvable`, `desc`, `ischange` and `hdmasterfingerprint` in `getaddressinfo`
-- Added `desc` in `listunspent`
-
-Dash-specific changes in existing RPCs:
-- Added `quorumIndex` in `quorum getinfo` and `quorum memberof`
-- In rpc `masternodelist` with parameters `full`, `info` and `json` the PoS penalty score of the MN will be returned. For `json` parameter, the field `pospenaltyscore` was added.
-
-Please check `help <command>` for more detailed information on specific RPCs.
-
-Command-line options
---------------------
-Most changes here were introduced through Bitcoin backports.
-
-New cmd-line options:
-- `asmap`
-- `avoidpartialspends`
-- `blockfilterindex`
-- `blocksonly`
-- `llmqinstantsenddip0024`
-- `llmqtestinstantsendparams`
-- `maxuploadtarget`
-- `natpmp`
-- `peerblockfilters`
-- `powtargetspacing`
-- `stdinwalletpassphrase`
-- `zmqpubhashchainlock`
-- `zmqpubrawchainlock`
-
-The option to set the PUB socket's outbound message high water mark
-(SNDHWM) may be set individually for each notification:
-- `-zmqpubhashtxhwm=n`
-- `-zmqpubhashblockhwm=n`
-- `-zmqpubhashchainlockhwm=n`
-- `-zmqpubhashtxlockhwm=n`
-- `-zmqpubhashgovernancevotehwm=n`
-- `-zmqpubhashgovernanceobjecthwm=n`
-- `-zmqpubhashinstantsenddoublespendhwm=n`
-- `-zmqpubhashrecoveredsighwm=n`
-- `-zmqpubrawblockhwm=n`
-- `-zmqpubrawtxhwm=n`
-- `-zmqpubrawchainlockhwm=n`
-- `-zmqpubrawchainlocksighwm=n`
-- `-zmqpubrawtxlockhwm=n`
-- `-zmqpubrawtxlocksighwm=n`
-- `-zmqpubrawgovernancevotehwm=n`
-- `-zmqpubrawgovernanceobjecthwm=n`
-- `-zmqpubrawinstantsenddoublespendhwm=n`
-- `-zmqpubrawrecoveredsighwm=n`
-
-Removed cmd-line options:
-- `keepass`
-- `keepassport`
-- `keepasskey`
-- `keepassid`
-- `keepassname`
-- `salvagewallet`
-
-Changes in existing cmd-line options:
-
-Please check `Help -> Command-line options` in Qt wallet or `dashd --help` for
-more information.
-
-Backports from Bitcoin Core
----------------------------
-This release introduces over 1000 updates from Bitcoin v0.18/v0.19/v0.20 as well as numerous updates from Bitcoin v0.21 and more recent versions. This includes multi-wallet support in the GUI, support for partially signed transactions (PSBT), Tor version 3 support, and a number of other updates that will benefit Dash users. Bitcoin changes that do not align with Dash’s product needs, such as SegWit and RBF, are excluded from our backporting. For additional detail on what’s included in Bitcoin, please refer to their release notes – v0.18, v0.19, v0.20.
-
-Miscellaneous
--------------
-A lot of refactoring, code cleanups and other small fixes were done in this release.
-
-v18.0.1 Change log
-==================
-
-See detailed [set of changes](https://github.com/dashpay/dash/compare/v0.17.0.3...dashpay:v18.0.1).
-
-Credits
-=======
+# Credits
 
 Thanks to everyone who directly contributed to this release:
 
-- AJ ONeal (coolaj86)
-- Christian Fifi Culp (christiancfifi)
-- dustinface (xdustinface)
-- gabriel-bjg
-- Holger Schinzel (schinzelh)
-- humbleDasher
-- Kittywhiskers Van Gogh (kittywhiskers)
-- Konstantin Akimov (knst)
-- ktechmidas
-- linuxsh2
-- Munkybooty
-- Nathan Marley (nmarley)
-- Odysseas Gabrielides (ogabrielides)
+- Kittywhiskers Van Gogh
+- Konstantin Akimov
 - PastaPastaPasta
-- pravblockc
-- rkarthik2k21
-- Stefan (5tefan)
-- strophy
-- TheLazieR Yip (thelazier)
-- thephez
 - UdjinM6
-- Vijay (vijaydasmp)
-- Vlad K (dzutto)
 
-As well as everyone that submitted issues, reviewed pull requests, helped debug the release candidates, and write DIPs that were implemented in this release. Notable mentions include:
+As well as everyone that submitted issues, reviewed pull requests and helped
+debug the release candidates.
 
-- Samuel Westrich (quantumexplorer)
-- Virgile Bartolo
-- xkcd
+# Older releases
 
-Older releases
-==============
+These releases are considered obsolete. Old release notes can be found here:
 
-Dash was previously known as Darkcoin.
+- [v23.1.0](https://github.com/dashpay/dash/blob/master/doc/release-notes/dash/release-notes-23.1.0.md) released Feb/15/2026
+- [v23.0.2](https://github.com/dashpay/dash/blob/master/doc/release-notes/dash/release-notes-23.0.2.md) released Dec/4/2025
+- [v23.0.0](https://github.com/dashpay/dash/blob/master/doc/release-notes/dash/release-notes-23.0.0.md) released Nov/10/2025
+- [v22.1.3](https://github.com/dashpay/dash/blob/master/doc/release-notes/dash/release-notes-22.1.3.md) released Jul/15/2025
+- [v22.1.2](https://github.com/dashpay/dash/blob/master/doc/release-notes/dash/release-notes-22.1.2.md) released Apr/15/2025
+- [v22.1.1](https://github.com/dashpay/dash/blob/master/doc/release-notes/dash/release-notes-22.1.1.md) released Feb/17/2025
+- [v22.1.0](https://github.com/dashpay/dash/blob/master/doc/release-notes/dash/release-notes-22.1.0.md) released Feb/10/2025
+- [v22.0.0](https://github.com/dashpay/dash/blob/master/doc/release-notes/dash/release-notes-22.0.0.md) released Dec/12/2024
+- [v21.1.1](https://github.com/dashpay/dash/blob/master/doc/release-notes/dash/release-notes-21.1.1.md) released Oct/22/2024
+- [v21.1.0](https://github.com/dashpay/dash/blob/master/doc/release-notes/dash/release-notes-21.1.0.md) released Aug/8/2024
+- [v21.0.2](https://github.com/dashpay/dash/blob/master/doc/release-notes/dash/release-notes-21.0.2.md) released Aug/1/2024
+- [v21.0.0](https://github.com/dashpay/dash/blob/master/doc/release-notes/dash/release-notes-21.0.0.md) released Jul/25/2024
+- [v20.1.1](https://github.com/dashpay/dash/blob/master/doc/release-notes/dash/release-notes-20.1.1.md) released April/3/2024
 
-Darkcoin tree 0.8.x was a fork of Litecoin tree 0.8, original name was XCoin
-which was first released on Jan/18/2014.
-
-Darkcoin tree 0.9.x was the open source implementation of masternodes based on
-the 0.8.x tree and was first released on Mar/13/2014.
-
-Darkcoin tree 0.10.x used to be the closed source implementation of Darksend
-which was released open source on Sep/25/2014.
-
-Dash Core tree 0.11.x was a fork of Bitcoin Core tree 0.9,
-Darkcoin was rebranded to Dash.
-
-Dash Core tree 0.12.0.x was a fork of Bitcoin Core tree 0.10.
-
-Dash Core tree 0.12.1.x was a fork of Bitcoin Core tree 0.12.
-
-These release are considered obsolete. Old release notes can be found here:
-
-- [v0.17.0.3](https://github.com/dashpay/dash/blob/master/doc/release-notes/dash/release-notes-0.17.0.3.md) released June/07/2021
-- [v0.17.0.2](https://github.com/dashpay/dash/blob/master/doc/release-notes/dash/release-notes-0.17.0.2.md) released May/19/2021
-- [v0.16.1.1](https://github.com/dashpay/dash/blob/master/doc/release-notes/dash/release-notes-0.16.1.1.md) released November/17/2020
-- [v0.16.1.0](https://github.com/dashpay/dash/blob/master/doc/release-notes/dash/release-notes-0.16.1.0.md) released November/14/2020
-- [v0.16.0.1](https://github.com/dashpay/dash/blob/master/doc/release-notes/dash/release-notes-0.16.0.1.md) released September/30/2020
-- [v0.15.0.0](https://github.com/dashpay/dash/blob/master/doc/release-notes/dash/release-notes-0.15.0.0.md) released Febrary/18/2020
-- [v0.14.0.5](https://github.com/dashpay/dash/blob/master/doc/release-notes/dash/release-notes-0.14.0.5.md) released December/08/2019
-- [v0.14.0.4](https://github.com/dashpay/dash/blob/master/doc/release-notes/dash/release-notes-0.14.0.4.md) released November/22/2019
-- [v0.14.0.3](https://github.com/dashpay/dash/blob/master/doc/release-notes/dash/release-notes-0.14.0.3.md) released August/15/2019
-- [v0.14.0.2](https://github.com/dashpay/dash/blob/master/doc/release-notes/dash/release-notes-0.14.0.2.md) released July/4/2019
-- [v0.14.0.1](https://github.com/dashpay/dash/blob/master/doc/release-notes/dash/release-notes-0.14.0.1.md) released May/31/2019
-- [v0.14.0](https://github.com/dashpay/dash/blob/master/doc/release-notes/dash/release-notes-0.14.0.md) released May/22/2019
-- [v0.13.3](https://github.com/dashpay/dash/blob/master/doc/release-notes/dash/release-notes-0.13.3.md) released Apr/04/2019
-- [v0.13.2](https://github.com/dashpay/dash/blob/master/doc/release-notes/dash/release-notes-0.13.2.md) released Mar/15/2019
-- [v0.13.1](https://github.com/dashpay/dash/blob/master/doc/release-notes/dash/release-notes-0.13.1.md) released Feb/9/2019
-- [v0.13.0](https://github.com/dashpay/dash/blob/master/doc/release-notes/dash/release-notes-0.13.0.md) released Jan/14/2019
-- [v0.12.3.4](https://github.com/dashpay/dash/blob/master/doc/release-notes/dash/release-notes-0.12.3.4.md) released Dec/14/2018
-- [v0.12.3.3](https://github.com/dashpay/dash/blob/master/doc/release-notes/dash/release-notes-0.12.3.3.md) released Sep/19/2018
-- [v0.12.3.2](https://github.com/dashpay/dash/blob/master/doc/release-notes/dash/release-notes-0.12.3.2.md) released Jul/09/2018
-- [v0.12.3.1](https://github.com/dashpay/dash/blob/master/doc/release-notes/dash/release-notes-0.12.3.1.md) released Jul/03/2018
-- [v0.12.2.3](https://github.com/dashpay/dash/blob/master/doc/release-notes/dash/release-notes-0.12.2.3.md) released Jan/12/2018
-- [v0.12.2.2](https://github.com/dashpay/dash/blob/master/doc/release-notes/dash/release-notes-0.12.2.2.md) released Dec/17/2017
-- [v0.12.2](https://github.com/dashpay/dash/blob/master/doc/release-notes/dash/release-notes-0.12.2.md) released Nov/08/2017
-- [v0.12.1](https://github.com/dashpay/dash/blob/master/doc/release-notes/dash/release-notes-0.12.1.md) released Feb/06/2017
-- [v0.12.0](https://github.com/dashpay/dash/blob/master/doc/release-notes/dash/release-notes-0.12.0.md) released Aug/15/2015
-- [v0.11.2](https://github.com/dashpay/dash/blob/master/doc/release-notes/dash/release-notes-0.11.2.md) released Mar/04/2015
-- [v0.11.1](https://github.com/dashpay/dash/blob/master/doc/release-notes/dash/release-notes-0.11.1.md) released Feb/10/2015
-- [v0.11.0](https://github.com/dashpay/dash/blob/master/doc/release-notes/dash/release-notes-0.11.0.md) released Jan/15/2015
-- [v0.10.x](https://github.com/dashpay/dash/blob/master/doc/release-notes/dash/release-notes-0.10.0.md) released Sep/25/2014
-- [v0.9.x](https://github.com/dashpay/dash/blob/master/doc/release-notes/dash/release-notes-0.9.0.md) released Mar/13/2014
+[set-of-changes]: https://github.com/dashpay/dash/compare/v23.1.0...dashpay:v23.1.2
