@@ -1,0 +1,14 @@
+[Desktop Entry]
+Type=Application
+Name=Dash Core Wallet
+GenericName=Cryptocurrency Wallet
+Comment=Full-blockchain cryptocurrency wallet for dash—a peer-to-peer, payments-focused, fungible, digital currency
+TryExec=/usr/bin/dash-wallet
+Exec=/usr/bin/dash-wallet.wrapper.sh
+Icon=org.dash.dash_core.DashWallet
+StartupWMClass=dash-wallet
+Categories=Office;Finance;
+MimeType=x-scheme-handler/dash;
+Terminal=false
+SingleMainWindow=true
+Version=1.5
