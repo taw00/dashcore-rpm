@@ -28,7 +28,7 @@ Summary: A global payments network and decentralized application (dapp) platform
 %define isTestBuild 1
 %define verX 23
 %define verY 1
-%define verZ 0
+%define verZ 2
 %define _pkgrel 1
 %define _pkgrel_iftestbuild 0.1
 
@@ -38,21 +38,6 @@ Summary: A global payments network and decentralized application (dapp) platform
 
 %define appid org.dash.dash_core.DashWallet
 %define appid_node %{appid}.node
-
-# Leave these switched off.
-# These settings are used if you want to deliver packages sourced from upstream
-# pre-builds instead of from source code. This is a last resort for scenarios
-# where an RPM is desired, but we could not successfully build from source.
-# E.g., we often have had a terrible time building to a EPEL/RHEL target.
-%define clientSourceIsBinary 1
-%define serverSourceIsBinary 1
-
-# Leave this switched on
-# Building without leaning on the system libraries for the build is currently
-# not supported (I have not been successful at a full depends-based build
-# yet). Please leave this on. It's poor packaging anyway to rely on a depends-
-# tree of libraries if those libraries are not maintained by the project.
-%define useSystemLibraries 1
 
 # VERSION
 %define vermajor %{verX}.%{verY}
@@ -86,17 +71,7 @@ Version: %{vermajor}.%{verminor}
 %endif
 
 %undefine _rp
-%if %{clientSourceIsBinary} && %{serverSourceIsBinary}
-  %define _rp rp
-%else
-  %if %{clientSourceIsBinary}
-    %define _rp rpc
-  %else
-  %if %{serverSourceIsBinary}
-    %define _rp rps
-  %endif
-  %endif
-%endif
+%define _rp rp
 
 # have to use _variables because rpm spec macros are easily recursive and break.
 %define _snapinfo THIS_VALUE_WILL_BE_REPLACED
@@ -135,12 +110,7 @@ Release: %{_release}
 
 # (flags for experimentation)
 # Don't manually edit these.
-%define buildFromSource 0
 %define testing_extras 0
-%if ! %{clientSourceIsBinary} || ! %{serverSourceIsBinary}
-  %define buildFromSource 1
-  #%%define testing_extras 1 -- turn off for now
-%endif
 
 # (flag for experimentation)
 # Don't disable the wallet build (leave it 0).
@@ -172,14 +142,10 @@ Release: %{_release}
 
 # Extracted source tree structure (extracted in .../BUILD)
 #   projectroot           dashcore-21.1.1
-#      \_sourcetree         \_dash-21.1.1 or dash-21.1.1-rc1...
 #      \_binarytree         \_dashcore-21.1.1
 #      \_srccontribtree     \_dashcore-contrib
 #      \_patch_files        \_dash-18.0.1-...patch
 #
-# In v18 and older ... Supplied but only "moved":
-#   bls-signatures-1.2.4.tar.gz
-#                           --> {sourcetree}/depends/sources/1.2.4.tar.gz
 
 %define _sourcearchivename %{_archivename_alt2}
 %define _binaryarchivename %{_archivename_alt3}
@@ -188,12 +154,10 @@ Release: %{_release}
 %if 0%{?buildQualifier:1}
   %define sourcearchivename %{_sourcearchivename}-%{buildQualifier}
   %define binaryarchivename %{_binaryarchivename}-%{buildQualifier}
-  %define sourcetree %{_sourcearchivename}-%{buildQualifier}
   %define binarytree %{_binarytree}
 %else
   %define sourcearchivename %{_sourcearchivename}
   %define binaryarchivename %{_binaryarchivename}
-  %define sourcetree %{_sourcearchivename}
   %define binarytree %{_binarytree}
 %endif
 #%%define blsarchiveversion 1.2.4 <-- dash v18 and older
@@ -208,27 +172,8 @@ Release: %{_release}
 
 
 Source1: https://github.com/taw00/dashcore-rpm/raw/master/SOURCES/%{srccontribarchive}.tar.gz
-%if %{buildFromSource}
-Source0: https://github.com/dashpay/dash/archive/v%{versionqualified}/%{sourcearchivename}.tar.gz
-#XXX Source2: https://github.com/taw00/dashcore-rpm/raw/master/SOURCES/bls-signatures-%%{blsarchiveversion}.tar.gz
-Source3: https://github.com/rust-lang-nursery/libbacktrace/archive/%{libbacktracearchiveversion}/libbacktrace-%{libbacktracearchiveversion}.tar.gz
-## Source4 and Source5 are for EL8 only
-Source4: http://miniupnp.free.fr/files/miniupnpc-%{miniupnpcversion}.tar.gz
-Source5: https://download.oracle.com/berkeley-db/db-%{bdbarchiveversion}.tar.gz
-%else
-%if %{clientSourceIsBinary} || %{serverSourceIsBinary}
 #Source6: https://github.com/dashpay/dash/archive/v%%{versionqualified}/%%{binaryarchivename}-x86_64-linux-gnu.tar.gz
 Source6: https://github.com/dashpay/dash/releases/download/v%{versionqualified}/%{binaryarchivename}-x86_64-linux-gnu.tar.gz
-%endif
-%endif
-
-%if %{buildFromSource}
-## (1) nuke "About QT" in the client source.
-#Patch1: https://github.com/taw00/dashcore-rpm/raw/master/SOURCES/dash-%%{version}-patch01-remove-about-qt-menu-item.patch
-## fixes for (2) newer bind and boost and (3) QT
-#Patch2: https://github.com/taw00/dashcore-rpm/raw/master/SOURCES/dash-%%{version}-patch02-bind-namespace-errors.patch
-#Patch3: https://github.com/taw00/dashcore-rpm/raw/master/SOURCES/dash-%%{version}-patch03-QPainterPath-issue.patch
-%endif
 
 %global selinux_variants mls strict targeted
 
@@ -257,32 +202,6 @@ URL: http://dash.org/
 # I'm ditching i386 and i686 platform choices. Sorry.
 ExclusiveArch: x86_64
 
-%if %{buildFromSource}
-# NOTE: the cmake supplied by EL8 is version 3.11 which is too old.
-# 3.14 is expected for bls-dash builds. It is supplied in the depends
-# tree but it is never used.
-
-# As recommended by...
-# https://github.com/dashpay/dash/raw/develop/doc/build-unix.md
-BuildRequires: libtool make autoconf automake patch
-BuildRequires: libstdc++-static binutils
-BuildRequires: python3
-
-%if %{useSystemLibraries}
-# These avoid unneccessary fetching of libraries from the internet.
-# Packaging is supposed to be performable with an airgapped system.
-BuildRequires: gettext
-BuildRequires: openssl-devel boost-devel libevent-devel sqlite-devel
-BuildRequires: ccache
-# Added to satisfy bls-signatures for 0.16 only.
-#BuildRequires: gmp-devel
-%if 0%{?fedora}
-# Note, EL8 uses in-src.rpm dependencies since EL8 does not provide these pkgs.
-BuildRequires: libdb4-cxx-devel miniupnpc-devel
-%endif
-%endif
-%endif
-
 # NOTE: other BuildRequires listed per package below
 
 # tree, vim-enhanced, and less for mock build environment introspection
@@ -307,18 +226,6 @@ Requires: qt5-qtwayland
 BuildRequires: libappstream-glib desktop-file-utils
 %endif
 
-%if %{buildFromSource} && %{useSystemLibraries}
-# These avoid unneccessary fetching of libraries from the internet.
-# Packaging is supposed to be performable with an airgapped system.
-BuildRequires: protobuf-devel
-%if ! %{disable_wallet}
-BuildRequires: qrencode-devel
-BuildRequires: qt5-qtbase-devel qt5-linguist
-BuildRequires: qt5-qtwayland-devel
-BuildRequires: libxkbcommon
-%endif
-# endif build from source and use system libraries
-%endif
 # endif fedora or el8
 %endif
 
@@ -547,11 +454,6 @@ Learn more at www.dash.org.
 
 mkdir -p %{projectroot}
 
-# Source0: dashcore (source)
-# {_builddir}/dashcore-0.17/dash-0.17.0.0/
-%if %{buildFromSource}
-%setup -q -T -D -a 0 -n %{projectroot}
-
 # Source6: dashcore (binary)
 # {_builddir}/dashcore-0.17/dashcore-0.17.0/
 %else
@@ -562,160 +464,32 @@ mkdir -p %{projectroot}
 # {_builddir}/dashcore-21.1.0/dashcore-contrib/
 %setup -q -T -D -a 1 -n %{projectroot}
 
-# XXX Source2: bls-dash archive
-# Source3: libbacktrace (backtrace) archive
-# Source4: miniupnpc archive (for EL only)
-# Source5: bdb archive (for EL only)
-# {_sourcedir} == ../../SOURCES/ but rpmlint hates use of {_sourcedir}
-# Moving the supplied tarballs from {_sourcedir} to their desired locations
-%if %{buildFromSource} && %{useExtraSources}
-mkdir -p %{sourcetree}/depends/sources/
-#mv ../../SOURCES/bls-signatures-%%{blsarchiveversion}.tar.gz %%{sourcetree}/depends/sources/v%%{blsarchiveversion}.tar.gz <-- dash-0.16 and older
-#mv ../../SOURCES/bls-signatures-%%{blsarchiveversion}.tar.gz %%{sourcetree}/depends/sources/bls-dash-%%{blsarchiveversion}.tar.gz <-- dash-18 and older
-mkdir -p %{sourcetree}/depends/sources/
-mv ../../SOURCES/libbacktrace-%{libbacktracearchiveversion}.tar.gz %{sourcetree}/depends/sources/%{libbacktracearchiveversion}.tar.gz
-# For EL builds only ...
-%if 0%{?rhel:1} || 0%{?centos:1}
-mkdir -p %{sourcetree}/depends/sources/
-mv ../../SOURCES/miniupnpc-%{miniupnpcversion}.tar.gz %{sourcetree}/depends/sources/miniupnpc-%{miniupnpcversion}.tar.gz
-mv ../../SOURCES/db-%{bdbarchiveversion}.tar.gz %{sourcetree}/depends/sources/db-%{bdbarchiveversion}.tar.gz
-%endif
-%endif
-
-%if ! %{clientSourceIsBinary}
-cd %{sourcetree}
-#%%patch1 -p1
-#%%patch2 -p1
-#%%patch3 -p1
-cd ..
-%endif
-
 # At this moment, we are in the projectroot directory
 
-%if %{buildFromSource} && %{useSystemLibraries}
-# Swap out packages.mk and bls-dash.mk makefiles in order to force some usage
-# of OS native devel libraries and tools.
-cp -a %{srccontribtree}/build/depends/packages/*.mk %{sourcetree}/depends/packages/
-# For EL builds only ...
-%if 0%{?rhel:1} || 0%{?centos:1}
-cp -a %{srccontribtree}/build/depends/packages/packages.mk--EL8 %{sourcetree}/depends/packages/packages.mk
-cp -a %{srccontribtree}/build/depends/packages/bls-dash.mk--EL8 %{sourcetree}/depends/packages/bls-dash.mk
-%endif
-%endif
 # For debugging purposes...
-
 %if %{isTestBuild}
   cd %{_builddir} ; tree -df -L 1 %{projectroot} ; cd -
 %endif
 
 
+
+
 %build
 # This section starts us in directory {_builddir}/{projectroot}
-%if ! %{buildFromSource}
-  exit 0
-%endif
+exit 0
 
-## A note about the _target_platform (RPM) and AC_CANONICAL_HOST (Makefile)
-## macros.
-##
-## _target_platform for Fedora/EL8 on X86_64 is x86_64-redhat-linux-gnu
-## AC_CANONICAL_HOST in the makefile will result in x86_64-pc-linux-gnu.
-## Regardless, config.sub in the depends directory will result in this
-## target host being set as such (...pc-linux-gnu) unless we force it to
-## something different.
-##
-## This is a bit baffling. If we don't add HOST= to the makefile, it will
-## default to x86_64-pc-linux-gnu. RPM though wants us to use _target_platform.
-## What is the "right way?" I don't know. I experiment with both.
-##
-## Read more:
-## http://ftp.rpm.org/api/4.4.2.2/config_macros.html
-## https://www.gnu.org/software/autoconf/manual/autoconf-2.69/html_node/Canonicalizing.html
 
-cd %{sourcetree}
-
-# build dependencies
-cd depends
-# Note: {_target_platform} = x86_64-redhat-linux-gnu
-# example: make HOST=x86_64-redhat-linux-gnu -j4
-make HOST=%{_target_platform} -j$(nproc)
-cd ..
-
-# build code
-%define _disable_tests --disable-tests --disable-gui-tests
-%if %{testing_extras}
-  %define _disable_tests %{nil}
-%endif
-
-./autogen.sh
-
-## Notes for next step:
-## - for building on ARM (which I do not do) you may have to add
-##   --enable-reduce-exports
-## - --enable-hardening is likely redundant since the RPM build instructions
-##   sets it already, but adding anyway.
-## - building without system libraries replacing most libraries represented in
-##   the depends tree currently does not work. For whatever reason, the QT
-##   libraries don't get picked up in the make step after the configure step.
-
-%if %{useSystemLibraries}
-  %define _targettree %{_builddir}/%{projectroot}/%{sourcetree}/depends/%{_target_platform}
-
-  # old configuration
-  #%%define _FLAGS CPPFLAGS="$CPPFLAGS -I%%{_targettree}/include -I%%{_includedir}" LDFLAGS="$LDFLAGS -L%%{_targettree}/lib -L%%{_libdir}"
-  #%%{_FLAGS} ./configure --libdir=%%{_targettree}/lib --prefix=%%{_targettree} --enable-reduce-exports %%{_disable_tests} --disable-zmq
-
-  # current configuration
-  %define _FLAGS CXXFLAGS="-I%{_targettree}/include -I%{_includedir} $CXXFLAGS -O" CPPFLAGS="-I%{_targettree}/include -I%{_includedir} $CPPFLAGS" LDFLAGS="-L%{_targettree}/lib -L%{_libdir} $LDFLAGS"
-  %{_FLAGS} ./configure --libdir=%{_targettree}/lib --includedir=%{_targettree}/include --prefix=%{_targettree} --enable-hardening %{_disable_tests} %{_disable_wallet}
-
-  make
-
-%else
-  # NOTE!!! THIS METHOD NOT WORKING JUST YET.
-  %define _FLAGS CXXFLAGS="-I%{_targettree}/include -I%{_includedir} $CXXFLAGS -O" CPPFLAGS="-I%{_targettree}/include -I%{_includedir} $CPPFLAGS" LDFLAGS="-L%{_targettree}/lib -L%{_libdir} $LDFLAGS"
-  %define _PKGCONFIG PKG_CONFIG_PATH="%{_targettree}/lib/pkgconfig:%{_targettree}/share/pkgconfig:%{_libdir}/pkgconfig"
-  %define _QTSTUFF "--with-qt-plugindir=%{_targettree}/plugins --with-qt-translationdir=%{_targettree}/translations --with-qt-libdir=%{_targettree}/lib --with-qt-incdir=%{_targettree}/include --with-qt-bindir=%{_targettree}/bin"
-  # This does nothing, commenting out
-  #cd %%{_targettree} && cp $(find ./plugins | grep "\.a$") ./lib/
-  #cd ../..
-  %{_FLAGS} %{_PKGCONFIG} ./configure --libdir=%{_targettree}/lib --includedir=%{_targettree}/include --with-boost-libdir=%{_targettree}/lib --prefix=%{_targettree} --enable-hardening %{_disable_tests} %{_disable_wallet} %{_QTSTUFF}
-  %{_PKGCONFIG} make
-%endif
-
-cd ..
 
 
 %check
 # This section starts us in directory {_builddir}/{projectroot}
-%if ! %{buildFromSource}
-  exit 0
-%endif
+exit 0
 
-cd %{sourcetree}
-%if %{testing_extras}
-# Run all the tests
-  make check
-  # Run all the other tests
-  #t0dd COMMENTED OUT FOR NOW -- Requires https://github.com/dashpay/dash_hash
-  #t0dd incorporated into the builds and that is not done yet.
-  #t0dd pushd src
-  #t0dd srcdir=. test/bitcoin-util-test.py
-  #t0dd popd
-  #t0dd LD_LIBRARY_PATH=/opt/openssl-compat-dashcore/lib PYTHONUNBUFFERED=1 qa/pull-tester/rpc-tests.py -extended
-%endif
 
 
 
 %install
 # This section starts us in directory {_builddir}/{projectroot}
-%if %{buildFromSource}
-  cd %{sourcetree}
-  # make install deploys to {_targettree}/ (defined in build step)
-  #make INSTALL="install -p" CP="cp -p" DESTDIR=%%{buildroot} install
-  make install
-  cd ..
-%endif
 
 # This export is used to ward off upstream's static rpath that they introduced.
 # I.e., it's an annoying misconfiguration on their part and we work around it.
@@ -766,37 +540,16 @@ install -d -m755 -p %{buildroot}%{_bindir}
 install -d -m755 -p %{buildroot}%{_includedir}
 install -d -m755 -p %{buildroot}%{_libdir}
 
-%if %{buildFromSource}
-  mv %{_targettree}/bin/dash* %{buildroot}%{_bindir}/
-  ln -s %{_bindir}/dash-qt %{buildroot}%{_bindir}/dash-wallet
-  mv %{_targettree}/include/dash* %{buildroot}%{_includedir}/
-  mv %{_targettree}/lib/libdash* %{buildroot}%{_libdir}/
-  install -d -m755 -p %{buildroot}%{_libdir}/pkgconfig
-  mv %{_targettree}/lib/pkgconfig/libdash* %{buildroot}%{_libdir}/pkgconfig/
-%endif
-
-%if %{clientSourceIsBinary} && %{serverSourceIsBinary}
-  mv %{binarytree}/bin/dash* %{buildroot}%{_bindir}/
-  mv %{binarytree}/include/*        %{buildroot}%{_includedir}/
-  mv %{binarytree}/lib/lib*         %{buildroot}%{_libdir}/
-  cp -a %{buildroot}%{_includedir}/bitcoinconsensus.h %{buildroot}%{_includedir}/dashconsensus.h
-%else
-  %if %{clientSourceIsBinary}
-    mv %{binarytree}/bin/dash-qt %{buildroot}%{_bindir}/
-    mv %{binarytree}/bin/dash-util %{buildroot}%{_bindir}/
-    mv %{binarytree}/bin/dash-tx %{buildroot}%{_bindir}/
-    mv %{binarytree}/bin/dash-wallet %{buildroot}%{_bindir}/
-    mv %{binarytree}/bin/dash-cli %{buildroot}%{_bindir}/
-  %endif
-  %if %{serverSourceIsBinary}
-    mv %{binarytree}/bin/dashd %{buildroot}%{_bindir}/
-    mv %{binarytree}/bin/dash-util %{buildroot}%{_bindir}/
-    mv %{binarytree}/bin/dash-tx %{buildroot}%{_bindir}/
-    mv %{binarytree}/include/*        %{buildroot}%{_includedir}/
-    mv %{binarytree}/lib/lib*         %{buildroot}%{_libdir}/
-    cp -a %{buildroot}%{_includedir}/bitcoinconsensus.h %{buildroot}%{_includedir}/dashconsensus.h
-  %endif
-%endif
+mv %{binarytree}/bin/dash* %{buildroot}%{_bindir}/
+#mv %{binarytree}/bin/dash-qt %{buildroot}%{_bindir}/
+#mv %{binarytree}/bin/dash-wallet %{buildroot}%{_bindir}/
+#mv %{binarytree}/bin/dashd %{buildroot}%{_bindir}/
+#mv %{binarytree}/bin/dash-util %{buildroot}%{_bindir}/
+#mv %{binarytree}/bin/dash-tx %{buildroot}%{_bindir}/
+#mv %{binarytree}/bin/dash-cli %{buildroot}%{_bindir}/
+mv %{binarytree}/include/*        %{buildroot}%{_includedir}/
+mv %{binarytree}/lib/lib*         %{buildroot}%{_libdir}/
+cp -a %{buildroot}%{_includedir}/bitcoinconsensus.h %{buildroot}%{_includedir}/dashconsensus.h
 
 # Remove the test binaries if they are still floating around
 %if ! %{testing_extras}
@@ -830,16 +583,10 @@ ln -s %{_localstatedir}/log/dashcore/testnet3/debug.log %{buildroot}%{_sharedsta
 ln -s %{_sysconfdir}/dashcore/dash.conf %{buildroot}%{_sharedstatedir}/dashcore/.dashcore/dash.conf
 
 # Man Pages (from upstream) - likely to overwrite ones from contrib (which is fine)
-%if %{buildFromSource}
-install -D -m644 %{sourcetree}/doc/man/*.1* %{buildroot}%{_mandir}/man1/
-%else
 install -D -m644 %{binarytree}/share/man/man1/*.1* %{buildroot}%{_mandir}/man1/
-%endif
 
-%if %{clientSourceIsBinary} || %{serverSourceIsBinary}
-  # probably the same as above. I haven't checked.
-  install -D -m644 %{binarytree}/share/man/man1/*.1* %{buildroot}%{_mandir}/man1/
-%endif
+# probably the same as above. I haven't checked.
+install -D -m644 %{binarytree}/share/man/man1/*.1* %{buildroot}%{_mandir}/man1/
 
 %if %{disable_wallet}
   rm -f %{buildroot}%{_mandir}/man1/dash-qt*
@@ -850,20 +597,14 @@ gzip -f %{buildroot}%{_mandir}/man1/*.1
 #gzip -f %%{buildroot}%%{_mandir}/man5/*.5
 
 # Bash completion
-%if %{buildFromSource}
-install -D -m644 %{sourcetree}/contrib/dash-cli.bash-completion %{buildroot}%{_datadir}/bash-completion/completions/dash-cli
-install -D -m644 %{sourcetree}/contrib/dash-tx.bash-completion %{buildroot}%{_datadir}/bash-completion/completions/dash-tx
-install -D -m644 %{sourcetree}/contrib/dashd.bash-completion %{buildroot}%{_datadir}/bash-completion/completions/dashd
-%else
-install -D -m644 %{srccontribtree}/linux/binary-build-contribs/bash-completion/dash-cli.bash-completion %{buildroot}%{_datadir}/bash-completion/completions/dash-cli
-install -D -m644 %{srccontribtree}/linux/binary-build-contribs/bash-completion/dash-tx.bash-completion %{buildroot}%{_datadir}/bash-completion/completions/dash-tx
-install -D -m644 %{srccontribtree}/linux/binary-build-contribs/bash-completion/dashd.bash-completion %{buildroot}%{_datadir}/bash-completion/completions/dashd
-%endif
+install -D -m644 %{srccontribtree}/binary-build-contribs/bash-completion/dash-cli.bash-completion %{buildroot}%{_datadir}/bash-completion/completions/dash-cli
+install -D -m644 %{srccontribtree}/binary-build-contribs/bash-completion/dash-tx.bash-completion %{buildroot}%{_datadir}/bash-completion/completions/dash-tx
+install -D -m644 %{srccontribtree}/binary-build-contribs/bash-completion/dashd.bash-completion %{buildroot}%{_datadir}/bash-completion/completions/dashd
 
 ## DESKTOP STUFF
 %if ! %{disable_wallet}
 # Desktop elements - desktop file (from contrib)
-cd %{srccontribtree}/linux/desktop/
+cd %{srccontribtree}/desktop/
 # org.dash.dash_core.dash-qt.desktop
 # https://docs.fedoraproject.org/en-US/packaging-guidelines/#_desktop_files
 install -m755  dash-wallet.wrapper.sh %{buildroot}%{_bindir}/
@@ -895,7 +636,7 @@ cd -
 %define testnet 0
 %endif
 
-install -D -m640 %{srccontribtree}/linux/systemd/etc-dashcore_dash.conf %{buildroot}%{_sysconfdir}/dashcore/dash.conf
+install -D -m640 %{srccontribtree}/systemd/etc-dashcore_dash.conf %{buildroot}%{_sysconfdir}/dashcore/dash.conf
 
 echo "\
 
@@ -965,23 +706,23 @@ the configuration file in /var/lib/dashcore/.dashcore/dash.conf
 " > %{buildroot}%{_sharedstatedir}/dashcore/.dashcore/README
 
 # System services
-install -D -m600 -p %{srccontribtree}/linux/systemd/etc-sysconfig_dashd %{buildroot}%{_sysconfdir}/sysconfig/dashd
-install -D -m755 -p %{srccontribtree}/linux/systemd/etc-sysconfig-dashd-scripts_dashd.send-email.sh %{buildroot}%{_sysconfdir}/sysconfig/dashd-scripts/dashd.send-email.sh
-install -D -m644 -p %{srccontribtree}/linux/systemd/usr-lib-systemd-system_dashd.service %{buildroot}%{_unitdir}/dashd.service
-install -D -m644 -p %{srccontribtree}/linux/systemd/usr-lib-tmpfiles.d_dashd.conf %{buildroot}%{_tmpfilesdir}/dashd.conf
+install -D -m600 -p %{srccontribtree}/systemd/etc-sysconfig_dashd %{buildroot}%{_sysconfdir}/sysconfig/dashd
+install -D -m755 -p %{srccontribtree}/systemd/etc-sysconfig-dashd-scripts_dashd.send-email.sh %{buildroot}%{_sysconfdir}/sysconfig/dashd-scripts/dashd.send-email.sh
+install -D -m644 -p %{srccontribtree}/systemd/usr-lib-systemd-system_dashd.service %{buildroot}%{_unitdir}/dashd.service
+install -D -m644 -p %{srccontribtree}/systemd/usr-lib-tmpfiles.d_dashd.conf %{buildroot}%{_tmpfilesdir}/dashd.conf
 
 # Log files
 # ...logrotate file rules
-install -D -m644 -p %{srccontribtree}/linux/logrotate/etc-logrotate.d_dashcore %{buildroot}/etc/logrotate.d/dashcore
+install -D -m644 -p %{srccontribtree}/logrotate/etc-logrotate.d_dashcore %{buildroot}/etc/logrotate.d/dashcore
 # ...ghosted log files - need to exist in the installed buildroot
 touch %{buildroot}%{_localstatedir}/log/dashcore/debug.log
 touch %{buildroot}%{_localstatedir}/log/dashcore/testnet3/debug.log
 
 # Service definition files for firewalld for full and master nodes
-install -D -m644 -p %{srccontribtree}/linux/firewalld/usr-lib-firewalld-services_dashcore.xml %{buildroot}%{_usr_lib}/firewalld/services/dashcore.xml
-install -D -m644 -p %{srccontribtree}/linux/firewalld/usr-lib-firewalld-services_dashcore-testnet.xml %{buildroot}%{_usr_lib}/firewalld/services/dashcore-testnet.xml
-install -D -m644 -p %{srccontribtree}/linux/firewalld/usr-lib-firewalld-services_dashcore-rpc.xml %{buildroot}%{_usr_lib}/firewalld/services/dashcore-rpc.xml
-install -D -m644 -p %{srccontribtree}/linux/firewalld/usr-lib-firewalld-services_dashcore-testnet-rpc.xml %{buildroot}%{_usr_lib}/firewalld/services/dashcore-testnet-rpc.xml
+install -D -m644 -p %{srccontribtree}/firewalld/usr-lib-firewalld-services_dashcore.xml %{buildroot}%{_usr_lib}/firewalld/services/dashcore.xml
+install -D -m644 -p %{srccontribtree}/firewalld/usr-lib-firewalld-services_dashcore-testnet.xml %{buildroot}%{_usr_lib}/firewalld/services/dashcore-testnet.xml
+install -D -m644 -p %{srccontribtree}/firewalld/usr-lib-firewalld-services_dashcore-rpc.xml %{buildroot}%{_usr_lib}/firewalld/services/dashcore-rpc.xml
+install -D -m644 -p %{srccontribtree}/firewalld/usr-lib-firewalld-services_dashcore-testnet-rpc.xml %{buildroot}%{_usr_lib}/firewalld/services/dashcore-testnet-rpc.xml
 
 
 # dashcore-client
@@ -1087,13 +828,8 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 %files client
 %defattr(-,root,root,-)
 %if ! %{disable_wallet}
-%if %{buildFromSource}
-%license %{sourcetree}/COPYING
-%doc %{sourcetree}/doc/*.md %{srccontribtree}/dash.conf.example
-%else
-%license %{srccontribtree}/linux/binary-build-contribs/license/COPYING
-%doc %{srccontribtree}/linux/binary-build-contribs/doc/*.md %{srccontribtree}/dash.conf.example
-%endif
+%license %{srccontribtree}/binary-build-contribs/license/COPYING
+%doc %{srccontribtree}/binary-build-contribs/doc/*.md %{srccontribtree}/dash.conf.example
 %{_bindir}/dash-qt
 %{_bindir}/dash-util
 %{_bindir}/dash-wallet
@@ -1121,13 +857,8 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 # dashcore-server
 %files server
 %defattr(-,root,root,-)
-%if %{buildFromSource}
-%license %{sourcetree}/COPYING
-%doc %{sourcetree}/doc/*.md %{srccontribtree}/dash.conf.example
-%else
-%license %{srccontribtree}/linux/binary-build-contribs/license/COPYING
-%doc %{srccontribtree}/linux/binary-build-contribs/doc/*.md %{srccontribtree}/dash.conf.example
-%endif
+%license %{srccontribtree}/binary-build-contribs/license/COPYING
+%doc %{srccontribtree}/binary-build-contribs/doc/*.md %{srccontribtree}/dash.conf.example
 
 # Application as systemd service directory structure
 %defattr(-,dashcore,dashcore,-)
@@ -1194,11 +925,7 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 %files libs
 %defattr(-,root,root,-)
 %{_libdir}/*
-%if %{buildFromSource}
-%license %{sourcetree}/COPYING
-%else
-%license %{srccontribtree}/linux/binary-build-contribs/license/COPYING
-%endif
+%license %{srccontribtree}/binary-build-contribs/license/COPYING
 
 
 # dashcore-devel
@@ -1206,11 +933,7 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 %defattr(-,root,root,-)
 %{_includedir}/*
 %{_libdir}/*
-%if %{buildFromSource}
-%license %{sourcetree}/COPYING
-%else
-%license %{srccontribtree}/linux/binary-build-contribs/license/COPYING
-%endif
+%license %{srccontribtree}/binary-build-contribs/license/COPYING
 
 
 # dashcore-utils
@@ -1226,11 +949,7 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 %{_mandir}/man1/dash-tx.1.gz
 %{_mandir}/man1/bitcoin-util.1.gz
 
-%if %{buildFromSource}
-%license %{sourcetree}/COPYING
-%else
-%license %{srccontribtree}/linux/binary-build-contribs/license/COPYING
-%endif
+%license %{srccontribtree}/binary-build-contribs/license/COPYING
 
 # Dash Core Information
 #
@@ -1267,6 +986,11 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Dash Electrum: https://github.com/akhavr/electrum-dash
 
 %changelog
+* Tue Mar 17 2026 Todd Warner <t0dd_at_protonmail.com> 23.1.2-1.rp.taw
+* Tue Mar 17 2026 Todd Warner <t0dd_at_protonmail.com> 23.1.2-0.1.rp.testing.taw
+  - (repackaged) https://github.com/dashpay/dash/releases/tag/v23.2.0
+  - stripped out all of the build from source bits. At least I hope so.
+
 * Wed Feb 25 2026 Todd Warner <t0dd_at_protonmail.com> 23.1.0-1.rp.taw
 * Wed Feb 25 2026 Todd Warner <t0dd_at_protonmail.com> 23.1.0-0.1.rp.testing.taw
   - (repackaged) https://github.com/dashpay/dash/releases/tag/v23.1.0
