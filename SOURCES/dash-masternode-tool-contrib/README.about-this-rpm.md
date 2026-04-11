@@ -4,7 +4,7 @@ USAGE:
     default configuration and data directory: `$HOME/.config/dmt`
   * Commandline: `dash-masternode-tool --data-dir ~/.config/dmt`  
     - default config/data-directory if you don't use `--data-dir` as
-      described  above is: ~/.dmt which is "less correct"
+      described  above is: ~/.dmt which is less "correct"
   PART 2
   * Read this:  
     <https://github.com/Bertrand256/dash-masternode-tool/blob/master/README.md>

@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 
 _datadir=$HOME/.config/dmt
-_binary=/usr/share/org.dash.dash_core.DashMasternodeTool/DashMasternodeTool
+_binary=/usr/share/org.dash.dash_core.DashMasternodeTool/DashMasternodeTool.AppImage
 
 # Create ~/.config/dmt directory if it doesn't exist. Set the
 # permissions to something better than 755 and kick off the main process.

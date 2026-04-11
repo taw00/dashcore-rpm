@@ -53,6 +53,7 @@
     <binary>dash-masternode-tool</binary>
   </provides>
   <releases>
+      <release version="0.9.41" date="2026-04-08" />
       <release version="0.9.40" date="2025-05-02" />
       <release version="0.9.39" date="2024-08-13" />
       <release version="0.9.38" date="2023-12-16" />
