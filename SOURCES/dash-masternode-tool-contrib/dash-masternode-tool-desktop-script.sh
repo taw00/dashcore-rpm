@@ -75,7 +75,7 @@ fi
 if [ ! -e "${CACHE_DIR}/dmt" ]
 then
   echo "... ~/.cache/dmt does not exist. Create it."
-  /usr/bin/mkdir -p -m755 ${_cachedir}
+  /usr/bin/mkdir -p -m750 ${_cachedir}
 elif [ ! -d "${_cachedir}" ]
 then
   echo "... we found ~/.cache/dmt but it is not a directory. ABORT ABORT!"
@@ -84,7 +84,7 @@ then
 else
   # Really should think about not forcing this. Or at least something better.
   echo "... found ~/.cache/dmt/ ... setting to m750 for better protection."
-  chmod 755 ${_cachedir}
+  chmod 750 ${_cachedir}
 fi
 
 # fetch the config file
