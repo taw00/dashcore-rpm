@@ -68,7 +68,7 @@ then
 elif [ ! -d "${CACHE_DIR}" ]
 then
   echo "... location ~/.cache is not a directory!!! ABORT ABORT!"
-  notify-send "Dash Masternode Tool" "Location ~/.config is not a directory!!! ABORT ABORT!" -t 5000
+  notify-send "Dash Masternode Tool" "Location ~/.cache is not a directory!!! ABORT ABORT!" -t 5000
   exit 1
 fi
 # At this point, we created ~/.cache/ or we aborted
