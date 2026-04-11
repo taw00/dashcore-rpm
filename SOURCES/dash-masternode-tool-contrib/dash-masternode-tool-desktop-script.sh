@@ -11,7 +11,8 @@ fi
 
 _datadir=$HOME/.config/dmt
 _cachedir=$CACHE_DIR/dmt
-_binary=/usr/share/org.dash.dash_core.DashMasternodeTool/DashMasternodeTool.AppImage
+#was: _binary=/usr/share/org.dash.dash_core.DashMasternodeTool/DashMasternodeTool.AppImage
+_binary=/usr/share/org.dash.dash_core.DashMasternodeTool/squashfs-root/AppRun
 
 # Create ~/.config/dmt and ~/.cache/dmt directories if they don't exist. Set the
 # permissions to something better than 755 and kick off the main process.
