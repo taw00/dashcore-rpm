@@ -1,6 +1,6 @@
 # dash-masternode-tool.spec
 #
-# This SPEC file serves to configure standard RPM builds for
+# This SPEC file serves to configure a standard RPM build for
 # dash-masternode-tool (aka DashMasternodeTool).
 #
 # A Dash Masternode is a Dash cryptocurrency full node with specialized
@@ -12,21 +12,28 @@
 # software.
 #
 # Therefore if Masternode operators wish to hold their 1000 dash in a hardware
-# wallet, they must use the DashMastenodeTool software in order to manage the
-# wallet interaction with their masternode.
+# wallet, DashMastenodeTool serves to simplied manage the wallet interaction
+# with their masternode.
 #
 # Read more here:
 # https://github.com/Bertrand256/dash-masternode-tool/blob/master/README.md
 #
-# Source - this SPEC file references source archives found here and here:
-# https://taw00.github.com/dashcore-rpm
-#  - dash-masternode-tool-<version>.tar.gz
-#  - dash-masternode-tool-<version-major>-contrib.tar.gz
-# ...and here:
+# Source - this SPEC file references source archives found here:
+# https://taw00.github.com/dashcore-rpm/SOURCES
+#  - dash-masternode-tool-contrib.tar.gz
+# ... and here:
 # https://github.com/Bertrand256/dash-masternode-tool
 #  - dash-masternode-tool-<version>.tar.gz
 
 
+# Filters out unneccessary provides
+# See also: https://docs.fedoraproject.org/en-US/packaging-guidelines/Node.js/
+%{?nodejs_default_filter}
+
+# this can make binaries unusable (it did with the DashMasternodeTool.AppImage). Turning strip off (true?).
+# https://www.linuxquestions.org/questions/red-hat-31/prevent-strip-when-building-an-rpm-package-591099/
+%global __os_install_post %{nil}
+%global __strip /bin/true
 
 Name: dash-masternode-tool
 %define _name2 DashMasternodeTool
@@ -37,21 +44,21 @@ Summary: Manage and collateralize a Dash Masternode with a hardware wallet
 
 %define isTestBuild 1
 
-%define buildQualifier hotfix4
 %undefine buildQualifier
+%define buildQualifier rc1
 
 # Package (RPM) name-version-release.
 # <name>-<vermajor.<verminor>-<pkgrel>[.<extraver>][.<snapinfo>].DIST[.<minorbump>]
 
 # VERSION
 %define vermajor 0.9
-%define verminor 40
+%define verminor 42
 Version: %{vermajor}.%{verminor}
 
 # RELEASE
-%define _pkgrel 2
+%define _pkgrel 1
 %if %{isTestBuild}
-  %define _pkgrel 1.3
+  %define _pkgrel 0.1
 %endif
 
 # MINORBUMP
@@ -99,29 +106,30 @@ Release: %{_release}
 
 
 # Extracted source tree structure (extracted in .../BUILD)
-# (sourcetree and binaryarchivename will be mutually exclusive)
-#   projectroot                 dash-masternode-tool-0.9
-#      \_sourcetree_contrib        \_dash-masternode-tool-contrib
-#      \_binaryarchivename         \_DashMasternodeTool (file) -or-
-#      \_sourcetree                \_dash-masternode-tool-0.9.38
+#   projectroot              dash-masternode-tool-0.9
+#     \_sourcetree_contrib     \_dash-masternode-tool-contrib
+#     \_appimagename_versioned \_DashMasternodeTool_0.9.41.AppImage (file) -or-
 %define projectroot %{name}-%{vermajor}
+%define appimagename %{_name2}.AppImage
 %if 0%{?buildQualifier:1}
-%define sourcetree %{name}-%{version}-%{buildQualifier}
-%define binaryarchivename %{_name2}_%{version}-%{buildQualifier}.linux
+%define appimagename_versioned %{_name2}_%{version}-%{buildQualifier}.AppImage
 %else
-%define sourcetree %{name}-%{version}
-%define binaryarchivename %{_name2}_%{version}.linux
+%define appimagename_versioned %{_name2}_%{version}.AppImage
 %endif
 
-%define sourcearchive_contrib %{name}-%{vermajor}-contrib
+%define sourcearchive_contrib %{name}-contrib
 %define sourcetree_contrib %{name}-contrib
 
 # /usr/share/org.dash.dash_core.dash_masternode_tool
 %define installtree %{_datadir}/%{appid}
 
 # dash-masternode-tool-0.9.z.tar.gz
-Source0: https://github.com/Bertrand256/dash-masternode-tool/releases/download/v%{version}/%{binaryarchivename}.tar.gz
-# dash-masternode-tool-0.9-contrib.tar.gz
+%if 0%{?buildQualifier:1}
+Source0: https://github.com/Bertrand256/%{name}/releases/download/v%{version}-%{buildQualifier}/%{appimagename_versioned}
+%else
+Source0: https://github.com/Bertrand256/%{name}/releases/download/v%{version}/%{appimagename_versioned}
+%endif
+# dash-masternode-tool-contrib.tar.gz
 Source1: https://github.com/taw00/dashcore-rpm/raw/master/SOURCES/%{sourcearchive_contrib}.tar.gz
 
 # tree, vim-enhanced, and less for mock build environment introspection
@@ -144,8 +152,8 @@ ExclusiveArch: x86_64
 
 # How debug info and build_ids are managed (I only halfway understand this):
 # https://github.com/rpm-software-management/rpm/blob/master/macros.in
-# I turn everything off by default avoid any packaging conflicts. This
-# is not correct packaging, but... it's what I do for now.
+# I turn everything off by default to avoid any packaging conflicts.
+# We do nothing but package builds now from upstream binaries, and so, this:
 %define debug_package %{nil}
 %define _unique_build_ids 1
 %define _build_id_links alldebug
@@ -153,7 +161,7 @@ ExclusiveArch: x86_64
 # https://fedoraproject.org/wiki/Changes/Harden_All_Packages
 # https://fedoraproject.org/wiki/Packaging:Guidelines#PIE
 %define _hardened_build 1
-
+%undefine _hardened_build
 
 %description
 DashMasternodeTool (aka dash-masternode-tool) enables Dash Masternode owners
@@ -180,25 +188,23 @@ Supported hardware wallets: Trezor (model One and T), KeepKey, Ledger Nano S
 #
 # I create a root dir and place the source and contribution trees under it.
 # Extracted source tree structure (extracted in .../BUILD)
-#      \_sourcetree_contrib        \_dash-masternode-tool-contrib
-#      \_binaryarchivename         \_DashMasternodeTool (file) -or-
-#      \_sourcetree                \_dash-masternode-tool-0.9.39
+#      \_sourcetree_contrib    \_dash-masternode-tool-contrib
+#      \_appimagename          \_DashMasternodeTool.AppImage (file)
 
 mkdir -p %{projectroot}
-# if DashMasternodeTool (binary)
-%setup -q -T -D -a 0 -c
-cd .. ; mv %{sourcetree} %{projectroot}/
 # contrib
 %setup -q -T -D -a 1 -n %{projectroot}
-
+# appimage
+mv %{SOURCE0} -v %{_builddir}/%{projectroot}/%{appimagename}
 # For debugging purposes...
 %if %{isTestBuild}
-/usr/bin/tree -df -L 3 %{_builddir}
+/usr/bin/tree -f -L 3 %{_builddir}
 %endif
 
 
 %build
 # This section starts us in directory {_builddir}/{projectroot}
+exit 0
 
 
 %install
@@ -232,18 +238,17 @@ install -d %{buildroot}%{_datadir}/applications
 install -d %{buildroot}%{installtree}
 
 # Binaries
-install -D -m755 -p %{sourcetree_contrib}/desktop/%{name}-desktop-script.sh %{buildroot}%{installtree}/
-install -D -m755 -p %{sourcetree}/%{_name2} %{buildroot}%{installtree}/%{_name2}
+install -D -m755 -p %{sourcetree_contrib}/%{name}-desktop-script.sh %{buildroot}%{installtree}/
+install -D -m755 -p %{appimagename} %{buildroot}%{installtree}/%{appimagename}
 
 ln -s %{installtree}/%{name}-desktop-script.sh %{buildroot}%{_bindir}/%{name}-desktop-script.sh
-ln -s %{installtree}/%{_name2} %{buildroot}%{_bindir}/%{name}
+ln -s %{installtree}/%{appimagename} %{buildroot}%{_bindir}/%{name}
 
 # Most use LICENSE or COPYING... not LICENSE.txt
 # Now using the copy in sourcetree_contrib
-#install -D -p %%{sourcetree}/LICENSE.txt %%{sourcetree}/LICENSE
 
 # Desktop
-cd %{sourcetree_contrib}/desktop/
+cd %{sourcetree_contrib}/
 install -D -m644 -p %{name}.hicolor.16x16.png        %{buildroot}%{_datadir}/icons/hicolor/16x16/apps/%{appid}.png
 install -D -m644 -p %{name}.hicolor.22x22.png        %{buildroot}%{_datadir}/icons/hicolor/22x22/apps/%{appid}.png
 install -D -m644 -p %{name}.hicolor.24x24.png        %{buildroot}%{_datadir}/icons/hicolor/24x24/apps/%{appid}.png
@@ -264,9 +269,8 @@ install -D -m644 -p %{name}.highcontrast.256x256.png %{buildroot}%{_datadir}/ico
 install -D -m644 -p %{name}.highcontrast.512x512.png %{buildroot}%{_datadir}/icons/HighContrast/512x512/apps/%{appid}.png
 install -D -m644 -p %{name}.highcontrast.svg         %{buildroot}%{_datadir}/icons/HighContrast/scalable/apps/%{appid}.svg
 
-# org.dash.dash_core.dash_masternode_tool.desktop
+# org.dash.dash_core.DashMasternodeTool.desktop
 # https://docs.fedoraproject.org/en-US/packaging-guidelines/
-#install -D -m644 -p %%{appid}.desktop %%{buildroot}%%{_datadir}/applications/%%{appid}.desktop
 desktop-file-install --dir=%{buildroot}%{_datadir}/applications/ %{appid}.desktop
 desktop-file-validate %{buildroot}%{_datadir}/applications/%{appid}.desktop
 
@@ -279,16 +283,15 @@ cd ../../
 
 %files
 %defattr(-,root,root,-)
-#%%license %%{sourcetree}/LICENSE
 %license %{sourcetree_contrib}/LICENSE
 %doc %{sourcetree_contrib}/README.about-this-rpm.md
-%doc %{sourcetree_contrib}/build/README.md
 
 # Binaries
 %{_bindir}/%{name}
 %{_bindir}/%{name}-desktop-script.sh
-%{installtree}/%{_name2}
-%{installtree}/%{name}-desktop-script.sh
+#%%{installtree}/%%{appimagename}
+#%%{installtree}/%%{name}-desktop-script.sh
+%{installtree}
 
 ## Desktop
 %{_datadir}/icons/*
@@ -306,8 +309,18 @@ umask 007
 /usr/bin/update-desktop-database &> /dev/null || :
 
 
+%check
+# added to turn off the warning
+exit 0
+
 
 %changelog
+* Wed Apr 15 2026 Todd Warner <t0dd_at_protonmail.com> 0.9.42-0.1.rc1.rp.taw
+  - https://github.com/Bertrand256/dash-masternode-tool/releases/tag/v0.9.42-rc1
+  - Moved to AppImage model for the binaries.
+  - contrib now unversioned and simplified to just an image and a shell script.
+  - changed where the tmp dir stuff goes.
+
 * Wed May 7 2025 Todd Warner <t0dd_at_protonmail.com> 0.9.40-2.rp.taw
 * Wed May 7 2025 Todd Warner <t0dd_at_protonmail.com> 0.9.40-1.3.testing.rp.taw
 * Wed May 7 2025 Todd Warner <t0dd_at_protonmail.com> 0.9.40-1.2.testing.rp.taw
