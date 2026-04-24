@@ -45,7 +45,7 @@ Summary: Manage and collateralize a Dash Masternode with a hardware wallet
 %define isTestBuild 1
 
 %undefine buildQualifier
-%define buildQualifier rc1
+%define buildQualifier rc2
 
 # Package (RPM) name-version-release.
 # <name>-<vermajor.<verminor>-<pkgrel>[.<extraver>][.<snapinfo>].DIST[.<minorbump>]
@@ -315,6 +315,9 @@ exit 0
 
 
 %changelog
+* Fri Apr 24 2026 Todd Warner <t0dd_at_protonmail.com> 0.9.42-0.1.rc2.rp.taw
+  - https://github.com/Bertrand256/dash-masternode-tool/releases/tag/v0.9.42-rc2
+
 * Wed Apr 15 2026 Todd Warner <t0dd_at_protonmail.com> 0.9.42-0.1.rc1.rp.taw
   - https://github.com/Bertrand256/dash-masternode-tool/releases/tag/v0.9.42-rc1
   - Moved to AppImage model for the binaries.
