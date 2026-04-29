@@ -58,7 +58,7 @@ Version: %{vermajor}.%{verminor}
 # RELEASE
 %define _pkgrel 1
 %if %{isTestBuild}
-  %define _pkgrel 0.1
+  %define _pkgrel 0.2
 %endif
 
 # MINORBUMP
@@ -315,6 +315,9 @@ exit 0
 
 
 %changelog
+* Wed Apr 29 2026 Todd Warner <t0dd_at_protonmail.com> 0.9.42-0.2.rc2.rp.taw
+  - fix WM_Class in the .desktop file so that the icons get mapped correctly
+
 * Fri Apr 24 2026 Todd Warner <t0dd_at_protonmail.com> 0.9.42-0.1.rc2.rp.taw
   - https://github.com/Bertrand256/dash-masternode-tool/releases/tag/v0.9.42-rc2
 

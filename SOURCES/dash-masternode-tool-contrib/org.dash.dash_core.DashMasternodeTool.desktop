@@ -5,6 +5,7 @@ GenericName=Cryptocurrency Wallet Utility
 Name[en_US]=Dash Masternode Tool
 GenericName[en_US]=Cryptocurrency Wallet Utility
 Comment=Manage and collateralize a Dash Masternode with a hardware wallet
+StartupWMClass=DashMasternodeTool
 Categories=Office;Finance;
 TryExec=/usr/share/org.dash.dash_core.DashMasternodeTool/DashMasternodeTool.AppImage
 Exec=/usr/bin/dash-masternode-tool-desktop-script.sh
