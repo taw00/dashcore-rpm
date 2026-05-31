@@ -28,9 +28,9 @@ Summary: A global payments network and decentralized application (dapp) platform
 %define isTestBuild 1
 %define verX 23
 %define verY 1
-%define verZ 2
-%define _pkgrel 2
-%define _pkgrel_iftestbuild 1.1
+%define verZ 3
+%define _pkgrel 1
+%define _pkgrel_iftestbuild 0.1
 
 # Use if the dev team includes things like rc1 in the filename
 %define buildQualifier rc1
@@ -141,8 +141,8 @@ Release: %{_release}
 %define _archivename_alt3 dashcore-%{version}
 
 # Extracted source tree structure (extracted in .../BUILD)
-#   projectroot           dashcore-21.1.1
-#      \_binarytree         \_dashcore-21.1.1
+#   projectroot           dashcore-23.1.3
+#      \_binarytree         \_dashcore-23.1.3
 #      \_srccontribtree     \_dashcore-contrib
 #      \_patch_files        \_dash-18.0.1-...patch
 #
@@ -167,13 +167,14 @@ Release: %{_release}
 %define bdbarchiveversion 4.8.30.NC
 
 %define projectroot %{name}-%{vermajor}
-%define srccontribarchive %{name}-%{verX}-contrib
+%define srccontribarchive %{name}-contrib
 %define srccontribtree %{name}-contrib
 
 
 Source1: https://github.com/taw00/dashcore-rpm/raw/master/SOURCES/%{srccontribarchive}.tar.gz
 #Source6: https://github.com/dashpay/dash/archive/v%%{versionqualified}/%%{binaryarchivename}-x86_64-linux-gnu.tar.gz
 Source6: https://github.com/dashpay/dash/releases/download/v%{versionqualified}/%{binaryarchivename}-x86_64-linux-gnu.tar.gz
+Source2: https://github.com/taw00/dashcore-rpm/raw/master/SOURCES/%{appid}.metainfo.xml
 
 %global selinux_variants mls strict targeted
 
@@ -460,8 +461,11 @@ mkdir -p %{projectroot}
 %setup -q -T -D -a 6 -n %{projectroot}
 
 # Source1: contributions
-# {_builddir}/dashcore-21.1.0/dashcore-contrib/
+# {_builddir}/dashcore-23.1.3/dashcore-contrib/
 %setup -q -T -D -a 1 -n %{projectroot}
+
+# Source2 (metadata file)
+mv %{SOURCE2} %{_builddir}/%{projectroot}/%{appid}.metainfo.xml
 
 # At this moment, we are in the projectroot directory
 
@@ -598,17 +602,15 @@ install -D -m644 %{srccontribtree}/binary-build-contribs/bash-completion/dashd.b
 
 ## DESKTOP STUFF
 %if ! %{disable_wallet}
-# Desktop elements - desktop file (from contrib)
-cd %{srccontribtree}/desktop/
-# org.dash.dash_core.dash-qt.desktop
+# Desktop elements - metainfo file and desktop file
+# https://docs.fedoraproject.org/en-US/packaging-guidelines/AppData/
 # https://docs.fedoraproject.org/en-US/packaging-guidelines/#_desktop_files
+install -D -m644 -p %{appid}.metainfo.xml %{buildroot}%{_metainfodir}/%{appid}.metainfo.xml
+appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/*.metainfo.xml
+cd %{srccontribtree}/desktop/
 install -m755  dash-wallet.wrapper.sh %{buildroot}%{_bindir}/
 desktop-file-install --dir=%{buildroot}%{_datadir}/applications %{appid}.desktop
 desktop-file-validate %{buildroot}%{_datadir}/applications/%{appid}.desktop
-# org.dash.dash_core.dash-qt.metainfo.xml
-# https://docs.fedoraproject.org/en-US/packaging-guidelines/AppData/
-install -D -m644 -p %{appid}.metainfo.xml %{buildroot}%{_metainfodir}/%{appid}.metainfo.xml
-appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/*.metainfo.xml
 # desktop icons
 install -D -m644            dash-hicolor-64.png         %{buildroot}%{_datadir}/icons/hicolor/64x64/apps/%{appid}.png
 install -D -m644           dash-hicolor-128.png       %{buildroot}%{_datadir}/icons/hicolor/128x128/apps/%{appid}.png
@@ -978,13 +980,18 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Dash Electrum: https://github.com/akhavr/electrum-dash
 
 %changelog
+* Sun May 31 2026 Todd Warner <t0dd_at_protonmail.com> 23.1.3-1.rp.taw
+* Sun May 31 2026 Todd Warner <t0dd_at_protonmail.com> 23.1.3-0.1.rp.testing.taw
+  - (repackaged) https://github.com/dashpay/dash/releases/tag/v23.1.3
+  - pulled the metadata file out of the contrib tarball
+
 * Wed Apr 29 2026 Todd Warner <t0dd_at_protonmail.com> 23.1.2-2.rp.taw
 * Wed Apr 29 2026 Todd Warner <t0dd_at_protonmail.com> 23.1.2-1.1.rp.testing.taw
   - fix WM_Class in the .desktop file so that the icons get mapped correctly
 
 * Tue Mar 17 2026 Todd Warner <t0dd_at_protonmail.com> 23.1.2-1.rp.taw
 * Tue Mar 17 2026 Todd Warner <t0dd_at_protonmail.com> 23.1.2-0.1.rp.testing.taw
-  - (repackaged) https://github.com/dashpay/dash/releases/tag/v23.2.0
+  - (repackaged) https://github.com/dashpay/dash/releases/tag/v23.1.2
   - the Obsoletes is still making RPM lint angry; setting a version
   - stripped out all of the build from source bits. At least I hope so.
   - adjusted docs to match updated dashcore-contrib
