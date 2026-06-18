@@ -28,7 +28,7 @@ Summary: A global payments network and decentralized application (dapp) platform
 %define isTestBuild 1
 %define verX 23
 %define verY 1
-%define verZ 3
+%define verZ 4
 %define _pkgrel 1
 %define _pkgrel_iftestbuild 0.1
 
@@ -947,39 +947,32 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 
 # Dash Core Information
 #
-# Dash...
+# Dash . . .
 #   * Project website: https://www.dash.org/
 #   * Project documentation: https://docs.dash.org/
 #   * Developer documentation: https://dash-docs.github.io/
 #
-# Dash Core on Fedora
+# Dash Core on Fedora . . .
 #   * Git Repo: https://github.com/taw00/dashcore-rpm
 #   * Documentation: https://github.com/taw00/dashcore-rpm/tree/master/documentation
 #
-# The last very involved testnet effort...
-#   * Announcement: https://www.dash.org/forum/threads/v14-0-testing.44047/
-#   * Documentation:
-#     https://docs.dash.org/en/latest/developers/testnet.html
-#     https://docs.dash.org/en/latest/masternodes/dip3-upgrade.html
-#     https://thephez.github.io/en/developer-reference
-#
-# Source snapshots...
+# Source snapshots . . .
 #     https://github.com/dashpay/dash/tags
 #     https://github.com/dashpay/dash/releases
-#     test example: dash-0.17.0.0-rc5.tar.gz
-#     release example: dash-0.17.0.0.tar.gz
 #
-# Dash Core (and related) git repos (a curated selection)...
+# Dash Core (and related) git repos (a curated selection) . . .
 #   * Dash Core: https://github.com/dashpay
 #     - https://github.com/dashpay/dash
 #     - https://github.com/dashpay/sentinel (not needed for dashcore v20+)
 #     - https://github.com/dashpay/dips
 #     - https://github.com/dashpay/docs
-#   * Dash Evolution: https://github.com/dashevo
 #   * Dash Masternode Tool: https://github.com/Bertrand256/dash-masternode-tool
-#   * Dash Electrum: https://github.com/akhavr/electrum-dash
 
 %changelog
+* Thu Jun 18 2026 Todd Warner <t0dd_at_protonmail.com> 23.1.4-1.rp.taw
+* Thu Jun 18 2026 Todd Warner <t0dd_at_protonmail.com> 23.1.4-0.1.rp.testing.taw
+  - (repackaged) https://github.com/dashpay/dash/releases/tag/v23.1.4
+
 * Sun May 31 2026 Todd Warner <t0dd_at_protonmail.com> 23.1.3-1.rp.taw
 * Sun May 31 2026 Todd Warner <t0dd_at_protonmail.com> 23.1.3-0.1.rp.testing.taw
   - (repackaged) https://github.com/dashpay/dash/releases/tag/v23.1.3
