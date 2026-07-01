@@ -28,7 +28,7 @@ Summary: A global payments network and decentralized application (dapp) platform
 %define isTestBuild 1
 %define verX 23
 %define verY 1
-%define verZ 4
+%define verZ 7
 %define _pkgrel 1
 %define _pkgrel_iftestbuild 0.1
 
@@ -969,6 +969,10 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Dash Masternode Tool: https://github.com/Bertrand256/dash-masternode-tool
 
 %changelog
+* Wed Jul 1 2026 Todd Warner <t0dd_at_protonmail.com> 23.1.7-1.rp.taw
+* Wed Jul 1 2026 Todd Warner <t0dd_at_protonmail.com> 23.1.7-0.1.rp.testing.taw
+  - (repackaged) https://github.com/dashpay/dash/releases/tag/v23.1.7
+
 * Thu Jun 18 2026 Todd Warner <t0dd_at_protonmail.com> 23.1.4-1.rp.taw
 * Thu Jun 18 2026 Todd Warner <t0dd_at_protonmail.com> 23.1.4-0.1.rp.testing.taw
   - (repackaged) https://github.com/dashpay/dash/releases/tag/v23.1.4
