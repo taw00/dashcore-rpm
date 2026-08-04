@@ -45,7 +45,7 @@ Summary: Manage and collateralize a Dash Masternode with a hardware wallet
 %define isTestBuild 1
 
 %undefine buildQualifier
-%define buildQualifier rc4
+%define buildQualifier rc5
 
 # Package (RPM) name-version-release.
 # <name>-<vermajor.<verminor>-<pkgrel>[.<extraver>][.<snapinfo>].DIST[.<minorbump>]
@@ -131,6 +131,7 @@ Source0: https://github.com/Bertrand256/%{name}/releases/download/v%{version}/%{
 %endif
 # dash-masternode-tool-contrib.tar.gz
 Source1: https://github.com/taw00/dashcore-rpm/raw/master/SOURCES/%{sourcearchive_contrib}.tar.gz
+Source2: https://github.com/taw00/dashcore-rpm/raw/master/SOURCES/%{appid}.metainfo.xml
 
 # tree, vim-enhanced, and less for mock build environment introspection
 %if %{isTestBuild}
@@ -192,10 +193,12 @@ Supported hardware wallets: Trezor (model One and T), KeepKey, Ledger Nano S
 #      \_appimagename          \_DashMasternodeTool.AppImage (file)
 
 mkdir -p %{projectroot}
-# contrib
+# Source1: contrib
 %setup -q -T -D -a 1 -n %{projectroot}
-# appimage
+# Source0: appimage (binary)
 mv %{SOURCE0} -v %{_builddir}/%{projectroot}/%{appimagename}
+# Source2 metainfo file
+mv %{SOURCE2} %{_builddir}/%{projectroot}/%{appid}.metainfo.xml
 # For debugging purposes...
 %if %{isTestBuild}
 /usr/bin/tree -f -L 3 %{_builddir}
@@ -274,6 +277,8 @@ install -D -m644 -p %{name}.highcontrast.svg         %{buildroot}%{_datadir}/ico
 desktop-file-install --dir=%{buildroot}%{_datadir}/applications/ %{appid}.desktop
 desktop-file-validate %{buildroot}%{_datadir}/applications/%{appid}.desktop
 
+cd -
+
 # org.dash.dash_core.dash_masternode_tool.metainfo.xml
 # https://docs.fedoraproject.org/en-US/packaging-guidelines/AppData/
 install -D -m644 -p %{appid}.metainfo.xml %{buildroot}%{_metainfodir}/%{appid}.metainfo.xml
@@ -315,6 +320,10 @@ exit 0
 
 
 %changelog
+* Tue Aug 4 2026 Todd Warner <t0dd_at_protonmail.com> 0.9.42-0.2.rc5.rp.taw
+  - https://github.com/Bertrand256/dash-masternode-tool/releases/tag/v0.9.42-rc5
+  - pulled the metainfo file out of the contrib tarball
+
 * Thu Jul 30 2026 Todd Warner <t0dd_at_protonmail.com> 0.9.42-0.2.rc4.rp.taw
   - https://github.com/Bertrand256/dash-masternode-tool/releases/tag/v0.9.42-rc4
 
