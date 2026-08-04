@@ -464,7 +464,7 @@ mkdir -p %{projectroot}
 # {_builddir}/dashcore-23.1.3/dashcore-contrib/
 %setup -q -T -D -a 1 -n %{projectroot}
 
-# Source2 (metadata file)
+# Source2: metadata file
 mv %{SOURCE2} %{_builddir}/%{projectroot}/%{appid}.metainfo.xml
 
 # At this moment, we are in the projectroot directory
