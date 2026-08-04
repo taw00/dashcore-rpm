@@ -464,7 +464,7 @@ mkdir -p %{projectroot}
 # {_builddir}/dashcore-23.1.3/dashcore-contrib/
 %setup -q -T -D -a 1 -n %{projectroot}
 
-# Source2: metadata file
+# Source2: metainfo file
 mv %{SOURCE2} %{_builddir}/%{projectroot}/%{appid}.metainfo.xml
 
 # At this moment, we are in the projectroot directory
@@ -607,6 +607,7 @@ install -D -m644 %{srccontribtree}/binary-build-contribs/bash-completion/dashd.b
 # https://docs.fedoraproject.org/en-US/packaging-guidelines/#_desktop_files
 install -D -m644 -p %{appid}.metainfo.xml %{buildroot}%{_metainfodir}/%{appid}.metainfo.xml
 appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/*.metainfo.xml
+
 cd %{srccontribtree}/desktop/
 install -m755  dash-wallet.wrapper.sh %{buildroot}%{_bindir}/
 desktop-file-install --dir=%{buildroot}%{_datadir}/applications %{appid}.desktop
@@ -984,7 +985,7 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 * Sun May 31 2026 Todd Warner <t0dd_at_protonmail.com> 23.1.3-1.rp.taw
 * Sun May 31 2026 Todd Warner <t0dd_at_protonmail.com> 23.1.3-0.1.rp.testing.taw
   - (repackaged) https://github.com/dashpay/dash/releases/tag/v23.1.3
-  - pulled the metadata file out of the contrib tarball
+  - pulled the metainfo file out of the contrib tarball
 
 * Wed Apr 29 2026 Todd Warner <t0dd_at_protonmail.com> 23.1.2-2.rp.taw
 * Wed Apr 29 2026 Todd Warner <t0dd_at_protonmail.com> 23.1.2-1.1.rp.testing.taw
