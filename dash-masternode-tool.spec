@@ -44,8 +44,8 @@ Summary: Manage and collateralize a Dash Masternode with a hardware wallet
 
 %define isTestBuild 1
 
+%define buildQualifier rc6
 %undefine buildQualifier
-%define buildQualifier rc5
 
 # Package (RPM) name-version-release.
 # <name>-<vermajor.<verminor>-<pkgrel>[.<extraver>][.<snapinfo>].DIST[.<minorbump>]
@@ -58,7 +58,7 @@ Version: %{vermajor}.%{verminor}
 # RELEASE
 %define _pkgrel 1
 %if %{isTestBuild}
-  %define _pkgrel 0.2
+  %define _pkgrel 0.3
 %endif
 
 # MINORBUMP
@@ -320,6 +320,10 @@ exit 0
 
 
 %changelog
+* Sun Sep 6 2026 Todd Warner <t0dd_at_protonmail.com> 0.9.42-1.rp.taw
+* Sun Sep 6 2026 Todd Warner <t0dd_at_protonmail.com> 0.9.42-0.3.testing.rp.taw
+  - https://github.com/Bertrand256/dash-masternode-tool/releases/tag/v0.9.42
+
 * Tue Aug 4 2026 Todd Warner <t0dd_at_protonmail.com> 0.9.42-0.2.rc5.rp.taw
   - https://github.com/Bertrand256/dash-masternode-tool/releases/tag/v0.9.42-rc5
   - pulled the metainfo file out of the contrib tarball
