@@ -9,9 +9,7 @@
   <project_license>MIT</project_license>
   <content_rating type="oars-1.1" />
   <developer id="org.dash">
-      <name>Bertrand256</name>
-      <name>Dash Core Team</name>
-      <name>Dash Community</name>
+      <name>Bertrand256, Dash Core Team, and the Dash Community</name>
   </developer>
   <project_group>Dash Core</project_group>
   <url type="homepage">https://github.com/Bertrand256/dash-masternode-tool</url>
@@ -53,13 +51,13 @@
     <binary>dash-masternode-tool</binary>
   </provides>
   <releases>
-      <release version="0.9.42" date="2026-09-05" />
-      <release version="0.9.42-rc6" date="2026-09-03" />
-      <release version="0.9.42-rc5" date="2026-08-02" />
-      <release version="0.9.42-rc4" date="2026-07-30" />
-      <release version="0.9.42-rc3" date="2026-07-17" />
-      <release version="0.9.42-rc2" date="2026-04-20" />
-      <release version="0.9.42-rc1" date="2026-04-13" />
+      <release version="0.9.42" date="2026-09-05" type="stable" />
+      <release version="0.9.42-rc6" date="2026-09-03" type="development" />
+      <release version="0.9.42-rc5" date="2026-08-02" type="development" />
+      <release version="0.9.42-rc4" date="2026-07-30" type="development" />
+      <release version="0.9.42-rc3" date="2026-07-17" type="development" />
+      <release version="0.9.42-rc2" date="2026-04-20" type="development" />
+      <release version="0.9.42-rc1" date="2026-04-13" type="development" />
       <release version="0.9.41" date="2026-04-08" />
       <release version="0.9.40" date="2025-05-02" />
       <release version="0.9.39" date="2024-08-13" />
