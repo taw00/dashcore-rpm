@@ -21,87 +21,90 @@
 # <name>-<vermajor>.<verminor>-<pkgrel>[.<extraver>][.<snapinfo>].DIST[.<minorbump>]
 
 Name: dashcore
-%define name_ dash
+%global name_ dash
 Summary: A global payments network and decentralized application (dapp) platform: a peer-to-peer, fungible, digital currency, protocol, and platform.
 
 # VERSION and RELEASE components
-%define isTestBuild 1
-%define verX 23
-%define verY 1
-%define verZ 8
-%define _pkgrel 1
-%define _pkgrel_iftestbuild 0.1
+%global isTestBuild 1
+%global verX 24
+%global verY 0
+%global verZ 0
+%global _pkgrel 1
+%global _pkgrel_iftestbuild 0.1
 
-# Use if the dev team includes things like rc1 in the filename
-%define buildQualifier rc1
+# Some versions of dashcore don't include dash-util or dash-util.1.gz for some
+# reasons. This flag exists to support that. Normally, this should be a 1.
+%global include_dash_util 1
+# Use buildQualifer if the dev team includes things like rc1 in the filename
 %undefine buildQualifier
+%global buildQualifier rc.1
 
-%define appid org.dash.dash_core.DashWallet
-%define appid_node %{appid}.node
+%global appid org.dash.dash_core.DashWallet
+%global appid_node %{appid}.node
 
 # VERSION
-%define vermajor %{verX}.%{verY}
-%define verminor %{verZ}
+%global vermajor %{verX}.%{verY}
+%global verminor %{verZ}
 Version: %{vermajor}.%{verminor}
-%define versionqualified %{version}
+%global versionqualified %{version}
 %if 0%{?buildQualifier:1}
-  %define versionqualified %{version}-%{buildQualifier}
+  %global versionqualified %{version}-%{buildQualifier}
 %endif
 
 # RELEASE
 # package release (and for testing only, extrarel)
-%if %{isTestBuild}
-  %define _pkgrel %{_pkgrel_iftestbuild}
+%if 0%{?isTestBuild}
+  %global _pkgrel %{_pkgrel_iftestbuild}
 %endif
 
 # MINORBUMP
-%define minorbump taw
+%global minorbump taw
 #%%undefine minorbump
 
 #
 # Build the release string - don't edit this
 #
 
-%define snapinfo testing
-%if ! %{isTestBuild}
+%global snapinfo testing
+%if ! 0%{?isTestBuild}
   %undefine snapinfo
 %endif
 %if 0%{?buildQualifier:1}
-  %define snapinfo %{buildQualifier}
+  %global snapinfo %{buildQualifier}
 %endif
 
 %undefine _rp
-%define _rp rp
+%global _rp rp
 
 # have to use _variables because rpm spec macros are easily recursive and break.
-%define _snapinfo THIS_VALUE_WILL_BE_REPLACED
+%global _snapinfo THIS_VALUE_WILL_BE_REPLACED
 %if 0%{?_rp:1}
   %if 0%{?snapinfo:1}
-    %define _snapinfo %{snapinfo}.%{_rp}
+    %global _snapinfo %{snapinfo}.%{_rp}
   %else
-    %define _snapinfo %{_rp}
+    %global _snapinfo %{_rp}
   %endif
 %else
   %if 0%{?snapinfo:1}
-    %define _snapinfo %snapinfo
+    %global _snapinfo %snapinfo
   %else
     %undefine _snapinfo
   %endif
 %endif
 
 # pkgrel will be defined, snapinfo and minorbump may not be
-%define _release %{_pkgrel}
+%global _release %{_pkgrel}
 %if 0%{?_snapinfo:1}
   %if 0%{?minorbump:1}
-    %define _release %{_pkgrel}.%{_snapinfo}%{?dist}.%{minorbump}
+    %global _release %{_pkgrel}.%{_snapinfo}%{?dist}.%{minorbump}
   %else
-    %define _release %{_pkgrel}.%{_snapinfo}%{?dist}
+    %global _release %{_pkgrel}.%{_snapinfo}%{?dist}
   %endif
 %else
   %if 0%{?minorbump:1}
-    %define _release %{_pkgrel}%{?dist}.%{minorbump}
+    %global _release %{_pkgrel}%{?dist}.%{minorbump}
   %else
-    %define _release %{_pkgrel}%{?dist}
+    %global _release %{_pkgrel}%{?dist}
   %endif
 %endif
 
@@ -110,35 +113,20 @@ Release: %{_release}
 
 # (flags for experimentation)
 # Don't manually edit these.
-%define testing_extras 0
+%global testing_extras 0
 
 # (flag for experimentation)
 # Don't disable the wallet build (leave it 0).
 # Note, if you do disable it, an empty dashcore-client RPM will be built.
-%define disable_wallet 0
-
-# (flag for experimentation)
-# Don't turn off the useExtraSources flag.
-# The src.rpm includes pre-downloaded extra source archives that satisfy
-# source expectations for the depends tree during the build. They are:
-# * libbacktrace (backtrace) from https://github.com/rust-lang-nursery/libbacktrace
-# ...The next two are for EL8 builds only...
-# * miniupnpc from http://miniupnp.free.fr/files/miniupnpc-2.0.20170509.tar.gz
-# * bdb v4 from https://download.oracle.com/berkeley-db/db-4.8.30.NC.tar.gz
-# The src.rpm USED TO include pre-downloaded extra source archives for
-# bls-signatures. But those are how imbedded in the dash source tree directly.
-# For posterity, the old archive was:
-# * bls-signatures (bls-dash) from https://github.com/dashpay/bls-signatures
-#   Note, used to be (chia_bls) from https://github.com/codablock/bls-signatures
-%define useExtraSources 1
+%global disable_wallet 0
 
 # the archive name and directory tree can have some variances
 # v18.0.1
-%define _archivename_alt1 v%{version}
+%global _archivename_alt1 v%{version}
 # dash-18.0.1
-%define _archivename_alt2 dash-%{version}
+%global _archivename_alt2 dash-%{version}
 # dashcore-18.0.1
-%define _archivename_alt3 dashcore-%{version}
+%global _archivename_alt3 dashcore-%{version}
 
 # Extracted source tree structure (extracted in .../BUILD)
 #   projectroot           dashcore-23.1.3
@@ -147,34 +135,29 @@ Release: %{_release}
 #      \_patch_files        \_dash-18.0.1-...patch
 #
 
-%define _sourcearchivename %{_archivename_alt2}
-%define _binaryarchivename %{_archivename_alt3}
-%define _binarytree %{_archivename_alt3}
+%global _sourcearchivename %{_archivename_alt2}
+%global _binaryarchivename %{_archivename_alt3}
+%global _binarytree %{_archivename_alt3}
 
 %if 0%{?buildQualifier:1}
-  %define sourcearchivename %{_sourcearchivename}-%{buildQualifier}
-  %define binaryarchivename %{_binaryarchivename}-%{buildQualifier}
-  %define binarytree %{_binarytree}
+  %global sourcearchivename %{_sourcearchivename}-%{buildQualifier}
+  %global binaryarchivename %{_binaryarchivename}-%{buildQualifier}
+  %global binarytree %{_binarytree}-%{buildQualifier}
 %else
-  %define sourcearchivename %{_sourcearchivename}
-  %define binaryarchivename %{_binaryarchivename}
-  %define binarytree %{_binarytree}
+  %global sourcearchivename %{_sourcearchivename}
+  %global binaryarchivename %{_binaryarchivename}
+  %global binarytree %{_binarytree}
 %endif
-#%%define blsarchiveversion 1.2.4 <-- dash v18 and older
-%define libbacktracearchiveversion rust-snapshot-2018-05-22
-%define libbacktracearchivename libbacktrace-%{libbacktracearchiveversion}
-%define miniupnpcversion 2.0.20180203
-%define bdbarchiveversion 4.8.30.NC
 
-%define projectroot %{name}-%{vermajor}
-%define srccontribarchive %{name}-contrib
-%define srccontribtree %{name}-contrib
+%global projectroot %{name}-%{vermajor}
+%global srccontribarchive %{name}-contrib
+%global srccontribtree %{name}-contrib
 
 
-Source1: https://github.com/taw00/dashcore-rpm/raw/master/SOURCES/%{srccontribarchive}.tar.gz
-#Source6: https://github.com/dashpay/dash/archive/v%%{versionqualified}/%%{binaryarchivename}-x86_64-linux-gnu.tar.gz
-Source6: https://github.com/dashpay/dash/releases/download/v%{versionqualified}/%{binaryarchivename}-x86_64-linux-gnu.tar.gz
-Source2: https://github.com/taw00/dashcore-rpm/raw/master/SOURCES/%{appid}.metainfo.xml
+Source0: https://github.com/taw00/dashcore-rpm/raw/master/SOURCES/%{srccontribarchive}.tar.gz
+#Source2: https://github.com/dashpay/dash/archive/v%% {versionqualified}/%% {binaryarchivename}-x86_64-linux-gnu.tar.gz
+Source2: https://github.com/dashpay/dash/releases/download/v%{versionqualified}/%{binaryarchivename}-x86_64-linux-gnu.tar.gz
+Source1: https://github.com/taw00/dashcore-rpm/raw/master/SOURCES/%{appid}.metainfo.xml
 
 %global selinux_variants mls strict targeted
 
@@ -187,13 +170,13 @@ Source2: https://github.com/taw00/dashcore-rpm/raw/master/SOURCES/%{appid}.metai
 # How debug info and build_ids managed (I only halfway understand this):
 # https://github.com/rpm-software-management/rpm/raw/master/macros.in
 # ...flip-flop next two lines in order to disable (nil) or enable (1) debuginfo package build
-%define debug_package 1
-%define debug_package %{nil}
-%define _unique_build_ids 1
-%define _build_id_links alldebug
+#%%global debug_package 1
+%global debug_package %{nil}
+%global _unique_build_ids 1
+%global _build_id_links alldebug
 
 # https://docs.fedoraproject.org/en-US/packaging-guidelines/#_pie
-%define _hardened_build 1
+%global _hardened_build 1
 
 # https://fedoraproject.org/wiki/Licensing:Main?rd=Licensing
 # https://spdx.org/licenses/
@@ -206,7 +189,7 @@ ExclusiveArch: x86_64
 # NOTE: other BuildRequires listed per package below
 
 # tree, vim-enhanced, and less for mock build environment introspection
-%if %{isTestBuild}
+%if 0%{?isTestBuild}
 BuildRequires: tree vim-enhanced less findutils
 %endif
 
@@ -225,6 +208,8 @@ Requires(postun): firewalld-filesystem
 Requires: qt5-qtwayland
 # Required for installing desktop applications on linux
 BuildRequires: libappstream-glib desktop-file-utils
+# Required for certain macros, like %%tmpfiles_create_package and %%tmpfiles_create
+BuildRequires: systemd-rpm-macros
 %endif
 
 # endif fedora or el8
@@ -249,12 +234,12 @@ Requires(postun): /usr/sbin/semodule, /sbin/restorecon, /sbin/fixfiles
 Requires: openssl-libs
 Requires: dashcore-utils = %{version}-%{release}
 #BuildRequires:  sysuser-tools
-Provides: user(dashcore)
-Provides: group(dashcore)
+Provides: user(dashcore) = %{version}-%{release}
+Provides: group(dashcore) = %{version}-%{release}
 
 # We no longer need dashcore-sentinel, so force it out! 1.7.3 was the last
 # version
-Obsoletes: dashcore-sentinel = 1.7.3
+Obsoletes: dashcore-sentinel <= 1.7.3-99
 
 
 # dashcore-libs
@@ -440,37 +425,37 @@ Learn more at www.dash.org.
 %{error: "EL7-based platforms (RHEL7/CentOS7) are not supported build targets."}
 %endif
 %if 0%{?rhel} && 0%{?rhel} < 9
-#%%{error: "EL8-based platforms (RHEL8/CentOS8) are not supported build targets."}
+%{error: "EL8-based platforms (RHEL8/CentOS8) are not supported build targets."}
 %endif
 %if 0%{?centos} && 0%{?centos_ver} < 8
 %{error: "EL7-based platforms (CentOS7/RHEL7) are not supported build targets."}
 %endif
 %if 0%{?centos} && 0%{?centos_ver} < 9
-#%%{error: "EL8-based platforms (CentOS8/RHEL8) are not supported build targets."}
+%{error: "EL8-based platforms (CentOS8/RHEL8) are not supported build targets."}
 %endif
 
-%define _disable_wallet --disable-wallet --without-gui
+%global _disable_wallet --disable-wallet --without-gui
 %if ! %{disable_wallet}
-  %define _disable_wallet %{nil}
+  %global _disable_wallet %{nil}
 %endif
 
 mkdir -p %{projectroot}
 
-# Source6: dashcore (binary)
+# Source2: dashcore (binary)
 # {_builddir}/dashcore-0.17/dashcore-0.17.0/
-%setup -q -T -D -a 6 -n %{projectroot}
+%setup -q -T -D -a 2 -n %{projectroot}
 
-# Source1: contributions
+# Source0: contributions
 # {_builddir}/dashcore-23.1.3/dashcore-contrib/
-%setup -q -T -D -a 1 -n %{projectroot}
+%setup -q -T -D -a 0 -n %{projectroot}
 
-# Source2: metainfo file
-mv %{SOURCE2} %{_builddir}/%{projectroot}/%{appid}.metainfo.xml
+# Source1: metainfo file
+mv %{SOURCE1} %{_builddir}/%{projectroot}/%{appid}.metainfo.xml
 
 # At this moment, we are in the projectroot directory
 
 # For debugging purposes...
-%if %{isTestBuild}
+%if 0%{?isTestBuild}
   cd %{_builddir} ; tree -df -L 1 %{projectroot} ; cd -
 %endif
 
@@ -515,17 +500,17 @@ export QA_RPATHS=0x0002
 #   _libdir = /usr/lib or /usr/lib64 (depending on system)
 # The _rawlib macro is used to quiet rpmlint who can't seem to understand
 # that /usr/lib is still used for certain things.
-%define _rawlib lib
-%define _usr_lib /usr/%{_rawlib}
+%global _rawlib lib
+%global _usr_lib /usr/%{_rawlib}
 # These three are defined in some versions of RPM and not in others.
 %if ! 0%{?_unitdir:1}
-  %define _unitdir %{_usr_lib}/systemd/system
+  %global _unitdir %{_usr_lib}/systemd/system
 %endif
 %if ! 0%{?_tmpfilesdir:1}
-  %define _tmpfilesdir %{_usr_lib}/tmpfiles.d
+  %global _tmpfilesdir %{_usr_lib}/tmpfiles.d
 %endif
 %if ! 0%{?_metainfodir:1}
-  %define _metainfodir %{_datadir}/metainfo
+  %global _metainfodir %{_datadir}/metainfo
 %endif
 
 # Create directories
@@ -538,20 +523,20 @@ install -d %{buildroot}%{_sharedstatedir}
 install -d %{buildroot}%{_tmpfilesdir}
 install -d %{buildroot}%{_unitdir}
 install -d %{buildroot}%{_metainfodir}
-install -d -m755 -p %{buildroot}%{_bindir}
-install -d -m755 -p %{buildroot}%{_includedir}
-install -d -m755 -p %{buildroot}%{_libdir}
+install -d -m 0755 -p %{buildroot}%{_bindir}
+install -d -m 0755 -p %{buildroot}%{_includedir}
+install -d -m 0755 -p %{buildroot}%{_libdir}
 
 mv %{binarytree}/bin/dash* %{buildroot}%{_bindir}/
-#mv %%{binarytree}/bin/dash-qt     %%{buildroot}%%{_bindir}/
-#mv %%{binarytree}/bin/dash-wallet %%{buildroot}%%{_bindir}/
-#mv %%{binarytree}/bin/dashd       %%{buildroot}%%{_bindir}/
-#mv %%{binarytree}/bin/dash-util   %%{buildroot}%%{_bindir}/
-#mv %%{binarytree}/bin/dash-tx     %%{buildroot}%%{_bindir}/
-#mv %%{binarytree}/bin/dash-cli    %%{buildroot}%%{_bindir}/
+#mv %% {binarytree}/bin/dash-qt     %% {buildroot}%% {_bindir}/
+#mv %% {binarytree}/bin/dash-wallet %% {buildroot}%% {_bindir}/
+#mv %% {binarytree}/bin/dashd       %% {buildroot}%% {_bindir}/
+#mv %% {binarytree}/bin/dash-util   %% {buildroot}%% {_bindir}/
+#mv %% {binarytree}/bin/dash-tx     %% {buildroot}%% {_bindir}/
+#mv %% {binarytree}/bin/dash-cli    %% {buildroot}%% {_bindir}/
 mv %{binarytree}/include/*        %{buildroot}%{_includedir}/
 mv %{binarytree}/lib/lib*         %{buildroot}%{_libdir}/
-cp -a %{buildroot}%{_includedir}/bitcoinconsensus.h %{buildroot}%{_includedir}/dashconsensus.h
+#cp -a %% {buildroot}%% {_includedir}/bitcoinconsensus.h %% {buildroot}%% {_includedir}/dashconsensus.h
 
 # Remove the test binaries if they are still floating around
 %if ! %{testing_extras}
@@ -561,14 +546,14 @@ cp -a %{buildroot}%{_includedir}/bitcoinconsensus.h %{buildroot}%{_includedir}/d
 
 # Application as systemd service directory structure
 # /etc/dashcore/
-install -d -m750 -p %{buildroot}%{_sysconfdir}/dashcore
+install -d -m 0750 -p %{buildroot}%{_sysconfdir}/dashcore
 # /var/lib/dashcore/...
-install -d -m750 -p %{buildroot}%{_sharedstatedir}/dashcore
-install -d -m750 -p %{buildroot}%{_sharedstatedir}/dashcore/testnet3
+install -d -m 0750 -p %{buildroot}%{_sharedstatedir}/dashcore
+install -d -m 0750 -p %{buildroot}%{_sharedstatedir}/dashcore/testnet3
 install -d %{buildroot}%{_sharedstatedir}/dashcore/.dashcore
 # /var/log/dashcore/...
-install -d -m700 %{buildroot}%{_localstatedir}/log/dashcore
-install -d -m700 %{buildroot}%{_localstatedir}/log/dashcore/testnet3
+install -d -m 0700 %{buildroot}%{_localstatedir}/log/dashcore
+install -d -m 0700 %{buildroot}%{_localstatedir}/log/dashcore/testnet3
 # /etc/sysconfig/dashd-scripts/
 install -d %{buildroot}%{_sysconfdir}/sysconfig/dashd-scripts
 
@@ -585,10 +570,10 @@ ln -s %{_localstatedir}/log/dashcore/testnet3/debug.log %{buildroot}%{_sharedsta
 ln -s %{_sysconfdir}/dashcore/dash.conf %{buildroot}%{_sharedstatedir}/dashcore/.dashcore/dash.conf
 
 # Man Pages
-#install -D -m644 %%{binarytree}/share/man/man1/*.1* %%{buildroot}%%{_mandir}/man1/
-install -D -m644 %{srccontribtree}/binary-build-contribs/doc/man/*.1* %{buildroot}%{_mandir}/man1/
+#install -D -m 0644 %% {binarytree}/share/man/man1/*.1* %% {buildroot}%% {_mandir}/man1/
+install -D -m 0644 %{srccontribtree}/binary-build-contribs/doc/man/*.1* %{buildroot}%{_mandir}/man1/
 
-%if %{disable_wallet}
+%if 0%{?disable_wallet}
   rm -f %{buildroot}%{_mandir}/man1/dash-qt*
   rm -f %{buildroot}%{_bindir}/dash-qt
 %endif
@@ -596,31 +581,31 @@ install -D -m644 %{srccontribtree}/binary-build-contribs/doc/man/*.1* %{buildroo
 gzip -f %{buildroot}%{_mandir}/man1/*.1
 
 # Bash completion
-install -D -m644 %{srccontribtree}/binary-build-contribs/bash-completion/dash-cli.bash-completion %{buildroot}%{_datadir}/bash-completion/completions/dash-cli
-install -D -m644 %{srccontribtree}/binary-build-contribs/bash-completion/dash-tx.bash-completion %{buildroot}%{_datadir}/bash-completion/completions/dash-tx
-install -D -m644 %{srccontribtree}/binary-build-contribs/bash-completion/dashd.bash-completion %{buildroot}%{_datadir}/bash-completion/completions/dashd
+install -D -m 0644 %{srccontribtree}/binary-build-contribs/bash-completion/dash-cli.bash-completion %{buildroot}%{_datadir}/bash-completion/completions/dash-cli
+install -D -m 0644 %{srccontribtree}/binary-build-contribs/bash-completion/dash-tx.bash-completion %{buildroot}%{_datadir}/bash-completion/completions/dash-tx
+install -D -m 0644 %{srccontribtree}/binary-build-contribs/bash-completion/dashd.bash-completion %{buildroot}%{_datadir}/bash-completion/completions/dashd
 
 ## DESKTOP STUFF
 %if ! %{disable_wallet}
 # Desktop elements - metainfo file and desktop file
 # https://docs.fedoraproject.org/en-US/packaging-guidelines/AppData/
 # https://docs.fedoraproject.org/en-US/packaging-guidelines/#_desktop_files
-install -D -m644 -p %{appid}.metainfo.xml %{buildroot}%{_metainfodir}/%{appid}.metainfo.xml
+install -D -m 0644 -p %{appid}.metainfo.xml %{buildroot}%{_metainfodir}/%{appid}.metainfo.xml
 appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/*.metainfo.xml
 
 cd %{srccontribtree}/desktop/
-install -m755  dash-wallet.wrapper.sh %{buildroot}%{_bindir}/
+install -m 0755  dash-wallet.wrapper.sh %{buildroot}%{_bindir}/
 desktop-file-install --dir=%{buildroot}%{_datadir}/applications %{appid}.desktop
 desktop-file-validate %{buildroot}%{_datadir}/applications/%{appid}.desktop
 # desktop icons
-install -D -m644            dash-hicolor-64.png         %{buildroot}%{_datadir}/icons/hicolor/64x64/apps/%{appid}.png
-install -D -m644           dash-hicolor-128.png       %{buildroot}%{_datadir}/icons/hicolor/128x128/apps/%{appid}.png
-install -D -m644           dash-hicolor-256.png       %{buildroot}%{_datadir}/icons/hicolor/256x256/apps/%{appid}.png
-install -D -m644      dash-hicolor-scalable.svg      %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/%{appid}.svg
-install -D -m644       dash-HighContrast-64.png    %{buildroot}%{_datadir}/icons/HighContrast/64x64/apps/%{appid}.png
-install -D -m644      dash-HighContrast-128.png  %{buildroot}%{_datadir}/icons/HighContrast/128x128/apps/%{appid}.png
-install -D -m644      dash-HighContrast-256.png  %{buildroot}%{_datadir}/icons/HighContrast/256x256/apps/%{appid}.png
-install -D -m644 dash-HighContrast-scalable.svg %{buildroot}%{_datadir}/icons/HighContrast/scalable/apps/%{appid}.svg
+install -D -m 0644            dash-hicolor-64.png         %{buildroot}%{_datadir}/icons/hicolor/64x64/apps/%{appid}.png
+install -D -m 0644           dash-hicolor-128.png       %{buildroot}%{_datadir}/icons/hicolor/128x128/apps/%{appid}.png
+install -D -m 0644           dash-hicolor-256.png       %{buildroot}%{_datadir}/icons/hicolor/256x256/apps/%{appid}.png
+install -D -m 0644      dash-hicolor-scalable.svg      %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/%{appid}.svg
+install -D -m 0644       dash-HighContrast-64.png    %{buildroot}%{_datadir}/icons/HighContrast/64x64/apps/%{appid}.png
+install -D -m 0644      dash-HighContrast-128.png  %{buildroot}%{_datadir}/icons/HighContrast/128x128/apps/%{appid}.png
+install -D -m 0644      dash-HighContrast-256.png  %{buildroot}%{_datadir}/icons/HighContrast/256x256/apps/%{appid}.png
+install -D -m 0644 dash-HighContrast-scalable.svg %{buildroot}%{_datadir}/icons/HighContrast/scalable/apps/%{appid}.svg
 cd -
 
 # endif not disabled wallet
@@ -628,13 +613,13 @@ cd -
 
 # Config
 # Install default configuration file (from contrib)
-%if %{isTestBuild}
-%define testnet 1
+%if 0%{?isTestBuild}
+%global testnet 1
 %else
-%define testnet 0
+%global testnet 0
 %endif
 
-install -D -m640 %{srccontribtree}/systemd/etc-dashcore_dash.conf %{buildroot}%{_sysconfdir}/dashcore/dash.conf
+install -D -m 0640 %{srccontribtree}/systemd/etc-dashcore_dash.conf %{buildroot}%{_sysconfdir}/dashcore/dash.conf
 
 echo "\
 
@@ -688,7 +673,7 @@ rpcport=9998
 rpcport=19998
 " >> %{buildroot}%{_sysconfdir}/dashcore/dash.conf
 
-install -D -m644 %{buildroot}%{_sysconfdir}/dashcore/dash.conf %{srccontribtree}/dash.conf.example
+install -D -m 0644 -p %{buildroot}%{_sysconfdir}/dashcore/dash.conf %{srccontribtree}/dash.conf.example
 
 # ...message about the convenience symlink:
 echo "\
@@ -704,23 +689,29 @@ the configuration file in /var/lib/dashcore/.dashcore/dash.conf
 " > %{buildroot}%{_sharedstatedir}/dashcore/.dashcore/README
 
 # System services
-install -D -m600 -p %{srccontribtree}/systemd/etc-sysconfig_dashd %{buildroot}%{_sysconfdir}/sysconfig/dashd
-install -D -m755 -p %{srccontribtree}/systemd/etc-sysconfig-dashd-scripts_dashd.send-email.sh %{buildroot}%{_sysconfdir}/sysconfig/dashd-scripts/dashd.send-email.sh
-install -D -m644 -p %{srccontribtree}/systemd/usr-lib-systemd-system_dashd.service %{buildroot}%{_unitdir}/dashd.service
-install -D -m644 -p %{srccontribtree}/systemd/usr-lib-tmpfiles.d_dashd.conf %{buildroot}%{_tmpfilesdir}/dashd.conf
+install -D -m 0600 -p %{srccontribtree}/systemd/etc-sysconfig_dashd %{buildroot}%{_sysconfdir}/sysconfig/dashd
+install -D -m 0755 -p %{srccontribtree}/systemd/etc-sysconfig-dashd-scripts_dashd.send-email.sh %{buildroot}%{_sysconfdir}/sysconfig/dashd-scripts/dashd.send-email.sh
+install -D -m 0644 -p %{srccontribtree}/systemd/usr-lib-systemd-system_dashd.service %{buildroot}%{_unitdir}/dashd.service
+install -D -m 0644 -p %{srccontribtree}/systemd/usr-lib-tmpfiles.d_dashd.conf %{buildroot}%{_tmpfilesdir}/dashd.conf
 
 # Log files
 # ...logrotate file rules
-install -D -m644 -p %{srccontribtree}/logrotate/etc-logrotate.d_dashcore %{buildroot}/etc/logrotate.d/dashcore
+install -D -m 0644 -p %{srccontribtree}/logrotate/etc-logrotate.d_dashcore %{buildroot}/etc/logrotate.d/dashcore
 # ...ghosted log files - need to exist in the installed buildroot
 touch %{buildroot}%{_localstatedir}/log/dashcore/debug.log
 touch %{buildroot}%{_localstatedir}/log/dashcore/testnet3/debug.log
 
 # Service definition files for firewalld for full and master nodes
-install -D -m644 -p %{srccontribtree}/firewalld/usr-lib-firewalld-services_dashcore.xml %{buildroot}%{_usr_lib}/firewalld/services/dashcore.xml
-install -D -m644 -p %{srccontribtree}/firewalld/usr-lib-firewalld-services_dashcore-testnet.xml %{buildroot}%{_usr_lib}/firewalld/services/dashcore-testnet.xml
-install -D -m644 -p %{srccontribtree}/firewalld/usr-lib-firewalld-services_dashcore-rpc.xml %{buildroot}%{_usr_lib}/firewalld/services/dashcore-rpc.xml
-install -D -m644 -p %{srccontribtree}/firewalld/usr-lib-firewalld-services_dashcore-testnet-rpc.xml %{buildroot}%{_usr_lib}/firewalld/services/dashcore-testnet-rpc.xml
+install -D -m 0644 -p %{srccontribtree}/firewalld/usr-lib-firewalld-services_dashcore.xml %{buildroot}%{_usr_lib}/firewalld/services/dashcore.xml
+install -D -m 0644 -p %{srccontribtree}/firewalld/usr-lib-firewalld-services_dashcore-testnet.xml %{buildroot}%{_usr_lib}/firewalld/services/dashcore-testnet.xml
+install -D -m 0644 -p %{srccontribtree}/firewalld/usr-lib-firewalld-services_dashcore-rpc.xml %{buildroot}%{_usr_lib}/firewalld/services/dashcore-rpc.xml
+install -D -m 0644 -p %{srccontribtree}/firewalld/usr-lib-firewalld-services_dashcore-testnet-rpc.xml %{buildroot}%{_usr_lib}/firewalld/services/dashcore-testnet-rpc.xml
+
+# clean up dash-util.1.gz if the dash-util binary was never built.
+if [ ! -f %{buildroot}%{_bindir}/dash-util ]; then
+  rm -f %{buildroot}%{_mandir}/man1/dash-util.1.gz
+fi
+
 
 
 # dashcore-client
@@ -733,12 +724,12 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 
 # Update the desktop database
 # https://fedoraproject.org/wiki/NewMIMESystem
-/usr/bin/update-desktop-database &> /dev/null || :
+# XXX Apparently redundant with Fedora 28+ EL8+ /usr/bin/update-desktop-database &> /dev/null || :
 
 %postun client
 # Update the desktop database
 # https://fedoraproject.org/wiki/NewMIMESystem
-/usr/bin/update-desktop-database &> /dev/null || :
+# XXX Apparently redundant with Fedora 28+ EL8+ /usr/bin/update-desktop-database &> /dev/null || :
 # the macro'ed reload is not working for some reason
 #%%firewalld_reload
 test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
@@ -763,25 +754,23 @@ getent passwd dashcore >/dev/null || useradd -r -g dashcore -d %{_sharedstatedir
 # If /var/lib/dashcore/debug.log is not a symlink, we need to fix that.
 #    /var/lib/dashcore/debug.log -> /var/log/dashcore/debug.log
 #    /var/lib/dashcore/testnet3/debug.log -> /var/log/dashcore/testnet3/debug.log
-%define vlibdc %{_sharedstatedir}/dashcore
-%define vlibdc_dl %{vlibdc}/debug.log
-%define vlibdc_tdl %{vlibdc}/testnet3/debug.log
-%define vlogdc %{_localstatedir}/log/dashcore
-%define vlogdc_dl %{vlogdc}/debug.log
-%define vlogdc_tdl %{vlogdc}/testnet3/debug.log
+%global vlibdc %{_sharedstatedir}/dashcore
+%global vlibdc_dl %{vlibdc}/debug.log
+%global vlibdc_tdl %{vlibdc}/testnet3/debug.log
+%global vlogdc %{_localstatedir}/log/dashcore
+%global vlogdc_dl %{vlogdc}/debug.log
+%global vlogdc_tdl %{vlogdc}/testnet3/debug.log
 # If either debug.log in /var/lib/dashcore is not a symlink, we need to move
 # files and then fix the symlinks Hopefully this doesn't break because
 # dashcore may have debug.log open
-if [ -e %{vlibdc_dl} -a -f %{vlibdc_dl} -a ! -h %{vlibdc_dl} ]
-then
+if [ -f "%{vlibdc_dl}" ] && [ ! -h "%{vlibdc_dl}" ]; then
    mv %{vlibdc_dl}* %{vlogdc}/
    ln -s %{vlogdc_dl} %{vlibdc_dl}
    chown dashcore:dashcore %{vlibdc_dl}
    chown -R dashcore:dashcore %{vlogdc}
    chmod 644 %{vlogdc_dl}*
 fi
-if [ -e %{vlibdc_tdl} -a -f %{vlibdc_tdl} -a ! -h %{vlibdc_tdl} ]
-then
+if [ -f "%{vlibdc_tdl}" ] && [ ! -h "%{vlibdc_tdl}" ]; then
    mv %{vlibdc_tdl}* %{vlogdc}/testnet3/
    ln -s %{vlogdc_tdl} %{vlibdc_tdl}
    chown dashcore:dashcore %{vlibdc_tdl}
@@ -800,13 +789,13 @@ exit 0
 # the macro'ed reload is not working for some reason
 #%%firewalld_reload
 test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
+%tmpfiles_create dashd.conf
 
 
 # dashcore-server
 %posttrans server
-/usr/bin/systemd-tmpfiles --create
-#TODO: Replace above with %%tmpfiles_create_package macro
-#TODO: https://github.com/systemd/systemd/raw/master/src/core/macros.systemd.in
+# OLD METHOD: /usr/bin/systemd-tmpfiles --create
+# NEW METHOD: %% tmpfiles_create_package %% {name}-server dashd.conf
 
 
 # dashcore-server
@@ -822,129 +811,116 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 
 
+
+
 # dashcore-client
 %files client
-%defattr(-,root,root,-)
 %if ! %{disable_wallet}
-%license %{srccontribtree}/binary-build-contribs/license/COPYING
-%doc %{srccontribtree}/binary-build-contribs/doc/* %{srccontribtree}/dash.conf.example
-%{_bindir}/dash-qt
-%{_bindir}/dash-util
-%{_bindir}/dash-wallet
-%{_bindir}/dash-wallet.wrapper.sh
-%{_datadir}/applications/%{appid}.desktop
-%{_metainfodir}/%{appid}.metainfo.xml
-# XXX Removing this unless someone gripes
-%{_datadir}/icons/*
-%{_mandir}/man1/dash-wallet.1.gz
-%{_mandir}/man1/dash-qt.1.gz
-%{_mandir}/man1/dash-util.1.gz
-%{_usr_lib}/firewalld/services/dashcore.xml
-%{_usr_lib}/firewalld/services/dashcore-testnet.xml
-%{_usr_lib}/firewalld/services/dashcore-rpc.xml
-%{_usr_lib}/firewalld/services/dashcore-testnet-rpc.xml
-#%%dir %%attr(750,dashcore,dashcore) %%{_sysconfdir}/dashcore
-#%%config(noreplace) %%attr(640,dashcore,dashcore) %%{_sysconfdir}/dashcore/dash.conf
-%if %{testing_extras}
-  %{_bindir}/test_dash-qt
+%attr(-,root,root) %license %{srccontribtree}/binary-build-contribs/license/COPYING
+%attr(-,root,root) %doc %{srccontribtree}/binary-build-contribs/doc/* %{srccontribtree}/dash.conf.example
+%attr(-,root,root) %{_bindir}/dash-qt
+%attr(-,root,root) %{_bindir}/dash-wallet
+%attr(-,root,root) %{_bindir}/dash-wallet.wrapper.sh
+%attr(-,root,root) %{_datadir}/applications/%{appid}.desktop
+%attr(-,root,root) %{_metainfodir}/%{appid}.metainfo.xml
+
+%attr(-,root,root) %{_datadir}/icons/*
+%attr(-,root,root) %{_mandir}/man1/dash-wallet.1.gz
+%attr(-,root,root) %{_mandir}/man1/dash-qt.1.gz
+# XXX ONLY USEFUL FOR SERVER, I THINK %%attr(-,root,root) %% {_usr_lib}/firewalld/services/dashcore.xml
+# XXX ONLY USEFUL FOR SERVER, I THINK %%attr(-,root,root) %% {_usr_lib}/firewalld/services/dashcore-testnet.xml
+# XXX ONLY USEFUL FOR SERVER, I THINK %%attr(-,root,root) %% {_usr_lib}/firewalld/services/dashcore-rpc.xml
+# XXX ONLY USEFUL FOR SERVER, I THINK %%attr(-,root,root) %% {_usr_lib}/firewalld/services/dashcore-testnet-rpc.xml
+%if 0%{?testing_extras}
+  %attr(-,root,root) %{_bindir}/test_dash-qt
 %endif
 %endif
 
 
 # dashcore-server
 %files server
-%defattr(-,root,root,-)
 %license %{srccontribtree}/binary-build-contribs/license/COPYING
 %doc %{srccontribtree}/binary-build-contribs/doc/* %{srccontribtree}/dash.conf.example
 
 # Application as systemd service directory structure
-%defattr(-,dashcore,dashcore,-)
 # /etc/dashcore/
-%dir %attr(750,dashcore,dashcore) %{_sysconfdir}/dashcore
+%attr(0750,dashcore,dashcore) %dir %{_sysconfdir}/dashcore
 # /var/lib/dashcore/...
-%dir %attr(750,dashcore,dashcore) %{_sharedstatedir}/dashcore
-%dir %attr(750,dashcore,dashcore) %{_sharedstatedir}/dashcore/testnet3
-%dir %attr(750,dashcore,dashcore) %{_sharedstatedir}/dashcore/.dashcore
+%attr(0750,dashcore,dashcore) %dir %{_sharedstatedir}/dashcore
+%attr(0750,dashcore,dashcore) %dir %{_sharedstatedir}/dashcore/testnet3
+%attr(0750,dashcore,dashcore) %dir %{_sharedstatedir}/dashcore/.dashcore
 # /var/log/dashcore/...
-%dir %attr(700,dashcore,dashcore) %{_localstatedir}/log/dashcore
-%dir %attr(700,dashcore,dashcore) %{_localstatedir}/log/dashcore/testnet3
+%attr(0700,dashcore,dashcore) %dir %{_localstatedir}/log/dashcore
+%attr(0700,dashcore,dashcore) %dir %{_localstatedir}/log/dashcore/testnet3
 # /etc/sysconfig/dashd-scripts/
-%dir %attr(755,dashcore,dashcore) %{_sysconfdir}/sysconfig/dashd-scripts
-%defattr(-,root,root,-)
+%attr(0755,dashcore,dashcore) %dir %{_sysconfdir}/sysconfig/dashd-scripts
 
-%config(noreplace) %attr(600,root,root) %{_sysconfdir}/sysconfig/dashd
-%attr(755,root,root) %{_sysconfdir}/sysconfig/dashd-scripts/dashd.send-email.sh
+%attr(0600,root,root) %config(noreplace) %{_sysconfdir}/sysconfig/dashd
+%attr(0755,root,root) %{_sysconfdir}/sysconfig/dashd-scripts/dashd.send-email.sh
 
 # The logs
-%attr(644,root,root) /etc/logrotate.d/dashcore
+%attr(0644,root,root) /etc/logrotate.d/dashcore
 # ...log files - they don't initially exist, but we still own them
 %ghost %{_localstatedir}/log/dashcore/debug.log
 %ghost %{_localstatedir}/log/dashcore/testnet3/debug.log
 # ...the symlinks for log files...
-%defattr(-,dashcore,dashcore,-)
-#%%attr(777,dashcore,dashcore) %%{_sharedstatedir}/dashcore/debug.log
-#%%attr(777,dashcore,dashcore) %%{_sharedstatedir}/dashcore/testnet3/debug.log
-%{_sharedstatedir}/dashcore/debug.log
-%{_sharedstatedir}/dashcore/testnet3/debug.log
-%defattr(-,root,root,-)
+#%%attr(0777,dashcore,dashcore) %% {_sharedstatedir}/dashcore/debug.log
+#%%attr(0777,dashcore,dashcore) %% {_sharedstatedir}/dashcore/testnet3/debug.log
+%attr(-,dashcore,dashcore) %{_sharedstatedir}/dashcore/debug.log
+%attr(-,dashcore,dashcore) %{_sharedstatedir}/dashcore/testnet3/debug.log
+
 
 # dash.conf
-%config(noreplace) %attr(640,dashcore,dashcore) %{_sysconfdir}/dashcore/dash.conf
+%attr(0640,dashcore,dashcore) %config(noreplace) %{_sysconfdir}/dashcore/dash.conf
 # ...convenience symlink:
 #    /var/lib/dashcore/.dashcore/dash.conf -> /etc/dashcore/dash.conf
 # ...this is probably really bad form.
-%defattr(-,dashcore,dashcore,-)
-#%%attr(777,dashcore,dashcore) %%{_sharedstatedir}/dashcore/.dashcore/dash.conf
-%{_sharedstatedir}/dashcore/.dashcore/dash.conf
-%defattr(-,root,root,-)
-%attr(640,dashcore,dashcore) %{_sharedstatedir}/dashcore/.dashcore/README
+#%%attr(0777,dashcore,dashcore) %% {_sharedstatedir}/dashcore/.dashcore/dash.conf
+%attr(-,dashcore,dashcore) %{_sharedstatedir}/dashcore/.dashcore/dash.conf
+%attr(-,dashcore,dashcore) %{_sharedstatedir}/dashcore/.dashcore/README
 
-%{_unitdir}/dashd.service
-%{_usr_lib}/firewalld/services/dashcore.xml
-%{_usr_lib}/firewalld/services/dashcore-testnet.xml
-%{_usr_lib}/firewalld/services/dashcore-rpc.xml
-%{_usr_lib}/firewalld/services/dashcore-testnet-rpc.xml
-%{_bindir}/dashd
-%{_bindir}/dash-util
-%{_tmpfilesdir}/dashd.conf
-%{_datadir}/bash-completion/completions/dashd
-%{_mandir}/man1/dashd.1.gz
-%{_mandir}/man1/dash-util.1.gz
+%attr(-,root,root) %{_unitdir}/dashd.service
+%attr(-,root,root) %{_usr_lib}/firewalld/services/dashcore.xml
+%attr(-,root,root) %{_usr_lib}/firewalld/services/dashcore-testnet.xml
+%attr(-,root,root) %{_usr_lib}/firewalld/services/dashcore-rpc.xml
+%attr(-,root,root) %{_usr_lib}/firewalld/services/dashcore-testnet-rpc.xml
+%attr(-,root,root) %{_bindir}/dashd
+%attr(-,root,root) %{_tmpfilesdir}/dashd.conf
+%attr(-,root,root) %{_datadir}/bash-completion/completions/dashd
+%attr(-,root,root) %{_mandir}/man1/dashd.1.gz
 
-%if %{testing_extras}
+%if 0%{?testing_extras}
   %{_bindir}/test_dash
 %endif
 
 
 # dashcore-libs
 %files libs
-%defattr(-,root,root,-)
-%{_libdir}/*
-%license %{srccontribtree}/binary-build-contribs/license/COPYING
+%attr(-,root,root) %{_libdir}/libdashconsensus.s*
+%attr(-,root,root) %license %{srccontribtree}/binary-build-contribs/license/COPYING
 
 
 # dashcore-devel
 %files devel
-%defattr(-,root,root,-)
-%{_includedir}/*
-%{_libdir}/*
-%license %{srccontribtree}/binary-build-contribs/license/COPYING
+%attr(-,root,root) %{_includedir}/bitcoinconsensus.h
+%attr(-,root,root) %license %{srccontribtree}/binary-build-contribs/license/COPYING
 
 
 # dashcore-utils
+# Note, dash-util and dash-util.1.gz are not always built upstream, at least
+# not always with the RC versions. And so, we make them optional.
 %files utils
-%defattr(-,root,root,-)
-
-%{_bindir}/dash-cli
-%{_bindir}/dash-tx
-%{_bindir}/dash-util
-%{_datadir}/bash-completion/completions/dash-cli
-%{_datadir}/bash-completion/completions/dash-tx
-%{_mandir}/man1/dash-cli.1.gz
-%{_mandir}/man1/dash-tx.1.gz
-%{_mandir}/man1/dash-util.1.gz
-
-%license %{srccontribtree}/binary-build-contribs/license/COPYING
+%attr(-,root,root) %{_bindir}/dash-cli
+%attr(-,root,root) %{_bindir}/dash-tx
+%attr(-,root,root) %{_datadir}/bash-completion/completions/dash-cli
+%attr(-,root,root) %{_datadir}/bash-completion/completions/dash-tx
+%attr(-,root,root) %{_mandir}/man1/dash-cli.1.gz
+%attr(-,root,root) %{_mandir}/man1/dash-tx.1.gz
+%attr(-,root,root) %license %{srccontribtree}/binary-build-contribs/license/COPYING
+%if 0%{?include_dash_util}
+%attr(-,root,root) %{_bindir}/dash-util
+%attr(-,root,root) %{_mandir}/man1/dash-util.1.gz
+%endif
 
 # Dash Core Information
 #
@@ -970,6 +946,15 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Dash Masternode Tool: https://github.com/Bertrand256/dash-masternode-tool
 
 %changelog
+* Fri Sep 25 2026 Todd Warner <t0dd_at_protonmail.com> 24.0.0-0.1.rc.1.rp.taw
+  - (repackaged) https://github.com/dashpay/dash/releases/tag/v24.0.0-rc.1
+  - spec: cruft removal and modernization
+  - spec: cleaned up source numbering
+  - packaging: upstream doesn't package dashconsensus.h. Removed from packaging
+  - Added a flag to support the case that dash-util is not built which, for  
+    whatever reason sometimes is the case in release candidates. At least  
+    that was the case for 23.0.0-rc.3. May remove this logic later.
+
 * Mon Aug 3 2026 Todd Warner <t0dd_at_protonmail.com> 23.1.8-1.rp.taw
 * Mon Aug 3 2026 Todd Warner <t0dd_at_protonmail.com> 23.1.8-0.1.rp.testing.taw
   - (repackaged) https://github.com/dashpay/dash/releases/tag/v23.1.8
