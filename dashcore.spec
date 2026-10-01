@@ -37,7 +37,7 @@ Summary: A global payments network and decentralized application (dapp) platform
 %global include_dash_util 1
 # Use buildQualifer if the dev team includes things like rc1 in the filename
 %undefine buildQualifier
-%global buildQualifier rc.1
+%global buildQualifier rc.2
 
 %global appid org.dash.dash_core.DashWallet
 %global appid_node %{appid}.node
@@ -946,6 +946,9 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Dash Masternode Tool: https://github.com/Bertrand256/dash-masternode-tool
 
 %changelog
+* Thu Oct 1 2026 Todd Warner <t0dd_at_protonmail.com> 24.0.0-0.1.rc.2.rp.taw
+  - (repackaged) https://github.com/dashpay/dash/releases/tag/v24.0.0-rc.2
+
 * Fri Sep 25 2026 Todd Warner <t0dd_at_protonmail.com> 24.0.0-0.1.rc.1.rp.taw
   - (repackaged) https://github.com/dashpay/dash/releases/tag/v24.0.0-rc.1
   - spec: cruft removal and modernization
