@@ -26,18 +26,18 @@ Summary: A global payments network and decentralized application (dapp) platform
 
 # VERSION and RELEASE components
 %global isTestBuild 1
-%global verX 23
-%global verY 1
-%global verZ 10
+%global verX 24
+%global verY 0
+%global verZ 0
 %global _pkgrel 1
 %global _pkgrel_iftestbuild 0.1
+# Use buildQualifer if the dev team includes things like rc1 in the filename
+%undefine buildQualifier
+%global buildQualifier rc.6
 
 # Some versions of dashcore don't include dash-util or dash-util.1.gz for some
 # reasons. This flag exists to support that. Normally, this should be a 1.
 %global include_dash_util 1
-# Use buildQualifer if the dev team includes things like rc1 in the filename
-%global buildQualifier rc.6
-%undefine buildQualifier
 
 %global appid org.dash.dash_core.DashWallet
 %global appid_node %{appid}.node
