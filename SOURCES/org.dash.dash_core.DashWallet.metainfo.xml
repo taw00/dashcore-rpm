@@ -60,13 +60,13 @@
 
   <releases>
       <release version="24.0.0-rc.6" date="2026-11-02" />
-      <release version="23.1.10" date="2026-11-02" />
       <release version="24.0.0-rc.5" date="2026-10-30" />
-      <release version="23.1.9" date="2026-10-29" />
       <release version="24.0.0-rc.4" date="2026-10-19" />
       <release version="24.0.0-rc.3" date="2026-10-07" />
       <release version="24.0.0-rc.2" date="2026-09-30" />
       <release version="24.0.0-rc.1" date="2026-09-24" />
+      <release version="23.1.10" date="2026-11-02" />
+      <release version="23.1.9" date="2026-10-29" />
       <release version="23.1.8" date="2026-08-03" />
       <release version="23.1.7" date="2026-07-01" />
       <release version="23.1.4" date="2026-06-18" />
