@@ -26,9 +26,9 @@ Summary: A global payments network and decentralized application (dapp) platform
 
 # VERSION and RELEASE components
 %global isTestBuild 1
-%global verX 24
-%global verY 0
-%global verZ 0
+%global verX 23
+%global verY 1
+%global verZ 10
 %global _pkgrel 1
 %global _pkgrel_iftestbuild 0.1
 
@@ -36,8 +36,8 @@ Summary: A global payments network and decentralized application (dapp) platform
 # reasons. This flag exists to support that. Normally, this should be a 1.
 %global include_dash_util 1
 # Use buildQualifer if the dev team includes things like rc1 in the filename
+%global buildQualifier rc.6
 %undefine buildQualifier
-%global buildQualifier rc.5
 
 %global appid org.dash.dash_core.DashWallet
 %global appid_node %{appid}.node
@@ -946,6 +946,13 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 #   * Dash Masternode Tool: https://github.com/Bertrand256/dash-masternode-tool
 
 %changelog
+* Tue Nov 3 2026 Todd Warner <t0dd_at_protonmail.com> 24.0.0-0.1.rc.6.rp.taw
+  - (repackaged) https://github.com/dashpay/dash/releases/tag/v24.0.0-rc.6
+
+* Tue Nov 3 2026 Todd Warner <t0dd_at_protonmail.com> 23.1.10-1.rp.taw
+* Tue Nov 3 2026 Todd Warner <t0dd_at_protonmail.com> 23.1.10-0.1.rp.testing.taw
+  - (repackaged) https://github.com/dashpay/dash/releases/tag/v23.1.10
+
 * Fri Oct 30 2026 Todd Warner <t0dd_at_protonmail.com> 24.0.0-0.1.rc.5.rp.taw
   - (repackaged) https://github.com/dashpay/dash/releases/tag/v24.0.0-rc.5
 
